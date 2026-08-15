@@ -18,7 +18,7 @@
         "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
         "@types/node": "^26.1.2",
         "@types/pg": "^8.20.3",
-        "@types/react": "18.3.18",
+        "@types/react": "19.2.18",
         "@types/react-dom": "18.3.5",
         "@types/supertest": "^6.0.3",
         "@vitest/coverage-v8": "^3.2.4",
@@ -109,13 +109,13 @@
         "@types/three": "^0.185.3",
         "meshline": "^3.3.1",
         "ogl": "^1.0.11",
-        "react": "18.3.1",
+        "react": "19.2.8",
         "react-dom": "18.3.1",
         "three": "^0.185.1",
       },
       "devDependencies": {
         "@types/node": "^24.13.3",
-        "@types/react": "18.3.18",
+        "@types/react": "19.2.18",
         "@types/react-dom": "18.3.5",
         "@vitejs/plugin-react": "^6.0.4",
         "oxlint": "^1.75.0",
@@ -194,7 +194,7 @@
       "version": "0.0.1",
       "devDependencies": {
         "@types/bun": "latest",
-        "@types/react": "18.3.18",
+        "@types/react": "19.2.18",
         "@types/react-dom": "18.3.5",
       },
       "peerDependencies": {
@@ -347,7 +347,7 @@
     },
   },
   "overrides": {
-    "@types/react": "18.3.18",
+    "@types/react": "19.2.18",
     "@types/react-dom": "18.3.5",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -945,13 +945,11 @@
 
     "@types/pg": ["@types/pg@8.20.3", "", { "dependencies": { "@types/node": "*", "pg-protocol": "*", "pg-types": "^2.2.0" } }, "sha512-4Tvg+HO6+oQaAkpT8GTYoSExzpGGZz532GXgbbCElWJQeQdMozBWxEKNBhJJpHFjWXsMxqPbyypvj/89FWNoSQ=="],
 
-    "@types/prop-types": ["@types/prop-types@15.7.15", "", {}, "sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw=="],
-
     "@types/qs": ["@types/qs@6.15.1", "", {}, "sha512-GZHUBZR9hckSUhrxmp1nG6NwdpM9fCunJwyThLW1X3AyHgd9IlHb6VANpQQqDr2o/qQp6McZ3y/IA2rVzKzSbw=="],
 
     "@types/range-parser": ["@types/range-parser@1.2.7", "", {}, "sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ=="],
 
-    "@types/react": ["@types/react@18.3.18", "", { "dependencies": { "@types/prop-types": "*", "csstype": "^3.0.2" } }, "sha512-t4yC+vtgnkYjNSKlFx1jkAhH8LgTo2N/7Qvi83kdEaUtMDiwpbLAktKDaAMlRcJ5eSxZkH74eEGt1ky31d7kfQ=="],
+    "@types/react": ["@types/react@19.2.18", "", { "dependencies": { "csstype": "^3.2.2" } }, "sha512-AnzbBERsrLKtk2XSfTbYRLjQPdy116Sty4q+T+Bp3IC4l6jNBvreVPAHmpq9qhXQM7CXZPjLVmGMw9sy+hxQ3w=="],
 
     "@types/react-dom": ["@types/react-dom@18.3.5", "", { "peerDependencies": { "@types/react": "^18.0.0" } }, "sha512-P4t6saawp+b/dFrUr2cvkVsfvPguwsxtH6dNIYRllMsefqFzkZk5UIjzyDOv5g1dXIPdG4Sp1yCR4Z6RCUsG/Q=="],
 
