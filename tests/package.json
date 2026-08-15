@@ -9,11 +9,11 @@
   },
   "devDependencies": {
     "@lumina/env": "workspace:*",
-    "@types/node": "^26.1.2",
-    "@types/supertest": "^6.0.3",
-    "@vitest/coverage-v8": "^3.2.4",
+    "@types/node": "^26.2.0",
+    "@types/supertest": "^7.2.1",
+    "@vitest/coverage-v8": "^4.1.10",
     "supertest": "^7.1.4",
-    "vitest": "^3.2.4",
-    "typescript": "5.9.2"
+    "vitest": "^4.1.10",
+    "typescript": "7.0.2"
   }
 }
