@@ -287,8 +287,8 @@ Request that adds, modifies, or deprecates Express API endpoints **must update
 Automated CI checks (`bun run check-openapi`) enforce that:
 
 1. `docs/api/openapi.yaml` exists and parses as valid OpenAPI 3.x.
-2. All mounted Express API routes (`/api/profile`, `/api/friends`, `/api/posts`, `/api/leaderboard`, `/api/v1/video/*`)
-   are documented in the specification paths inventory.
+2. All mounted Express API routes (`/api/profile`, `/api/friends`, `/api/posts`, `/api/leaderboard`, `/api/video/*`) are
+   documented in the specification paths inventory.
 
 PRs with stale or missing OpenAPI declarations will fail CI.
 

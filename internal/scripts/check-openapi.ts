@@ -64,15 +64,48 @@ function checkOpenApi() {
     process.exit(1)
   }
 
-  // 4. Expected Route Path Inventory Coverage Smoke Check
+  // 4. Expected Route Path Inventory Coverage Smoke Check across all API domains
   const expectedRoutes = [
+    '/ok',
+    '/health',
+    '/ready',
+    '/metrics',
     '/api/profile/me',
+    '/api/profile/{username}',
     '/api/friends',
+    '/api/friends/request/{userId}',
+    '/api/friends/request/{requestId}/accept',
+    '/api/friends/request/{requestId}/reject',
+    '/api/friends/request/{requestId}',
+    '/api/friends/{friendId}',
+    '/api/friends/mutual/{userId}',
+    '/api/friends/requests/incoming',
+    '/api/friends/requests/outgoing',
     '/api/posts',
+    '/api/posts/{id}/like',
+    '/api/posts/{id}/likes/count',
+    '/api/posts/{id}/save',
+    '/api/posts/saved',
+    '/api/chat/token',
+    '/api/chat/conversations',
     '/api/leaderboard',
-    '/api/v1/video/token',
-    '/api/v1/video/calls',
-    '/api/v1/video/calls/history',
+    '/api/leaderboard/me/around',
+    '/api/leaderboard/me',
+    '/api/leaderboard/{userId}',
+    '/api/leetcode/sync',
+    '/api/video/token',
+    '/api/video/calls',
+    '/api/video/calls/history',
+    '/api/video/calls/{callId}',
+    '/api/video/calls/{callId}/join',
+    '/api/video/calls/{callId}/respond',
+    '/api/video/calls/{callId}/end',
+    '/api/comments/posts/{postId}/comments',
+    '/api/comments/{commentId}',
+    '/api/comments/{commentId}/history',
+    '/api/comments/{commentId}/reactions',
+    '/api/comments/{commentId}/pin',
+    '/api/comments/{commentId}/report',
   ]
 
   const declaredPaths = Object.keys(doc.paths)

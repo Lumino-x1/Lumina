@@ -10,7 +10,7 @@ Troubleshooting guide for common Stream Video integration issues and resolution 
 
 - **Symptom**: User receives `403 Forbidden` when attempting to join a video call.
 - **Cause**: User is not listed as an invited participant or host for the private call.
-- **Resolution**: Verify that the host invited the user's `userId` when creating the call (`POST /api/v1/video/calls`).
+- **Resolution**: Verify that the host invited the user's `userId` when creating the call (`POST /api/video/calls`).
 
 ### 2. Missing Stream Credentials
 

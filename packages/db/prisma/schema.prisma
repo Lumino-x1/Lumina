@@ -60,6 +60,10 @@ model User {
   accounts               Account[]
   clubMembers            ClubMember[]
   comments               Comment[]
+  commentReactions       CommentReaction[]
+  commentMentions        CommentMention[]
+  commentEditHistory     CommentEditHistory[]
+  commentReports         CommentReport[]
   communityMembers       CommunityMember[]
   communityPosts         CommunityPost[]
   conversations          Conversation[]
@@ -337,7 +341,10 @@ model Comment {
   postId    String
   userId    String
   parentId  String?
+  depth     Int      @default(0)
+  isDeleted Boolean  @default(false)
   isPinned  Boolean  @default(false)
+  version   Int      @default(1)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -347,10 +354,81 @@ model Comment {
   parent  Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
   replies Comment[] @relation("CommentReplies")
 
-  @@index([postId])
+  reactions   CommentReaction[]
+  mentions    CommentMention[]
+  editHistory CommentEditHistory[]
+  reports     CommentReport[]
+
+  @@index([postId, createdAt])
   @@index([userId])
   @@index([parentId])
   @@index([postId, isPinned])
+}
+
+model CommentReaction {
+  id        String   @id @default(cuid())
+  commentId String
+  userId    String
+  emoji     String
+  createdAt DateTime @default(now())
+
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, userId, emoji])
+  @@index([commentId])
+  @@index([userId])
+}
+
+model CommentMention {
+  id              String   @id @default(cuid())
+  commentId       String
+  mentionedUserId String
+  createdAt       DateTime @default(now())
+
+  comment       Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  mentionedUser User    @relation(fields: [mentionedUserId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, mentionedUserId])
+  @@index([commentId])
+  @@index([mentionedUserId])
+}
+
+model CommentEditHistory {
+  id              String   @id @default(cuid())
+  commentId       String
+  previousContent String
+  editedByUserId  String
+  version         Int
+  createdAt       DateTime @default(now())
+
+  comment  Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  editedBy User    @relation(fields: [editedByUserId], references: [id])
+
+  @@index([commentId])
+}
+
+model CommentReport {
+  id             String       @id @default(cuid())
+  commentId      String
+  reporterUserId String
+  reason         String
+  details        String?
+  status         ReportStatus @default(PENDING)
+  createdAt      DateTime     @default(now())
+
+  comment  Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  reporter User    @relation(fields: [reporterUserId], references: [id])
+
+  @@unique([commentId, reporterUserId])
+  @@index([commentId])
+  @@index([reporterUserId])
+}
+
+enum ReportStatus {
+  PENDING
+  RESOLVED
+  REJECTED
 }
 
 model Like {
@@ -377,6 +455,9 @@ model Notification {
 
 enum NotificationType {
   COMMENT
+  COMMENT_REPLY
+  COMMENT_MENTION
+  COMMENT_REACTION
   LIKE
   SHARE
   FOLLOW

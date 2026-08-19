@@ -10,5 +10,4 @@ observable API change.
 - Collections use one-based `page` and capped `limit`; the leaderboard cap is 100. Manual LeetCode sync has a
   five-minute cooldown and returns `429` with `retryAfterSeconds`.
 
-Existing internal routes remain under `/api`. New public APIs use `/api/v1/...`; breaking changes require a new version,
-deprecation period, and migration notes.
+All API routes are mounted under `/api`. Breaking changes require documented migration notes.

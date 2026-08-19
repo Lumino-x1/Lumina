@@ -423,79 +423,78 @@ bun run format:check # Verify formatting without writing changes
 
 ## 📡 API Reference
 
-Existing internal endpoints are mounted below `/api`; new public endpoints use `/api/v1`. Protected routes require
-authentication via session cookies issued by Better Auth (`better-auth.session_token`). The full contract is defined in
-[`openapi.yaml`](openapi.yaml).
+API endpoints are mounted below `/api`. Protected routes require authentication via session cookies issued by Better
+Auth (`better-auth.session_token`). The full contract is defined in [`openapi.yaml`](openapi.yaml).
 
 ### Profile
 
-| Method  | Endpoint           | Description                                  |
-| ------- | ------------------- | --------------------------------------------- |
-| `GET`   | `/api/profile/me`  | Get the current user's profile               |
-| `PATCH` | `/api/profile/me`  | Update or create the current user's profile  |
+| Method  | Endpoint          | Description                                 |
+| ------- | ----------------- | ------------------------------------------- |
+| `GET`   | `/api/profile/me` | Get the current user's profile              |
+| `PATCH` | `/api/profile/me` | Update or create the current user's profile |
 
 ### Friends
 
-| Method   | Endpoint                                  | Description                   |
-| -------- | ------------------------------------------ | ------------------------------ |
-| `GET`    | `/api/friends`                            | List accepted friends         |
-| `POST`   | `/api/friends/request/:userId`            | Send a friend request         |
-| `PATCH`  | `/api/friends/request/:requestId/accept`  | Accept a friend request       |
-| `PATCH`  | `/api/friends/request/:requestId/reject`  | Reject a friend request       |
-| `DELETE` | `/api/friends/request/:requestId`         | Cancel a friend request       |
-| `DELETE` | `/api/friends/:friendId`                  | Remove a friend               |
-| `GET`    | `/api/friends/mutual/:userId`             | Get mutual friends            |
-| `GET`    | `/api/friends/requests/incoming`          | Get incoming friend requests  |
-| `GET`    | `/api/friends/requests/outgoing`          | Get outgoing friend requests  |
+| Method   | Endpoint                                 | Description                  |
+| -------- | ---------------------------------------- | ---------------------------- |
+| `GET`    | `/api/friends`                           | List accepted friends        |
+| `POST`   | `/api/friends/request/:userId`           | Send a friend request        |
+| `PATCH`  | `/api/friends/request/:requestId/accept` | Accept a friend request      |
+| `PATCH`  | `/api/friends/request/:requestId/reject` | Reject a friend request      |
+| `DELETE` | `/api/friends/request/:requestId`        | Cancel a friend request      |
+| `DELETE` | `/api/friends/:friendId`                 | Remove a friend              |
+| `GET`    | `/api/friends/mutual/:userId`            | Get mutual friends           |
+| `GET`    | `/api/friends/requests/incoming`         | Get incoming friend requests |
+| `GET`    | `/api/friends/requests/outgoing`         | Get outgoing friend requests |
 
 ### Posts
 
-| Method   | Endpoint                                   | Description                       |
-| -------- | -------------------------------------------- | ----------------------------------- |
-| `POST`   | `/api/posts`                               | Create a post with optional media |
-| `GET`    | `/api/posts/saved`                         | Get saved posts                   |
-| `POST`   | `/api/posts/:id/like`                      | Like a post                       |
-| `GET`    | `/api/posts/:id/likes/count`               | Get post like count               |
-| `GET`    | `/api/posts/:id/comments`                  | Get comments for a post           |
-| `POST`   | `/api/posts/:id/comments`                  | Add a comment to a post           |
-| `PATCH`  | `/api/posts/:id/comments/:commentId/pin`   | Pin or unpin a comment            |
-| `DELETE` | `/api/posts/:id/comments/:commentId`       | Delete a comment                  |
-| `POST`   | `/api/posts/:id/save`                      | Save a post                       |
+| Method   | Endpoint                                 | Description                       |
+| -------- | ---------------------------------------- | --------------------------------- |
+| `POST`   | `/api/posts`                             | Create a post with optional media |
+| `GET`    | `/api/posts/saved`                       | Get saved posts                   |
+| `POST`   | `/api/posts/:id/like`                    | Like a post                       |
+| `GET`    | `/api/posts/:id/likes/count`             | Get post like count               |
+| `GET`    | `/api/posts/:id/comments`                | Get comments for a post           |
+| `POST`   | `/api/posts/:id/comments`                | Add a comment to a post           |
+| `PATCH`  | `/api/posts/:id/comments/:commentId/pin` | Pin or unpin a comment            |
+| `DELETE` | `/api/posts/:id/comments/:commentId`     | Delete a comment                  |
+| `POST`   | `/api/posts/:id/save`                    | Save a post                       |
 
 ### Leaderboard
 
-| Method | Endpoint                     | Description                                                          |
-| ------ | ------------------------------ | ----------------------------------------------------------------------- |
-| `GET`  | `/api/leaderboard`            | Get the paginated coding leaderboard (`page`, `limit` query params) |
-| `GET`  | `/api/leaderboard/me`         | Get the current user's rank and solved count                        |
-| `GET`  | `/api/leaderboard/me/around`  | Get users ranked near the current user                              |
-| `GET`  | `/api/leaderboard/:userId`    | Get leaderboard stats for a user                                    |
+| Method | Endpoint                     | Description                                                         |
+| ------ | ---------------------------- | ------------------------------------------------------------------- |
+| `GET`  | `/api/leaderboard`           | Get the paginated coding leaderboard (`page`, `limit` query params) |
+| `GET`  | `/api/leaderboard/me`        | Get the current user's rank and solved count                        |
+| `GET`  | `/api/leaderboard/me/around` | Get users ranked near the current user                              |
+| `GET`  | `/api/leaderboard/:userId`   | Get leaderboard stats for a user                                    |
 
-### Video (`/api/v1`)
+### Video (`/api/video`)
 
-| Method | Endpoint                              | Description                                                    |
-| ------ | ---------------------------------------- | ------------------------------------------------------------------ |
-| `POST` | `/api/v1/video/token`                 | Generate a Stream Video user JWT token (rate-limited)          |
-| `POST` | `/api/v1/video/calls`                 | Create a 1-on-1 or group video call (rate-limited)              |
-| `GET`  | `/api/v1/video/calls/history`         | Get the current user's video call history                       |
-| `GET`  | `/api/v1/video/calls/:callId`         | Get video call details and participant status                   |
-| `POST` | `/api/v1/video/calls/:callId/join`    | Authorize join and return Stream call credentials                |
-| `POST` | `/api/v1/video/calls/:callId/respond` | Accept or decline a video call invitation (`ACCEPT`/`REJECT`)   |
-| `POST` | `/api/v1/video/calls/:callId/end`     | End an active video call as the host                             |
+| Method | Endpoint                           | Description                                                   |
+| ------ | ---------------------------------- | ------------------------------------------------------------- |
+| `POST` | `/api/video/token`                 | Generate a Stream Video user JWT token (rate-limited)         |
+| `POST` | `/api/video/calls`                 | Create a 1-on-1 or group video call (rate-limited)            |
+| `GET`  | `/api/video/calls/history`         | Get the current user's video call history                     |
+| `GET`  | `/api/video/calls/:callId`         | Get video call details and participant status                 |
+| `POST` | `/api/video/calls/:callId/join`    | Authorize join and return Stream call credentials             |
+| `POST` | `/api/video/calls/:callId/respond` | Accept or decline a video call invitation (`ACCEPT`/`REJECT`) |
+| `POST` | `/api/video/calls/:callId/end`     | End an active video call as the host                          |
 
 Video call `type` accepts `ONE_ON_ONE`, `GROUP`, `MENTORSHIP`, `CLUB_MEETING`, or `FACULTY_SESSION`, with up to 50
 `participantIds` and a 120-character `title`.
 
 ### Other
 
-| Method | Endpoint                    | Description                                  |
-| ------ | ------------------------------ | ----------------------------------------------- |
-| `*`    | `/api/auth/*`                 | Authentication (handled by Better Auth)      |
-| `GET`  | `/api/chat/conversations`     | Chat conversations                           |
-| `GET`  | `/api/chat/token`             | Server-issued Stream Chat token              |
-| `POST` | `/api/leetcode/sync`          | Manual LeetCode profile sync (rate-limited)  |
-| `GET`  | `/ok` / `/health` / `/ready`  | Liveness, health, and readiness probes       |
-| `GET`  | `/metrics`                    | Prometheus metrics scrape endpoint           |
+| Method | Endpoint                     | Description                                 |
+| ------ | ---------------------------- | ------------------------------------------- |
+| `*`    | `/api/auth/*`                | Authentication (handled by Better Auth)     |
+| `GET`  | `/api/chat/conversations`    | Chat conversations                          |
+| `GET`  | `/api/chat/token`            | Server-issued Stream Chat token             |
+| `POST` | `/api/leetcode/sync`         | Manual LeetCode profile sync (rate-limited) |
+| `GET`  | `/ok` / `/health` / `/ready` | Liveness, health, and readiness probes      |
+| `GET`  | `/metrics`                   | Prometheus metrics scrape endpoint          |
 
 All authenticated endpoints return `401 Unauthorized` when the session cookie is missing or invalid.
 
