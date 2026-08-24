@@ -19,7 +19,7 @@
     "ignoreDeprecations": "6.0",
     "paths": {
       "@auth/*": ["../packages/auth/src/*"],
-      "@profile/*": ["../apps/api/modules/profile/*"],
+      "@profile/*": ["../apps/api/src/api/*"],
       "@db/*": ["../packages/db/src/*"],
       "@test/*": ["./*"]
     },

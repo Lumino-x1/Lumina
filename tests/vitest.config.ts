@@ -13,7 +13,7 @@ export default {
       { find: '@auth', replacement: path.resolve(repoRoot, 'packages/auth/src') },
       {
         find: '@profile',
-        replacement: path.resolve(repoRoot, 'apps/api/modules/profile'),
+        replacement: path.resolve(repoRoot, 'apps/api/src/api'),
       },
       {
         find: '@db/client',
@@ -25,7 +25,10 @@ export default {
   },
   test: {
     environment: 'node',
-    include: ['tests/integration/**/*.{test,spec}.{ts,tsx}'],
+    include: [
+      'tests/integration/**/*.{test,spec}.{ts,tsx}',
+      'tests/unit/**/*.{test,spec}.{ts,tsx}',
+    ],
     exclude: ['**/node_modules/**', '**/dist/**', '**/.turbo/**'],
     setupFiles: ['tests/setup.ts'],
     testTimeout: 15000,

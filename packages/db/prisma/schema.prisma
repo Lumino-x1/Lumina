@@ -86,8 +86,17 @@ model User {
   profile                Profile?
   refreshTokens          RefreshToken[]
   sessions               Session[]
-  studyGroups            StudyGroup[]
-  studyGroupMembers      StudyGroupMember[]
+  studyGroups                   StudyGroup[]
+  studyGroupMembers             StudyGroupMember[]
+  studyGroupInvitesSent         StudyGroupInvitation[]      @relation("StudyGroupInviter")
+  studyGroupInvitesReceived     StudyGroupInvitation[]      @relation("StudyGroupInvitee")
+  studyGroupDiscussions         StudyGroupDiscussion[]
+  studyGroupDiscussionReplies   StudyGroupDiscussionReply[]
+  studyGroupNotes               StudyGroupNote[]
+  studyGroupNoteVersions        StudyGroupNoteVersion[]
+  studyGroupFiles               StudyGroupFile[]
+  studyGroupTimetableVersions   StudyGroupTimetableVersion[]
+  studyGroupAuditEvents         StudyGroupAuditEvent[]
   college                College?                @relation(fields: [collegeId], references: [id])
   department             Department?             @relation(fields: [departmentId], references: [id])
   verification           Verification?
@@ -639,27 +648,170 @@ model EventRegistration {
 }
 
 model StudyGroup {
-  id          String                @id @default(cuid())
-  name        String
-  type        StudyGroupType
-  visibility  StudyGroupVisibility  @default(PRIVATE)
-  subject     String
-  semester    Int
-  description String?
-  ownerId     String
-  createdAt   DateTime              @default(now())
-  owner       User                  @relation(fields: [ownerId], references: [id])
-  members     StudyGroupMember[]
+  id            String               @id @default(cuid())
+  name          String
+  type          StudyGroupType
+  visibility    StudyGroupVisibility @default(PRIVATE)
+  subject       String
+  semester      Int
+  description   String?
+  ownerId       String
+  version       Int                  @default(1)
+  chatChannelId String?
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  owner         User                 @relation(fields: [ownerId], references: [id])
+  members       StudyGroupMember[]
+  invitations   StudyGroupInvitation[]
+  discussions   StudyGroupDiscussion[]
+  notes         StudyGroupNote[]
+  files         StudyGroupFile[]
+  timetable     StudyGroupTimetable?
+  auditEvents   StudyGroupAuditEvent[]
+
+  @@index([ownerId])
+  @@index([name])
+  @@index([subject])
 }
 
 model StudyGroupMember {
-  id           String     @id @default(cuid())
+  id           String                @id @default(cuid())
   studyGroupId String
   userId       String
-  studyGroup   StudyGroup @relation(fields: [studyGroupId], references: [id])
-  user         User       @relation(fields: [userId], references: [id])
+  role         StudyGroupMemberRole  @default(MEMBER)
+  joinedAt     DateTime              @default(now())
+  studyGroup   StudyGroup            @relation(fields: [studyGroupId], references: [id], onDelete: Cascade)
+  user         User                  @relation(fields: [userId], references: [id])
 
   @@unique([studyGroupId, userId])
+  @@index([userId])
+}
+
+model StudyGroupInvitation {
+  id           String                       @id @default(cuid())
+  studyGroupId String
+  inviterId    String
+  inviteeId    String
+  message      String?
+  status       StudyGroupInvitationStatus   @default(PENDING)
+  createdAt    DateTime                     @default(now())
+  studyGroup   StudyGroup                   @relation(fields: [studyGroupId], references: [id], onDelete: Cascade)
+  inviter      User                         @relation("StudyGroupInviter", fields: [inviterId], references: [id])
+  invitee      User                         @relation("StudyGroupInvitee", fields: [inviteeId], references: [id])
+
+  @@unique([studyGroupId, inviteeId])
+  @@index([inviteeId, status])
+}
+
+model StudyGroupDiscussion {
+  id           String                       @id @default(cuid())
+  studyGroupId String
+  authorId     String
+  title        String
+  body         String
+  createdAt    DateTime                     @default(now())
+  updatedAt    DateTime                     @updatedAt
+  studyGroup   StudyGroup                   @relation(fields: [studyGroupId], references: [id], onDelete: Cascade)
+  author       User                         @relation(fields: [authorId], references: [id])
+  replies      StudyGroupDiscussionReply[]
+
+  @@index([studyGroupId, createdAt])
+}
+
+model StudyGroupDiscussionReply {
+  id           String                 @id @default(cuid())
+  discussionId String
+  authorId     String
+  body         String
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+  discussion   StudyGroupDiscussion   @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  author       User                   @relation(fields: [authorId], references: [id])
+
+  @@index([discussionId, createdAt])
+}
+
+model StudyGroupNote {
+  id           String                 @id @default(cuid())
+  studyGroupId String
+  authorId     String
+  title        String
+  body         String
+  version      Int                    @default(1)
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+  studyGroup   StudyGroup             @relation(fields: [studyGroupId], references: [id], onDelete: Cascade)
+  author       User                   @relation(fields: [authorId], references: [id])
+  versions     StudyGroupNoteVersion[]
+
+  @@index([studyGroupId, updatedAt])
+}
+
+model StudyGroupNoteVersion {
+  id        String         @id @default(cuid())
+  noteId    String
+  editorId  String
+  version   Int
+  title     String
+  body      String
+  createdAt DateTime       @default(now())
+  note      StudyGroupNote @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  editor    User           @relation(fields: [editorId], references: [id])
+
+  @@unique([noteId, version])
+  @@index([noteId])
+}
+
+model StudyGroupFile {
+  id           String     @id @default(cuid())
+  studyGroupId String
+  uploaderId   String
+  key          String     @unique
+  url          String?
+  fileName     String
+  mimeType     String
+  sizeBytes    Int
+  createdAt    DateTime   @default(now())
+  studyGroup   StudyGroup @relation(fields: [studyGroupId], references: [id], onDelete: Cascade)
+  uploader     User       @relation(fields: [uploaderId], references: [id])
+
+  @@index([studyGroupId, createdAt])
+}
+
+model StudyGroupTimetable {
+  id           String                       @id @default(cuid())
+  studyGroupId String                       @unique
+  content      Json
+  version      Int                          @default(1)
+  updatedAt    DateTime                     @updatedAt
+  studyGroup   StudyGroup                   @relation(fields: [studyGroupId], references: [id], onDelete: Cascade)
+  versions     StudyGroupTimetableVersion[]
+}
+
+model StudyGroupTimetableVersion {
+  id          String               @id @default(cuid())
+  timetableId String
+  editorId    String
+  version     Int
+  content     Json
+  createdAt   DateTime             @default(now())
+  timetable   StudyGroupTimetable  @relation(fields: [timetableId], references: [id], onDelete: Cascade)
+  editor      User                 @relation(fields: [editorId], references: [id])
+
+  @@unique([timetableId, version])
+}
+
+model StudyGroupAuditEvent {
+  id           String     @id @default(cuid())
+  studyGroupId String
+  actorId      String
+  action       String
+  metadata     Json?
+  createdAt    DateTime   @default(now())
+  studyGroup   StudyGroup @relation(fields: [studyGroupId], references: [id], onDelete: Cascade)
+  actor        User       @relation(fields: [actorId], references: [id])
+
+  @@index([studyGroupId, createdAt])
 }
 
 model MarketplaceListing {
@@ -892,6 +1044,18 @@ enum StudyGroupType {
 enum StudyGroupVisibility {
   PUBLIC
   PRIVATE
+}
+
+enum StudyGroupMemberRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum StudyGroupInvitationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
 }
 
 enum ListingStatus {

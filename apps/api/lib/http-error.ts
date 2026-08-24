@@ -17,5 +17,7 @@ export const unauthorized = (code = 'UNAUTHORIZED') => new HttpError(401, code)
 export const forbidden = (code = 'FORBIDDEN') => new HttpError(403, code)
 export const notFound = (code = 'NOT_FOUND') => new HttpError(404, code)
 export const conflict = (code: string, message?: string) => new HttpError(409, code, message)
+export const preconditionFailed = (code = 'PRECONDITION_FAILED', message?: string) =>
+  new HttpError(412, code, message)
 export const unprocessable = (code: string, message?: string) => new HttpError(422, code, message)
 export const tooMany = (code = 'RATE_LIMITED') => new HttpError(429, code)

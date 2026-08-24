@@ -6,7 +6,7 @@ Guidance for coding agents working in this monorepo.
 
 ```text
 apps/
-  api/          Express API (modules: chat, clubs, friends, leaderboard, leetcode, posts, profile, video)
+  api/          Express API (`src/api` routes + controller + service)
   web/          Vite product UI
   admin/        Internal console (stub)
   docs/         Docs app (stub)
@@ -48,7 +48,6 @@ tests/          Integration + unit tests
   `bun run --filter api build`, and `bun run --filter web build` before requesting review.
 - **OpenAPI Policy (ADR-005)**: Any change to API endpoints MUST update `docs/api/openapi.yaml` in the same PR.
 - **Package Conventions**: Package names are `@lumina/*` (never `@repo/*`).
-- **API Architecture**: API domain code lives under `apps/api/modules/<domain>/` with `*.handler.ts`, `*.service.ts`,
-  `*.repo.ts`, `*.router.ts`.
+- **API Architecture**: API HTTP code lives in `apps/api/src/api/` (`routes.ts`, `controller.ts`, `service.ts`). Prisma and Redis stay on the existing `@lumina/db` client and `apps/api/config` Redis setup.
 - **Runtime**: Prefer Bun for scripts and local runs (`bun run <script>`).
 - **Minimal Stubs**: Do not invent product behavior in stub packages — keep stubs minimal until wired.

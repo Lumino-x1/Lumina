@@ -18,6 +18,7 @@
     "@lumina/env": "workspace:*",
     "@lumina/contracts": "workspace:*",
     "@aws-sdk/client-s3": "^3.1101.0",
+    "@aws-sdk/s3-request-presigner": "^3.1101.0",
     "dotenv": "^17.4.2",
     "multer": "^2.2.0",
     "sharp": "^0.35.3",

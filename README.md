@@ -240,7 +240,7 @@ graph TB
 
 | Principle                 | Implementation                                                                                  |
 | ------------------------- | ----------------------------------------------------------------------------------------------- |
-| **Modular modules**       | Each domain lives in `apps/api/modules/` with router → handler → service → repo                 |
+| **Single API surface**    | HTTP routes, controllers, and services live in `apps/api/src/api/`                               |
 | **Durable + fast reads**  | PostgreSQL is the source of truth; Redis powers hot paths like leaderboards                     |
 | **Async by default**      | Long-running work (LeetCode sync, media processing) goes through BullMQ                         |
 | **Type-safe end-to-end**  | TypeScript everywhere; shared types in `@lumina/contracts`                                      |

@@ -1,12 +1,12 @@
 import { enqueueProfileSync } from '../config/leetcode.queue'
-import * as syncRepository from '../modules/leetcode/leetcode.sync.repo'
+import { findStaleProfiles } from '../src/api/service'
 
 const STALE_SYNC_MS = 24 * 60 * 60 * 1000
 const DAILY_SYNC_STAGGER_MS = 3000
 
 export async function runLeetcodeDailySync() {
   const staleBefore = new Date(Date.now() - STALE_SYNC_MS)
-  const profiles = await syncRepository.findStaleProfiles(staleBefore)
+  const profiles = await findStaleProfiles(staleBefore)
 
   console.log(`[leetcode-cron] Daily sync scheduling ${profiles.length} profiles`)
 

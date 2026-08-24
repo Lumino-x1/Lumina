@@ -488,6 +488,531 @@ paths:
         '201': { description: Report submitted }
         '409': { description: Already reported comment }
 
+  /api/v1/study-groups:
+    get:
+      summary: List study groups the current user belongs to
+      responses:
+        '200': { description: Study groups returned }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    post:
+      summary: Create a study group (SUBJECT, EXAM, PROJECT, or ASSIGNMENT)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, type, visibility, subject, semester]
+              properties:
+                name: { type: string }
+                type: { type: string, enum: [SUBJECT, EXAM, PROJECT, ASSIGNMENT] }
+                visibility: { type: string, enum: [PUBLIC, PRIVATE] }
+                subject: { type: string }
+                semester: { type: integer }
+                description: { type: string, nullable: true }
+      responses:
+        '201': { description: Study group created }
+        '400': { description: Invalid payload }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/v1/study-groups/search:
+    get:
+      summary: Search groups and content the current user can access
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Search results returned }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/v1/study-groups/{groupId}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      summary: Get a study group by id
+      responses:
+        '200': { description: Study group returned }
+        '404': { description: Study group not found }
+    patch:
+      summary: Update a study group (owner or admin)
+      parameters:
+        - name: If-Match
+          in: header
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: true }
+      responses:
+        '200': { description: Study group updated }
+        '403': { description: Insufficient permissions }
+        '412': { description: Version conflict }
+    delete:
+      summary: Delete a study group (owner)
+      responses:
+        '200': { description: Study group deleted }
+        '403': { description: Insufficient permissions }
+  /api/v1/study-groups/{groupId}/join:
+    post:
+      summary: Join a public study group or accept a private invitation
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Membership created }
+        '403': { description: Invitation required for private groups }
+  /api/v1/study-groups/{groupId}/leave:
+    post:
+      summary: Leave a study group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Left the group }
+        '403': { description: Owner cannot leave }
+  /api/v1/study-groups/{groupId}/members:
+    get:
+      summary: List study group members
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Members returned }
+  /api/v1/study-groups/{groupId}/invitations:
+    post:
+      summary: Invite a user to a study group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId]
+              properties:
+                userId: { type: string }
+                message: { type: string }
+      responses:
+        '201': { description: Invitation created }
+        '409': { description: Already a member }
+  /api/v1/study-groups/{groupId}/members/{userId}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema: { type: string }
+      - name: userId
+        in: path
+        required: true
+        schema: { type: string }
+    patch:
+      summary: Change a member role (ADMIN or MEMBER)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [role]
+              properties:
+                role: { type: string, enum: [ADMIN, MEMBER] }
+      responses:
+        '200': { description: Member role updated }
+        '403': { description: Insufficient permissions }
+    delete:
+      summary: Remove a member from the group
+      responses:
+        '200': { description: Member removed }
+  /api/v1/study-groups/{groupId}/discussions:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      summary: List discussion threads
+      responses:
+        '200': { description: Discussions returned }
+    post:
+      summary: Create a discussion thread
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, body]
+              properties:
+                title: { type: string }
+                body: { type: string }
+      responses:
+        '201': { description: Discussion created }
+  /api/v1/study-groups/{groupId}/discussions/{discussionId}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema: { type: string }
+      - name: discussionId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      summary: Get a discussion thread
+      responses:
+        '200': { description: Discussion returned }
+        '404': { description: Discussion not found }
+    patch:
+      summary: Edit own discussion (or moderate)
+      requestBody:
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: true }
+      responses:
+        '200': { description: Discussion updated }
+    delete:
+      summary: Delete own discussion (or moderate)
+      responses:
+        '200': { description: Discussion deleted }
+  /api/v1/study-groups/{groupId}/discussions/{discussionId}/replies:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema: { type: string }
+      - name: discussionId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      summary: List discussion replies
+      responses:
+        '200': { description: Replies returned }
+    post:
+      summary: Reply to a discussion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [body]
+              properties:
+                body: { type: string }
+      responses:
+        '201': { description: Reply created }
+  /api/v1/study-groups/{groupId}/discussions/{discussionId}/replies/{replyId}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema: { type: string }
+      - name: discussionId
+        in: path
+        required: true
+        schema: { type: string }
+      - name: replyId
+        in: path
+        required: true
+        schema: { type: string }
+    patch:
+      summary: Edit own reply (or moderate)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [body]
+              properties:
+                body: { type: string }
+      responses:
+        '200': { description: Reply updated }
+    delete:
+      summary: Delete own reply (or moderate)
+      responses:
+        '200': { description: Reply deleted }
+  /api/v1/study-groups/{groupId}/notes:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      summary: List shared notes
+      responses:
+        '200': { description: Notes returned }
+    post:
+      summary: Create a shared note
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, body]
+              properties:
+                title: { type: string }
+                body: { type: string }
+      responses:
+        '201': { description: Note created }
+  /api/v1/study-groups/{groupId}/notes/{noteId}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema: { type: string }
+      - name: noteId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      summary: Get a shared note
+      responses:
+        '200': { description: Note returned }
+    patch:
+      summary: Edit a note and append a version snapshot
+      parameters:
+        - name: If-Match
+          in: header
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: true }
+      responses:
+        '200': { description: Note updated }
+        '412': { description: Version conflict }
+    delete:
+      summary: Delete a note
+      responses:
+        '200': { description: Note deleted }
+  /api/v1/study-groups/{groupId}/notes/{noteId}/versions:
+    get:
+      summary: List note version history
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: noteId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Note versions returned }
+  /api/v1/study-groups/{groupId}/notes/{noteId}/versions/{version}:
+    get:
+      summary: Get a specific note version
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: noteId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: version
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200': { description: Note version returned }
+        '404': { description: Version not found }
+  /api/v1/study-groups/{groupId}/files/upload-url:
+    post:
+      summary: Create a validated object-storage upload URL
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fileName, mimeType, sizeBytes]
+              properties:
+                fileName: { type: string }
+                mimeType: { type: string }
+                sizeBytes: { type: integer }
+      responses:
+        '200': { description: Presigned upload URL returned }
+        '400': { description: File validation failed }
+  /api/v1/study-groups/{groupId}/files:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      summary: List academic files
+      responses:
+        '200': { description: Files returned }
+    post:
+      summary: Register an uploaded academic file
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [key, fileName, mimeType, sizeBytes]
+              properties:
+                key: { type: string }
+                fileName: { type: string }
+                mimeType: { type: string }
+                sizeBytes: { type: integer }
+      responses:
+        '201': { description: File registered }
+  /api/v1/study-groups/{groupId}/files/{fileId}:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema: { type: string }
+      - name: fileId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      summary: Get academic file metadata
+      responses:
+        '200': { description: File returned }
+        '404': { description: File not found }
+    delete:
+      summary: Delete an academic file
+      responses:
+        '200': { description: File deleted }
+  /api/v1/study-groups/{groupId}/files/{fileId}/download-url:
+    get:
+      summary: Create a time-limited download URL
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: fileId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Presigned download URL returned }
+  /api/v1/study-groups/{groupId}/timetable:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      summary: View the group timetable
+      responses:
+        '200': { description: Timetable returned }
+        '404': { description: Timetable not found }
+    post:
+      summary: Create or replace the group timetable
+      parameters:
+        - name: If-Match
+          in: header
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [entries]
+              properties:
+                entries:
+                  type: array
+                  items: { type: object, additionalProperties: true }
+      responses:
+        '200': { description: Timetable saved }
+    patch:
+      summary: Update the group timetable
+      parameters:
+        - name: If-Match
+          in: header
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: true }
+      responses:
+        '200': { description: Timetable updated }
+        '412': { description: Version conflict }
+    delete:
+      summary: Delete the group timetable
+      responses:
+        '200': { description: Timetable deleted }
+  /api/v1/study-groups/{groupId}/timetable/versions:
+    get:
+      summary: List timetable versions
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Timetable versions returned }
+  /api/v1/study-groups/{groupId}/search:
+    get:
+      summary: Search content inside a study group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: q
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Search results returned }
+  /api/v1/study-groups/{groupId}/chat:
+    parameters:
+      - name: groupId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      summary: Get existing group chat channel
+      responses:
+        '200': { description: Chat channel returned }
+        '404': { description: Chat not created }
+    post:
+      summary: Open or create the group chat via the existing Chat service
+      responses:
+        '200': { description: Chat channel opened }
+  /api/v1/study-groups/{groupId}/audit:
+    get:
+      summary: List study group audit and domain events
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Audit events returned }
+        '403': { description: Insufficient permissions }
+
 components:
   securitySchemes:
     sessionCookie:

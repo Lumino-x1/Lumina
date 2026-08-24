@@ -18,7 +18,7 @@
     "noImplicitOverride": true,
     "paths": {
       "@auth/*": ["./packages/auth/src/*"],
-      "@profile/*": ["./apps/api/modules/profile/*"],
+      "@profile/*": ["./apps/api/src/api/*"],
       "@db/*": ["./packages/db/src/*"],
       "@test/*": ["./tests/*"],
       "@lumina/contracts": ["./packages/contracts/src/index.ts"]

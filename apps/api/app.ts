@@ -1,16 +1,8 @@
 import { redis } from './config/config.redis.ts'
-import chatRoutes from './modules/chat/chat.router.ts'
-import commentsRouter from './modules/comments/comments.router.ts'
-import friendsRouter from './modules/friends/friends.router.ts'
-import leaderboardRouter from './modules/leaderboard/leaderboard.router.ts'
-import leetcodeRouter from './modules/leetcode/leetcode.router.ts'
-import postsRouter from './modules/posts/posts.router.ts'
-import { profileRouter } from './modules/profile/profile.router.ts'
-import videoRouter from './modules/video/video.router.ts'
+import apiRouter from './src/api/routes.ts'
 import { auth } from '@lumina/auth'
 import { MSG_OK } from '@lumina/constants'
 import { prisma } from '@lumina/db'
-import studyGroupRouter from './modules/study-group/study-group.routes.ts'
 import {
   errorTrackingMiddleware,
   getMetricsContentType,
@@ -69,15 +61,7 @@ export function createApp() {
   )
 
   app.all('/api/auth/*path', toNodeHandler(auth))
-  app.use('/api/profile', profileRouter)
-  app.use('/api/friends', friendsRouter)
-  app.use('/api/posts', postsRouter)
-  app.use('/api/chat', chatRoutes)
-  app.use('/api/leaderboard', leaderboardRouter)
-  app.use('/api/leetcode', leetcodeRouter)
-  app.use('/api/video', videoRouter);
-  app.use('/api/study-group', studyGroupRouter);
-  app.use('api/comments', commentsRouter);
+  app.use('/api', apiRouter)
 
   app.get('/ok', (_req: Request, res: Response) => {
     res.status(200).json({ message: MSG_OK })

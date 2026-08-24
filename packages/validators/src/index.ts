@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const profileVisibilitySchema = z.enum(['PUBLIC', 'COLLEGE', 'FRIENDS', 'PRIVATE'])
 export const profileUpdateSchema = z
@@ -86,7 +86,8 @@ export const createStudyGroupSchema = z
     subject: z.string().trim().min(1).max(120),
     semester: z.number().int().min(1).max(16),
     description: z.string().trim().max(2000).nullable().optional(),
-  }).strict()
+  })
+  .strict()
 
 export const updateStudyGroupSchema = z
   .object({
@@ -96,23 +97,106 @@ export const updateStudyGroupSchema = z
     subject: z.string().trim().min(1).max(120).optional(),
     semester: z.number().int().min(1).max(16).optional(),
     description: z.string().trim().max(2000).nullable().optional(),
-  }).strict()
+  })
+  .strict()
 
-  export interface StudyGroupInput {
-    name: string
-    type: 'SUBJECT' | 'EXAM' | 'PROJECT' | 'ASSIGNMENT'
-    visibility: 'PUBLIC' | 'PRIVATE'
-    subject: string
-    semester: number
-    description?: string | null
-  } 
-  export interface StudyGroupInvitationInput {
-    userId: string
-    message: string
-  }
-  export const studyGroupInvitationSchema = z
-    .object({
-      userId: z.string().min(1).max(64),
-      message: z.string().trim().min(1).max(2000),
-    })
-    .strict()
+export interface StudyGroupInput {
+  name: string
+  type: 'SUBJECT' | 'EXAM' | 'PROJECT' | 'ASSIGNMENT'
+  visibility: 'PUBLIC' | 'PRIVATE'
+  subject: string
+  semester: number
+  description?: string | null
+}
+
+export const studyGroupInvitationSchema = z
+  .object({
+    userId: z.string().min(1).max(64),
+    message: z.string().trim().max(2000).optional(),
+  })
+  .strict()
+
+export const updateStudyGroupMemberSchema = z
+  .object({
+    role: z.enum(['ADMIN', 'MEMBER']),
+  })
+  .strict()
+
+export const studyGroupDiscussionSchema = z
+  .object({
+    title: z.string().trim().min(1).max(200),
+    body: z.string().trim().min(1).max(10000),
+  })
+  .strict()
+
+export const updateStudyGroupDiscussionSchema = z
+  .object({
+    title: z.string().trim().min(1).max(200).optional(),
+    body: z.string().trim().min(1).max(10000).optional(),
+  })
+  .strict()
+
+export const studyGroupReplySchema = z
+  .object({
+    body: z.string().trim().min(1).max(5000),
+  })
+  .strict()
+
+export const studyGroupNoteSchema = z
+  .object({
+    title: z.string().trim().min(1).max(200),
+    body: z.string().trim().min(1).max(50000),
+  })
+  .strict()
+
+export const updateStudyGroupNoteSchema = z
+  .object({
+    title: z.string().trim().min(1).max(200).optional(),
+    body: z.string().trim().min(1).max(50000).optional(),
+  })
+  .strict()
+
+export const studyGroupFileUploadUrlSchema = z
+  .object({
+    fileName: z.string().trim().min(1).max(255),
+    mimeType: z.string().trim().min(1).max(120),
+    sizeBytes: z
+      .number()
+      .int()
+      .positive()
+      .max(25 * 1024 * 1024),
+  })
+  .strict()
+
+export const studyGroupFileRegisterSchema = z
+  .object({
+    key: z.string().trim().min(1).max(500),
+    fileName: z.string().trim().min(1).max(255),
+    mimeType: z.string().trim().min(1).max(120),
+    sizeBytes: z
+      .number()
+      .int()
+      .positive()
+      .max(25 * 1024 * 1024),
+  })
+  .strict()
+
+export const studyGroupTimetableEntrySchema = z
+  .object({
+    day: z.enum(['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']),
+    start: z.string().regex(/^\d{2}:\d{2}$/),
+    end: z.string().regex(/^\d{2}:\d{2}$/),
+    title: z.string().trim().min(1).max(200),
+    location: z.string().trim().max(200).optional(),
+  })
+  .strict()
+
+export const studyGroupTimetableSchema = z
+  .object({
+    entries: z.array(studyGroupTimetableEntrySchema).max(200),
+  })
+  .strict()
+
+export const studyGroupSearchQuerySchema = z.object({
+  q: z.string().trim().min(1).max(200),
+})
