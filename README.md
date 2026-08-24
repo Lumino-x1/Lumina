@@ -212,7 +212,7 @@ graph TB
         WEB_CLIENT[Web Client]
     end
 
-    subgraph API["API Layer — apps/web"]
+    subgraph API["API Layer — demo/web"]
         EXPRESS[Express 5 + Bun]
         AUTH_MW[Better Auth Middleware]
         FEATURES[Feature Modules<br/>profile · posts · friends · chat · leaderboard · leetcode]
@@ -256,7 +256,7 @@ graph TB
 | **Modular modules**      | Each domain lives in `modules/` with handler → service → repo           |
 | **Durable + fast reads** | PostgreSQL is source of truth; Redis powers hot paths like leaderboards |
 | **Async by default**     | Long-running work (LeetCode sync, media processing) goes through BullMQ |
-| **Type-safe end-to-end** | TypeScript everywhere, shared types in `@lumina/contracts`              |
+| **Type-safe end-to-end** | TypeScript everywhere, shared types in `@lumina/core/contracts`              |
 | **Cloud-native**         | Docker Compose locally, Vercel + managed Postgres/Redis in production   |
 
 ### Monorepo Structure
@@ -290,9 +290,9 @@ lumina/
 │   ├── analytics/            # Analytics (stub)
 │   └── api-client/           # HTTP client (stub)
 ├── tooling/                  # Shared eslint / tsconfig / prettier
-├── workers/leetcode/         # BullMQ LeetCode worker
+├── demo/worker-leetcode/         # BullMQ LeetCode worker
 ├── infra/                    # Docker + CI stubs
-├── internal/scripts/         # Seed and internal scripts
+├── packages/cli/src/         # Seed and internal scripts
 ├── tests/                    # Integration & unit tests (Vitest)
 ├── docker-compose.yml        # Local Postgres + Redis + services
 └── turbo.json                # Turborepo pipeline config
@@ -351,16 +351,16 @@ lumina/
 
 ### Prerequisites
 
-- [Bun](https://bun.sh) ≥ 1.3
+- [pnpm](https://pnpm.io) 10.15.1 (`corepack enable`)
 - [Docker](https://www.docker.com/) (for Postgres + Redis)
-- Node.js ≥ 18 (for tooling compatibility)
+- Node.js ≥ 20
 
 ### 1. Clone & install
 
 ```bash
 git clone https://github.com/Lumino-x1/Lumina.git
 cd lumina
-bun install
+pnpm install
 ```
 
 ### 2. Configure environment
@@ -391,10 +391,10 @@ make db-migrate
 make dev
 
 # API only
-bun run dev:api
+pnpm dev:api
 
 # Web UI only
-bun run dev:web
+pnpm dev:web
 ```
 
 | Service       | Default URL             |

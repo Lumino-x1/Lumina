@@ -1,0 +1,73 @@
+{
+  "name": "@lumina/core",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Shared types, env, errors, constants, and validators for Lumina.",
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "clean": "rm -rf dist",
+    "lint:package": "publint run --strict --pack false",
+    "lint:types": "attw --profile esm-only --pack .",
+    "typecheck": "tsc --project tsconfig.json",
+    "test": "vitest --passWithNoTests",
+    "coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "dev-source": "./src/index.ts",
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "./env": {
+      "dev-source": "./src/env/index.ts",
+      "types": "./dist/env/index.d.mts",
+      "default": "./dist/env/index.mjs"
+    },
+    "./constants": {
+      "dev-source": "./src/constants/index.ts",
+      "types": "./dist/constants/index.d.mts",
+      "default": "./dist/constants/index.mjs"
+    },
+    "./contracts": {
+      "dev-source": "./src/contracts/index.ts",
+      "types": "./dist/contracts/index.d.mts",
+      "default": "./dist/contracts/index.mjs"
+    },
+    "./validators": {
+      "dev-source": "./src/validators/index.ts",
+      "types": "./dist/validators/index.d.mts",
+      "default": "./dist/validators/index.mjs"
+    },
+    "./error": {
+      "dev-source": "./src/error.ts",
+      "types": "./dist/error.d.mts",
+      "default": "./dist/error.mjs"
+    }
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:vitest",
+    "@arethetypeswrong/cli": "^0.18.3",
+    "publint": "^0.3.12"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "typescript": "catalog:peer"
+  }
+}

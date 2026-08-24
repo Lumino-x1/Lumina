@@ -1,4 +1,4 @@
-import '@lumina/env'
+import '@lumina/core/env'
 import { dbQueryDurationSeconds } from '@lumina/observability'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'

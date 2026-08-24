@@ -1,0 +1,23 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [],
+  "linked": [],
+  "access": "restricted",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": [
+    "@lumina/root",
+    "@lumina/demo-api",
+    "@lumina/demo-web",
+    "@lumina/demo-admin",
+    "@lumina/demo-storybook",
+    "@lumina/demo-worker-leetcode",
+    "docs",
+    "@lumina/e2e-smoke",
+    "@lumina/e2e-integration",
+    "@lumina/e2e-adapter",
+    "@lumina/test"
+  ]
+}

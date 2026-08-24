@@ -2,19 +2,47 @@
   "name": "@lumina/observability",
   "version": "0.0.1",
   "private": true,
+  "description": "Logging, tracing, and metrics plugin.",
   "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "clean": "rm -rf dist",
+    "lint:package": "publint run --strict --pack false",
+    "lint:types": "attw --profile esm-only --pack .",
+    "typecheck": "tsc --project tsconfig.json",
+    "test": "vitest --passWithNoTests",
+    "coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "dev-source": "./src/index.ts",
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "devDependencies": {
+    "@lumina/core": "workspace:*",
+    "@types/express": "^5.0.6",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:vitest",
+    "@arethetypeswrong/cli": "^0.18.3",
+    "publint": "^0.3.12"
   },
   "dependencies": {
     "@opentelemetry/api": "^1.9.0",
     "prom-client": "^15.1.3"
   },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "@types/express": "^5.0.6"
-  },
   "peerDependencies": {
-    "typescript": "^5"
+    "@lumina/core": "workspace:^",
+    "typescript": "catalog:peer"
   }
 }

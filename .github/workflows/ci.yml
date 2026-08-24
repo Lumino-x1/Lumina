@@ -18,15 +18,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
+      - uses: pnpm/action-setup@v4
         with:
-          bun-version: 1.3.0
-      - run: bun install --frozen-lockfile || bun install
-      - run: bun run --filter @lumina/db generate
-      - run: bun run format:check
-      - run: bun run lint
-      - run: bun run check-types
-      - run: bun run check-openapi
+          version: 10.15.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @lumina/db generate
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm check-openapi
+      - run: pnpm --filter @lumina/core test
 
   qodana:
     name: Qodana Static Analysis
@@ -43,10 +47,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: 1.3.0
-
       - name: Qodana Scan
         uses: JetBrains/qodana-action@v2026.1
         with:
@@ -58,8 +58,8 @@ jobs:
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
 
-  build-apps:
-    name: Build API & Web production apps
+  build-packages:
+    name: Build packages and demos
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -67,18 +67,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - uses: oven-sh/setup-bun@v2
+      - uses: pnpm/action-setup@v4
         with:
-          bun-version: 1.3.0
-
-      - run: bun install --frozen-lockfile || bun install
-
-      - run: bun run --filter @lumina/db generate
-
-      - run: bun run --filter api build
-
-      - run: bun run --filter web build
+          version: 10.15.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @lumina/db generate
+      - run: pnpm build
+      - run: pnpm --filter @lumina/demo-web build
 
   container-security:
     name: Production image vulnerability scan
@@ -91,7 +90,7 @@ jobs:
         run: |
           docker build \
             --pull \
-            -f apps/api/Dockerfile \
+            -f demo/api/Dockerfile \
             -t lumina-api:${{ github.sha }} .
 
       - name: Scan API image

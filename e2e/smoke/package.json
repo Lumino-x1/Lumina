@@ -1,0 +1,13 @@
+{
+  "name": "@lumina/e2e-smoke",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "e2e:smoke": "vitest run",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vitest": "catalog:vitest"
+  }
+}

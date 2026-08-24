@@ -1,26 +1,51 @@
 {
   "name": "@lumina/db",
-  "module": "./src/index.ts",
-  "type": "module",
+  "version": "0.0.1",
   "private": true,
+  "description": "Prisma database adapter for Lumina.",
+  "type": "module",
+  "sideEffects": false,
   "scripts": {
-    "generate": "prisma generate",
+    "build": "prisma generate && tsdown",
     "dev": "prisma generate --watch",
+    "clean": "rm -rf dist",
+    "lint:package": "publint run --strict --pack false",
+    "lint:types": "attw --profile esm-only --pack .",
+    "typecheck": "tsc --project tsconfig.json",
+    "test": "vitest --passWithNoTests",
+    "coverage": "vitest run --coverage --passWithNoTests",
+    "generate": "prisma generate",
     "migrate:dev": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
     "migrate:status": "prisma migrate status"
   },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
-    ".": "./src/index.ts"
-  },
-  "dependencies": {
-    "@lumina/env": "workspace:*",
-    "@lumina/observability": "workspace:*"
+    ".": {
+      "dev-source": "./src/index.ts",
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/pg": "^8.15.5",
+    "prisma": "^7.9.1",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:vitest",
+    "@arethetypeswrong/cli": "^0.18.3",
+    "publint": "^0.3.12"
   },
-  "peerDependencies": {
-    "typescript": "^5"
+  "dependencies": {
+    "@lumina/core": "workspace:*",
+    "@lumina/observability": "workspace:*",
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
+    "pg": "^8.22.0"
   }
 }

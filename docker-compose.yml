@@ -1,5 +1,5 @@
-# Local development infrastructure only. Run application processes with Bun so
-# hot reload remains available: `bun run dev:api` and `bun run dev:web`.
+# Local development infrastructure (Postgres + Redis).
+# Run apps with pnpm: `pnpm dev:api` and `pnpm dev:web`.
 services:
   db:
     image: postgres:16-alpine

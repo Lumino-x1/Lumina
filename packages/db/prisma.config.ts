@@ -1,4 +1,4 @@
-import '@lumina/env'
+import "../core/src/env/index.ts";
 
 import { defineConfig, env } from 'prisma/config'
 

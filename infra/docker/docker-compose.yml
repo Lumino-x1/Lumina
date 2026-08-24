@@ -61,7 +61,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: apps/web/Dockerfile
+      dockerfile: demo/web/Dockerfile
       args:
         - NODE_ENV=production
     container_name: lumina_web
@@ -87,7 +87,7 @@ services:
   dashboard:
     build:
       context: .
-      dockerfile: apps/web/Dockerfile
+      dockerfile: demo/web/Dockerfile
     container_name: lumina_dashboard
     restart: unless-stopped
     ports:

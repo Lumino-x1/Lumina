@@ -1,0 +1,20 @@
+{
+  "name": "@lumina/e2e-integration",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "e2e:integration": "vitest run",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@lumina/core": "workspace:*",
+    "@lumina/db": "workspace:*",
+    "@lumina/demo-api": "workspace:*",
+    "@lumina/test-utils": "workspace:*",
+    "@types/supertest": "^6.0.3",
+    "supertest": "^7.1.4",
+    "typescript": "catalog:",
+    "vitest": "catalog:vitest"
+  }
+}

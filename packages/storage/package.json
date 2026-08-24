@@ -1,26 +1,50 @@
 {
   "name": "@lumina/storage",
-  "module": "index.ts",
-  "type": "module",
+  "version": "0.0.1",
   "private": true,
+  "description": "S3 object-storage adapter.",
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "clean": "rm -rf dist",
+    "lint:package": "publint run --strict --pack false",
+    "lint:types": "attw --profile esm-only --pack .",
+    "typecheck": "tsc --project tsconfig.json",
+    "test": "vitest --passWithNoTests",
+    "coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
-    ".": "./index.ts"
+    ".": {
+      "dev-source": "./src/index.ts",
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
   },
   "devDependencies": {
-    "@types/bun": "latest",
+    "@lumina/core": "workspace:*",
     "@types/multer": "^2.2.0",
-    "@types/node": "^26.1.2"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
+    "multer": "^2.2.0",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:vitest",
+    "@arethetypeswrong/cli": "^0.18.3",
+    "publint": "^0.3.12"
   },
   "dependencies": {
-    "@lumina/env": "workspace:*",
-    "@lumina/contracts": "workspace:*",
     "@aws-sdk/client-s3": "^3.1101.0",
-    "dotenv": "^17.4.2",
-    "multer": "^2.2.0",
     "sharp": "^0.35.3",
     "uuid": "^14.0.1"
+  },
+  "peerDependencies": {
+    "@lumina/core": "workspace:^",
+    "typescript": "catalog:peer"
   }
 }

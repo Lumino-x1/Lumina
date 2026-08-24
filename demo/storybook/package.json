@@ -1,0 +1,17 @@
+{
+  "name": "@lumina/demo-storybook",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node --import tsx src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@lumina/design-system": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.5",
+    "typescript": "catalog:"
+  }
+}

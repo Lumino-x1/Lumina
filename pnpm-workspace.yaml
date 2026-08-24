@@ -1,0 +1,37 @@
+packages:
+  - packages/**
+  - docs
+  - demo/**
+  - e2e/**
+  - test
+
+catalog:
+  tsdown: 0.14.2
+  typescript: ^5.9.2
+  zod: ^4.4.3
+
+catalogs:
+  peer:
+    typescript: ^5.9.0
+  vitest:
+    "@vitest/coverage-v8": ^3.2.4
+    vitest: ^3.2.4
+
+overrides:
+  react: 18.3.1
+  react-dom: 18.3.1
+  "@types/react": 18.3.18
+  "@types/react-dom": 18.3.5
+
+onlyBuiltDependencies:
+  - "@prisma/client"
+  - "@prisma/engines"
+  - esbuild
+  - lefthook
+  - prisma
+  - sharp
+  - "@ffprobe-installer/darwin-arm64"
+  - msgpackr-extract
+  - stream-chat
+
+linkWorkspacePackages: true

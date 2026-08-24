@@ -339,7 +339,7 @@ Deploy concrete app packages, not the monorepo root by default. Prefer `prisma.c
 
 Checklist:
 
-- choose the app directory, such as `apps/api`
+- choose the app directory, such as `demo/api`
 - run the workspace build from the correct root/package
 - pass the app package's runtime entrypoint or framework
 - pass the correct env file, which may live outside the app package
@@ -350,9 +350,9 @@ Example config:
 ```typescript
 export default defineComputeConfig({
   apps: {
-    web: { root: "apps/web", framework: "nextjs" },
+    web: { root: "demo/web", framework: "nextjs" },
     api: {
-      root: "apps/api",
+      root: "demo/api",
       framework: "bun",
       entry: "src/index.ts",
       httpPort: 3000,
@@ -374,7 +374,7 @@ Flag-only shape after confirming output paths:
 bun run build
 bunx @prisma/cli@latest app deploy \
   --framework bun \
-  --entry apps/api/dist/src/index.js \
+  --entry demo/api/dist/src/index.js \
   --http-port 3000 \
   --env packages/db/.env
 ```

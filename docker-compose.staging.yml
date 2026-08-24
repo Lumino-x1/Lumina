@@ -35,7 +35,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: apps/api/Dockerfile
+      dockerfile: demo/api/Dockerfile
     container_name: lumina-api-staging
     restart: unless-stopped
     environment:

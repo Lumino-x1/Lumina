@@ -13,8 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - **Production Engineering Foundation**: Established production-grade Git workflows, branch protection rules,
   Conventional Commits, PR templates, issue templates, and CODEOWNERS.
-- **Docker & Container Standardization**: Multi-stage unprivileged Docker builds (`apps/api`, `apps/web`,
-  `workers/leetcode`) using `oven/bun:1-alpine`, health check probes (`/ok`, `/health`, `/ready`), and container
+- **Docker & Container Standardization**: Multi-stage unprivileged Docker builds (`demo/api`, `demo/web`,
+  `demo/worker-leetcode`) using `oven/bun:1-alpine`, health check probes (`/ok`, `/health`, `/ready`), and container
   security guidelines in `docs/DOCKER.md`.
 - **Security & Vulnerability Automation**: Integrated Trivy container scanning in CI (`.github/workflows/ci.yml`),
   Dependabot (`.github/dependabot.yml`), Dependency Review (`.github/workflows/dependency-review.yml`), and CodeQL
@@ -32,7 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **Error Tracking & Health Probes**: Added sanitized Sentry error tracking interface, `/health` liveness probe,
   `/ready` readiness probe, and global error handling.
 - **Continuous Deployment Pipeline**: Configured 5-stage CD pipeline in `.github/workflows/cd.yml` with automated smoke
-  testing CLI (`internal/scripts/smoke-test.ts`).
+  testing CLI (`packages/cli/src/smoke-test.ts`).
 - **Infrastructure as Code (Terraform)**: Modular Terraform infrastructure under `infrastructure/terraform/` covering
   VPC, ECS Fargate, RDS PostgreSQL, ElastiCache Redis, S3, and environment configs (`dev`, `staging`, `production`).
 - **Operational Runbooks**: Published incident runbooks under `docs/runbooks/` covering Deployment Rollback, Database

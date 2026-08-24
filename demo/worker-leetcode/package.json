@@ -1,0 +1,20 @@
+{
+  "name": "@lumina/demo-worker-leetcode",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --import tsx --watch src/index.ts",
+    "start": "node --import tsx src/index.ts"
+  },
+  "dependencies": {
+    "@lumina/demo-api": "workspace:*",
+    "@lumina/db": "workspace:*",
+    "@lumina/core": "workspace:*",
+    "@lumina/observability": "workspace:*",
+    "bullmq": "^6.0.9"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.5",
+    "typescript": "catalog:"
+  }
+}

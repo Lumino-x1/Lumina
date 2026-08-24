@@ -1,0 +1,30 @@
+{
+  "name": "@lumina/demo-web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@react-three/drei": "^9.121.5",
+    "@react-three/fiber": "^8.17.14",
+    "@react-three/rapier": "^1.5.0",
+    "@types/three": "^0.185.3",
+    "meshline": "^3.3.1",
+    "ogl": "^1.0.11",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5",
+    "@vitejs/plugin-react": "^6.0.4",
+    "typescript": "catalog:",
+    "vite": "^8.2.0"
+  }
+}

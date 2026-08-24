@@ -2,17 +2,49 @@
   "name": "@lumina/auth",
   "version": "0.0.1",
   "private": true,
+  "description": "Better Auth integration plugin for Lumina.",
   "type": "module",
-  "main": "./src/index.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "clean": "rm -rf dist",
+    "lint:package": "publint run --strict --pack false",
+    "lint:types": "attw --profile esm-only --pack .",
+    "typecheck": "tsc --project tsconfig.json",
+    "test": "vitest --passWithNoTests",
+    "coverage": "vitest run --coverage --passWithNoTests"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "dev-source": "./src/index.ts",
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250121.0",
+    "@lumina/core": "workspace:*",
+    "@lumina/db": "workspace:*",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:vitest",
+    "@arethetypeswrong/cli": "^0.18.3",
+    "publint": "^0.3.12"
   },
   "dependencies": {
-    "@lumina/db": "workspace:*",
-    "@lumina/env": "workspace:*",
-    "@types/dotenv": "^8.2.3",
-    "better-auth": "^latest",
-    "dotenv": "^17.4.2",
+    "better-auth": "^1.6.25",
     "resend": "^6.18.1"
+  },
+  "peerDependencies": {
+    "@lumina/core": "workspace:^",
+    "@lumina/db": "workspace:^",
+    "typescript": "catalog:peer"
   }
 }

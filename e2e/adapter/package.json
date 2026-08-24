@@ -1,0 +1,13 @@
+{
+  "name": "@lumina/e2e-adapter",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@lumina/db": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:vitest"
+  }
+}

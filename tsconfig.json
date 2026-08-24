@@ -1,36 +1,21 @@
 {
-  "compilerOptions": {
-    "lib": ["ESNext"],
-    "target": "ESNext",
-    "module": "Preserve",
-    "moduleDetection": "force",
-    "jsx": "react-jsx",
-    "allowJs": true,
-    "ignoreDeprecations": "6.0",
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "noEmit": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    "paths": {
-      "@auth/*": ["./packages/auth/src/*"],
-      "@profile/*": ["./apps/api/modules/profile/*"],
-      "@db/*": ["./packages/db/src/*"],
-      "@test/*": ["./tests/*"],
-      "@lumina/contracts": ["./packages/contracts/src/index.ts"]
-    },
-    "types": ["vitest/globals", "node"]
-  },
-  "include": [
-    "apps/**/*.ts",
-    "apps/**/*.tsx",
-    "packages/**/*.ts",
-    "workers/**/*.ts",
-    "tests/**/*.ts"
-  ],
-  "exclude": ["**/dist/**", "**/coverage/**", "**/node_modules/**"]
+  "extends": "./tsconfig.base.json",
+  "files": ["vitest.config.ts"],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/lumina" },
+    { "path": "./packages/cli" },
+    { "path": "./packages/auth" },
+    { "path": "./packages/observability" },
+    { "path": "./packages/analytics" },
+    { "path": "./packages/realtime" },
+    { "path": "./packages/transactional" },
+    { "path": "./packages/design-system" },
+    { "path": "./packages/db" },
+    { "path": "./packages/storage" },
+    { "path": "./packages/kv" },
+    { "path": "./test" },
+    { "path": "./e2e/smoke" },
+    { "path": "./e2e/adapter" }
+  ]
 }

@@ -242,7 +242,7 @@ feat(auth): add WebAuthn passkey support
 
 ### Code Formatting
 
-We use Prettier with the config in `.prettierrc`. Run `bun run format` before committing. The CI will fail if formatting
+We use Prettier with the config in `.prettierrc`. Run `pnpm format` before committing. The CI will fail if formatting
 is not applied.
 
 ---

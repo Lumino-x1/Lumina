@@ -1,4 +1,4 @@
-import '@lumina/env'
+import '@lumina/core/env'
 
 import { S3Client } from '@aws-sdk/client-s3'
 

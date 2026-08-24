@@ -1,0 +1,111 @@
+{
+  "root": true,
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "tab"
+  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "style": {
+        "noRestrictedImports": {
+          "options": {
+            "paths": {
+              "zod": {
+                "importNames": ["z"],
+                "message": "Use `import * as z from \"zod\"` instead of `import { z }`."
+              }
+            }
+          },
+          "level": "error"
+        },
+        "useImportType": {
+          "level": "error",
+          "options": {
+            "style": "separatedType"
+          }
+        },
+        "useNodejsImportProtocol": "error",
+        "useConst": "error"
+      },
+      "suspicious": {
+        "noDebugger": "error"
+      },
+      "correctness": {
+        "noUnusedImports": "warn",
+        "noUnusedVariables": "warn"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.json"],
+      "formatter": {
+        "indentStyle": "space",
+        "indentWidth": 2
+      }
+    },
+    {
+      "includes": ["packages/core/src/contracts/**", "packages/storage/src/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedTypes": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/**/src/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedTypes": {
+              "level": "error",
+              "options": {
+                "types": {
+                  "Buffer": {
+                    "message": "Buffer is deprecated. Use `Uint8Array` instead.",
+                    "use": "Uint8Array"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "**/*.test.*",
+        "**/*.spec.*",
+        "**/test/**",
+        "**/e2e/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedTypes": "off",
+            "noRestrictedGlobals": "off"
+          }
+        }
+      }
+    }
+  ],
+  "files": {
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/coverage",
+      "!**/build",
+      "!**/.next",
+      "!**/.turbo",
+      "!**/.cache",
+      "!**/generated",
+      "!**/output",
+      "!**/tmp"
+    ]
+  }
+}

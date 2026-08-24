@@ -1,4 +1,4 @@
-import '@lumina/env'
+import '@lumina/core/env'
 
 import { existsSync } from 'node:fs'
 import { resend } from '../plugins/plugins.resend'

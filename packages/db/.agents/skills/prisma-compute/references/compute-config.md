@@ -136,17 +136,17 @@ import { defineComputeConfig } from "@prisma/compute-sdk/config";
 export default defineComputeConfig({
   apps: {
     web: {
-      root: "apps/web",
+      root: "demo/web",
       framework: "nextjs",
-      env: "apps/web/.env",
+      env: "demo/web/.env",
     },
     api: {
-      root: "apps/api",
+      root: "demo/api",
       framework: "hono",
       entry: "src/index.ts",
       httpPort: 8080,
       env: {
-        file: "apps/api/.env",
+        file: "demo/api/.env",
         vars: {
           LOG_LEVEL: "info",
         },

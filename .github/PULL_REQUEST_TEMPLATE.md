@@ -16,8 +16,8 @@
 
 - [ ] Tests added or updated
 - [ ] `bun run test`
-- [ ] `bun run lint`
-- [ ] `bun run check-types`
+- [ ] `pnpm lint`
+- [ ] `pnpm typecheck`
 - [ ] Manual testing (describe below)
 
 ## Potential risks

@@ -1,0 +1,6 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/index.ts", "src/ensure-env.ts", "src/check-openapi.ts", "src/smoke-test.ts"],
+  "exclude": ["dist", "node_modules"],
+  "references": [{ "path": "../core" }]
+}

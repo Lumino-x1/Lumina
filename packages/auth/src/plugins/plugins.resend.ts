@@ -1,4 +1,4 @@
-import '@lumina/env'
+import '@lumina/core/env'
 
 import { Resend } from 'resend'
 

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turborepo.dev/schema.json",
+  "$schema": "./node_modules/turbo/schema.json",
   "globalPassThroughEnv": [
     "NODE_ENV",
     "DATABASE_URL",
@@ -17,8 +17,53 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "dist/**"]
+      "inputs": ["$TURBO_DEFAULT$", "tsconfig.json", "tsdown.config.*"],
+      "outputs": ["dist/**", "node_modules/.cache/ts/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "clean": {
+      "cache": false
+    },
+    "test": {
+      "dependsOn": ["^build", "build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "vitest.config.*",
+        "src/**",
+        "test/**",
+        "tests/**",
+        "*.test.*",
+        "*.spec.*",
+        "package.json"
+      ],
+      "outputs": [".vitest/**", "coverage/**", "test-results/**"]
+    },
+    "coverage": {
+      "dependsOn": ["^build", "build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "vitest.config.*",
+        "src/**",
+        "test/**",
+        "tests/**",
+        "*.test.*",
+        "*.spec.*",
+        "package.json"
+      ],
+      "outputs": ["coverage/**"]
+    },
+    "lint:types": {
+      "dependsOn": ["^build", "build"],
+      "inputs": ["dist/**", "package.json"],
+      "outputs": []
+    },
+    "lint:package": {
+      "dependsOn": ["^build", "build"],
+      "inputs": ["dist/**", "package.json"],
+      "outputs": []
     },
     "generate": {
       "cache": false
@@ -27,21 +72,13 @@
       "inputs": ["prisma/**", "prisma.config.ts"],
       "outputs": ["generated/**"]
     },
-    "lint": {
-      "dependsOn": ["^lint"]
+    "e2e:smoke": {
+      "dependsOn": ["^build"],
+      "cache": false
     },
-    "check-types": {
-      "dependsOn": ["^check-types"]
-    },
-    "//#dev:setup": {
-      "cache": false,
-      "outputs": ["packages/db/generated/**"]
-    },
-    "dev": {
-      "dependsOn": ["//#dev:setup"],
-      "cache": false,
-      "persistent": true,
-      "outputLogs": "full"
+    "e2e:integration": {
+      "dependsOn": ["^build"],
+      "cache": false
     }
   }
 }

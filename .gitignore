@@ -12,6 +12,11 @@ node_modules
 
 # Testing
 coverage
+.vitest
+*.tsbuildinfo
+
+# pnpm
+pnpm-debug.log*
 
 # Turbo
 .turbo

@@ -1,0 +1,22 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "lumina",
+    "lumino",
+    "tsdown",
+    "lefthook",
+    "publint",
+    "knip",
+    "leetcode",
+    "vitest",
+    "biomejs"
+  ],
+  "ignorePaths": [
+    "pnpm-lock.yaml",
+    "**/dist/**",
+    "**/generated/**",
+    "output/**",
+    "tmp/**"
+  ]
+}

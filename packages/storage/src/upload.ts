@@ -4,7 +4,7 @@ import { s3 } from './s3'
 import { getBucketName, getRegion } from './utils'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 
-import type { UploadFileOptions } from '@lumina/contracts'
+import type { UploadFileOptions } from '@lumina/core/contracts'
 import type { Readable } from 'stream'
 
 function safeObjectName(mimeType: string) {
