@@ -1,16 +1,21 @@
 import { prisma } from '@lumina/db'
-
 import type {
   ParticipantCallStatus,
   VideoCallRole,
   VideoCallStatus,
   VideoCallType,
-} from '@lumina/db'
+} from '@prisma/client'
 
 export const findUserById = async (userId: string) => {
   return prisma.user.findUnique({
     where: { id: userId },
-    select: { id: true, username: true, name: true, image: true, role: true },
+    select: { id: true, username: true, name: true, image: true, role: true, email: true, phone: true },
+  })
+}
+export const findUserByUsername = async (username: string) => {
+  return prisma.user.findFirst({
+    where: { username },
+    select: { id: true, username: true, name: true, image: true, role: true, email: true, phone: true },
   })
 }
 

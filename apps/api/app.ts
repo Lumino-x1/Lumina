@@ -9,6 +9,7 @@ import videoRouter from './modules/video/video.router.ts'
 import { auth } from '@lumina/auth'
 import { MSG_OK } from '@lumina/constants'
 import { prisma } from '@lumina/db'
+import studyGroupRouter from './modules/study-group/study-group.routes.ts'
 import {
   errorTrackingMiddleware,
   getMetricsContentType,
@@ -73,7 +74,8 @@ export function createApp() {
   app.use('/api/chat', chatRoutes)
   app.use('/api/leaderboard', leaderboardRouter)
   app.use('/api/leetcode', leetcodeRouter)
-  app.use('/api/v1/video', videoRouter)
+  app.use('/api/video', videoRouter);
+  app.use('/api/study-group', studyGroupRouter);
 
   app.get('/ok', (_req: Request, res: Response) => {
     res.status(200).json({ message: MSG_OK })

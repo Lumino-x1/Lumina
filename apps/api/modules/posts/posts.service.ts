@@ -10,7 +10,6 @@ import {
 import * as postsRepository from './posts.repo'
 import { prisma } from '@lumina/db'
 import { deleteFile, uploadFile } from '@lumina/storage'
-
 import type { CreatePostInput } from '@lumina/contracts'
 
 export const createPost = async ({ userId, body, files }: CreatePostInput) => {
@@ -45,7 +44,7 @@ export const createPost = async ({ userId, body, files }: CreatePostInput) => {
           throw badRequest('IMAGE_TOO_LARGE', 'Each image must be 5 MB or less.')
         }
         assertDeclaredMimeMatchesContent(file.mimetype, file.buffer)
-        const { width, height } = await getImageDimensions(file)
+        const { width, height } = await getImageDimensions(file as any)
         const uploaded = await uploadFile({
           buffer: file.buffer,
           mimeType: file.mimetype,

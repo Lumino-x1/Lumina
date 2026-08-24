@@ -1,7 +1,6 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
 export const profileVisibilitySchema = z.enum(['PUBLIC', 'COLLEGE', 'FRIENDS', 'PRIVATE'])
-
 export const profileUpdateSchema = z
   .object({
     firstName: z.string().trim().min(1).max(80).optional(),
@@ -32,7 +31,6 @@ export const profileUpdateSchema = z
     hideCgpa: z.boolean().optional(),
   })
   .strict()
-
 export const protectedProfileFields = [
   'userId',
   'id',
@@ -55,7 +53,6 @@ export const protectedProfileFields = [
   'coverImage',
   'coverImageKey',
 ] as const
-
 export const createCallSchema = z
   .object({
     type: z
@@ -71,15 +68,51 @@ export const respondInviteSchema = z
     response: z.enum(['ACCEPT', 'REJECT']),
   })
   .strict()
-
 export const createCommentSchema = z
   .object({
     content: z.string().trim().min(1).max(2000),
     parentId: z.string().min(1).max(64).nullable().optional(),
   })
   .strict()
-
 export const paginationQuerySchema = z.object({
   limit: z.union([z.string(), z.number()]).optional(),
   cursor: z.string().optional(),
 })
+export const createStudyGroupSchema = z
+  .object({
+    name: z.string().trim().min(1).max(120),
+    type: z.enum(['SUBJECT', 'EXAM', 'PROJECT', 'ASSIGNMENT']),
+    visibility: z.enum(['PUBLIC', 'PRIVATE']),
+    subject: z.string().trim().min(1).max(120),
+    semester: z.number().int().min(1).max(16),
+    description: z.string().trim().max(2000).nullable().optional(),
+  }).strict()
+
+export const updateStudyGroupSchema = z
+  .object({
+    name: z.string().trim().min(1).max(120).optional(),
+    type: z.enum(['SUBJECT', 'EXAM', 'PROJECT', 'ASSIGNMENT']).optional(),
+    visibility: z.enum(['PUBLIC', 'PRIVATE']).optional(),
+    subject: z.string().trim().min(1).max(120).optional(),
+    semester: z.number().int().min(1).max(16).optional(),
+    description: z.string().trim().max(2000).nullable().optional(),
+  }).strict()
+
+  export interface StudyGroupInput {
+    name: string
+    type: 'SUBJECT' | 'EXAM' | 'PROJECT' | 'ASSIGNMENT'
+    visibility: 'PUBLIC' | 'PRIVATE'
+    subject: string
+    semester: number
+    description?: string | null
+  } 
+  export interface StudyGroupInvitationInput {
+    userId: string
+    message: string
+  }
+  export const studyGroupInvitationSchema = z
+    .object({
+      userId: z.string().min(1).max(64),
+      message: z.string().trim().min(1).max(2000),
+    })
+    .strict()

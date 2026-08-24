@@ -558,14 +558,16 @@ model EventRegistration {
 }
 
 model StudyGroup {
-  id          String             @id @default(cuid())
+  id          String                @id @default(cuid())
   name        String
+  type        StudyGroupType
+  visibility  StudyGroupVisibility  @default(PRIVATE)
   subject     String
   semester    Int
   description String?
   ownerId     String
-  createdAt   DateTime           @default(now())
-  owner       User               @relation(fields: [ownerId], references: [id])
+  createdAt   DateTime              @default(now())
+  owner       User                  @relation(fields: [ownerId], references: [id])
   members     StudyGroupMember[]
 }
 
@@ -797,6 +799,18 @@ enum EventType {
   FEST
   WEBINAR
   OTHER
+}
+
+enum StudyGroupType {
+  SUBJECT
+  EXAM
+  PROJECT
+  ASSIGNMENT
+}
+
+enum StudyGroupVisibility {
+  PUBLIC
+  PRIVATE
 }
 
 enum ListingStatus {
