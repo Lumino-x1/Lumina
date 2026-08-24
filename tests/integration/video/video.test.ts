@@ -41,7 +41,7 @@ describe('Video Call Module Integration Tests', () => {
     const cookieHeader = buildCookieHeader(getSetCookieHeader(signupRes))
 
     const res = await request(app)
-      .post('/api/v1/video/token')
+      .post('/api/video/token')
       .set('Cookie', cookieHeader ?? '')
 
     expect(res.status).toBe(200)
@@ -63,7 +63,7 @@ describe('Video Call Module Integration Tests', () => {
     const dbUserB = await prisma.user.findUnique({ where: { email: userB.email } })
 
     const createCallRes = await request(app)
-      .post('/api/v1/video/calls')
+      .post('/api/video/calls')
       .set('Cookie', cookieA ?? '')
       .send({
         type: 'ONE_ON_ONE',
@@ -80,7 +80,7 @@ describe('Video Call Module Integration Tests', () => {
 
     // Authorized User B joins call
     const joinBRes = await request(app)
-      .post(`/api/v1/video/calls/${callId}/join`)
+      .post(`/api/video/calls/${callId}/join`)
       .set('Cookie', cookieB ?? '')
 
     expect(joinBRes.status).toBe(200)
@@ -103,7 +103,7 @@ describe('Video Call Module Integration Tests', () => {
     })
 
     const createCallRes = await request(app)
-      .post('/api/v1/video/calls')
+      .post('/api/video/calls')
       .set('Cookie', cookieA ?? '')
       .send({
         type: 'ONE_ON_ONE',
@@ -115,7 +115,7 @@ describe('Video Call Module Integration Tests', () => {
 
     // Unauthorized User C attempts to join
     const joinCRes = await request(app)
-      .post(`/api/v1/video/calls/${callId}/join`)
+      .post(`/api/video/calls/${callId}/join`)
       .set('Cookie', cookieC ?? '')
 
     expect(joinCRes.status).toBe(403)
@@ -128,7 +128,7 @@ describe('Video Call Module Integration Tests', () => {
     const cookieA = buildCookieHeader(getSetCookieHeader(signupA))
 
     const createCallRes = await request(app)
-      .post('/api/v1/video/calls')
+      .post('/api/video/calls')
       .set('Cookie', cookieA ?? '')
       .send({
         type: 'GROUP',
@@ -138,14 +138,14 @@ describe('Video Call Module Integration Tests', () => {
     const callId = createCallRes.body.callId
 
     const endRes = await request(app)
-      .post(`/api/v1/video/calls/${callId}/end`)
+      .post(`/api/video/calls/${callId}/end`)
       .set('Cookie', cookieA ?? '')
 
     expect(endRes.status).toBe(200)
     expect(endRes.body.status).toBe('ENDED')
 
     const historyRes = await request(app)
-      .get('/api/v1/video/calls/history')
+      .get('/api/video/calls/history')
       .set('Cookie', cookieA ?? '')
 
     expect(historyRes.status).toBe(200)

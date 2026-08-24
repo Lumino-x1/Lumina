@@ -2,105 +2,108 @@ openapi: 3.1.0
 info:
   title: Lumina API
   version: 1.0.0
-  description: Existing internal endpoints are mounted below /api. New public endpoints use /api/v1.
+  description: API endpoints are mounted below /api. System endpoints are at root.
 servers:
   - url: http://localhost:3000
 security:
   - sessionCookie: []
 paths:
+  /ok:
+    get:
+      summary: Simple health ping check
+      responses:
+        '200': { description: OK message returned }
+  /health:
+    get:
+      summary: Liveness probe check for API process
+      responses:
+        '200': { description: Liveness status returned }
+  /ready:
+    get:
+      summary: Readiness probe check for Database and Redis dependencies
+      responses:
+        '200': { description: Dependencies ready }
+        '530': { description: Service unavailable }
+  /metrics:
+    get:
+      summary: Prometheus metrics endpoint
+      responses:
+        '200': { description: Prometheus text metrics returned }
+
   /api/profile/me:
     get:
-      summary: Get the current user's profile
+      summary: Get current user profile
       responses:
-        '200':
-          description: Profile returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
+        '200': { description: Profile returned }
+        '401': { $ref: '#/components/responses/Unauthorized' }
     patch:
-      summary: Update or create the current user's profile
+      summary: Update or create current user profile
       requestBody:
         required: true
         content:
           application/json:
-            schema:
-              type: object
-              additionalProperties: true
+            schema: { type: object, additionalProperties: true }
       responses:
-        '200':
-          description: Updated profile returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+        '200': { description: Updated profile returned }
+  /api/profile/{username}:
+    get:
+      summary: Get public profile by username
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: User profile returned }
+        '404': { description: Profile not found }
 
   /api/friends:
     get:
       summary: List accepted friends
       responses:
-        '200':
-          description: Friends returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
+        '200': { description: Friends returned }
+        '401': { $ref: '#/components/responses/Unauthorized' }
   /api/friends/request/{userId}:
     post:
-      summary: Send a friend request
+      summary: Send a friend request to a user
       parameters:
         - name: userId
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '201':
-          description: Friend request sent
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
+        '201': { description: Friend request sent }
+        '400': { description: Cannot send request }
   /api/friends/request/{requestId}/accept:
     patch:
-      summary: Accept a friend request
+      summary: Accept a pending friend request
       parameters:
         - name: requestId
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '200':
-          description: Friend request accepted
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
+        '200': { description: Friend request accepted }
   /api/friends/request/{requestId}/reject:
     patch:
-      summary: Reject a friend request
+      summary: Reject a pending friend request
       parameters:
         - name: requestId
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '200':
-          description: Friend request rejected
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
+        '200': { description: Friend request rejected }
   /api/friends/request/{requestId}:
     delete:
-      summary: Cancel a friend request
+      summary: Cancel an outgoing friend request
       parameters:
         - name: requestId
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '204':
-          description: Friend request cancelled
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
+        '200': { description: Request cancelled }
   /api/friends/{friendId}:
     delete:
       summary: Remove a friend
@@ -108,46 +111,29 @@ paths:
         - name: friendId
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '204':
-          description: Friend removed
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
+        '200': { description: Friend removed }
   /api/friends/mutual/{userId}:
     get:
-      summary: Get mutual friends
+      summary: Get mutual friends with a user
       parameters:
         - name: userId
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '200':
-          description: Mutual friends returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
+        '200': { description: Mutual friends array returned }
   /api/friends/requests/incoming:
     get:
-      summary: Get incoming friend requests
+      summary: List pending incoming friend requests
       responses:
-        '200':
-          description: Incoming requests returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
+        '200': { description: Incoming requests returned }
   /api/friends/requests/outgoing:
     get:
-      summary: Get outgoing friend requests
+      summary: List pending outgoing friend requests
       responses:
-        '200':
-          description: Outgoing requests returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+        '200': { description: Outgoing requests returned }
 
   /api/posts:
     post:
@@ -159,351 +145,348 @@ paths:
             schema:
               type: object
               properties:
-                content:
-                  type: string
-                visibility:
-                  type: string
-                  enum:
-                    - PUBLIC
-                    - COLLEGE
-                    - FRIENDS
-                    - PRIVATE
-                media:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
+                content: { type: string }
+                visibility: { type: string, enum: [PUBLIC, COLLEGE, FRIENDS, PRIVATE] }
+                media: { type: array, items: { type: string, format: binary } }
       responses:
-        '201':
-          description: Post created
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
-  /api/posts/saved:
-    get:
-      summary: Get saved posts
-      responses:
-        '200':
-          description: Saved posts returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
+        '201': { description: Post created }
   /api/posts/{id}/like:
     post:
-      summary: Like a post
+      summary: Toggle like on a post
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '200':
-          description: Post liked
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
+        '200': { description: Like toggled }
   /api/posts/{id}/likes/count:
     get:
-      summary: Get post like count
+      summary: Get total likes count for a post
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '200':
-          description: Like count returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
-  /api/posts/{id}/comments:
-    get:
-      summary: Get comments for a post
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Comments returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
+        '200': { description: Like count returned }
+  /api/posts/{id}/save:
     post:
-      summary: Add a comment to a post
+      summary: Save or unsave a post
       parameters:
         - name: id
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
+      responses:
+        '200': { description: Post save toggled }
+  /api/posts/saved:
+    get:
+      summary: Get list of saved posts
+      responses:
+        '200': { description: Saved posts returned }
+
+  /api/chat/token:
+    get:
+      summary: Generate Stream Chat token
+      responses:
+        '200': { description: Stream token returned }
+  /api/chat/conversations:
+    post:
+      summary: Create 1-on-1 chat conversation
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              additionalProperties: true
+              required: [targetUserId]
+              properties:
+                targetUserId: { type: string }
       responses:
-        '201':
-          description: Comment created
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
-  /api/posts/{id}/comments/{commentId}/pin:
-    patch:
-      summary: Pin or unpin a comment
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: commentId
-          in: path
-          required: true
-          schema:
-            type: string
+        '201': { description: Conversation created }
+    get:
+      summary: List user conversations
       responses:
-        '200':
-          description: Comment pin status updated
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
-  /api/posts/{id}/comments/{commentId}:
-    delete:
-      summary: Delete a comment
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: commentId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: Comment deleted
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
-  /api/posts/{id}/save:
-    post:
-      summary: Save a post
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Post saved
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+        '200': { description: Conversations array returned }
 
   /api/leaderboard:
     get:
-      summary: Get the paginated coding leaderboard
+      summary: Get paginated LeetCode leaderboard
       parameters:
         - name: page
           in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 1
-            default: 1
+          schema: { type: integer, default: 1 }
         - name: limit
           in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 50
+          schema: { type: integer, default: 20 }
+        - name: query
+          in: query
+          schema: { type: string }
       responses:
-        '200':
-          description: Leaderboard page returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
-  /api/leaderboard/me:
-    get:
-      summary: Get the current user's rank and solved count
-      responses:
-        '200':
-          description: Current user leaderboard stats returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
+        '200': { description: Leaderboard returned }
   /api/leaderboard/me/around:
     get:
-      summary: Get users ranked near the current user
+      summary: Get leaderboard users around the current user
       responses:
-        '200':
-          description: Nearby leaderboard entries returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
+        '200': { description: Surrounding leaderboard users returned }
+  /api/leaderboard/me:
+    get:
+      summary: Get current user leaderboard rank and stats
+      responses:
+        '200': { description: Current user stats returned }
   /api/leaderboard/{userId}:
     get:
-      summary: Get leaderboard stats for a user
+      summary: Get specific user leaderboard rank and stats
       parameters:
         - name: userId
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '200':
-          description: User leaderboard stats returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          description: User not found on the leaderboard
+        '200': { description: User leaderboard stats returned }
 
-  /api/v1/video/token:
+  /api/leetcode/sync:
     post:
-      summary: Generate a Stream Video user JWT token
+      summary: Manually trigger LeetCode profile metrics synchronization
       responses:
-        '200':
-          description: Video token returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '429':
-          description: Too many video token requests
+        '200': { description: Sync initiated }
 
-  /api/v1/video/calls:
+  /api/video/token:
     post:
-      summary: Create a 1-on-1 or group video call
+      summary: Generate Stream Video authentication token
+      responses:
+        '200': { description: Token and Stream API Key returned }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '429': { description: Rate limit exceeded }
+  /api/video/calls:
+    post:
+      summary: Initialize a new 1-on-1 or group video call
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              additionalProperties: false
               properties:
                 type:
-                  type: string
-                  enum:
-                    - ONE_ON_ONE
-                    - GROUP
-                    - MENTORSHIP
-                    - CLUB_MEETING
-                    - FACULTY_SESSION
-                title:
-                  type: string
-                  maxLength: 120
-                participantIds:
-                  type: array
-                  maxItems: 50
-                  items:
-                    type: string
+                  {
+                    type: string,
+                    enum: [ONE_ON_ONE, GROUP, MENTORSHIP, CLUB_MEETING, FACULTY_SESSION],
+                  }
+                title: { type: string }
+                participantIds: { type: array, items: { type: string } }
       responses:
-        '201':
-          description: Video call created
-        '400':
-          description: Invalid call payload
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '429':
-          description: Too many call creation attempts
-
-  /api/v1/video/calls/history:
+        '201': { description: Video call created }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/video/calls/history:
     get:
-      summary: Get the current user's video call history
+      summary: List past video calls for the authenticated user
       responses:
-        '200':
-          description: Call history returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
-  /api/v1/video/calls/{callId}:
+        '200': { description: Call history array returned }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/video/calls/{callId}:
     get:
-      summary: Get video call details and participant status
+      summary: Get details of a specific video call
       parameters:
         - name: callId
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '200':
-          description: Call details returned
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
-  /api/v1/video/calls/{callId}/join:
+        '200': { description: Call details returned }
+  /api/video/calls/{callId}/join:
     post:
-      summary: Authorize join and return Stream call credentials
+      summary: Join an active video call
       parameters:
         - name: callId
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '200':
-          description: Join authorized
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          description: Caller is not a participant
-
-  /api/v1/video/calls/{callId}/respond:
+        '200': { description: Call joined }
+  /api/video/calls/{callId}/respond:
     post:
-      summary: Accept or decline a video call invitation
+      summary: Accept or decline a video call invite
       parameters:
         - name: callId
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - response
-              additionalProperties: false
+              required: [accept]
               properties:
-                response:
-                  type: string
-                  enum:
-                    - ACCEPT
-                    - REJECT
+                accept: { type: boolean }
       responses:
-        '200':
-          description: Invitation response recorded
-        '400':
-          description: Invalid response payload
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-
-  /api/v1/video/calls/{callId}/end:
+        '200': { description: Response recorded }
+  /api/video/calls/{callId}/end:
     post:
-      summary: End an active video call as the host
+      summary: End an active video call
       parameters:
         - name: callId
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '200':
-          description: Call ended
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+        '200': { description: Call ended }
+
+  /api/comments/posts/{postId}/comments:
+    post:
+      summary: Create a root comment or nested reply attached to a post
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content: { type: string }
+                parentId: { type: string }
+      responses:
+        '201': { description: Comment or reply created }
+        '400': { description: Invalid content or parent post mismatch }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '422': { description: Max comment depth 10 exceeded }
+    get:
+      summary: Fetch comments tree for a post with cursor pagination and formatted reaction counts
+      parameters:
+        - name: postId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: cursor
+          in: query
+          schema: { type: string }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 20 }
+      responses:
+        '200': { description: Comments tree returned }
+        '404': { description: Post not found }
+  /api/comments/{commentId}:
+    patch:
+      summary: Edit a comment (owner-only, tracked in edit history, concurrent-edit safe)
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content: { type: string }
+      responses:
+        '200': { description: Comment updated }
+        '403': { description: Not authorized to edit comment }
+        '409': { description: Stale comment version concurrent conflict }
+    delete:
+      summary: Soft delete comment (tombstone preserving reply tree)
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Comment soft deleted }
+        '403': { description: Not authorized to delete comment }
+  /api/comments/{commentId}/history:
+    get:
+      summary: Fetch edit history log for a comment
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Array of edit history entries returned }
+        '404': { description: Comment not found }
+  /api/comments/{commentId}/reactions:
+    post:
+      summary: Toggle or add emoji reaction to a comment
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [emoji]
+              properties:
+                emoji: { type: string }
+      responses:
+        '200': { description: Reaction toggled }
+        '400': { description: Cannot react to deleted comment }
+    delete:
+      summary: Remove emoji reaction from a comment
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [emoji]
+              properties:
+                emoji: { type: string }
+      responses:
+        '200': { description: Reaction removed }
+  /api/comments/{commentId}/pin:
+    post:
+      summary: Pin or unpin a comment (post owner, admin, or moderator, max 3 pins per post)
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Pin state toggled }
+        '400': { description: Max pinned comments limit exceeded }
+        '403': { description: Not authorized to pin comment }
+  /api/comments/{commentId}/report:
+    post:
+      summary: Report a comment for moderation
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason: { type: string }
+                details: { type: string }
+      responses:
+        '201': { description: Report submitted }
+        '409': { description: Already reported comment }
 
 components:
   securitySchemes:
@@ -514,10 +497,3 @@ components:
   responses:
     Unauthorized:
       description: Authentication required
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
