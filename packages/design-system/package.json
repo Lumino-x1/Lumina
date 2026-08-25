@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/react": "18.3.18",
+    "@types/react": "19.2.18",
     "@types/react-dom": "18.3.5"
   }
 }
