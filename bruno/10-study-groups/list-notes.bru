@@ -1,0 +1,17 @@
+meta {
+  name: List notes
+  type: http
+  seq: 21
+}
+
+get {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/notes
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

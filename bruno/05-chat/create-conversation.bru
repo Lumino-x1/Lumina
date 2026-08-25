@@ -1,0 +1,27 @@
+meta {
+  name: Create 1-1 conversation
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/chat/conversations
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "otherUserId": "{{userId}}"
+  }
+}
+
+docs {
+Runtime body field is `otherUserId` (not OpenAPI `targetUserId`).
+}

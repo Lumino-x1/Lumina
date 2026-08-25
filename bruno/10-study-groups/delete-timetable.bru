@@ -1,0 +1,17 @@
+meta {
+  name: Delete timetable
+  type: http
+  seq: 36
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/timetable
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

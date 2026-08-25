@@ -1,0 +1,17 @@
+meta {
+  name: Mutual friends
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/friends/mutual/{{userId}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

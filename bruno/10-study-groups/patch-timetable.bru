@@ -1,0 +1,32 @@
+meta {
+  name: Update timetable
+  type: http
+  seq: 35
+}
+
+patch {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/timetable
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+  If-Match: {{timetableVersion}}
+}
+
+body:json {
+    {
+    "entries": [
+      {
+        "day": "WED",
+        "start": "16:00",
+        "end": "17:00",
+        "title": "Catch-up session",
+        "location": "Online"
+      }
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Update discussion
+  type: http
+  seq: 14
+}
+
+patch {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/discussions/{{discussionId}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "title": "Readers-writers lock examples (updated)",
+    "body": "Please include complexity notes."
+  }
+}

@@ -1,0 +1,17 @@
+meta {
+  name: Delete group
+  type: http
+  seq: 44
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

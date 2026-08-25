@@ -17,6 +17,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,md,json,yml,yaml}\"",
     "check-types": "turbo run check-types",
     "check-openapi": "bun internal/scripts/check-openapi.ts",
+    "test:bruno": "mkdir -p reports && cd bruno && bunx @usebruno/cli run -r --global-env ci --workspace-path .. --tags smoke,workflow,release-gate --reporter-html ../reports/github-actions-report.html",
     "worker:leetcode": "bun workers/leetcode/src/index.ts",
     "db:migrate:deploy": "bun run --filter @lumina/db migrate:deploy"
   },
@@ -69,6 +70,7 @@
     "@prisma/client": "^7.9.1",
     "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.6",
+    "@usebruno/cli": "^4.0.0",
     "better-auth": "^1.6.25",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",

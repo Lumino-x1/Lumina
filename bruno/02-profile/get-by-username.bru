@@ -1,0 +1,17 @@
+meta {
+  name: Get profile by username
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/profile/{{username}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

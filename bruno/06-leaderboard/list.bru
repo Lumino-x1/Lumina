@@ -1,0 +1,23 @@
+meta {
+  name: Get leaderboard
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/leaderboard
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+params:query {
+  page: 1
+  limit: 20
+  query: 
+}

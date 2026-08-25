@@ -1,0 +1,17 @@
+meta {
+  name: Edit history
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/comments/{{commentId}}/history
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

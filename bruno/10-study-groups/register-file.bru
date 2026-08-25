@@ -1,0 +1,26 @@
+meta {
+  name: Register file
+  type: http
+  seq: 28
+}
+
+post {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/files
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "key": "study-groups/{{groupId}}/os-midterm.pdf",
+    "fileName": "os-midterm.pdf",
+    "mimeType": "application/pdf",
+    "sizeBytes": 245760
+  }
+}

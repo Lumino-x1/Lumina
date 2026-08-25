@@ -1,0 +1,17 @@
+meta {
+  name: Outgoing requests
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{baseUrl}}/api/friends/requests/outgoing
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

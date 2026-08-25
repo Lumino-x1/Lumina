@@ -1,0 +1,23 @@
+meta {
+  name: Update member role
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/members/{{userId}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "role": "ADMIN"
+  }
+}

@@ -1,0 +1,25 @@
+meta {
+  name: Upload avatar
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{baseUrl}}/api/profile/avatar
+  body: multipart-form
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:multipart-form {
+  image: @file(../fixtures/avatar.png)
+}
+
+docs {
+Field name must be `image`.
+}

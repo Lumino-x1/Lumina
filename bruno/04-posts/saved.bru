@@ -1,0 +1,17 @@
+meta {
+  name: List saved posts
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/posts/saved
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

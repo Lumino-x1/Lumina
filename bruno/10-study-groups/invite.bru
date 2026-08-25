@@ -1,0 +1,24 @@
+meta {
+  name: Invite member
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/invitations
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "userId": "{{userId}}",
+    "message": "Join the OS study group this week."
+  }
+}

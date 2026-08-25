@@ -1,0 +1,17 @@
+meta {
+  name: Reject friend request
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/api/friends/request/{{requestId}}/reject
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

@@ -1,0 +1,27 @@
+meta {
+  name: Respond to invite
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/video/calls/{{callId}}/respond
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "response": "ACCEPT"
+  }
+}
+
+docs {
+Runtime body is `{ "response": "ACCEPT" | "REJECT" }`.
+}

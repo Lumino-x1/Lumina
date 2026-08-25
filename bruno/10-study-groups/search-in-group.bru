@@ -1,0 +1,21 @@
+meta {
+  name: Search in group
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/search
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+params:query {
+  q: deadlock
+}

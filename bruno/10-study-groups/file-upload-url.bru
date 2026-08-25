@@ -1,0 +1,25 @@
+meta {
+  name: Create file upload URL
+  type: http
+  seq: 27
+}
+
+post {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/files/upload-url
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "fileName": "os-midterm.pdf",
+    "mimeType": "application/pdf",
+    "sizeBytes": 245760
+  }
+}

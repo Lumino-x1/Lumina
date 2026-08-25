@@ -1,0 +1,12 @@
+opencollection: 1.0.0
+info:
+  name: Lumina
+  type: workspace
+
+collections:
+  - name: Lumina API
+    path: bruno
+
+specs:
+
+docs: Bruno workspace for the Lumina API collection. Global environments live in environments/.

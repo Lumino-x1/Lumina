@@ -1,0 +1,25 @@
+meta {
+  name: Update note
+  type: http
+  seq: 23
+}
+
+patch {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/notes/{{noteId}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+  If-Match: {{noteVersion}}
+}
+
+body:json {
+    {
+    "title": "Process vs thread cheat sheet",
+    "body": "Added context-switch cost comparison."
+  }
+}

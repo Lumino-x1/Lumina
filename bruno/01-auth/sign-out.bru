@@ -1,0 +1,21 @@
+meta {
+  name: Sign out
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/auth/sign-out
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+  {}
+}

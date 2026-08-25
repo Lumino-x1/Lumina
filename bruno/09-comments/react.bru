@@ -1,0 +1,23 @@
+meta {
+  name: Toggle reaction
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/comments/{{commentId}}/reactions
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "emoji": "👍"
+  }
+}

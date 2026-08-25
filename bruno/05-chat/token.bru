@@ -1,0 +1,17 @@
+meta {
+  name: Get chat token
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/chat/token
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

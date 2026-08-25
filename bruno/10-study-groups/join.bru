@@ -1,0 +1,17 @@
+meta {
+  name: Join group
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/join
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

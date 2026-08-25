@@ -1,0 +1,25 @@
+meta {
+  name: Metrics
+  type: http
+  seq: 4
+  tags: [
+    smoke
+    workflow
+    release-gate
+  ]
+}
+
+get {
+  url: {{baseUrl}}/metrics
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+}
+
+assert {
+  res.status: eq 200
+}

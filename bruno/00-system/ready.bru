@@ -1,0 +1,28 @@
+meta {
+  name: Ready
+  type: http
+  seq: 3
+  tags: [
+    smoke
+    workflow
+    release-gate
+  ]
+}
+
+get {
+  url: {{baseUrl}}/ready
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+}
+
+assert {
+  res.status: eq 200
+  res.body.status: eq ready
+  res.body.checks.database: eq ok
+  res.body.checks.redis: eq ok
+}

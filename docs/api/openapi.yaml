@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: API endpoints are mounted below /api. System endpoints are at root.
 servers:
-  - url: http://localhost:3000
+  - url: http://localhost:3002
 security:
   - sessionCookie: []
 paths:

@@ -1,0 +1,23 @@
+meta {
+  name: Update reply
+  type: http
+  seq: 18
+}
+
+patch {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/discussions/{{discussionId}}/replies/{{replyId}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "body": "Updated: also see the Mesa-style monitor notes."
+  }
+}

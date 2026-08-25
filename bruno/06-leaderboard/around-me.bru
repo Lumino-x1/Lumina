@@ -1,0 +1,17 @@
+meta {
+  name: Around me
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/leaderboard/me/around
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

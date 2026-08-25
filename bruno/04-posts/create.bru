@@ -1,0 +1,29 @@
+meta {
+  name: Create post
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/posts
+  body: multipart-form
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:multipart-form {
+  content: First campus post from Bruno
+  visibility: PUBLIC
+  anonymous: false
+  location: Library lawn
+  media: @file(../fixtures/avatar.png)
+}
+
+docs {
+Multipart field `media` accepts up to 10 files. Text-only posts can omit media.
+}

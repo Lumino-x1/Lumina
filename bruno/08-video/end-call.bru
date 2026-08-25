@@ -1,0 +1,17 @@
+meta {
+  name: End call
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/api/video/calls/{{callId}}/end
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

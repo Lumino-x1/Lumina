@@ -1,0 +1,17 @@
+meta {
+  name: Toggle save post
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/api/posts/{{postId}}/save
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

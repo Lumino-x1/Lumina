@@ -1,0 +1,24 @@
+meta {
+  name: Report comment
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/api/comments/{{commentId}}/report
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "reason": "spam",
+    "details": "Repeated promotional links."
+  }
+}

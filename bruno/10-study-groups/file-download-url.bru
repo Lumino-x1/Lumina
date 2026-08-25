@@ -1,0 +1,17 @@
+meta {
+  name: Get download URL
+  type: http
+  seq: 31
+}
+
+get {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/files/{{fileId}}/download-url
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

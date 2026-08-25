@@ -1,0 +1,17 @@
+meta {
+  name: Get video token
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/video/token
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

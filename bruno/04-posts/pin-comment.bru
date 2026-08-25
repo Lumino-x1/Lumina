@@ -1,0 +1,23 @@
+meta {
+  name: Pin post comment
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{baseUrl}}/api/posts/{{postId}}/comments/{{commentId}}/pin
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "isPinned": true
+  }
+}

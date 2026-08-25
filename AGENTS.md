@@ -48,6 +48,7 @@ tests/          Integration + unit tests
   `bun run --filter api build`, and `bun run --filter web build` before requesting review.
 - **OpenAPI Policy (ADR-005)**: Any change to API endpoints MUST update `docs/api/openapi.yaml` in the same PR.
 - **Package Conventions**: Package names are `@lumina/*` (never `@repo/*`).
-- **API Architecture**: API HTTP code lives in `apps/api/src/api/` (`routes.ts`, `controller.ts`, `service.ts`). Prisma and Redis stay on the existing `@lumina/db` client and `apps/api/config` Redis setup.
+- **API Architecture**: API HTTP code lives in `apps/api/src/api/` (`routes.ts`, `controller.ts`, `service.ts`). Prisma
+  and Redis stay on the existing `@lumina/db` client and `apps/api/config` Redis setup.
 - **Runtime**: Prefer Bun for scripts and local runs (`bun run <script>`).
 - **Minimal Stubs**: Do not invent product behavior in stub packages — keep stubs minimal until wired.

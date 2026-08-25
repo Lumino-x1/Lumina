@@ -1,0 +1,23 @@
+meta {
+  name: Create reply
+  type: http
+  seq: 16
+}
+
+post {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/discussions/{{discussionId}}/replies
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "body": "I like the POSIX rwlock variant from lecture 8."
+  }
+}

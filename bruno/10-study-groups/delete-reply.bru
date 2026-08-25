@@ -1,0 +1,17 @@
+meta {
+  name: Delete reply
+  type: http
+  seq: 19
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/discussions/{{discussionId}}/replies/{{replyId}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

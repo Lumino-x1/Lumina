@@ -1,0 +1,17 @@
+meta {
+  name: Delete avatar
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/api/profile/avatar
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

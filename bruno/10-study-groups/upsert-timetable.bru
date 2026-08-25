@@ -1,0 +1,39 @@
+meta {
+  name: Create timetable
+  type: http
+  seq: 33
+}
+
+post {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/timetable
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+  If-Match: {{timetableVersion}}
+}
+
+body:json {
+    {
+    "entries": [
+      {
+        "day": "MON",
+        "start": "18:00",
+        "end": "19:30",
+        "title": "Problem set review",
+        "location": "Lab 3"
+      },
+      {
+        "day": "THU",
+        "start": "17:00",
+        "end": "18:00",
+        "title": "Past paper drill",
+        "location": "Library G2"
+      }
+    ]
+  }
+}

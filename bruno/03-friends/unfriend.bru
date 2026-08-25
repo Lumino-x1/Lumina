@@ -1,0 +1,17 @@
+meta {
+  name: Unfriend
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/api/friends/{{friendId}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

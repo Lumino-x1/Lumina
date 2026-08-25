@@ -1,0 +1,122 @@
+name: ci
+variables:
+  - name: baseUrl
+    value: http://127.0.0.1:3002
+    enabled: true
+    secret: false
+    type: text
+  - name: origin
+    value: http://localhost:5173
+    enabled: true
+    secret: false
+    type: text
+  - name: sessionToken
+    value: ci-unused-session-token
+    enabled: true
+    secret: true
+    type: text
+  - name: username
+    value: jane
+    enabled: true
+    secret: false
+    type: text
+  - name: userId
+    value: usr_sample_001
+    enabled: true
+    secret: false
+    type: text
+  - name: friendId
+    value: usr_sample_002
+    enabled: true
+    secret: false
+    type: text
+  - name: requestId
+    value: fr_sample_001
+    enabled: true
+    secret: false
+    type: text
+  - name: postId
+    value: post_sample_001
+    enabled: true
+    secret: false
+    type: text
+  - name: commentId
+    value: cmt_sample_001
+    enabled: true
+    secret: false
+    type: text
+  - name: callId
+    value: call_sample_001
+    enabled: true
+    secret: false
+    type: text
+  - name: resetToken
+    value: reset_sample_token
+    enabled: true
+    secret: false
+    type: text
+  - name: groupId
+    value: sg_sample_001
+    enabled: true
+    secret: false
+    type: text
+  - name: discussionId
+    value: disc_sample_001
+    enabled: true
+    secret: false
+    type: text
+  - name: replyId
+    value: reply_sample_001
+    enabled: true
+    secret: false
+    type: text
+  - name: noteId
+    value: note_sample_001
+    enabled: true
+    secret: false
+    type: text
+  - name: noteVersion
+    value: "1"
+    enabled: true
+    secret: false
+    type: text
+  - name: fileId
+    value: file_sample_001
+    enabled: true
+    secret: false
+    type: text
+  - name: groupVersion
+    value: "1"
+    enabled: true
+    secret: false
+    type: text
+  - name: timetableVersion
+    value: "1"
+    enabled: true
+    secret: false
+    type: text
+  - name: idempotencyKey
+    value: bru-ci-001
+    enabled: true
+    secret: false
+    type: text
+  - name: platform_name
+    value: GitHub Actions
+    enabled: true
+    secret: false
+    type: text
+  - name: target_environment
+    value: ci
+    enabled: true
+    secret: false
+    type: text
+  - name: build_id
+    value: ci-run-001
+    enabled: true
+    secret: false
+    type: text
+  - name: commit_sha
+    value: ci-demo-sha
+    enabled: true
+    secret: false
+    type: text

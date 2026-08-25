@@ -1,0 +1,26 @@
+meta {
+  name: Profile router test
+  type: http
+  seq: 1
+  tags: [
+    smoke
+    workflow
+    release-gate
+  ]
+}
+
+get {
+  url: {{baseUrl}}/api/profile/test
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+}
+
+assert {
+  res.status: eq 200
+  res.body.message: eq profile router works
+}

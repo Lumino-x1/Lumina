@@ -1,0 +1,24 @@
+meta {
+  name: Create post comment
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/posts/{{postId}}/comments
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "content": "Nice post — thanks for sharing notes.",
+    "parentId": null
+  }
+}

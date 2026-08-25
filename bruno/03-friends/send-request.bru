@@ -1,0 +1,17 @@
+meta {
+  name: Send friend request
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/friends/request/{{userId}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

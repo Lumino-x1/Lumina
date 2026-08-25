@@ -1,0 +1,58 @@
+meta {
+  name: Update my profile
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/api/profile/me
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "bio": "CS junior. Building campus tools.",
+    "about": "Interested in systems, compilers, and study groups.",
+    "gender": "FEMALE",
+    "dob": "2004-06-15",
+    "hometown": "Pune",
+    "location": "Campus hostel B",
+    "cgpa": 8.7,
+    "semester": 6,
+    "year": 3,
+    "batch": "2022",
+    "rollNumber": "CS22B001",
+    "skills": [
+      "TypeScript",
+      "Python",
+      "SQL"
+    ],
+    "interests": [
+      "DSA",
+      "Open source"
+    ],
+    "languages": [
+      "en",
+      "hi"
+    ],
+    "github": "https://github.com/janedoe",
+    "linkedin": "https://www.linkedin.com/in/janedoe",
+    "portfolio": "https://janedoe.dev",
+    "leetcodeUrl": "https://leetcode.com/janedoe",
+    "codeforces": "jane_cf",
+    "hackerrank": "jane_hr",
+    "profileVisibility": "COLLEGE",
+    "hideEmail": false,
+    "hidePhone": true,
+    "hideCgpa": false
+  }
+}

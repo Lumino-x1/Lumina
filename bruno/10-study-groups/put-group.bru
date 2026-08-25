@@ -1,0 +1,29 @@
+meta {
+  name: Put group
+  type: http
+  seq: 43
+}
+
+put {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+  If-Match: {{groupVersion}}
+}
+
+body:json {
+    {
+    "name": "Operating Systems — Sem 6",
+    "type": "SUBJECT",
+    "visibility": "PRIVATE",
+    "subject": "Operating Systems",
+    "semester": 6,
+    "description": "Invite-only from midterm week."
+  }
+}

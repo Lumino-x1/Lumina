@@ -1,0 +1,39 @@
+name: Bruno API Tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bruno-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - run: mkdir -p reports
+
+      - uses: usebruno/bruno-cli-action@v1
+        with:
+          working-directory: bruno
+          command: >
+            run
+            --global-env ci
+            --workspace-path ..
+            --tags smoke,workflow,release-gate
+            --env-var platform_name="GitHub Actions"
+            --env-var build_id="${{ github.run_id }}"
+            --env-var commit_sha="${{ github.sha }}"
+            --reporter-html ../reports/github-actions-report.html
+
+      - uses: actions/upload-artifact@v6
+        if: ${{ !cancelled() }}
+        with:
+          name: bruno-report
+          path: reports/github-actions-report.html
+          if-no-files-found: error

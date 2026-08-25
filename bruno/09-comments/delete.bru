@@ -1,0 +1,17 @@
+meta {
+  name: Delete comment
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/api/comments/{{commentId}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

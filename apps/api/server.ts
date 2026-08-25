@@ -1,4 +1,5 @@
 import '@lumina/env'
+
 import { createApp } from './app.ts'
 import { startCronJobs } from './cron/index.ts'
 import { logger } from '@lumina/observability'

@@ -1,0 +1,17 @@
+meta {
+  name: Get timetable
+  type: http
+  seq: 34
+}
+
+get {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/timetable
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

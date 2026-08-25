@@ -1,0 +1,17 @@
+meta {
+  name: Get file
+  type: http
+  seq: 30
+}
+
+get {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/files/{{fileId}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

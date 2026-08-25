@@ -1,0 +1,17 @@
+meta {
+  name: Call history
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/video/calls/history
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

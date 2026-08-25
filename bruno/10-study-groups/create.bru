@@ -1,0 +1,29 @@
+meta {
+  name: Create group
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/study-groups
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+  Idempotency-Key: {{idempotencyKey}}
+}
+
+body:json {
+    {
+    "name": "Operating Systems — Sem 6",
+    "type": "SUBJECT",
+    "visibility": "PUBLIC",
+    "subject": "Operating Systems",
+    "semester": 6,
+    "description": "Weekly problem sets and past papers."
+  }
+}

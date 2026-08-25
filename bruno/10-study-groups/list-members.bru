@@ -1,0 +1,17 @@
+meta {
+  name: List members
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/members
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

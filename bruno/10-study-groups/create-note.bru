@@ -1,0 +1,24 @@
+meta {
+  name: Create note
+  type: http
+  seq: 20
+}
+
+post {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/notes
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "title": "Process vs thread cheat sheet",
+    "body": "Process: isolated address space. Thread: shared heap, own stack."
+  }
+}

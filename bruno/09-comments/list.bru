@@ -1,0 +1,22 @@
+meta {
+  name: List comments tree
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/comments/posts/{{postId}}/comments
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+params:query {
+  cursor: 
+  limit: 20
+}

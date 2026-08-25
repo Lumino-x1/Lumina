@@ -1,0 +1,17 @@
+meta {
+  name: Manual sync
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/leetcode/sync
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

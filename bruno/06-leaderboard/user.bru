@@ -1,0 +1,17 @@
+meta {
+  name: User stats
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/leaderboard/{{userId}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

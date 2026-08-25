@@ -1,0 +1,17 @@
+meta {
+  name: Get note version
+  type: http
+  seq: 26
+}
+
+get {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/notes/{{noteId}}/versions/{{noteVersion}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}

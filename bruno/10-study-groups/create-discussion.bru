@@ -1,0 +1,24 @@
+meta {
+  name: Create discussion
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{baseUrl}}/api/v1/study-groups/{{groupId}}/discussions
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
+
+body:json {
+    {
+    "title": "Readers-writers lock examples",
+    "body": "Post your favorite implementation and why."
+  }
+}

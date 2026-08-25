@@ -1,0 +1,22 @@
+meta {
+  name: Lumina API
+}
+
+auth {
+  mode: none
+}
+
+docs {
+  Local Bruno collection for the Lumina Express API.
+
+  1. Open the Lumina workspace (workspace.yml) in Bruno, or open this folder as a collection.
+  2. Select the local environment (workspace global env, or collection env).
+  3. Run Auth → Sign in email, then copy better-auth.session_token from the Set-Cookie header into sessionToken.
+  4. Replace sample IDs (userId, postId, groupId, …) with values from your local DB.
+
+  Mutating requests send Origin: {{origin}} because the API CSRF check requires a localhost origin.
+
+  GitHub Actions (bruno-api-tests.yml) runs:
+    bru run --global-env ci --workspace-path .. --tags smoke,workflow,release-gate
+  and injects platform_name, build_id, and commit_sha. Those tags are on unauthenticated system probes plus /api/profile/test.
+}

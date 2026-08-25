@@ -1,0 +1,17 @@
+meta {
+  name: List conversations
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/chat/conversations
+  body: none
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+  Cookie: better-auth.session_token={{sessionToken}}
+}
