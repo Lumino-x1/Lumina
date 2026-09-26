@@ -13,8 +13,8 @@ import {
 import analyticsRouter from '../analytics/router'
 import * as controller from './controller'
 import { MSG_PROFILE_ROUTER_WORKS } from '@lumina/constants'
-import { Router } from 'express'
 import { subscribe } from '@lumina/realtime'
+import { Router } from 'express'
 import rateLimit from 'express-rate-limit'
 
 import type { AuthenticatedRequest } from '@lumina/contracts'
@@ -402,7 +402,12 @@ apiRouter.use('/alumni', alumniRouter)
 const notificationRouter = Router()
 notificationRouter.get('/stream', requireAuth, (req, res) => {
   const userId = (req as AuthenticatedRequest).user.id
-  res.status(200).set({ 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache, no-transform', Connection: 'keep-alive', 'X-Accel-Buffering': 'no' })
+  res.status(200).set({
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache, no-transform',
+    Connection: 'keep-alive',
+    'X-Accel-Buffering': 'no',
+  })
   res.flushHeaders?.()
   const unsubscribe = subscribe(userId, res)
   req.on('close', unsubscribe)
@@ -437,8 +442,16 @@ adminRouter.patch(
 adminRouter.get('/verification/queue', requireAuth, controller.listAdminVerificationQueue)
 adminRouter.get('/verification-queue', requireAuth, controller.listAdminVerificationQueue)
 adminRouter.post('/verification/approve', requireAuth, controller.approveAlumniVerification)
-adminRouter.post('/verification/:verificationId/approve', requireAuth, controller.approveAdminVerificationById)
-adminRouter.post('/verification/:verificationId/reject', requireAuth, controller.rejectAdminVerificationById)
+adminRouter.post(
+  '/verification/:verificationId/approve',
+  requireAuth,
+  controller.approveAdminVerificationById
+)
+adminRouter.post(
+  '/verification/:verificationId/reject',
+  requireAuth,
+  controller.rejectAdminVerificationById
+)
 adminRouter.get('/reports/queue', requireAuth, controller.listAdminReportsQueue)
 adminRouter.get('/reports', requireAuth, controller.listAdminReportsQueue)
 adminRouter.post('/moderation/action', requireAuth, controller.applyAdminModerationAction)

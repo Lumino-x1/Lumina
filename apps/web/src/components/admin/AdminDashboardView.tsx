@@ -72,7 +72,14 @@ export interface AnnouncementItem {
 
 export const AdminDashboardView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'analytics' | 'users' | 'verification' | 'reports' | 'audit' | 'settings' | 'resources'
+    | 'overview'
+    | 'analytics'
+    | 'users'
+    | 'verification'
+    | 'reports'
+    | 'audit'
+    | 'settings'
+    | 'resources'
   >('overview')
   const [metrics, setMetrics] = useState<AdminMetricsData | null>(null)
   const [analyticsData, setAnalyticsData] = useState<any>(null)
@@ -81,23 +88,67 @@ export const AdminDashboardView: React.FC = () => {
   const [reports, setReports] = useState<AdminReportItem[]>([])
   const [auditLogs, setAuditLogs] = useState<AdminAuditLogItem[]>([])
   const [announcements, setAnnouncements] = useState<AnnouncementItem[]>([])
-  const [managedResources, setManagedResources] = useState<Record<string, any[]>>({ COMMUNITIES: [], CLUBS: [], EVENTS: [], INTERNSHIPS: [], NOTIFICATIONS: [] })
+  const [managedResources, setManagedResources] = useState<Record<string, any[]>>({
+    COMMUNITIES: [],
+    CLUBS: [],
+    EVENTS: [],
+    INTERNSHIPS: [],
+    NOTIFICATIONS: [],
+  })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  // Filters & search
+  const [userSearchQuery, setUserSearchQuery] = useState('')
+  const [selectedRoleFilter, setSelectedRoleFilter] = useState('ALL')
+  const [selectedStatusFilter, setSelectedStatusFilter] = useState('ALL')
+
+  // Announcement form
+  const [annTitle, setAnnTitle] = useState('')
+  const [annContent, setAnnContent] = useState('')
+  const [annType, setAnnType] = useState('INFO')
+
+  // System settings state
+  const [maintenanceMode, setMaintenanceMode] = useState(false)
+  const [registrationAllowed, setRegistrationAllowed] = useState(true)
+
   const api = (import.meta as any).env?.VITE_API_BASE_URL || '/api/v1'
   const unwrap = (value: any) => value?.data ?? value
-  const asList = (value: any, key: string) => Array.isArray(value) ? value : unwrap(value)?.[key] || unwrap(value)?.items || []
-  const request = useCallback(async (path: string, options: RequestInit = {}) => {
-    const response = await fetch(api + path, { credentials: 'include', headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }, ...options })
-    const payload = response.status === 204 ? null : await response.json().catch(() => null)
-    if (!response.ok) throw new Error(payload?.message || payload?.error || 'Admin request failed')
-    return unwrap(payload)
-  }, [api])
+  const asList = (value: any, key: string) =>
+    Array.isArray(value) ? value : unwrap(value)?.[key] || unwrap(value)?.items || []
+  const request = useCallback(
+    async (path: string, options: RequestInit = {}) => {
+      const response = await fetch(api + path, {
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+        ...options,
+      })
+      const payload = response.status === 204 ? null : await response.json().catch(() => null)
+      if (!response.ok)
+        throw new Error(payload?.message || payload?.error || 'Admin request failed')
+      return unwrap(payload)
+    },
+    [api]
+  )
   const loadAdmin = useCallback(async () => {
-    setLoading(true); setError(null);
+    setLoading(true)
+    setError(null)
     try {
-      const [m, u, v, r, a, s, ann, communities, clubs, events, internships, notifications, analyticsRes] = await Promise.all([
+      const [
+        m,
+        u,
+        v,
+        r,
+        a,
+        s,
+        ann,
+        communities,
+        clubs,
+        events,
+        internships,
+        notifications,
+        analyticsRes,
+      ] = await Promise.all([
         request('/admin/summary').catch(() => null),
         request('/admin/users').catch(() => []),
         request('/admin/verification/queue').catch(() => []),
@@ -139,30 +190,91 @@ export const AdminDashboardView: React.FC = () => {
       setLoading(false)
     }
   }, [request])
-  useEffect(() => { void loadAdmin() }, [loadAdmin])
+  useEffect(() => {
+    void loadAdmin()
+  }, [loadAdmin])
 
-  // Filters & search
-  const [userSearchQuery, setUserSearchQuery] = useState('')
-  const [selectedRoleFilter, setSelectedRoleFilter] = useState('ALL')
-  const [selectedStatusFilter, setSelectedStatusFilter] = useState('ALL')
+  const handleUpdateUserStatus = async (
+    userId: string,
+    newStatus: 'ACTIVE' | 'SUSPENDED' | 'BANNED'
+  ) => {
+    try {
+      await request('/admin/users/' + userId, {
+        method: 'PATCH',
+        body: JSON.stringify({ status: newStatus }),
+      })
+      await loadAdmin()
+    } catch (e: any) {
+      setError(e.message)
+    }
+  }
 
-  // Announcement form
-  const [annTitle, setAnnTitle] = useState('')
-  const [annContent, setAnnContent] = useState('')
-  const [annType, setAnnType] = useState('INFO')
+  const handleApproveVerification = async (verId: string, approve: boolean) => {
+    try {
+      await request('/admin/moderation/action', {
+        method: 'POST',
+        body: JSON.stringify({
+          targetType: 'VERIFICATION',
+          targetId: verId,
+          action: approve ? 'APPROVE' : 'REJECT',
+          reason: 'Reviewed by administrator',
+        }),
+      })
+      await loadAdmin()
+    } catch (e: any) {
+      setError(e.message)
+    }
+  }
 
-  // System settings state
-  const [maintenanceMode, setMaintenanceMode] = useState(false)
-  const [registrationAllowed, setRegistrationAllowed] = useState(true)
+  const handleResolveReport = async (reportId: string, action: string) => {
+    try {
+      await request('/admin/moderation/action', {
+        method: 'POST',
+        body: JSON.stringify({
+          targetType: 'REPORT',
+          targetId: reportId,
+          action,
+          reason: 'Reviewed by administrator',
+        }),
+      })
+      await loadAdmin()
+    } catch (e: any) {
+      setError(e.message)
+    }
+  }
 
-  const handleUpdateUserStatus = async (userId: string, newStatus: 'ACTIVE' | 'SUSPENDED' | 'BANNED') => { try { await request('/admin/users/' + userId, { method: 'PATCH', body: JSON.stringify({ status: newStatus }) }); await loadAdmin() } catch (e:any) { setError(e.message) } }
-
-  const handleApproveVerification = async (verId: string, approve: boolean) => { try { await request('/admin/moderation/action', { method: 'POST', body: JSON.stringify({ targetType: 'VERIFICATION', targetId: verId, action: approve ? 'APPROVE' : 'REJECT', reason: 'Reviewed by administrator' }) }); await loadAdmin() } catch (e:any) { setError(e.message) } }
-
-  const handleResolveReport = async (reportId: string, action: string) => { try { await request('/admin/moderation/action', { method: 'POST', body: JSON.stringify({ targetType: 'REPORT', targetId: reportId, action, reason: 'Reviewed by administrator' }) }); await loadAdmin() } catch (e:any) { setError(e.message) } }
-
-  const handleCreateAnnouncement = async (e: React.FormEvent) => { e.preventDefault(); if (!annTitle || !annContent) return; try { await request('/admin/announcements', { method: 'POST', body: JSON.stringify({ title: annTitle, content: annContent, targetRole: 'ALL', priority: annType }) }); setAnnTitle(''); setAnnContent(''); await loadAdmin() } catch (e:any) { setError(e.message) } }
-  const handleSetting = async (key: string, value: boolean, description: string) => { try { await request('/admin/settings', { method: 'PATCH', body: JSON.stringify({ key, value: String(value), description }) }); if (key === 'maintenance_mode') setMaintenanceMode(value); else setRegistrationAllowed(value) } catch (e:any) { setError(e.message) } }
+  const handleCreateAnnouncement = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!annTitle || !annContent) return
+    try {
+      await request('/admin/announcements', {
+        method: 'POST',
+        body: JSON.stringify({
+          title: annTitle,
+          content: annContent,
+          targetRole: 'ALL',
+          priority: annType,
+        }),
+      })
+      setAnnTitle('')
+      setAnnContent('')
+      await loadAdmin()
+    } catch (e: any) {
+      setError(e.message)
+    }
+  }
+  const handleSetting = async (key: string, value: boolean, description: string) => {
+    try {
+      await request('/admin/settings', {
+        method: 'PATCH',
+        body: JSON.stringify({ key, value: String(value), description }),
+      })
+      if (key === 'maintenance_mode') setMaintenanceMode(value)
+      else setRegistrationAllowed(value)
+    } catch (e: any) {
+      setError(e.message)
+    }
+  }
 
   const filteredUsers = users.filter((u) => {
     const matchesSearch =
@@ -184,8 +296,22 @@ export const AdminDashboardView: React.FC = () => {
         padding: '24px',
       }}
     >
-      {error && <div style={{ background: '#451a1a', color: '#fecaca', padding: '12px', borderRadius: '8px', marginBottom: '12px' }}>{error}</div>}
-      {loading && <div style={{ color: '#a5b4fc', marginBottom: '12px' }}>Loading administrator data…</div>}
+      {error && (
+        <div
+          style={{
+            background: '#451a1a',
+            color: '#fecaca',
+            padding: '12px',
+            borderRadius: '8px',
+            marginBottom: '12px',
+          }}
+        >
+          {error}
+        </div>
+      )}
+      {loading && (
+        <div style={{ color: '#a5b4fc', marginBottom: '12px' }}>Loading administrator data…</div>
+      )}
       {/* Header Banner */}
       <div
         style={{
@@ -331,7 +457,12 @@ export const AdminDashboardView: React.FC = () => {
                 color: '#38bdf8',
                 icon: '🏛️',
               },
-              { label: 'Active Clubs', value: metrics?.totalClubs ?? '—', color: '#ec4899', icon: '🛡️' },
+              {
+                label: 'Active Clubs',
+                value: metrics?.totalClubs ?? '—',
+                color: '#ec4899',
+                icon: '🛡️',
+              },
               {
                 label: 'Internships Posted',
                 value: metrics?.totalInternships ?? '—',
@@ -612,10 +743,12 @@ export const AdminDashboardView: React.FC = () => {
                 Internship Application Funnel
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {(analyticsData?.funnels?.internshipApplication?.steps ?? [
-                  { name: 'internship_viewed', count: 0, dropOffRate: 0 },
-                  { name: 'internship_applied', count: 0, dropOffRate: 0 },
-                ]).map((step: any, idx: number) => (
+                {(
+                  analyticsData?.funnels?.internshipApplication?.steps ?? [
+                    { name: 'internship_viewed', count: 0, dropOffRate: 0 },
+                    { name: 'internship_applied', count: 0, dropOffRate: 0 },
+                  ]
+                ).map((step: any, idx: number) => (
                   <div
                     key={step.name}
                     style={{
@@ -625,7 +758,13 @@ export const AdminDashboardView: React.FC = () => {
                       borderLeft: `4px solid ${idx === 0 ? '#38bdf8' : '#34d399'}`,
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
                       <span style={{ fontWeight: 600, fontSize: '13px', color: '#fff' }}>
                         Step {idx + 1}: {step.name.replace('_', ' ').toUpperCase()}
                       </span>
@@ -653,7 +792,8 @@ export const AdminDashboardView: React.FC = () => {
                 >
                   Overall Conversion Rate:{' '}
                   {(
-                    (analyticsData?.funnels?.internshipApplication?.overallConversionRate ?? 0) * 100
+                    (analyticsData?.funnels?.internshipApplication?.overallConversionRate ?? 0) *
+                    100
                   ).toFixed(1)}
                   %
                 </div>
@@ -704,7 +844,9 @@ export const AdminDashboardView: React.FC = () => {
                     }}
                   >
                     <div style={{ fontSize: '12px', color: '#9ca3af' }}>{d.name}</div>
-                    <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff', marginTop: '2px' }}>
+                    <div
+                      style={{ fontSize: '15px', fontWeight: 700, color: '#fff', marginTop: '2px' }}
+                    >
                       {d.count}
                     </div>
                     <div style={{ fontSize: '11px', color: '#6b7280', marginTop: '2px' }}>
@@ -1169,18 +1311,32 @@ export const AdminDashboardView: React.FC = () => {
             padding: '24px',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '20px' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '12px',
+              marginBottom: '20px',
+            }}
+          >
             <div>
-              <h2 style={{ fontSize: '20px', fontWeight: 700, margin: '0 0 4px 0', color: '#ffffff' }}>
+              <h2
+                style={{ fontSize: '20px', fontWeight: 700, margin: '0 0 4px 0', color: '#ffffff' }}
+              >
                 Administrator Audit Trail
               </h2>
               <p style={{ color: '#9ca3af', fontSize: '14px', margin: 0 }}>
-                Immutable audit log records for all privileged administrative actions and system modifications.
+                Immutable audit log records for all privileged administrative actions and system
+                modifications.
               </p>
             </div>
             <button
               onClick={() => {
-                const blob = new Blob([JSON.stringify(auditLogs, null, 2)], { type: 'application/json' })
+                const blob = new Blob([JSON.stringify(auditLogs, null, 2)], {
+                  type: 'application/json',
+                })
                 const url = URL.createObjectURL(blob)
                 const a = document.createElement('a')
                 a.href = url
@@ -1256,11 +1412,41 @@ export const AdminDashboardView: React.FC = () => {
       )}
 
       {activeTab === 'resources' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '16px',
+          }}
+        >
           {Object.entries(managedResources).map(([name, items]) => (
-            <section key={name} style={{ background: 'rgba(17,24,39,.6)', border: '1px solid rgba(255,255,255,.08)', borderRadius: '14px', padding: '20px' }}>
-              <h2 style={{ marginTop: 0, fontSize: '17px' }}>{name} <span style={{ color: '#818cf8' }}>({items.length})</span></h2>
-              {items.length === 0 ? <p style={{ color: '#9ca3af' }}>No records available.</p> : items.slice(0, 10).map((item:any) => <div key={item.id || item.slug || JSON.stringify(item)} style={{ padding: '10px 0', borderTop: '1px solid rgba(255,255,255,.08)' }}><strong>{item.name || item.title || item.message || item.id}</strong><div style={{ color: '#9ca3af', fontSize: '12px' }}>{item.status || item.type || item.description || ''}</div></div>)}
+            <section
+              key={name}
+              style={{
+                background: 'rgba(17,24,39,.6)',
+                border: '1px solid rgba(255,255,255,.08)',
+                borderRadius: '14px',
+                padding: '20px',
+              }}
+            >
+              <h2 style={{ marginTop: 0, fontSize: '17px' }}>
+                {name} <span style={{ color: '#818cf8' }}>({items.length})</span>
+              </h2>
+              {items.length === 0 ? (
+                <p style={{ color: '#9ca3af' }}>No records available.</p>
+              ) : (
+                items.slice(0, 10).map((item: any) => (
+                  <div
+                    key={item.id || item.slug || JSON.stringify(item)}
+                    style={{ padding: '10px 0', borderTop: '1px solid rgba(255,255,255,.08)' }}
+                  >
+                    <strong>{item.name || item.title || item.message || item.id}</strong>
+                    <div style={{ color: '#9ca3af', fontSize: '12px' }}>
+                      {item.status || item.type || item.description || ''}
+                    </div>
+                  </div>
+                ))
+              )}
             </section>
           ))}
         </div>
@@ -1428,7 +1614,13 @@ export const AdminDashboardView: React.FC = () => {
                 <input
                   type="checkbox"
                   checked={maintenanceMode}
-                  onChange={(e) => void handleSetting('maintenance_mode', e.target.checked, 'Global maintenance flag')}
+                  onChange={(e) =>
+                    void handleSetting(
+                      'maintenance_mode',
+                      e.target.checked,
+                      'Global maintenance flag'
+                    )
+                  }
                   style={{
                     width: '18px',
                     height: '18px',
@@ -1459,7 +1651,13 @@ export const AdminDashboardView: React.FC = () => {
                 <input
                   type="checkbox"
                   checked={registrationAllowed}
-                  onChange={(e) => void handleSetting('registration_allowed', e.target.checked, 'Allow new registrations')}
+                  onChange={(e) =>
+                    void handleSetting(
+                      'registration_allowed',
+                      e.target.checked,
+                      'Allow new registrations'
+                    )
+                  }
                   style={{
                     width: '18px',
                     height: '18px',

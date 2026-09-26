@@ -1,10 +1,10 @@
-import { describe, expect, it } from 'vitest'
 import {
+  alumniConnectionRequestSchema,
   alumniProfileSchema,
   alumniSearchQuerySchema,
-  alumniConnectionRequestSchema,
   updateMentorshipStatusSchema,
 } from '../../packages/validators/src'
+import { describe, expect, it } from 'vitest'
 
 describe('Alumni Permissions & Verification Rules', () => {
   it('validates role requirements for alumni verification approval', () => {

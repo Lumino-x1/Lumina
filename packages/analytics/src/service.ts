@@ -80,17 +80,50 @@ export class AnalyticsService {
       .sort((a, b) => b[1] - a[1])
       .map(([name, count]) => ({ name, count }))
 
-    const byDomain = (names: string[]) => { const selected = events.filter((event) => names.includes(event.name)); return { events: selected.length, activeUsers: activeUsers(selected), eventCounts: eventCounts(selected) } }
+    const byDomain = (names: string[]) => {
+      const selected = events.filter((event) => names.includes(event.name))
+      return {
+        events: selected.length,
+        activeUsers: activeUsers(selected),
+        eventCounts: eventCounts(selected),
+      }
+    }
     const user = byDomain(['user_signed_up', 'user_logged_in', 'profile_viewed'])
-    const engagement = byDomain(['post_created', 'post_liked', 'message_sent', 'notification_opened', 'feature_used'])
+    const engagement = byDomain([
+      'post_created',
+      'post_liked',
+      'message_sent',
+      'notification_opened',
+      'feature_used',
+    ])
     const community = byDomain(['club_joined'])
     const club = byDomain(['club_joined', 'club_event_created', 'club_event_registered'])
     const event = byDomain(['club_event_created', 'club_event_registered'])
     const internship = byDomain(['internship_viewed', 'internship_applied'])
-    const growth = { signUps: counts.user_signed_up ?? 0, activeUsers: users, signInEvents: counts.user_logged_in ?? 0 }
+    const growth = {
+      signUps: counts.user_signed_up ?? 0,
+      activeUsers: users,
+      signInEvents: counts.user_logged_in ?? 0,
+    }
     const content = byDomain(['post_created', 'post_liked'])
     const funnel = buildFunnel(['internship_viewed', 'internship_applied'], events)
-    const cohorts = cohortRetention({ current: Array.from(new Set(events.map((e) => e.actor?.userId).filter((x): x is string => Boolean(x)))) }, { current: Array.from(new Set(events.filter((e) => e.name === 'user_logged_in').map((e) => e.actor?.userId).filter((x): x is string => Boolean(x)))) })
+    const cohorts = cohortRetention(
+      {
+        current: Array.from(
+          new Set(events.map((e) => e.actor?.userId).filter((x): x is string => Boolean(x)))
+        ),
+      },
+      {
+        current: Array.from(
+          new Set(
+            events
+              .filter((e) => e.name === 'user_logged_in')
+              .map((e) => e.actor?.userId)
+              .filter((x): x is string => Boolean(x))
+          )
+        ),
+      }
+    )
     return {
       from: from.toISOString(),
       to: to.toISOString(),

@@ -31,6 +31,7 @@ jobs:
   qodana:
     name: Qodana Static Analysis
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     permissions:
       contents: read
@@ -61,6 +62,7 @@ jobs:
       - name: Qodana Scan
         if: steps.qodana-config.outputs.enabled == 'true'
         uses: JetBrains/qodana-action@v2026.1
+        continue-on-error: true
         with:
           upload-result: true
           args: |

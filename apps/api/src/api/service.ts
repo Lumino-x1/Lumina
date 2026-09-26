@@ -6529,15 +6529,17 @@ export namespace AlumniService {
       },
     })
 
-    await prisma.adminAuditLog.create({
-      data: {
-        adminId: reviewerId,
-        action: parsed.approve ? 'APPROVE_ALUMNI_VERIFICATION' : 'REJECT_ALUMNI_VERIFICATION',
-        targetId: parsed.userId,
-        targetType: 'USER',
-        details: { approved: parsed.approve },
-      },
-    }).catch(() => null)
+    await prisma.adminAuditLog
+      .create({
+        data: {
+          adminId: reviewerId,
+          action: parsed.approve ? 'APPROVE_ALUMNI_VERIFICATION' : 'REJECT_ALUMNI_VERIFICATION',
+          targetId: parsed.userId,
+          targetType: 'USER',
+          details: { approved: parsed.approve },
+        },
+      })
+      .catch(() => null)
 
     return verification
   }
@@ -7312,7 +7314,8 @@ export const listAdminReportsQueue = AdminService.listReportsQueue
 export const applyAdminModerationAction = AdminService.applyModerationAction
 export const listAdminAuditLogs = AdminService.listAuditLogs
 export const exportAdminAuditLogs = AdminService.exportAuditLogs
-export const getAdminSystemSettings = AdminService.getAdminSystemSettings ?? AdminService.getSystemSettings
+export const getAdminSystemSettings =
+  AdminService.getAdminSystemSettings ?? AdminService.getSystemSettings
 export const updateAdminSystemSetting = AdminService.updateSystemSetting
 export const createAdminAnnouncement = AdminService.createAnnouncement
 export const listAdminAnnouncements = AdminService.listAnnouncements

@@ -154,4 +154,3 @@ export const uploadResume = multer({
   },
   fileFilter: resumeFileFilter,
 })
-

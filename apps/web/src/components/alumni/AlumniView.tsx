@@ -380,7 +380,12 @@ export const AlumniView: React.FC = () => {
           directoryVisible: profileDirectoryVisible,
           linkedIn: profileLinkedIn || undefined,
           github: profileGithub || undefined,
-          skills: profileSkills ? profileSkills.split(',').map((s) => s.trim()).filter(Boolean) : [],
+          skills: profileSkills
+            ? profileSkills
+                .split(',')
+                .map((s) => s.trim())
+                .filter(Boolean)
+            : [],
         }),
       })
       setProfileSaved(true)
@@ -420,8 +425,22 @@ export const AlumniView: React.FC = () => {
         padding: '24px',
       }}
     >
-      {error && <div style={{ background: '#451a1a', color: '#fecaca', padding: '12px', borderRadius: '8px', marginBottom: '12px' }}>{error}</div>}
-      {loading && <div style={{ color: '#a5b4fc', marginBottom: '12px' }}>Loading alumni network…</div>}
+      {error && (
+        <div
+          style={{
+            background: '#451a1a',
+            color: '#fecaca',
+            padding: '12px',
+            borderRadius: '8px',
+            marginBottom: '12px',
+          }}
+        >
+          {error}
+        </div>
+      )}
+      {loading && (
+        <div style={{ color: '#a5b4fc', marginBottom: '12px' }}>Loading alumni network…</div>
+      )}
       {/* Header Banner */}
       <div
         style={{
@@ -855,7 +874,9 @@ export const AlumniView: React.FC = () => {
                   )}
                 </div>
 
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                <div
+                  style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}
+                >
                   {sess.meetingUrl && (
                     <a
                       href={sess.meetingUrl}
@@ -1386,7 +1407,8 @@ export const AlumniView: React.FC = () => {
             My Alumni Profile & Privacy Settings
           </h2>
           <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '24px' }}>
-            Keep your graduation records, current career position, and mentorship availability updated.
+            Keep your graduation records, current career position, and mentorship availability
+            updated.
           </p>
 
           {profileSaved && (
@@ -1404,139 +1426,342 @@ export const AlumniView: React.FC = () => {
             </div>
           )}
 
-          <form onSubmit={handleUpdateMyProfile} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <form
+            onSubmit={handleUpdateMyProfile}
+            style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}
+          >
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#d1d5db', marginBottom: '4px' }}>Graduation Year</label>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '12px',
+                    color: '#d1d5db',
+                    marginBottom: '4px',
+                  }}
+                >
+                  Graduation Year
+                </label>
                 <input
                   type="number"
                   value={profileGradYear}
                   onChange={(e) => setProfileGradYear(e.target.value)}
-                  style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(31, 41, 55, 0.8)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '10px', color: '#fff' }}
+                  style={{
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    background: 'rgba(31, 41, 55, 0.8)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: '8px',
+                    padding: '10px',
+                    color: '#fff',
+                  }}
                   required
                 />
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#d1d5db', marginBottom: '4px' }}>Department / Major</label>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '12px',
+                    color: '#d1d5db',
+                    marginBottom: '4px',
+                  }}
+                >
+                  Department / Major
+                </label>
                 <input
                   type="text"
                   placeholder="e.g. Electrical Engineering"
                   value={profileDept}
                   onChange={(e) => setProfileDept(e.target.value)}
-                  style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(31, 41, 55, 0.8)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '10px', color: '#fff' }}
+                  style={{
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    background: 'rgba(31, 41, 55, 0.8)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: '8px',
+                    padding: '10px',
+                    color: '#fff',
+                  }}
                 />
               </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#d1d5db', marginBottom: '4px' }}>Current Company</label>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '12px',
+                    color: '#d1d5db',
+                    marginBottom: '4px',
+                  }}
+                >
+                  Current Company
+                </label>
                 <input
                   type="text"
                   placeholder="e.g. Google, Microsoft, Startup"
                   value={profileCompany}
                   onChange={(e) => setProfileCompany(e.target.value)}
-                  style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(31, 41, 55, 0.8)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '10px', color: '#fff' }}
+                  style={{
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    background: 'rgba(31, 41, 55, 0.8)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: '8px',
+                    padding: '10px',
+                    color: '#fff',
+                  }}
                 />
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#d1d5db', marginBottom: '4px' }}>Job Title / Role</label>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '12px',
+                    color: '#d1d5db',
+                    marginBottom: '4px',
+                  }}
+                >
+                  Job Title / Role
+                </label>
                 <input
                   type="text"
                   placeholder="e.g. Senior Software Engineer"
                   value={profileJobTitle}
                   onChange={(e) => setProfileJobTitle(e.target.value)}
-                  style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(31, 41, 55, 0.8)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '10px', color: '#fff' }}
+                  style={{
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    background: 'rgba(31, 41, 55, 0.8)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: '8px',
+                    padding: '10px',
+                    color: '#fff',
+                  }}
                 />
               </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#d1d5db', marginBottom: '4px' }}>Industry</label>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '12px',
+                    color: '#d1d5db',
+                    marginBottom: '4px',
+                  }}
+                >
+                  Industry
+                </label>
                 <input
                   type="text"
                   placeholder="e.g. Artificial Intelligence"
                   value={profileIndustry}
                   onChange={(e) => setProfileIndustry(e.target.value)}
-                  style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(31, 41, 55, 0.8)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '10px', color: '#fff' }}
+                  style={{
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    background: 'rgba(31, 41, 55, 0.8)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: '8px',
+                    padding: '10px',
+                    color: '#fff',
+                  }}
                 />
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#d1d5db', marginBottom: '4px' }}>Location</label>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '12px',
+                    color: '#d1d5db',
+                    marginBottom: '4px',
+                  }}
+                >
+                  Location
+                </label>
                 <input
                   type="text"
                   placeholder="e.g. San Francisco, CA or Remote"
                   value={profileLocation}
                   onChange={(e) => setProfileLocation(e.target.value)}
-                  style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(31, 41, 55, 0.8)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '10px', color: '#fff' }}
+                  style={{
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    background: 'rgba(31, 41, 55, 0.8)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: '8px',
+                    padding: '10px',
+                    color: '#fff',
+                  }}
                 />
               </div>
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '12px', color: '#d1d5db', marginBottom: '4px' }}>Skills & Expertise (comma separated)</label>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '12px',
+                  color: '#d1d5db',
+                  marginBottom: '4px',
+                }}
+              >
+                Skills & Expertise (comma separated)
+              </label>
               <input
                 type="text"
                 placeholder="TypeScript, Distributed Systems, Python, Product Strategy"
                 value={profileSkills}
                 onChange={(e) => setProfileSkills(e.target.value)}
-                style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(31, 41, 55, 0.8)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '10px', color: '#fff' }}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  background: 'rgba(31, 41, 55, 0.8)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  borderRadius: '8px',
+                  padding: '10px',
+                  color: '#fff',
+                }}
               />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#d1d5db', marginBottom: '4px' }}>LinkedIn Profile URL</label>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '12px',
+                    color: '#d1d5db',
+                    marginBottom: '4px',
+                  }}
+                >
+                  LinkedIn Profile URL
+                </label>
                 <input
                   type="url"
                   placeholder="https://linkedin.com/in/username"
                   value={profileLinkedIn}
                   onChange={(e) => setProfileLinkedIn(e.target.value)}
-                  style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(31, 41, 55, 0.8)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '10px', color: '#fff' }}
+                  style={{
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    background: 'rgba(31, 41, 55, 0.8)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: '8px',
+                    padding: '10px',
+                    color: '#fff',
+                  }}
                 />
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: '12px', color: '#d1d5db', marginBottom: '4px' }}>GitHub Profile URL</label>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '12px',
+                    color: '#d1d5db',
+                    marginBottom: '4px',
+                  }}
+                >
+                  GitHub Profile URL
+                </label>
                 <input
                   type="url"
                   placeholder="https://github.com/username"
                   value={profileGithub}
                   onChange={(e) => setProfileGithub(e.target.value)}
-                  style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(31, 41, 55, 0.8)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '10px', color: '#fff' }}
+                  style={{
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    background: 'rgba(31, 41, 55, 0.8)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: '8px',
+                    padding: '10px',
+                    color: '#fff',
+                  }}
                 />
               </div>
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '12px', color: '#d1d5db', marginBottom: '4px' }}>Bio / Introduction</label>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '12px',
+                  color: '#d1d5db',
+                  marginBottom: '4px',
+                }}
+              >
+                Bio / Introduction
+              </label>
               <textarea
                 placeholder="A brief introduction for students who wish to connect or seek mentorship..."
                 value={profileBio}
                 onChange={(e) => setProfileBio(e.target.value)}
                 rows={3}
-                style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(31, 41, 55, 0.8)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '10px', color: '#fff' }}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  background: 'rgba(31, 41, 55, 0.8)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  borderRadius: '8px',
+                  padding: '10px',
+                  color: '#fff',
+                }}
               />
             </div>
 
-            <div style={{ background: 'rgba(31,41,55,0.4)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#e2e8f0', cursor: 'pointer', fontSize: '13px' }}>
+            <div
+              style={{
+                background: 'rgba(31,41,55,0.4)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '10px',
+                padding: '14px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+              }}
+            >
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  color: '#e2e8f0',
+                  cursor: 'pointer',
+                  fontSize: '13px',
+                }}
+              >
                 <input
                   type="checkbox"
                   checked={profileMentorshipAvail}
                   onChange={(e) => setProfileMentorshipAvail(e.target.checked)}
                   style={{ accentColor: '#6366f1' }}
                 />
-                <strong>Available for Mentorship:</strong> Students can request 1:1 sessions with you.
+                <strong>Available for Mentorship:</strong> Students can request 1:1 sessions with
+                you.
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#e2e8f0', cursor: 'pointer', fontSize: '13px' }}>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  color: '#e2e8f0',
+                  cursor: 'pointer',
+                  fontSize: '13px',
+                }}
+              >
                 <input
                   type="checkbox"
                   checked={profileDirectoryVisible}
                   onChange={(e) => setProfileDirectoryVisible(e.target.checked)}
                   style={{ accentColor: '#6366f1' }}
                 />
-                <strong>Directory Visibility:</strong> Make profile visible to students in public alumni directory.
+                <strong>Directory Visibility:</strong> Make profile visible to students in public
+                alumni directory.
               </label>
             </div>
 
@@ -1794,17 +2019,74 @@ export const AlumniView: React.FC = () => {
             <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', color: '#ffffff' }}>
               Post Referral Opportunity
             </h3>
-            <form
-              onSubmit={handleCreateReferral}
-            >
+            <form onSubmit={handleCreateReferral}>
               <p style={{ fontSize: '13px', color: '#9ca3af' }}>
                 Share a real referral slot or opportunity with current students.
               </p>
-              <input required placeholder="Opportunity title" value={referralTitle} onChange={(e) => setReferralTitle(e.target.value)} style={{ width: '100%', boxSizing: 'border-box', marginBottom: '10px', padding: '10px', borderRadius: '8px' }} />
-              <input required placeholder="Company" value={referralCompany} onChange={(e) => setReferralCompany(e.target.value)} style={{ width: '100%', boxSizing: 'border-box', marginBottom: '10px', padding: '10px', borderRadius: '8px' }} />
-              <input placeholder="Location" value={referralLocation} onChange={(e) => setReferralLocation(e.target.value)} style={{ width: '100%', boxSizing: 'border-box', marginBottom: '10px', padding: '10px', borderRadius: '8px' }} />
-              <textarea placeholder="Description" value={referralDescription} onChange={(e) => setReferralDescription(e.target.value)} rows={3} style={{ width: '100%', boxSizing: 'border-box', marginBottom: '10px', padding: '10px', borderRadius: '8px' }} />
-              <input type="url" placeholder="Opportunity URL (optional)" value={referralLink} onChange={(e) => setReferralLink(e.target.value)} style={{ width: '100%', boxSizing: 'border-box', marginBottom: '10px', padding: '10px', borderRadius: '8px' }} />
+              <input
+                required
+                placeholder="Opportunity title"
+                value={referralTitle}
+                onChange={(e) => setReferralTitle(e.target.value)}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  marginBottom: '10px',
+                  padding: '10px',
+                  borderRadius: '8px',
+                }}
+              />
+              <input
+                required
+                placeholder="Company"
+                value={referralCompany}
+                onChange={(e) => setReferralCompany(e.target.value)}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  marginBottom: '10px',
+                  padding: '10px',
+                  borderRadius: '8px',
+                }}
+              />
+              <input
+                placeholder="Location"
+                value={referralLocation}
+                onChange={(e) => setReferralLocation(e.target.value)}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  marginBottom: '10px',
+                  padding: '10px',
+                  borderRadius: '8px',
+                }}
+              />
+              <textarea
+                placeholder="Description"
+                value={referralDescription}
+                onChange={(e) => setReferralDescription(e.target.value)}
+                rows={3}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  marginBottom: '10px',
+                  padding: '10px',
+                  borderRadius: '8px',
+                }}
+              />
+              <input
+                type="url"
+                placeholder="Opportunity URL (optional)"
+                value={referralLink}
+                onChange={(e) => setReferralLink(e.target.value)}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  marginBottom: '10px',
+                  padding: '10px',
+                  borderRadius: '8px',
+                }}
+              />
               <div
                 style={{
                   display: 'flex',
@@ -1813,7 +2095,18 @@ export const AlumniView: React.FC = () => {
                   marginTop: '20px',
                 }}
               >
-                <button type="submit" disabled={submitting} style={{ background: '#6366f1', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer' }}>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  style={{
+                    background: '#6366f1',
+                    color: '#fff',
+                    border: 'none',
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                  }}
+                >
                   {submitting ? 'Posting…' : 'Post Referral'}
                 </button>
                 <button
@@ -1879,7 +2172,14 @@ export const AlumniView: React.FC = () => {
               }}
             >
               <div style={{ marginBottom: '12px' }}>
-                <label style={{ display: 'block', fontSize: '12px', color: '#d1d5db', marginBottom: '4px' }}>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '12px',
+                    color: '#d1d5db',
+                    marginBottom: '4px',
+                  }}
+                >
                   Scheduled Date & Time
                 </label>
                 <input
@@ -1900,7 +2200,14 @@ export const AlumniView: React.FC = () => {
                 />
               </div>
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '12px', color: '#d1d5db', marginBottom: '4px' }}>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '12px',
+                    color: '#d1d5db',
+                    marginBottom: '4px',
+                  }}
+                >
                   Meeting / Video URL (e.g. Google Meet, Zoom)
                 </label>
                 <input
@@ -2064,7 +2371,14 @@ export const AlumniView: React.FC = () => {
                   color: '#fff',
                 }}
               />
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '16px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '10px',
+                  justifyContent: 'flex-end',
+                  marginTop: '16px',
+                }}
+              >
                 <button
                   type="button"
                   onClick={() => setShowEventModal(false)}
