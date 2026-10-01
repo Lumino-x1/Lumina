@@ -1,0 +1,407 @@
+/* CTA & Newsletter Section Styling */
+.cta-section {
+  position: relative;
+  width: 100%;
+  background-color: #191919;
+  color: #ffffff;
+  padding: 110px 32px 100px;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cta-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* Top Architectural Grid Header with Blank Placeholder Slots */
+.cta-grid-header {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 38px;
+}
+
+.cta-grid-matrix {
+  position: relative;
+  width: 320px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cta-grid-line-h {
+  position: absolute;
+  top: 0;
+  left: -50px;
+  right: -50px;
+  height: 1px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.cta-grid-line-h.bottom {
+  top: auto;
+  bottom: 0;
+}
+
+.cta-grid-line-v {
+  position: absolute;
+  top: -24px;
+  bottom: -24px;
+  width: 1px;
+  border-left: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.cta-grid-line-v.left {
+  left: 20px;
+}
+
+.cta-grid-line-v.right {
+  right: 20px;
+}
+
+.cta-lumina-logo {
+  width: 52px;
+  height: 38px;
+  color: #ffffff;
+  fill: currentColor;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.cta-lumina-logo:hover {
+  transform: scale(1.06);
+}
+
+/* Body Content */
+.cta-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 720px;
+  margin-bottom: 74px;
+}
+
+.cta-title {
+  font-family: var(--font-sans);
+  font-size: clamp(34px, 4.4vw, 50px);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+  line-height: 1.14;
+  margin-bottom: 18px;
+}
+
+.cta-subtitle {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 400;
+  max-width: 620px;
+  margin-bottom: 32px;
+}
+
+.cta-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.btn-cta-blue {
+  background-color: #1d70f5;
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 9999px;
+  border: 1px solid #1d70f5;
+  cursor: pointer;
+  box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-cta-blue:hover {
+  background-color: #1660d5;
+  opacity: 0.95;
+}
+
+.btn-cta-white,
+.btn-cta-primary {
+  background-color: #ffffff;
+  color: #191919;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 9999px;
+  border: 1px solid #ffffff;
+  cursor: pointer;
+  box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.btn-cta-white:hover,
+.btn-cta-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.btn-cta-link:hover {
+  color: #ffffff;
+}
+
+/* Newsletter Card - Aligned seamlessly with Notion black bg */
+.newsletter-card {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  background-color: #191919;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  padding: 44px 52px;
+  box-shadow: none;
+}
+
+/* Hatch pattern accents */
+.newsletter-hatch-pattern {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 90px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.035) 0,
+    rgba(255, 255, 255, 0.035) 1px,
+    transparent 0,
+    transparent 8px
+  );
+  pointer-events: none;
+}
+
+.newsletter-hatch-pattern.left {
+  left: 0;
+  border-right: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.newsletter-hatch-pattern.right {
+  left: 48%;
+  width: 50px;
+  border-left: 1px dashed rgba(255, 255, 255, 0.08);
+  border-right: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+/* Architectural Crosshair Dots */
+.newsletter-crosshair {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.newsletter-crosshair.top-center {
+  top: -4.5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.newsletter-crosshair.bottom-center {
+  bottom: -4.5px;
+  left: 48%;
+  transform: translateX(-50%);
+}
+
+.newsletter-crosshair.bottom-left {
+  bottom: -4.5px;
+  left: 12%;
+}
+
+.newsletter-crosshair.top-right {
+  top: -4.5px;
+  right: 12%;
+}
+
+.crosshair-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  opacity: 0.8;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+}
+
+.newsletter-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 36px;
+  width: 100%;
+}
+
+.newsletter-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.newsletter-heading {
+  font-family: var(--font-sans);
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+}
+
+.newsletter-subtext {
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.newsletter-right {
+  flex: 1;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.newsletter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.newsletter-input-pill {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 9999px;
+  padding: 4px 4px 4px 18px;
+  height: 48px;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.newsletter-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: #111111;
+  padding-right: 10px;
+}
+
+.newsletter-input::placeholder {
+  color: #888888;
+}
+
+.newsletter-submit-btn {
+  background-color: #1d70f5;
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+}
+
+.newsletter-submit-btn:hover {
+  background-color: #2b7cf8;
+}
+
+.newsletter-disclaimer {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+}
+
+@media (max-width: 860px) {
+  .newsletter-card {
+    padding: 36px 28px;
+  }
+
+  .newsletter-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+  }
+
+  .newsletter-right {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .cta-section {
+    padding: 70px 20px 60px;
+  }
+
+  .cta-title {
+    font-size: 30px;
+  }
+
+  .cta-subtitle {
+    font-size: 15px;
+  }
+
+  .newsletter-card {
+    padding: 28px 20px;
+  }
+
+  .newsletter-heading {
+    font-size: 22px;
+  }
+
+  .newsletter-hatch-pattern {
+    display: none;
+  }
+}

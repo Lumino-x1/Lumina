@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Chakra+Petch:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Covered+By+Your+Grace&family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Geist:wght@100..900&family=Geist+Mono:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&family=Oxanium:wght@400;500;600;700;800&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Reenie+Beanie&family=Righteous&family=Rock+Salt&family=Rubik+Glitch&family=Syne:wght@700;800&family=Unbounded:wght@600;700;800;900&display=swap');
+
+/* Google Sans (Google Antigravity exact brand typography) */
+@font-face {
+  font-family: 'Google Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/googlesans/v58/4UaGrENHsxJlGDuGo1OIlL3Kwp5MKg.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Google Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/googlesans/v58/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2rgCIlsw.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Google Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/googlesans/v58/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2rgCIlsw.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Google Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/googlesans/v58/4UaBrENHsxJlGDuGo1OIlL3Kwp5MKg.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Google Sans Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/googlesansdisplay/v24/ea8Fad4W1UlLHPG9n13NPW-W41AlXCs9.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Google Sans Display';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/googlesansdisplay/v24/ea8Iad4W1UlLHPG9n13NPW-W41AlVCk_Z4E.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Google Sans Display';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/googlesansdisplay/v24/ea8Iad4W1UlLHPG9n13NPW-W41AlUCc_Z4E.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Google Sans Text';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/googlesanstext/v21/5aUu9-KzpRiLCAt4Unrc-xIKmCU5qEp2iw.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Google Sans Text';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/googlesanstext/v21/5aUt9-KzpRiLCAt4Unrc-xIKmCU5sHp0k02x.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Google Sans Text';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/googlesanstext/v21/5aUt9-KzpRiLCAt4Unrc-xIKmCU5rHp0k02x.woff2') format('woff2');
+}
+
+:root {
+  --font-sans: 'Google Sans', 'Google Sans Display', 'Google Sans Text', 'Product Sans', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --notion-bg: #191919;
+  --notion-sidebar: #202020;
+  --notion-hover: #262626;
+  --notion-border: rgba(255, 255, 255, 0.1);
+  --notion-text: rgba(255, 255, 255, 0.9);
+  --notion-text-muted: rgba(255, 255, 255, 0.6);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: #191919;
+  color: var(--notion-text);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #191919;
+}
+
+.app-main-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #191919;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}

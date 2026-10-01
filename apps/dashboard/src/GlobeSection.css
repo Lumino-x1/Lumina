@@ -1,0 +1,183 @@
+.globe-section {
+  position: relative;
+  width: 100%;
+  min-height: 85vh;
+  background-color: #191919;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 80px 48px 100px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.globe-section-container {
+  display: flex;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 56px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Left Column: 3D Globe */
+.globe-left-col {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 380px;
+  max-width: 620px;
+}
+
+.globe-canvas-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  min-height: 540px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Right Column: GridPattern + Content */
+.globe-right-col {
+  flex: 1;
+  position: relative;
+  min-height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 40px 24px;
+}
+
+/* MagicUI Skewed GridPattern Background positioned on the Right Column */
+.globe-right-col .globe-grid-pattern {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  top: -35%;
+  width: 140%;
+  height: 200%;
+  transform: skewY(12deg);
+  -webkit-transform: skewY(12deg);
+  mask-image: radial-gradient(420px circle at center, white 30%, transparent 85%);
+  -webkit-mask-image: radial-gradient(420px circle at center, white 30%, transparent 85%);
+  color: rgba(255, 255, 255, 0.08);
+  fill: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Content Block on the Right Side */
+.globe-content-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  max-width: 580px;
+  z-index: 2;
+}
+
+.globe-content-title {
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: clamp(38px, 4.2vw, 56px);
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+}
+
+.globe-content-desc {
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: clamp(16.5px, 1.4vw, 19px);
+  line-height: 1.62;
+  color: rgba(255, 255, 255, 0.68);
+  max-width: 540px;
+}
+
+/* Ambient glow background behind the globe */
+.globe-canvas-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 80%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(56, 189, 248, 0.03) 40%, transparent 70%);
+  pointer-events: none;
+  filter: blur(50px);
+}
+
+.globe-canvas-wrapper .shader-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 640px;
+  overflow: hidden;
+  display: flex;
+  background: transparent;
+}
+
+.globe-canvas-wrapper .shader-frame .orb-gallery {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 640px;
+  background: transparent !important;
+}
+
+@media (max-width: 960px) {
+  .globe-section {
+    padding: 60px 24px 80px;
+  }
+
+  .globe-section-container {
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .globe-left-col,
+  .globe-right-col {
+    width: 100%;
+    max-width: 100%;
+    min-width: auto;
+  }
+
+  .globe-content-wrap {
+    align-items: center;
+    text-align: center;
+  }
+
+  .globe-content-desc {
+    margin: 0 auto;
+  }
+
+  .globe-canvas-wrapper {
+    max-width: 440px;
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 480px) {
+  .globe-section {
+    padding: 48px 16px 64px;
+  }
+
+  .globe-canvas-wrapper {
+    max-width: 320px;
+    min-height: 320px;
+  }
+}

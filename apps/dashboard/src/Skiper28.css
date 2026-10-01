@@ -1,0 +1,277 @@
+.skiper-section {
+  position: relative;
+  width: 100%;
+  min-height: 65vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 110px 48px;
+  background-color: #191919;
+  color: #ffffff;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.skiper-container {
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+}
+
+.skiper-content-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+/* Left Side: Clean Slider (no border) */
+.skiper-left-slider {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 360px;
+  transform: translateY(18px);
+}
+
+/* Right Side: Shifted to the right */
+.skiper-right-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Architectural Dashed Blueprint Frame around Text */
+.skiper-text-blueprint-frame {
+  container-type: inline-size;
+  position: relative;
+  padding: 40px 48px;
+  width: 100%;
+  max-width: 940px;
+  box-sizing: border-box;
+}
+
+/* Dashed box */
+.skiper-text-blueprint-box {
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+/* Horizontal overshooting guidelines */
+.skiper-text-blueprint-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -42px;
+  right: -42px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.2);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+/* Vertical overshooting guidelines */
+.skiper-text-blueprint-box::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -42px;
+  bottom: -42px;
+  border-left: 1px dashed rgba(255, 255, 255, 0.2);
+  border-right: 1px dashed rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+/* Neon Gray & Yellow Glowing Pip on the Right Dashed Border Line */
+.skiper-blueprint-neon-pip {
+  position: absolute;
+  right: -1.5px;
+  top: 26%;
+  width: 3px;
+  height: 56px;
+  background: linear-gradient(180deg, #94a3b8 0%, #cbd5e1 28%, #fff01f 68%, #ffe600 100%);
+  border-radius: 3px;
+  box-shadow:
+    0 0 10px rgba(255, 230, 0, 0.9),
+    0 0 20px rgba(203, 213, 225, 0.7),
+    0 0 34px rgba(255, 230, 0, 0.45);
+  z-index: 5;
+  pointer-events: none;
+  animation: neonPipPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes neonPipPulse {
+  0% {
+    box-shadow:
+      0 0 8px rgba(255, 230, 0, 0.85),
+      0 0 16px rgba(203, 213, 225, 0.65),
+      0 0 28px rgba(255, 230, 0, 0.35);
+    opacity: 0.92;
+  }
+  100% {
+    box-shadow:
+      0 0 14px rgba(255, 230, 0, 1),
+      0 0 24px rgba(255, 255, 255, 0.85),
+      0 0 42px rgba(255, 230, 0, 0.65);
+    opacity: 1;
+  }
+}
+
+.skiper-text-block {
+  font-family: var(--font-sans, 'Google Sans', 'Google Sans Display', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  width: 100%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.vision-line {
+  font-family: var(--font-sans, 'Google Sans', 'Google Sans Display', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  font-size: clamp(24px, 2.85vw, 40px);
+  font-weight: 450;
+  letter-spacing: -0.03em;
+  line-height: 1.26;
+  white-space: nowrap;
+}
+
+.text-white {
+  color: #ffffff;
+  font-weight: 650;
+}
+
+.text-muted {
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 450;
+}
+
+.text-body {
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 450;
+}
+
+/* White Contact Us Button */
+.skiper-cta-row {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+}
+
+.skiper-contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #ffffff;
+  color: #121212;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  padding: 12px 28px;
+  border-radius: 9999px;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  transition: all 0.22s ease;
+}
+
+.skiper-contact-btn:hover {
+  background-color: #f2f2f2;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 26px rgba(255, 255, 255, 0.22);
+}
+
+.skiper-contact-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .skiper-content-wrap {
+    gap: 36px;
+  }
+
+  .skiper-text-blueprint-frame {
+    padding: 34px 38px;
+  }
+
+  .vision-line {
+    font-size: clamp(20px, 2.5vw, 32px);
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 1024px) {
+  .vision-line {
+    font-size: clamp(19px, 2.4vw, 28px);
+    white-space: normal;
+  }
+}
+
+@media (max-width: 960px) {
+  .skiper-section {
+    padding: 70px 24px;
+    min-height: auto;
+  }
+
+  .skiper-content-wrap {
+    flex-direction: column;
+    align-items: center;
+    gap: 52px;
+    text-align: center;
+  }
+
+  .skiper-left-slider {
+    min-width: auto;
+    width: auto;
+    transform: none;
+  }
+
+  .skiper-right-text {
+    justify-content: center;
+    padding-left: 0;
+  }
+
+  .skiper-text-blueprint-frame {
+    padding: 28px 20px;
+    max-width: 100%;
+  }
+
+  .skiper-text-blueprint-box::before {
+    left: -20px;
+    right: -20px;
+  }
+
+  .skiper-text-blueprint-box::after {
+    top: -20px;
+    bottom: -20px;
+  }
+
+  .skiper-text-block {
+    text-align: center;
+    align-items: center;
+  }
+
+  .vision-line {
+    font-size: clamp(22px, 5.2vw, 30px);
+    white-space: normal;
+    line-height: 1.25;
+  }
+
+  .skiper-cta-row {
+    justify-content: center;
+    margin-top: 24px;
+  }
+}

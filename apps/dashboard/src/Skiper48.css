@@ -1,0 +1,186 @@
+.skiper48-outer-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.skiper-deck-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 24px;
+}
+
+.Carousal_002 {
+  position: relative;
+  width: 340px;
+  height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skiper48-card-stack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 340px;
+  height: 480px;
+  border-radius: 0 !important;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  cursor: grab;
+  touch-action: pan-y;
+  background: #181818;
+}
+
+.skiper48-card-stack:active {
+  cursor: grabbing;
+}
+
+.skiper48-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 0 !important;
+  overflow: hidden;
+}
+
+.skiper48-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  border-radius: 0 !important;
+}
+
+.skiper48-card-glass-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(0, 0, 0, 0) 35%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+  pointer-events: none;
+  border-radius: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Card Caption / CEO Text without background */
+.skiper48-card-caption {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.caption-text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 0;
+}
+
+.caption-title {
+  font-family: 'Great Vibes', 'Alex Brush', cursive;
+  font-size: 36px;
+  font-weight: 400;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95), 0 0 20px rgba(0, 0, 0, 0.9);
+  display: inline-block;
+  text-transform: none;
+}
+
+.caption-subtitle {
+  font-family: 'Alex Brush', 'Great Vibes', cursive;
+  font-size: 24px;
+  font-weight: 400;
+  color: #ffe600;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95), 0 0 16px rgba(255, 230, 0, 0.4);
+  display: inline-block;
+  text-transform: none;
+}
+
+.skiper48-nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 26px;
+  z-index: 20;
+}
+
+.skiper48-nav-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.skiper48-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.skiper48-nav-btn:active {
+  transform: scale(0.95);
+}
+
+.skiper48-dots {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.skiper48-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.skiper48-dot.active {
+  background: #ffffff;
+  width: 20px;
+  border-radius: 3px;
+}
+
+@media (max-width: 640px) {
+  .Carousal_002,
+  .skiper48-card-stack {
+    width: 260px;
+    height: 380px;
+  }
+}
