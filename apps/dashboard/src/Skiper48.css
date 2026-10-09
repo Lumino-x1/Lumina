@@ -131,7 +131,7 @@
 .skiper48-nav-btn {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -163,7 +163,7 @@
 .skiper48-dot {
   width: 6px;
   height: 6px;
-  border-radius: 50%;
+  border-radius: 0;
   background: rgba(255, 255, 255, 0.25);
   border: none;
   padding: 0;
@@ -174,7 +174,7 @@
 .skiper48-dot.active {
   background: #ffffff;
   width: 20px;
-  border-radius: 3px;
+  border-radius: 0;
 }
 
 @media (max-width: 640px) {

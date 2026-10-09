@@ -20,7 +20,7 @@
   border-radius: 50%;
   overflow: hidden;
   background-color: #242424;
-  box-shadow: 0 0 0 2px #191919;
+  box-shadow: 0 0 0 2px #000000;
   flex-shrink: 0;
   transition: transform 0.15s ease, z-index 0.15s ease;
 }

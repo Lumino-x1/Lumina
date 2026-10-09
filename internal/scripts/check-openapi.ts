@@ -83,7 +83,6 @@ function checkOpenApi() {
     '/api/friends/requests/outgoing',
     '/api/posts',
     '/api/posts/{id}/like',
-    '/api/posts/{id}/likes/count',
     '/api/posts/{id}/save',
     '/api/posts/saved',
     '/api/chat/token',

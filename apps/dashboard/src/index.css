@@ -1,95 +1,66 @@
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Chakra+Petch:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Covered+By+Your+Grace&family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Geist:wght@100..900&family=Geist+Mono:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&family=Oxanium:wght@400;500;600;700;800&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Reenie+Beanie&family=Righteous&family=Rock+Salt&family=Rubik+Glitch&family=Syne:wght@700;800&family=Unbounded:wght@600;700;800;900&display=swap');
+@import "tailwindcss";
 
-/* Google Sans (Google Antigravity exact brand typography) */
-@font-face {
-  font-family: 'Google Sans';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/googlesans/v58/4UaGrENHsxJlGDuGo1OIlL3Kwp5MKg.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Google Sans';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/googlesans/v58/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2rgCIlsw.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Google Sans';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/googlesans/v58/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2rgCIlsw.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Google Sans';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/googlesans/v58/4UaBrENHsxJlGDuGo1OIlL3Kwp5MKg.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Google Sans Display';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/googlesansdisplay/v24/ea8Fad4W1UlLHPG9n13NPW-W41AlXCs9.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Google Sans Display';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/googlesansdisplay/v24/ea8Iad4W1UlLHPG9n13NPW-W41AlVCk_Z4E.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Google Sans Display';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/googlesansdisplay/v24/ea8Iad4W1UlLHPG9n13NPW-W41AlUCc_Z4E.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Google Sans Text';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/googlesanstext/v21/5aUu9-KzpRiLCAt4Unrc-xIKmCU5qEp2iw.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Google Sans Text';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/googlesanstext/v21/5aUt9-KzpRiLCAt4Unrc-xIKmCU5sHp0k02x.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Google Sans Text';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('https://fonts.gstatic.com/s/googlesanstext/v21/5aUt9-KzpRiLCAt4Unrc-xIKmCU5rHp0k02x.woff2') format('woff2');
+@theme {
+  --font-sans: 'Plus Jakarta Sans', 'Inter', 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 :root {
-  --font-sans: 'Google Sans', 'Google Sans Display', 'Google Sans Text', 'Product Sans', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --notion-bg: #191919;
-  --notion-sidebar: #202020;
-  --notion-hover: #262626;
-  --notion-border: rgba(255, 255, 255, 0.1);
-  --notion-text: rgba(255, 255, 255, 0.9);
-  --notion-text-muted: rgba(255, 255, 255, 0.6);
+  /* SaasCN Design System Foundations */
+  --font-family-primary: 'Geist', 'Geist Fallback', system-ui, sans-serif;
+  --font-size-base: 17.5px;
+  --font-weight-base: 400;
+  --font-line-height-base: 26px;
+
+  /* Typography Scale */
+  --font-size-xs: 15px;
+  --font-size-sm: 17.5px;
+  --font-size-md: 19.5px;
+  --font-size-lg: 22px;
+  --font-size-xl: 52px;
+  --font-size-2xl: 78px;
+
+  /* Color Palette */
+  --color-text-primary: #ebebeb;
+  --color-text-secondary: #b3b3b3;
+  --color-text-tertiary: #171717;
+  --color-surface-raised: #fafafa;
+  --color-surface-base: #000000;
+  --color-surface-muted: oklab(0.510275 0.000023216 0.0000101924 / 0.06);
+  --color-surface-strong: #121212;
+  --color-border-default: #666666;
+  --color-border-subtle: rgba(255, 255, 255, 0.12);
+  --color-focus-ring: oklab(0.640083 0.0000290871 0.000012815 / 0.5);
+
+  /* Spacing Scale */
+  --space-1: 6px;
+  --space-2: 8px;
+  --space-3: 10px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 64px;
+  --space-8: 149px;
+
+  /* Radius & Motion */
+  --radius-xs: 6px;
+  --radius-pill: 9999px;
+  --motion-duration-instant: 100ms;
+  --motion-duration-fast: 150ms;
+  --motion-duration-normal: 300ms;
+
+  --font-sans: var(--font-family-primary);
+  --notion-bg: var(--color-surface-base);
+  --notion-text: var(--color-text-primary);
+  --notion-text-muted: var(--color-text-secondary);
+  --notion-border: var(--color-border-subtle);
+}
+
+/* WCAG 2.2 AA Focus Visible Requirements */
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
 }
 
 * {
@@ -99,7 +70,7 @@
 }
 
 html, body {
-  background-color: #191919;
+  background-color: #000000;
   color: var(--notion-text);
   font-family: var(--font-sans);
   min-height: 100vh;
@@ -114,13 +85,13 @@ html, body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #191919;
+  background-color: #000000;
 }
 
 .app-main-wrapper {
   width: 100%;
   min-height: 100vh;
-  background-color: #191919;
+  background-color: #000000;
 }
 
 a {
@@ -128,6 +99,63 @@ a {
   text-decoration: none;
 }
 
-button {
+button,
+.btn,
+.btn-primary-pill,
+.btn-call-pill,
+.btn-docs-pill,
+.btn-demo,
+.btn-login,
+.btn-signup,
+.btn-cta-blue,
+.btn-cta-white,
+.btn-cta-primary,
+.lumina-btn-demo,
+.lumina-btn-login,
+.lumina-btn-signup,
+.hero-nav-pill,
+.hero-version-pill,
+.skiper-contact-btn,
+.skiper48-nav-btn,
+.process-book-btn,
+.card-question-pill,
+.newsletter-submit-btn,
+.newsletter-input-pill,
+.footer-cta-pill,
+.integrations-label,
+[role="button"] {
   font-family: inherit;
+  border-radius: 0 !important;
+}
+
+/* Grid Corner Crosshairs (+) */
+.crosshair-marker {
+  position: absolute;
+  font-family: monospace, ui-monospace, sans-serif;
+  font-size: 15px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+  z-index: 10;
+  user-select: none;
+}
+
+.crosshair-top-left {
+  top: -8px;
+  left: -5px;
+}
+
+.crosshair-top-right {
+  top: -8px;
+  right: -5px;
+}
+
+.crosshair-bottom-left {
+  bottom: -8px;
+  left: -5px;
+}
+
+.crosshair-bottom-right {
+  bottom: -8px;
+  right: -5px;
 }

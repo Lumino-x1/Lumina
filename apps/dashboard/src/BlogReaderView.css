@@ -1,0 +1,559 @@
+/* BlogReaderView.css - Medium / Lumina dark blog reader view matching reference design */
+
+.lumina-blog-reader-page {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #000000;
+  color: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: padding-right 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 1024px) {
+  .lumina-blog-reader-page.has-drawer-open {
+    padding-right: 440px;
+  }
+}
+
+/* 1. Sticky Top Navigation Bar */
+.reader-top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.reader-top-bar-inner {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reader-top-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.reader-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  padding: 8px 16px 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.reader-back-btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.reader-back-btn:active {
+  transform: translateY(1px);
+}
+
+.reader-top-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reader-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.reader-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.reader-icon-btn.is-active {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+.reader-icon-btn.is-active svg {
+  fill: #000000;
+  stroke: #000000;
+}
+
+/* 2. Document Canvas Sheet */
+.reader-document-canvas {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 44px 24px 120px;
+  box-sizing: border-box;
+  background: #000000;
+}
+
+.reader-document-sheet {
+  width: 100%;
+  max-width: 740px;
+  margin: 0 auto;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tags pill row */
+.reader-tags-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.reader-topic-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.reader-topic-pill:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.reader-topic-plus {
+  color: #9ca3af;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Announcement Pill */
+.reader-announcement-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 9999px;
+  margin-bottom: 20px;
+  width: fit-content;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* Document Title */
+.reader-title {
+  font-size: 42px;
+  line-height: 1.22;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  word-break: break-word;
+}
+
+@media (max-width: 640px) {
+  .reader-title {
+    font-size: 30px;
+    line-height: 1.25;
+  }
+}
+
+/* Subtitle / Excerpt */
+.reader-subtitle {
+  font-size: 20px;
+  line-height: 1.5;
+  color: #9ca3af;
+  margin: 0 0 28px 0;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 640px) {
+  .reader-subtitle {
+    font-size: 16px;
+  }
+}
+
+/* Author Row */
+.reader-author-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.reader-author-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.reader-author-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.reader-author-avatar-fallback {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #262626;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reader-author-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.reader-author-name-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reader-author-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.reader-author-username {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.reader-post-meta-sub {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.reader-dot {
+  color: #4b5563;
+}
+
+.reader-inline-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reader-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.reader-pill-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.reader-pill-btn.is-liked,
+.reader-pill-btn.is-active {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+.reader-pill-btn.is-liked svg,
+.reader-pill-btn.is-active svg {
+  fill: #000000;
+  stroke: #000000;
+}
+
+.reader-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0 0 32px 0;
+}
+
+/* Cover Image */
+.reader-cover-wrap {
+  width: 100%;
+  margin-bottom: 36px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.reader-cover-img {
+  width: 100%;
+  max-height: 480px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Article Body Typography */
+.reader-body-content {
+  color: #d1d5db;
+  font-size: 18px;
+  line-height: 1.75;
+  letter-spacing: -0.003em;
+}
+
+.reader-p {
+  margin: 0 0 24px 0;
+  color: #d1d5db;
+}
+
+.reader-h1 {
+  font-size: 28px;
+  line-height: 1.3;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 40px 0 16px 0;
+}
+
+.reader-h2 {
+  font-size: 22px;
+  line-height: 1.35;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 32px 0 14px 0;
+}
+
+.reader-h3 {
+  font-size: 19px;
+  line-height: 1.4;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 24px 0 12px 0;
+}
+
+.reader-quote {
+  border-left: 3px solid #ffffff;
+  padding: 14px 22px;
+  margin: 28px 0;
+  font-style: italic;
+  color: #f3f4f6;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0 8px 8px 0;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.reader-code {
+  background: #18181b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 24px 0;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #e4e4e7;
+}
+
+.reader-list {
+  margin: 0 0 24px 0;
+  padding-left: 24px;
+  color: #d1d5db;
+}
+
+.reader-list li {
+  margin-bottom: 12px;
+  line-height: 1.7;
+}
+
+.reader-list li strong {
+  color: #ffffff;
+}
+
+/* Topics Tags */
+.reader-topics-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 36px 0 44px;
+}
+
+.reader-topic-tag {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #9ca3af;
+}
+
+/* Article Footer */
+.reader-article-footer {
+  margin-top: 48px;
+  padding-top: 36px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.reader-author-bio-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0;
+  padding: 22px 24px;
+  margin-bottom: 28px;
+}
+
+.reader-bio-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reader-bio-avatar-fallback {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #262626;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 22px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reader-bio-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.reader-bio-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.reader-bio-desc {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #9ca3af;
+}
+
+.reader-footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.reader-footer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.reader-footer-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.reader-footer-btn.is-liked,
+.reader-footer-btn.is-active {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+.reader-footer-btn.primary-back-btn {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.reader-footer-btn.primary-back-btn:hover {
+  background: #e5e7eb;
+  border-color: #e5e7eb;
+}

@@ -5,57 +5,76 @@ import {
   MSG_UNAUTHORIZED,
 } from '@lumina/constants'
 import multer from 'multer'
-
 import type { AuthenticatedRequest } from '@lumina/contracts'
 import type { NextFunction, Request, Response } from 'express'
-
 export type AuthRequest = AuthenticatedRequest
+import { fromNodeHeaders } from "better-auth/node";
 
-export async function requireAuth(req: Request, res: Response, next: NextFunction) {
+export async function requireAuth(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
-    if (process.env.NODE_ENV === 'test' && req.headers['x-test-user-id']) {
-      const { prisma } = await import('@lumina/db')
+    if (process.env.NODE_ENV === "test" && req.headers["x-test-user-id"]) {
+      const { prisma } = await import("@lumina/db");
+
       const mockUser = await prisma.user.findUnique({
-        where: { id: req.headers['x-test-user-id'] as string },
-      })
+        where: {
+          id: req.headers["x-test-user-id"] as string,
+        },
+      });
+
       if (mockUser) {
-        ;(req as AuthenticatedRequest).user = {
+        (req as AuthenticatedRequest).user = {
           id: mockUser.id,
           email: mockUser.email,
           role: String(mockUser.role) as never,
-        }
-        return next()
+        };
+
+        return next();
       }
     }
 
     const session = await auth.api.getSession({
-      headers: req.headers,
-    })
+      headers: fromNodeHeaders(req.headers),
+    });
+    console.log("SESSION:", session);
+
 
     if (!session) {
       return res.status(401).json({
         message: MSG_UNAUTHORIZED,
-      })
+      });
     }
 
-    ;(req as AuthenticatedRequest).user = {
+    (req as AuthenticatedRequest).user = {
       id: session.user.id,
       email: session.user.email,
-      role: 'role' in session.user ? String(session.user.role) : 'STUDENT',
-    }
+      role:
+        "role" in session.user
+          ? String(session.user.role)
+          : "STUDENT",
+    };
 
-    next()
-  } catch {
+    return next();
+  } catch (error) {
+    console.error("========== BETTER AUTH ERROR ==========");
+    console.error(error);
+    console.error("cause:", error instanceof Error ? error.cause : undefined);
+    console.error("stack:", error instanceof Error ? error.stack : undefined);
+    console.error("========================================");
+  
     return res.status(401).json({
       message: MSG_UNAUTHORIZED,
-    })
+    });
   }
 }
 
 export async function optionalAuth(req: Request, _res: Response, next: NextFunction) {
   try {
     const session = await auth.api.getSession({
-      headers: req.headers,
+      headers: fromNodeHeaders(req.headers),
     })
     if (session) {
       ;(req as AuthenticatedRequest).user = {

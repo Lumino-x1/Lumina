@@ -19,7 +19,11 @@
     "check-openapi": "bun internal/scripts/check-openapi.ts",
     "test:bruno": "mkdir -p reports && cd bruno && bunx @usebruno/cli run -r --global-env ci --workspace-path .. --tags smoke,workflow,release-gate --reporter-html ../reports/github-actions-report.html",
     "worker:leetcode": "bun workers/leetcode/src/index.ts",
-    "db:migrate:deploy": "bun run --filter @lumina/db migrate:deploy"
+    "db:setup": "docker compose up -d db && bun run --filter @lumina/db migrate:deploy",
+    "seed:blogs": "bun scripts/seed-blogs.js",
+    "db:migrate:deploy": "bun run --filter @lumina/db migrate:deploy",
+    "db:shell": "docker compose exec db psql -U lumina_user -d lumina_dev",
+    "db:studio": "bunx prisma studio --config packages/db/prisma.config.ts"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.7.1",

@@ -36,22 +36,10 @@ const DEFAULT_IMAGES: ImageItem[] = [
     subtitle: 'CTO Lumina',
   },
   {
-    src: '/landing-page-ML-dev.jpeg',
-    alt: 'Agnesh KK ML developer Lumina',
-    title: 'Agnesh KK',
-    subtitle: 'ML developer Lumina',
-  },
-  {
-    src: '/landing-page-image-of-ceo.jpeg',
-    alt: 'Sunilkumar T CEO Lumina',
-    title: 'Sunilkumar T',
-    subtitle: 'CEO Lumina',
-  },
-  {
-    src: '/landing-page-image-of-CTO.jpeg',
-    alt: 'Dharaneesh S L CTO Lumina',
-    title: 'Dharaneesh S L',
-    subtitle: 'CTO Lumina',
+    src: '/gowhtam-cro.png',
+    alt: 'Gowtham P CRO Lumina',
+    title: 'Gowtham P',
+    subtitle: 'CRO Lumina',
   },
   {
     src: '/landing-page-ML-dev.jpeg',

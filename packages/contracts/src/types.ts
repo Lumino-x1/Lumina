@@ -9,10 +9,20 @@ export interface AuthenticatedRequest extends Request {
 }
 
 export interface SignUpInput {
-  name: string
+  firstName?: string
+  lastName?: string
   email: string
-  password: string
-  rememberMe?: boolean
+  profilePicture?: string | null
+  college?: string | null
+  department?: string | null
+  year?: number | null
+  interests?: string[]
+  skills?: string[]
+  bio?: string
+  about?: string
+  github?: string
+  portfolio?: string
+  location?: string
 }
 
 export interface SignInInput {
@@ -30,22 +40,6 @@ export interface UploadFileOptions {
   mimeType: string
   folder: string
   fileName?: string
-}
-
-export interface CreatePostInput {
-  userId: string
-  body: {
-    content?: string
-    visibility: 'PUBLIC' | 'COLLEGE' | 'FRIENDS' | 'PRIVATE'
-    anonymous?: boolean
-    location?: string
-  }
-  files: Array<{
-    buffer: Buffer
-    mimetype: string
-    size: number
-    originalname: string
-  }>
 }
 
 export interface LeaderboardEntry {

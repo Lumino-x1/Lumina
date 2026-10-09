@@ -1,4 +1,4 @@
-import React, { ElementType } from 'react'
+import React, { type ElementType } from 'react'
 import { motion, type Variants } from 'framer-motion'
 import { cn } from '../../lib/utils'
 

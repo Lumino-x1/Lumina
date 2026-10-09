@@ -1,0 +1,26 @@
+/* Lumina World-Class Auth Stylesheet */
+
+.lumina-auth-root {
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Chrome / Safari / Edge Autofill Fix */
+.lumina-auth-root input:-webkit-autofill,
+.lumina-auth-root input:-webkit-autofill:hover,
+.lumina-auth-root input:-webkit-autofill:focus,
+.lumina-auth-root input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #18181b inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  transition: background-color 5000s ease-in-out 0s;
+  font-size: 13.5px !important;
+}
+
+/* Dot grid overlay for right pane */
+.lumina-grid-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}

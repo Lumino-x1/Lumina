@@ -1,0 +1,5 @@
+ALTER TABLE "Post"
+ADD COLUMN "title" TEXT,
+ADD COLUMN "subtitle" TEXT,
+ADD COLUMN "coverImage" TEXT,
+ADD COLUMN "blocks" JSONB;

@@ -1,0 +1,216 @@
+/* ==========================================================================
+   Lumina Monochromatic Cinematic Curtain Reveal Footer
+   Matches Lumina's #191919 Landing Page Palette - No Neon Colors
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Curtain Reveal Outer Wrapper: standard scroll flow with clipPath window */
+.cinematic-footer-outer {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  width: 100%;
+  clip-path: polygon(0% 0, 100% 0%, 100% 100%, 0 100%);
+  -webkit-clip-path: polygon(0% 0, 100% 0%, 100% 100%, 0 100%);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Fixed Inner Footer: viewport-locked underneath content */
+.cinematic-footer-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+/* Animations */
+@keyframes footer-breathe {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+/* Soft Monochromatic Ambient Glow (No Neon) */
+.footer-aurora {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 75vw;
+  max-width: 1000px;
+  height: 60vh;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 45%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+  animation: footer-breathe 8s ease-in-out infinite alternate;
+}
+
+/* Subtle Monochrome Grid Pattern matching Landing Page */
+.footer-bg-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-size: 64px 64px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Giant Hero Wordmark: LUMINA with Brand Logo Emblem */
+.footer-hero-container {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1400px;
+  padding: 0 32px;
+  box-sizing: border-box;
+}
+
+.footer-brand-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.footer-brand-logo-icon {
+  width: clamp(48px, 6vw, 76px);
+  height: auto;
+  color: rgba(255, 255, 255, 0.85);
+  filter: drop-shadow(0 0 24px rgba(255, 255, 255, 0.15));
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.footer-hero-wordmark {
+  font-size: clamp(6.5rem, 21vw, 22rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.8;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  user-select: none;
+  white-space: nowrap;
+  
+  /* Refined Monochromatic Metallic Gradient */
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(255, 255, 255, 0.35) 45%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
+  filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.08));
+}
+
+/* Minimalist Bottom Bar (Rights Reserved & Back to Top) */
+.footer-bottom-bar {
+  position: absolute;
+  bottom: 28px;
+  left: 0;
+  width: 100%;
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  z-index: 20;
+}
+
+.footer-copyright-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-mini-logo {
+  width: 18px;
+  height: 14px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.footer-copyright {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.footer-back-to-top {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0;
+  margin: 0;
+}
+
+.footer-back-to-top:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.footer-back-to-top svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 768px) {
+  .footer-bottom-bar {
+    bottom: 20px;
+    padding: 0 24px;
+  }
+}

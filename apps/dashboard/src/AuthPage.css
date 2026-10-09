@@ -1,386 +1,778 @@
-/* Lumina Auth Page (Login / Signin) Styling */
-.auth-page-root {
+/* ==========================================================================
+   LUMINA ONBOARDING & AUTHENTICATION (DEEP DARK BLACK EDITION)
+   ========================================================================== */
+
+.lumina-split-root {
   min-height: 100vh;
   width: 100%;
-  background-color: #191919;
-  color: #ffffff;
+  display: flex;
+  background-color: #000000;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ==========================================================================
+   LEFT PANE: Auth Form & Onboarding (With DotGrid background)
+   ========================================================================== */
+
+.lumina-split-left {
+  width: 100%;
+  max-width: 580px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: 28px 24px;
+  background-color: #000000;
   box-sizing: border-box;
-  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   position: relative;
-  overflow-x: hidden;
-}
-
-/* Subtle ambient background glow */
-.auth-page-root::before {
-  content: '';
-  position: absolute;
-  top: -120px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 600px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.035) 0%, transparent 70%);
-  pointer-events: none;
-  filter: blur(60px);
-}
-
-/* Top Header */
-.auth-header {
-  width: 100%;
-  max-width: 1560px;
+  overflow: hidden;
+  z-index: 10;
   margin: 0 auto;
-  padding: 24px 36px;
+}
+
+@media (min-width: 1024px) {
+  .lumina-split-left {
+    width: 50%;
+    max-width: none;
+    margin: 0;
+    padding: 36px 44px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .lumina-split-left {
+    padding: 40px 60px;
+  }
+}
+
+.lumina-auth-top-bar,
+.lumina-auth-form-wrap,
+.lumina-auth-bottom-spacer {
+  position: relative;
+  z-index: 2;
+}
+
+/* Top Back Navigation */
+.lumina-auth-top-bar {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-sizing: border-box;
-  z-index: 10;
 }
 
-.auth-brand-link {
+.lumina-auth-back-btn {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  color: #ffffff;
-  transition: opacity 0.15s ease;
-}
-
-.auth-brand-link:hover {
-  opacity: 0.85;
-}
-
-.auth-lumina-logo {
-  width: 26px;
-  height: 19px;
-  fill: currentColor;
-  display: block;
-}
-
-.auth-brand-name {
-  font-family: var(--font-sans);
-  font-size: 19px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  color: #ffffff;
-}
-
-.auth-back-btn {
-  background: transparent;
+  gap: 8px;
+  background-color: transparent;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.75);
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.65);
+  padding: 6px 14px;
+  border-radius: 0;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.15s ease;
   outline: none;
 }
 
-.auth-back-btn:hover {
+.lumina-auth-back-btn:hover {
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.25);
-  transform: translateX(-2px);
+  border-color: rgba(255, 255, 255, 0.28);
+  background-color: rgba(255, 255, 255, 0.06);
+  transform: translateX(-1px);
 }
 
-/* Main Center Content */
-.auth-main-content {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  box-sizing: border-box;
-  z-index: 5;
+.lumina-auth-step-badge {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.02em;
 }
 
-.auth-card {
+/* Form Container */
+.lumina-auth-form-wrap {
+  margin: auto;
   width: 100%;
-  max-width: 390px;
+  max-width: 460px;
+  padding: 20px 0;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
+  align-items: center;
 }
 
-/* Card Header */
-.auth-card-head {
-  text-align: center;
-  margin-bottom: 26px;
-}
-
-.auth-title {
-  font-size: 29px;
-  font-weight: 600;
-  letter-spacing: -0.035em;
-  color: #ffffff;
-  line-height: 1.2;
-  margin: 0 0 10px;
-}
-
-.auth-subtitle {
-  font-size: 14px;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.55);
-  margin: 0 auto;
-  max-width: 320px;
-}
-
-/* Google OAuth Button */
-.auth-google-btn {
-  width: 100%;
-  height: 44px;
-  background-color: #ffffff;
-  color: #121212;
-  border: 1px solid #ffffff;
-  border-radius: 8px;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  display: inline-flex;
+/* Header */
+.lumina-auth-header {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  margin-bottom: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.lumina-auth-logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.lumina-auth-brand-logo {
+  width: 38px;
+  height: 28px;
+  fill: currentColor;
+  color: #ffffff;
+  display: block;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.lumina-auth-brand-logo:hover {
+  transform: scale(1.06);
+  opacity: 0.9;
+}
+
+.lumina-auth-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.25;
+}
+
+/* Multi-step progress bar */
+.lumina-progress-track {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.lumina-progress-bar {
+  flex: 1;
+  height: 3.5px;
+  border-radius: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.lumina-progress-bar.active {
+  background-color: #ffffff;
+}
+
+.lumina-progress-bar.completed {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Frosted Deep Dark Black Card with sharp rectangular edges */
+.lumina-auth-card {
+  width: 100%;
+  background-color: rgba(6, 6, 6, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 0;
+  padding: 28px 24px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-.auth-google-btn:hover {
-  opacity: 0.92;
+@media (min-width: 640px) {
+  .lumina-auth-card {
+    padding: 30px 28px;
+  }
 }
 
-.auth-google-btn:active {
-  transform: scale(0.99);
+/* Form Styles */
+.lumina-auth-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
-.google-icon {
-  width: 18px;
-  height: 18px;
+.lumina-auth-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.lumina-auth-field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.lumina-auth-label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.88);
+  margin-bottom: 7px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lumina-auth-label-opt {
+  font-size: 11.5px;
+  font-weight: normal;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.lumina-auth-input-prefix-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.lumina-auth-input-prefix {
+  position: absolute;
+  left: 14px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.lumina-auth-input.has-prefix {
+  padding-left: 30px;
+}
+
+.lumina-auth-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 0;
+  background-color: #0c0c0c;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  font-family: inherit;
+}
+
+.lumina-auth-textarea {
+  width: 100%;
+  height: 76px;
+  padding: 10px 14px;
+  border-radius: 0;
+  background-color: #0c0c0c;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 13.5px;
+  box-sizing: border-box;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-family: inherit;
+  line-height: 1.45;
+}
+
+.lumina-auth-input::placeholder,
+.lumina-auth-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.lumina-auth-input:focus,
+.lumina-auth-textarea:focus {
+  border-color: rgba(255, 255, 255, 0.45);
+  background-color: #141414;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+/* Avatar / Profile Picture Picker */
+.lumina-avatar-picker-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 0;
+  background: #0c0c0c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lumina-avatar-preview {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #141414;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   flex-shrink: 0;
 }
 
-/* Divider */
-.auth-divider {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin: 22px 0;
+.lumina-avatar-preview img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.auth-divider-line {
+.lumina-avatar-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   flex: 1;
-  height: 1px;
-  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.auth-divider-text {
-  font-size: 11.5px;
+.lumina-avatar-upload-btn {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  font-size: 12.5px;
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.38);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+  width: fit-content;
 }
 
-/* Form */
-.auth-form {
+.lumina-avatar-upload-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.lumina-avatar-hint {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Year Selection Radio Pills */
+.lumina-year-pills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.lumina-year-pill-btn {
+  padding: 10px 8px;
+  border-radius: 0;
+  background: #0c0c0c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.lumina-year-pill-btn:hover {
+  background: #181818;
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.lumina-year-pill-btn.active {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #000000;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Interests Chip Grid */
+.lumina-chips-container {
   display: flex;
-  flex-direction: column;
-  gap: 18px;
-  width: 100%;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
-.auth-field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  width: 100%;
+.lumina-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 0;
+  background: #0c0c0c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
 }
 
-.auth-label-row {
+.lumina-chip-btn:hover {
+  background: #181818;
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.lumina-chip-btn.selected {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.lumina-chip-indicator {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.auth-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.85);
-  letter-spacing: -0.01em;
-}
-
-.auth-forgot-link {
+  margin-bottom: 8px;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.55);
-  text-decoration: none;
-  transition: color 0.15s ease;
+  color: rgba(255, 255, 255, 0.5);
 }
 
-.auth-forgot-link:hover {
-  color: #ffffff;
+.lumina-chip-indicator.valid {
+  color: #86efac;
 }
 
-.auth-input-wrapper {
-  position: relative;
-  width: 100%;
+/* Skills Tag Input */
+.lumina-skills-tags-wrap {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  margin-bottom: 12px;
 }
 
-.auth-input {
-  width: 100%;
-  height: 42px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  padding: 0 14px;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  color: #ffffff;
-  outline: none;
-  box-sizing: border-box;
-  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.auth-input.with-toggle {
-  padding-right: 42px;
-}
-
-.auth-input::placeholder {
-  color: rgba(255, 255, 255, 0.28);
-}
-
-.auth-input:focus {
-  border-color: rgba(255, 255, 255, 0.4);
-  background-color: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
-}
-
-.auth-password-toggle {
-  position: absolute;
-  right: 12px;
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.45);
-  cursor: pointer;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.15s ease;
-}
-
-.auth-password-toggle:hover {
-  color: #ffffff;
-}
-
-/* Submit Button */
-.auth-submit-btn {
-  width: 100%;
-  height: 44px;
-  background-color: #262626;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
+.lumina-skill-tag {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  margin-top: 6px;
-  transition: all 0.15s ease;
-  box-sizing: border-box;
-}
-
-.auth-submit-btn:hover {
-  background-color: #303030;
-  border-color: rgba(255, 255, 255, 0.28);
-}
-
-.auth-submit-btn:active {
-  transform: scale(0.99);
-}
-
-/* Mode Toggle */
-.auth-mode-toggle {
-  text-align: center;
-  margin-top: 24px;
-}
-
-.auth-toggle-text {
-  font-size: 13.5px;
-  color: rgba(255, 255, 255, 0.55);
-  margin: 0;
-}
-
-.auth-toggle-btn {
-  background: none;
-  border: none;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 12px;
   color: #ffffff;
-  font-family: var(--font-sans);
-  font-size: 13.5px;
+}
+
+.lumina-skill-tag-remove {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+}
+
+.lumina-skill-tag-remove:hover {
+  color: #ffffff;
+}
+
+.lumina-skills-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.lumina-skill-suggestion-btn {
+  padding: 3px 8px;
+  border-radius: 0;
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lumina-skill-suggestion-btn:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+}
+
+/* Button Group (Back & Next) */
+.lumina-auth-btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.lumina-auth-secondary-btn {
+  flex: 1;
+  height: 46px;
+  border-radius: 0;
+  background-color: #0c0c0c;
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.lumina-auth-secondary-btn:hover {
+  background-color: #181818;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+/* Primary Action Button (White in Dark theme) */
+.lumina-auth-submit-btn {
+  flex: 2;
+  height: 46px;
+  border-radius: 0;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+  outline: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.lumina-auth-submit-btn.full-width {
+  flex: none;
+  width: 100%;
+}
+
+.lumina-auth-submit-btn:hover:not(:disabled) {
+  background-color: #e4e4e7;
+}
+
+.lumina-auth-submit-btn:active:not(:disabled) {
+  transform: scale(0.995);
+}
+
+.lumina-auth-submit-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Social Buttons */
+.lumina-auth-social-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+  width: 100%;
+}
+
+.lumina-auth-social-btn {
+  width: 100%;
+  height: 44px;
+  border-radius: 0;
+  background-color: #0c0c0c;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  padding: 0 0 0 4px;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  transition: opacity 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  outline: none;
 }
 
-.auth-toggle-btn:hover {
-  opacity: 0.8;
+.lumina-auth-social-btn:hover {
+  background-color: #181818;
+  border-color: rgba(255, 255, 255, 0.24);
 }
 
-/* Footer Disclaimer */
-.auth-footer {
+/* Hairline Divider */
+.lumina-auth-divider {
+  display: flex;
+  align-items: center;
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px 24px 32px;
-  text-align: center;
-  box-sizing: border-box;
-  z-index: 10;
+  margin: 16px 0;
+  gap: 10px;
 }
 
-.auth-disclaimer {
-  font-size: 12px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.42);
+.lumina-auth-divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.lumina-auth-divider-text {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Switch Mode Footer */
+.lumina-auth-footer {
+  margin-top: 22px;
+  text-align: center;
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.lumina-auth-switch-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 4px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  outline: none;
+  text-decoration: underline;
+}
+
+.lumina-auth-switch-btn:hover {
+  opacity: 0.85;
+}
+
+/* Alerts */
+.lumina-auth-alert {
+  padding: 10px 14px;
+  border-radius: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  margin-bottom: 14px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lumina-auth-alert-error {
+  background-color: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+.lumina-auth-alert-success {
+  background-color: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #86efac;
+}
+
+/* Spinner */
+.lumina-auth-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(24, 24, 27, 0.3);
+  border-top-color: #18181b;
+  border-radius: 50%;
+  animation: lumina-spin 0.6s linear infinite;
+}
+
+@keyframes lumina-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.lumina-auth-bottom-spacer {
+  height: 20px;
+}
+
+/* ==========================================================================
+   RIGHT PANE: GrainGradient Orange Shader Showcase
+   ========================================================================== */
+
+.lumina-split-right {
+  display: none;
+  position: relative;
+  overflow: hidden;
+  background-color: #000000;
+  box-sizing: border-box;
+  margin: 0;
+  border-radius: 0;
+}
+
+@media (min-width: 1024px) {
+  .lumina-split-right {
+    display: flex;
+    flex: 1;
+    width: 50%;
+    height: 100vh;
+    min-height: 100vh;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    margin: 0;
+    border-radius: 0;
+    border: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+.lumina-split-right-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 48px 40px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  .lumina-split-right-content {
+    padding: 72px 56px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .lumina-split-right-content {
+    padding: 92px 68px;
+  }
+}
+
+.lumina-split-heading {
+  max-width: 620px;
+  font-size: 42px;
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  color: #ffffff;
+  line-height: 1.05;
   margin: 0;
 }
 
-.auth-disclaimer a {
-  color: rgba(255, 255, 255, 0.65);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  transition: color 0.15s ease;
+@media (min-width: 640px) {
+  .lumina-split-heading {
+    font-size: 52px;
+  }
 }
 
-.auth-disclaimer a:hover {
-  color: #ffffff;
+@media (min-width: 1024px) {
+  .lumina-split-heading {
+    font-size: 64px;
+    line-height: 0.98;
+  }
 }
 
-@media (max-width: 640px) {
-  .auth-header {
-    padding: 18px 20px;
-  }
-
-  .auth-card {
-    max-width: 100%;
-  }
-
-  .auth-title {
-    font-size: 26px;
+@media (min-width: 1280px) {
+  .lumina-split-heading {
+    font-size: 72px;
   }
 }

@@ -682,7 +682,7 @@ function transformGalleryHeadingSource(
   mode: EffectMode,
   variant: GalleryHeadingConfiguration,
 ) {
-  const background = mode === "light" ? "#f4f7fb" : "#191919";
+  const background = mode === "light" ? "#f4f7fb" : "#000000";
   const ink = mode === "light" ? variant.ink.light : variant.ink.dark;
   const font = GALLERY_HEADING_FONTS[variant.type.font];
 
@@ -1629,10 +1629,10 @@ const EFFECTS = {
   galleryHeading: {
     title: "Gallery Heading canvas animation",
     source: galleryHeadingSource,
-    background: "#191919",
+    background: "#000000",
     theme: {
       lightBackground: "#f4f7fb",
-      darkBackground: "#191919",
+      darkBackground: "#000000",
     },
     transformSource: (source, mode) => transformGalleryHeadingSource(source, mode, GALLERY_HEADING_VARIANTS[GALLERY_HEADING_DEFAULTS.variant]),
     targets: [{ selector: "#stage", role: "background" }],

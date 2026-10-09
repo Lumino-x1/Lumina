@@ -1,0 +1,258 @@
+/* ==========================================================================
+   OperationsSection (Scale Operations Carousel / Grid Section)
+   Matches Landing Page Black & Architectural Grid Theme
+   ========================================================================== */
+
+.operations-section {
+  position: relative;
+  width: 100%;
+  background-color: transparent;
+  color: #ffffff;
+  overflow: hidden;
+  padding: 80px 0 100px;
+  font-family: var(--font-sans, 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif);
+}
+
+.operations-top-divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.08);
+  margin-bottom: 60px;
+}
+
+.operations-container {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0 48px;
+  box-sizing: border-box;
+}
+
+/* Header Row: 2-column layout */
+.operations-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 48px;
+  margin-bottom: 56px;
+}
+
+.operations-header-left {
+  flex: 1;
+  max-width: 640px;
+}
+
+.operations-title {
+  font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: clamp(32px, 3.8vw, 50px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+}
+
+.operations-header-right {
+  flex: 1;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.operations-subtitle {
+  font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0 0 24px 0;
+}
+
+/* Circular Carousel Arrow Controls */
+.operations-nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.operations-carousel-btn {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 9999px !important;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0 !important;
+}
+
+.operations-carousel-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.28) !important;
+  transform: scale(1.04);
+}
+
+.operations-carousel-btn:active {
+  transform: scale(0.96);
+}
+
+/* Track Wrapper */
+.operations-track-wrapper {
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+}
+
+.operations-cards-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding: 0;
+  margin: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.operations-cards-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Individual Card Cell */
+.operations-card-cell {
+  flex: 0 0 460px;
+  max-width: 460px;
+  box-sizing: border-box;
+  padding: 40px 36px 44px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.25s ease;
+}
+
+.operations-card-cell:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Blank Image Container */
+.operations-image-slot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 16px;
+  background-color: #0c0c0e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.operations-card-cell:hover .operations-image-slot {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+}
+
+.operations-image-content {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.operations-image-blank {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+}
+
+.operations-blank-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.35);
+  user-select: none;
+}
+
+.operations-blank-label {
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Card Meta (Title & Description) */
+.operations-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.operations-card-title {
+  font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.operations-card-description {
+  font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 14px;
+  line-height: 1.58;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.62);
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .operations-header-row {
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .operations-header-right {
+    max-width: 100%;
+  }
+
+  .operations-card-cell {
+    flex: 0 0 380px;
+    max-width: 380px;
+    padding: 32px 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .operations-container {
+    padding: 0 24px;
+  }
+
+  .operations-card-cell {
+    flex: 0 0 320px;
+    max-width: 320px;
+    padding: 24px 20px;
+  }
+
+  .operations-image-slot {
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+}

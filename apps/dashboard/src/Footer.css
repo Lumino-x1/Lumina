@@ -1,122 +1,144 @@
-/* Modern Developer Footer Styles */
+/* ==========================================================================
+   Lumina Arc Footer (Dia / The Browser Company Style)
+   ========================================================================== */
+
 .site-footer {
   position: relative;
   width: 100%;
-  background-color: #191919;
-  color: #ffffff;
-  padding: 140px 48px 0;
-  border-top: none;
-  overflow: hidden;
+  background-color: #FAF8F5;
+  color: #1a1a1a;
+  padding: 0 56px 44px;
+  box-sizing: border-box;
+  margin-top: 120px;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
 }
 
+/* --------------------------------------------------------------------------
+   Top Arc Curve
+   -------------------------------------------------------------------------- */
+.footer-arc-curve {
+  position: absolute;
+  top: -120px;
+  left: 0;
+  width: 100%;
+  height: 122px;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 5;
+}
+
+.footer-arc-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Container
+   -------------------------------------------------------------------------- */
 .footer-container {
-  max-width: 1240px;
+  max-width: 1280px;
   margin: 0 auto;
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-direction: column;
 }
 
-/* Pre-Footer Hero CTA Block */
-.footer-cta-block {
+/* --------------------------------------------------------------------------
+   Arc CTA Center Block
+   -------------------------------------------------------------------------- */
+.footer-arc-cta {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-bottom: 110px;
+  margin-top: -74px;
+  margin-bottom: 76px;
+  position: relative;
+  z-index: 12;
 }
 
-.footer-cta-title {
-  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 48px;
-  font-weight: 500;
-  letter-spacing: -0.035em;
-  color: #ffffff;
-  margin-bottom: 24px;
-}
-
-.footer-cta-actions {
-  display: flex;
+.footer-cta-pill {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-}
-
-.btn-footer-deploy {
-  background-color: #ffffff;
-  color: #000000;
-  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 13.5px;
-  font-weight: 500;
-  padding: 8px 18px;
-  border-radius: 9999px;
-  border: 1px solid #ffffff;
-  cursor: pointer;
-  transition: opacity 0.15s ease, transform 0.15s ease;
-}
-
-.btn-footer-deploy:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.btn-footer-agent {
-  background-color: #202020;
+  background-color: #000000;
   color: #ffffff;
-  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 13.5px;
+  font-size: 16.5px;
   font-weight: 500;
-  padding: 7px 16px;
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  letter-spacing: -0.015em;
+  padding: 16px 44px;
+  border-radius: 0;
+  text-decoration: none;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.18s ease, box-shadow 0.2s ease;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  user-select: none;
 }
 
-.btn-footer-agent:hover {
-  background-color: #282828;
-  border-color: rgba(255, 255, 255, 0.28);
-  transform: translateY(-1px);
+.footer-cta-pill:hover {
+  background-color: #1a1a1a;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.28);
 }
 
-.agent-icons-group {
+.footer-cta-arrow {
+  font-size: 18px;
+  line-height: 1;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.footer-cta-pill:hover .footer-cta-arrow {
+  transform: translateY(2px);
+}
+
+.footer-cta-subtext {
+  margin-top: 12px;
+  font-size: 12.5px;
+  color: #6b7280;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* --------------------------------------------------------------------------
+   Main Content Row (Columns + Right Seal Badge)
+   -------------------------------------------------------------------------- */
+.footer-main-content {
   display: flex;
-  align-items: center;
-  gap: 5px;
-  color: rgba(255, 255, 255, 0.75);
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 48px;
+  padding-bottom: 56px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.external-arrow {
-  color: rgba(255, 255, 255, 0.45);
-  margin-left: -1px;
-}
-
-/* Links Grid: 6 Columns */
-.footer-links-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 32px 24px;
-}
-
-.footer-row-bottom {
-  margin-top: 56px;
+.footer-columns-grid {
+  display: flex;
+  align-items: flex-start;
+  gap: 80px;
+  flex-wrap: wrap;
+  flex: 1;
 }
 
 .footer-column {
   display: flex;
   flex-direction: column;
+  min-width: 130px;
 }
 
 .footer-col-title {
   font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 13px;
-  font-weight: 500;
-  color: #ffffff;
-  margin-bottom: 12px;
-  letter-spacing: -0.01em;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #18181b;
+  text-transform: uppercase;
+  margin: 0 0 16px 0;
 }
 
 .footer-col-list {
@@ -125,194 +147,106 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .footer-link-item {
-  display: flex;
+  margin: 0;
+  padding: 0;
 }
 
 .footer-link {
   font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.52);
+  font-size: 13.5px;
+  font-weight: 400;
   letter-spacing: -0.01em;
-  display: inline-flex;
-  align-items: center;
+  color: #6b7280;
   text-decoration: none;
   transition: color 0.15s ease;
+  display: inline-block;
 }
 
 .footer-link:hover {
-  color: #ffffff;
+  color: #09090b;
 }
 
-/* New Pill Badge */
-.pill-badge-new {
-  font-size: 10px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
-  background-color: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 9999px;
-  padding: 1px 6px;
-  margin-left: 6px;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-}
-
-/* Giant Lumina Brand Wordmark in Gray Color (Granby style) */
-.footer-giant-wordmark-wrap {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  margin-top: 60px;
-  margin-bottom: -18px;
-  overflow: hidden;
-  user-select: none;
-  pointer-events: none;
-}
-
-.footer-giant-wordmark {
-  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: clamp(100px, 19vw, 280px);
-  font-weight: 800;
-  line-height: 0.78;
-  letter-spacing: -0.045em;
-  text-align: center;
-  text-transform: none;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.22) 0%,
-    rgba(255, 255, 255, 0.05) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: #383838;
-  white-space: nowrap;
-  display: block;
-}
-
-/* Bottom Utility Bar */
-.footer-bottom-bar {
+/* --------------------------------------------------------------------------
+   Bottom Row
+   -------------------------------------------------------------------------- */
+.footer-bottom-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 20px;
-  padding-top: 28px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 24px;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 12px;
+  letter-spacing: -0.01em;
+  color: #71717a;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
-.footer-status-block {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 22px;
-}
-
-.footer-logo-triangle {
-  color: #ffffff;
+.footer-copy-text {
   display: flex;
   align-items: center;
+  gap: 6px;
 }
 
-.system-status-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.copy-sep {
+  font-size: 13px;
 }
 
-.status-live-dot {
-  width: 6.5px;
-  height: 6.5px;
-  border-radius: 50%;
-  background-color: #0070f3;
-  box-shadow: 0 0 8px #0070f3;
+.footer-built-text {
+  color: #52525b;
 }
 
-.status-text {
-  font-family: var(--font-mono, "SF Mono", "Roboto Mono", Menlo, monospace);
-  font-size: 11px;
-  font-weight: 500;
-  color: #0070f3;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-/* Preference Controls Toolbar */
-.footer-controls-toolbar {
-  display: inline-flex;
-  align-items: center;
-  gap: 1px;
-  padding: 3px;
-  background-color: #202020;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 7px;
-}
-
-.toolbar-btn {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.45);
-  padding: 5px 7px;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.15s ease, background-color 0.15s ease;
-}
-
-.toolbar-btn:hover {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
-/* Responsive Breakpoints */
-@media (max-width: 1100px) {
-  .footer-links-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 36px 20px;
-  }
-
-  .footer-row-bottom {
-    margin-top: 36px;
+/* --------------------------------------------------------------------------
+   Responsive Breakpoints
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .footer-columns-grid {
+    gap: 48px;
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .site-footer {
-    padding: 80px 20px 0;
+    padding: 0 24px 32px;
+    margin-top: 80px;
   }
 
-  .footer-cta-title {
-    font-size: 34px;
+  .footer-arc-curve {
+    top: -64px;
+    height: 66px;
   }
 
-  .footer-cta-actions {
-    flex-direction: column;
-    width: 100%;
+  .footer-arc-cta {
+    margin-top: -46px;
+    margin-bottom: 48px;
   }
 
-  .btn-footer-deploy,
-  .btn-footer-agent {
-    width: 100%;
-    justify-content: center;
+  .footer-main-content {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 40px;
   }
 
-  .footer-links-grid {
+  .footer-columns-grid {
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    width: 100%;
   }
 
-  .footer-giant-wordmark-wrap {
-    margin-top: 40px;
-    margin-bottom: -10px;
-  }
-
-  .footer-bottom-bar {
+  .footer-bottom-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 28px;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-columns-grid {
+    grid-template-columns: 1fr;
   }
 }

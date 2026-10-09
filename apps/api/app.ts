@@ -14,8 +14,9 @@ import { toNodeHandler } from 'better-auth/node'
 import cors from 'cors'
 import express from 'express'
 import rateLimit from 'express-rate-limit'
-
 import type { NextFunction, Request, Response } from 'express'
+import mediaRouter from './src/api/media/media.router.ts'
+import feedRouter from './src/api/feed/feed.routes.ts'
 
 export function createApp() {
   const app = express()
@@ -39,7 +40,8 @@ export function createApp() {
 
   app.use(globalLimiter)
   app.use(httpLoggerMiddleware('api'))
-  app.use(express.json({ limit: '1mb' }))
+  app.use(express.json({ limit: '25mb' }))
+  app.use(express.urlencoded({ limit: '25mb', extended: true }))
 
   app.use((req: Request, res: Response, next: NextFunction) => {
     const isStateChanging = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)
@@ -60,12 +62,12 @@ export function createApp() {
     })
   )
 
+
   app.all('/api/auth/*path', toNodeHandler(auth))
   app.use('/api', apiRouter)
+  app.use('/api/media', mediaRouter)
+  app.use('/api/feed' , feedRouter);
 
-  app.get('/ok', (_req: Request, res: Response) => {
-    res.status(200).json({ message: MSG_OK })
-  })
 
   app.get('/health', (_req: Request, res: Response) => {
     res.status(200).json({

@@ -1,0 +1,529 @@
+/* ==========================================================================
+   CommandCodeSection Styling
+   Matches the Langbase // command section reference:
+   1. Top Row: Execution trace (Input / Thinking / Output) vs // command display
+   2. Middle Row: Frontier model description vs action pills
+   3. Bottom Row: 3 columns with gradient noise mosaic bricks
+   Continuous dashed 1280px container frame with extended guide lines and crosshairs (+)
+   ========================================================================== */
+
+.command-section {
+  position: relative;
+  width: 100%;
+  background-color: #000000;
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+/* Continuous Centered Container Frame with Vertical Dashed Guide Lines */
+.command-container-frame {
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+  border-left: 1px dashed rgba(255, 255, 255, 0.12);
+  border-right: 1px dashed rgba(255, 255, 255, 0.12);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  background-color: #000000;
+  box-sizing: border-box;
+}
+
+/* Full width bottom border extension */
+.command-container-frame::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   1. TOP ROW: Trace Timeline & // command Showcase
+   ========================================================================== */
+.command-top-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.command-top-row::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+/* Left Column: Interactive Execution Trace */
+.command-trace-col {
+  border-right: 1px dashed rgba(255, 255, 255, 0.12);
+  padding: 24px 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  background-color: #000000;
+}
+
+.command-trace-timeline {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+}
+
+/* Individual Timeline Row with bottom divider */
+.command-trace-row {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
+}
+
+.command-trace-row:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Left Stage Tag Column: [ Input ], [ Thinking ], [ Output ] */
+.command-trace-tag {
+  width: 104px;
+  flex-shrink: 0;
+  padding-left: 24px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.42);
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+/* Center Spine Column containing Node and Line Segments */
+.command-trace-spine-cell {
+  width: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  align-self: stretch;
+}
+
+/* Vertical Spine Lines */
+.command-spine-seg-top-dashed {
+  position: absolute;
+  top: 0;
+  height: 50%;
+  left: 50%;
+  width: 0;
+  transform: translateX(-50%);
+  border-left: 1.5px dashed rgba(255, 255, 255, 0.22);
+  z-index: 1;
+}
+
+.command-spine-seg-down {
+  position: absolute;
+  top: 50%;
+  bottom: -50%;
+  left: 50%;
+  width: 1.5px;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.spine-color-1 {
+  background: linear-gradient(to bottom, #fb7185 0%, #ec4899 100%);
+}
+
+.spine-color-2 {
+  background: linear-gradient(to bottom, #ec4899 0%, #a855f7 100%);
+}
+
+.spine-color-3 {
+  background: linear-gradient(to bottom, #a855f7 0%, #38bdf8 100%);
+}
+
+.spine-color-4 {
+  background: linear-gradient(to bottom, #38bdf8 0%, #2dd4bf 100%);
+}
+
+.command-spine-seg-bottom {
+  position: absolute;
+  top: 50%;
+  bottom: 0;
+  left: 50%;
+  width: 1.5px;
+  transform: translateX(-50%);
+  background: rgba(45, 212, 191, 0.45);
+  z-index: 1;
+}
+
+/* Square Node Icon Box */
+.command-trace-node-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 5px;
+  background-color: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+  flex-shrink: 0;
+}
+
+/* Right Text Column */
+.command-trace-text {
+  flex: 1;
+  padding: 0 24px 0 16px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  word-break: break-word;
+}
+
+.command-trace-text-muted {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Right Column: // command Big Typography */
+.command-hero-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 40px;
+  box-sizing: border-box;
+  background-color: #000000;
+}
+
+.command-brand-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  user-select: none;
+}
+
+.command-brand-slash {
+  font-family: monospace, ui-monospace, sans-serif;
+  font-size: clamp(48px, 6.2vw, 80px);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: -0.04em;
+  transform: translateY(-2px);
+}
+
+.command-brand-name {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: clamp(52px, 6.6vw, 84px);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   2. MIDDLE ROW: Model Description vs Action Pills
+   ========================================================================== */
+.command-middle-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.command-middle-row::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.command-desc-col {
+  border-right: 1px dashed rgba(255, 255, 255, 0.12);
+  padding: 56px 48px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.command-desc-text {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 17.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 440px;
+  margin: 0;
+  font-weight: 400;
+}
+
+.command-actions-col {
+  padding: 56px 48px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.command-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
+  border-radius: 9999px !important;
+  padding: 12px 24px;
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 14.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.18s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.command-btn-primary:hover {
+  background-color: #e5e5e5;
+  transform: translateY(-1px);
+}
+
+.command-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9999px !important;
+  padding: 12px 24px;
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 14.5px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+  white-space: nowrap;
+}
+
+.command-btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ==========================================================================
+   3. BOTTOM ROW: 3 Feature Columns with Gradient Mosaic Bricks
+   ========================================================================== */
+.command-features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.command-feature-card {
+  padding: 48px 36px 44px;
+  box-sizing: border-box;
+  border-right: 1px dashed rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #000000;
+  position: relative;
+}
+
+.command-feature-card:last-child {
+  border-right: none;
+}
+
+.command-feature-header {
+  margin-bottom: 36px;
+}
+
+.command-feature-title {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 17.5px;
+  font-weight: 500;
+  color: #ffffff;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.015em;
+}
+
+.command-feature-slash {
+  font-family: monospace, ui-monospace, sans-serif;
+  color: rgba(255, 255, 255, 0.45);
+  margin-right: 6px;
+}
+
+.command-feature-desc {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+/* Gradient Mosaic Bricks Container */
+.command-bricks-mosaic {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+  margin-top: auto;
+}
+
+.command-brick-row {
+  display: flex;
+  gap: 7px;
+  width: 100%;
+  height: 28px;
+}
+
+/* Individual Brick */
+.command-brick {
+  border-radius: 4px;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.15);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Subtle grain texture overlay for all bricks */
+.command-brick::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* Brick Color Theme 1: Magenta / Violet */
+.brick-theme-violet {
+  background: linear-gradient(90deg, #ec4899 0%, #a855f7 60%, #7c3aed 100%);
+}
+
+.brick-theme-violet-alt {
+  background: linear-gradient(90deg, #d946ef 0%, #8b5cf6 50%, #ec4899 100%);
+}
+
+.brick-theme-violet-dark {
+  background: linear-gradient(90deg, rgba(236, 72, 153, 0.3) 0%, rgba(168, 85, 247, 0.65) 100%);
+}
+
+.brick-theme-violet-faded {
+  background: linear-gradient(90deg, rgba(217, 70, 239, 0.4) 0%, rgba(139, 92, 246, 0.25) 100%);
+}
+
+/* Brick Color Theme 2: Cyan / Emerald */
+.brick-theme-cyan {
+  background: linear-gradient(90deg, #06b6d4 0%, #14b8a6 60%, #10b981 100%);
+}
+
+.brick-theme-cyan-alt {
+  background: linear-gradient(90deg, #38bdf8 0%, #06b6d4 50%, #2dd4bf 100%);
+}
+
+.brick-theme-cyan-dark {
+  background: linear-gradient(90deg, rgba(6, 182, 212, 0.3) 0%, rgba(20, 184, 166, 0.65) 100%);
+}
+
+.brick-theme-cyan-faded {
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.4) 0%, rgba(16, 185, 129, 0.25) 100%);
+}
+
+/* Brick Color Theme 3: Orange / Amber */
+.brick-theme-orange {
+  background: linear-gradient(90deg, #f59e0b 0%, #f97316 60%, #ef4444 100%);
+}
+
+.brick-theme-orange-alt {
+  background: linear-gradient(90deg, #fb923c 0%, #f59e0b 50%, #f97316 100%);
+}
+
+.brick-theme-orange-dark {
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.3) 0%, rgba(249, 115, 22, 0.65) 100%);
+}
+
+.brick-theme-orange-faded {
+  background: linear-gradient(90deg, rgba(251, 146, 60, 0.4) 0%, rgba(239, 68, 68, 0.25) 100%);
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .command-top-row,
+  .command-middle-row {
+    grid-template-columns: 1fr;
+  }
+
+  .command-trace-col,
+  .command-desc-col {
+    border-right: none;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  }
+
+  .command-features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .command-feature-card {
+    border-right: none;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  }
+
+  .command-feature-card:last-child {
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .command-trace-col {
+    padding: 24px 16px;
+  }
+
+  .command-desc-col,
+  .command-actions-col {
+    padding: 36px 20px;
+  }
+
+  .command-feature-card {
+    padding: 36px 20px 32px;
+  }
+
+  .command-stage-tag {
+    width: 68px;
+    font-size: 10px;
+  }
+
+  .command-step-text,
+  .command-substep-text {
+    font-size: 11px;
+  }
+}

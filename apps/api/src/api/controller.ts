@@ -3,11 +3,9 @@
  * Each handler keeps the previous status codes and response bodies.
  */
 import { enqueueProfileSync } from '../../config/leetcode.queue'
-import { parseLimit } from '../../lib/pagination'
 import { sendError } from '../../lib/send-error'
 import * as api from './service'
 import {
-  MSG_COMMENT_CANNOT_BE_EMPTY,
   MSG_FAILED_TO_CREATE_COMMENT,
   MSG_FAILED_TO_DELETE_COVER_IMAGE,
   MSG_FAILED_TO_DELETE_COVER_IMAGE,
@@ -16,20 +14,13 @@ import {
   MSG_FAILED_TO_FETCH_LEADERBOARD,
   MSG_FAILED_TO_FETCH_LEADERBOARD,
   MSG_FAILED_TO_FETCH_PROFILE,
-  MSG_FAILED_TO_GET_LIKE_COUNT,
   MSG_FAILED_TO_SYNC_LEETCODE,
-  MSG_FAILED_TO_TOGGLE_LIKE,
   MSG_FAILED_TO_UPDATE_PROFILE,
   MSG_FAILED_TO_UPLOAD_COVER_IMAGE,
   MSG_FAILED_TO_UPLOAD_PROFILE_PICTURE,
-  MSG_INTERNAL_SERVER_ERROR,
   MSG_LEADERBOARD_USER_NOT_FOUND,
   MSG_LEETCODE_SYNC_QUEUED,
   MSG_LEETCODE_SYNC_RATE_LIMITED,
-  MSG_LIKE_COUNT_FETCHED_SUCCESSFULLY,
-  MSG_LIKE_UPDATED,
-  MSG_POST_CREATED_SUCCESSFULLY,
-  MSG_POST_NOT_FOUND,
   MSG_PROFILE_NOT_FOUND,
 } from '@lumina/constants'
 import { logger } from '@lumina/observability'
@@ -37,113 +28,7 @@ import { createCallSchema, respondInviteSchema } from '@lumina/validators'
 
 import type { AuthRequest } from '../../middleware'
 import type { AuthenticatedRequest, UsernameParams } from '@lumina/contracts'
-import type { NextFunction, Request, Response } from 'express'
-
-// Profile HTTP handlers
-export async function getMyProfile(req: Request, res: Response) {
-  try {
-    const { user } = req as AuthenticatedRequest
-    const profile = await api.getMyProfile(user.id)
-
-    if (!profile) {
-      return res.status(404).json({
-        message: MSG_PROFILE_NOT_FOUND,
-      })
-    }
-
-    return res.json(profile)
-  } catch (err) {
-    return sendError(res, err)
-  }
-}
-
-export async function updateMyProfile(req: Request, res: Response) {
-  try {
-    const { user } = req as AuthenticatedRequest
-    const profile = await api.updateMyProfile(user.id, req.body)
-    if (profile.leetcodeUsername) {
-      await enqueueProfileSync(profile.id)
-    }
-    return res.json(profile)
-  } catch (err) {
-    if (err && typeof err === 'object' && 'status' in err) {
-      return sendError(res, err)
-    }
-    return res.status(500).json({
-      message: MSG_FAILED_TO_UPDATE_PROFILE,
-    })
-  }
-}
-
-export async function getProfileByUsername(req: Request<UsernameParams>, res: Response) {
-  try {
-    const viewer = (req as unknown as AuthenticatedRequest).user
-    const profile = await api.getProfileByUsername(req.params.username, viewer)
-    return res.json(profile)
-  } catch (err) {
-    return sendError(res, err)
-  }
-}
-
-export const uploadProfilePicture = async (req: Request, res: Response) => {
-  try {
-    const { user } = req as AuthenticatedRequest
-    const result = await api.uploadProfilePicture(user.id, req.file!)
-    return res.status(200).json(result)
-  } catch (err) {
-    if (err && typeof err === 'object' && 'status' in err) {
-      return sendError(res, err)
-    }
-    return res.status(500).json({
-      message: MSG_FAILED_TO_UPLOAD_PROFILE_PICTURE,
-    })
-  }
-}
-
-export const deleteProfilePicture = async (req: Request, res: Response) => {
-  try {
-    const { user } = req as AuthenticatedRequest
-    const result = await api.deleteProfilePicture(user.id)
-    return res.status(200).json(result)
-  } catch (err) {
-    if (err && typeof err === 'object' && 'status' in err) {
-      return sendError(res, err)
-    }
-    return res.status(500).json({
-      message: MSG_FAILED_TO_DELETE_PROFILE_PICTURE,
-    })
-  }
-}
-
-export const uploadCoverImage = async (req: Request, res: Response) => {
-  try {
-    const { user } = req as AuthenticatedRequest
-    const result = await api.uploadCoverImage(user.id, req.file!)
-    return res.status(200).json(result)
-  } catch (err) {
-    if (err && typeof err === 'object' && 'status' in err) {
-      return sendError(res, err)
-    }
-    return res.status(500).json({
-      message: MSG_FAILED_TO_UPLOAD_COVER_IMAGE,
-    })
-  }
-}
-
-export const deleteCoverImage = async (req: Request, res: Response) => {
-  try {
-    const { user } = req as AuthenticatedRequest
-    const result = await api.deleteCoverImage(user.id)
-    return res.status(200).json(result)
-  } catch (err) {
-    if (err && typeof err === 'object' && 'status' in err) {
-      return sendError(res, err)
-    }
-    return res.status(500).json({
-      message: MSG_FAILED_TO_DELETE_COVER_IMAGE,
-    })
-  }
-}
+import type { Request, Response } from 'express'
 
 // Friends HTTP handlers
 export async function sendFriendRequest(req: Request, res: Response) {
@@ -560,176 +445,6 @@ export async function manualSyncLeetCode(req: Request, res: Response) {
   }
 }
 
-// Posts HTTP handlers
-export const createPost = async (
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const userId = req.user.id
-
-    const post = await api.createPost({
-      userId,
-      body: req.body,
-      files: req.files as Express.Multer.File[],
-    })
-
-    res.status(201).json({
-      success: true,
-      message: MSG_POST_CREATED_SUCCESSFULLY,
-      data: post,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-export const toggleLike = async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const result = await api.toggleLike(req.user.id, req.params.id as string)
-    res.status(200).json({
-      success: true,
-      message: MSG_LIKE_UPDATED,
-      data: result,
-    })
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({
-      success: false,
-      message: MSG_FAILED_TO_TOGGLE_LIKE,
-    })
-  }
-}
-
-export const getLikeCount = async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const result = await api.getLikeCount(req.params.id as string)
-    res.status(200).json({
-      success: true,
-      message: MSG_LIKE_COUNT_FETCHED_SUCCESSFULLY,
-      data: result,
-    })
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({
-      success: false,
-      message: MSG_FAILED_TO_GET_LIKE_COUNT,
-    })
-  }
-}
-
-export const createComment = async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const postId = req.params.id
-    const userId = req.user.id
-    const { content, parentId } = req.body
-
-    if (!content?.trim()) {
-      return res.status(400).json({
-        message: MSG_COMMENT_CANNOT_BE_EMPTY,
-      })
-    }
-
-    const comment = await api.createPostComment({
-      postId: postId as string,
-      userId: userId,
-      content: content.trim(),
-      parentId: parentId ?? null,
-    })
-
-    return res.status(201).json({
-      success: true,
-      data: comment,
-    })
-  } catch (error) {
-    return sendError(res, error)
-  }
-}
-
-export const listComments = async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const limit = parseLimit(req.query.limit)
-    const cursor = typeof req.query.cursor === 'string' ? req.query.cursor : undefined
-    const comments = await api.listPostComments(req.params.id as string, limit, cursor)
-    return res.status(200).json({ success: true, data: comments })
-  } catch (error) {
-    return sendError(res, error)
-  }
-}
-
-export const pinComment = async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const isPinned = req.body?.isPinned !== false
-    const result = await api.pinPostComment(req.user.id, req.params.commentId as string, isPinned)
-    return res.status(200).json({ success: true, data: result })
-  } catch (error) {
-    return sendError(res, error)
-  }
-}
-
-export const deleteComment = async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    await api.deletePostComment(req.user.id, req.params.commentId as string)
-    return res.status(204).send()
-  } catch (error) {
-    return sendError(res, error)
-  }
-}
-
-export const toggleSavePost = async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const { id: postId } = req.params
-    const userId = req.user.id
-    const result = await api.toggleSavePost({
-      postId: postId as string,
-      userId,
-    })
-
-    return res.status(200).json({
-      success: true,
-      ...result,
-    })
-  } catch (error: any) {
-    if (error.message === 'POST_NOT_FOUND') {
-      return res.status(404).json({
-        success: false,
-
-        message: MSG_POST_NOT_FOUND,
-      })
-    }
-
-    console.error(error)
-
-    return res.status(500).json({
-      success: false,
-      message: MSG_INTERNAL_SERVER_ERROR,
-    })
-  }
-}
-
-export const getMySavedPosts = async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const userId = req.user.id
-
-    const savedPosts = await api.getMySavedPosts(userId)
-
-    return res.status(200).json({
-      success: true,
-
-      savedPosts,
-    })
-  } catch (error) {
-    console.error(error)
-
-    return res.status(500).json({
-      success: false,
-
-      message: MSG_INTERNAL_SERVER_ERROR,
-    })
-  }
-}
-
 // Comments HTTP handlers
 export async function createCommentHandler(req: AuthenticatedRequest, res: Response) {
   try {
@@ -762,7 +477,12 @@ export async function getCommentsForPostHandler(req: AuthenticatedRequest, res: 
       limit ? parseInt(limit as string, 10) : 20
     )
 
-    res.status(200).json(result)
+    res.status(200).json({
+      success: true,
+      data: result.comments,
+      comments: result.comments,
+      nextCursor: result.nextCursor,
+    })
   } catch (err: any) {
     const status = err.status || 500
     res.status(status).json({ message: err.message || 'Failed to fetch comments' })

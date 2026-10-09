@@ -1,0 +1,387 @@
+/* ==========================================================================
+   WhyUsSection Styling
+   Matches reference: Continuous dashed frame, partner trust bar,
+   hatched architectural gap strip with 4 crosshairs (+), and offset bento grid
+   ========================================================================== */
+
+.why-us-section {
+  position: relative;
+  width: 100%;
+  background-color: #000000;
+  color: #ffffff;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Continuous Centered Container Frame with Vertical Dashed Guide Lines */
+.why-us-container-frame {
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+  border-left: 1px dashed rgba(255, 255, 255, 0.12);
+  border-right: 1px dashed rgba(255, 255, 255, 0.12);
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   1. Partner / Customer Trust Bar
+   ========================================================================== */
+.why-us-trust-bar {
+  width: 100%;
+  position: relative;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  padding: 48px 36px;
+  min-height: 120px;
+  background-color: #000000;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.why-us-trust-bar::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.why-us-trust-bar::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.why-us-trust-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 36px;
+  width: 100%;
+}
+
+.why-us-trust-text {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 340px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.why-us-logos-row {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  flex-wrap: wrap;
+}
+
+.why-us-logo-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  opacity: 0.9;
+  user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+.why-us-logo-item:hover {
+  opacity: 1;
+}
+
+.why-us-logo-label {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   2. Hatched Blueprint Spacer Gap with Crosshairs (+)
+   ========================================================================== */
+.why-us-hatch-gap {
+  position: relative;
+  width: 100%;
+  height: 38px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  background-color: #000000;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.055) 0px,
+    rgba(255, 255, 255, 0.055) 1px,
+    transparent 1px,
+    transparent 6px
+  );
+  box-sizing: border-box;
+}
+
+.why-us-hatch-gap::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+/* Hatch Gap Crosshairs at frame border intersections */
+.crosshair-hatch-tl {
+  top: -8px;
+  left: -5px;
+}
+
+.crosshair-hatch-tr {
+  top: -8px;
+  right: -5px;
+}
+
+.crosshair-hatch-bl {
+  bottom: -8px;
+  left: -5px;
+}
+
+.crosshair-hatch-br {
+  bottom: -8px;
+  right: -5px;
+}
+
+/* ==========================================================================
+   3. Main Content & Section Header
+   ========================================================================== */
+.why-us-main-content {
+  width: 100%;
+  padding: 64px 32px 110px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.why-us-header-block {
+  margin-bottom: 56px;
+}
+
+.why-us-title {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: clamp(40px, 4.5vw, 54px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0 0 14px 0;
+  line-height: 1.15;
+}
+
+.why-us-subtitle {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 17.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 480px;
+  margin: 0;
+}
+
+/* ==========================================================================
+   4. Offset Architectural Bento Grid
+   ========================================================================== */
+.why-us-bento-grid {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #000000;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* Grid Corner Crosshairs (+) */
+.crosshair-marker {
+  position: absolute;
+  font-family: monospace, ui-monospace, sans-serif;
+  font-size: 15px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+  z-index: 2;
+  user-select: none;
+}
+
+.crosshair-top-left {
+  top: -8px;
+  left: -5px;
+}
+
+.crosshair-top-right {
+  top: -8px;
+  right: -5px;
+}
+
+.crosshair-bottom-left {
+  bottom: -8px;
+  left: -5px;
+}
+
+.crosshair-bottom-right {
+  bottom: -8px;
+  right: -5px;
+}
+
+.why-us-bento-row {
+  display: flex;
+  width: 100%;
+  position: relative;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  box-sizing: border-box;
+}
+
+.why-us-bento-row::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.why-us-bento-row:last-child {
+  border-bottom: none;
+}
+
+.why-us-bento-row:last-child::after {
+  display: none;
+}
+
+/* Card Geometry */
+.why-us-card {
+  box-sizing: border-box;
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 380px;
+  background-color: transparent;
+  transition: background-color 0.22s ease;
+  position: relative;
+}
+
+.why-us-card:hover {
+  background-color: rgba(255, 255, 255, 0.018);
+}
+
+/* Row 1 Asymmetric Ratio */
+.card-wide-left {
+  flex: 1.62;
+  border-right: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.card-narrow-right {
+  flex: 1;
+}
+
+/* Row 2 Asymmetric Ratio */
+.card-narrow-left {
+  flex: 1;
+  border-right: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.card-wide-right {
+  flex: 1.62;
+}
+
+/* Card Icon */
+.why-us-card-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: 48px;
+}
+
+/* Card Content (Anchored to Bottom) */
+.why-us-card-body {
+  margin-top: auto;
+}
+
+.why-us-card-title {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 19.5px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+  margin: 0 0 9px 0;
+}
+
+.why-us-card-desc {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0;
+  max-width: 380px;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 900px) {
+  .why-us-trust-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .why-us-logos-row {
+    gap: 28px;
+  }
+
+  .why-us-bento-row {
+    flex-direction: column;
+    border-bottom: none;
+  }
+
+  .why-us-card {
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 300px;
+    padding: 32px 24px;
+    flex: none !important;
+    width: 100%;
+  }
+
+  .why-us-bento-row:last-child .why-us-card:last-child {
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .why-us-trust-bar {
+    padding: 36px 24px;
+    min-height: auto;
+  }
+
+  .why-us-main-content {
+    padding: 48px 20px 80px;
+  }
+
+  .why-us-title {
+    font-size: 30px;
+  }
+
+  .why-us-logos-row {
+    gap: 20px;
+  }
+
+  .why-us-card-icon-wrap {
+    margin-bottom: 32px;
+  }
+}

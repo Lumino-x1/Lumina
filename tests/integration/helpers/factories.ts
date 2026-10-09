@@ -115,41 +115,45 @@ export async function createProfile(userId: string, overrides: ProfileOverrides 
   const token = randomUUID().slice(0, 8)
   const linkedUser = await prisma.user.findUniqueOrThrow({
     where: { id: userId },
-    select: { username: true },
+    select: { username: true, email: true },
   })
 
-  return prisma.profile.create({
-    data: {
-      userId,
-      username: linkedUser.username ?? `profile_${token}`,
-      firstName: overrides.firstName ?? 'Aarav',
-      lastName: overrides.lastName ?? 'Kumar',
-      bio: overrides.bio ?? 'Engineering student building reliable product systems.',
-      about:
-        overrides.about ?? 'Interested in distributed systems, payments, and developer tooling.',
-      profilePicture:
-        overrides.profilePicture ?? `https://images.example.com/profiles/${token}.png`,
-      coverImage: overrides.coverImage ?? `https://images.example.com/covers/${token}.png`,
-      hometown: overrides.hometown ?? 'Mysuru',
-      location: overrides.location ?? 'Bengaluru, India',
-      cgpa: overrides.cgpa ?? 8.4,
-      semester: overrides.semester ?? 6,
-      year: overrides.year ?? 3,
-      batch: overrides.batch ?? '2024',
-      rollNumber: overrides.rollNumber ?? `21CS${token.slice(0, 4).toUpperCase()}`,
-      skills: overrides.skills ?? ['TypeScript', 'PostgreSQL', 'Express'],
-      interests: overrides.interests ?? ['Backend Engineering', 'Platform Reliability'],
-      languages: overrides.languages ?? ['English', 'Hindi', 'Kannada'],
-      github: overrides.github ?? `https://github.com/${token}`,
-      linkedin: overrides.linkedin ?? `https://linkedin.com/in/${token}`,
-      portfolio: overrides.portfolio ?? `https://portfolio-${token}.test`,
-      leetcode: overrides.leetcode ?? `https://leetcode.com/${token}`,
-      codeforces: overrides.codeforces ?? `https://codeforces.com/profile/${token}`,
-      hackerrank: overrides.hackerrank ?? `https://hackerrank.com/${token}`,
-      profileVisibility: overrides.profileVisibility ?? 'PUBLIC',
-      hideEmail: overrides.hideEmail ?? false,
-      hidePhone: overrides.hidePhone ?? false,
-      hideCgpa: overrides.hideCgpa ?? false,
-    },
+  const profileData = {
+    userId,
+    email: overrides.email ?? linkedUser.email ?? `student.${token}@lumina.test`,
+    firstName: overrides.firstName ?? 'Aarav',
+    lastName: overrides.lastName ?? 'Kumar',
+    bio: overrides.bio ?? 'Engineering student building reliable product systems.',
+    about:
+      overrides.about ?? 'Interested in distributed systems, payments, and developer tooling.',
+    profilePicture:
+      overrides.profilePicture ?? `https://images.example.com/profiles/${token}.png`,
+    coverImage: overrides.coverImage ?? `https://images.example.com/covers/${token}.png`,
+    hometown: overrides.hometown ?? 'Mysuru',
+    location: overrides.location ?? 'Bengaluru, India',
+    cgpa: overrides.cgpa ?? 8.4,
+    semester: overrides.semester ?? 6,
+    year: overrides.year ?? 3,
+    batch: overrides.batch ?? '2024',
+    rollNumber: overrides.rollNumber ?? `21CS${token.slice(0, 4).toUpperCase()}`,
+    skills: overrides.skills ?? ['TypeScript', 'PostgreSQL', 'Express'],
+    interests: overrides.interests ?? ['Backend Engineering', 'Platform Reliability'],
+    languages: overrides.languages ?? ['English', 'Hindi', 'Kannada'],
+    github: overrides.github ?? `https://github.com/${token}`,
+    linkedin: overrides.linkedin ?? `https://linkedin.com/in/${token}`,
+    portfolio: overrides.portfolio ?? `https://portfolio-${token}.test`,
+    leetcodeUrl: overrides.leetcode ?? `https://leetcode.com/${token}`,
+    codeforces: overrides.codeforces ?? `https://codeforces.com/profile/${token}`,
+    hackerrank: overrides.hackerrank ?? `https://hackerrank.com/${token}`,
+    profileVisibility: overrides.profileVisibility ?? 'PUBLIC',
+    hideEmail: overrides.hideEmail ?? false,
+    hidePhone: overrides.hidePhone ?? false,
+    hideCgpa: overrides.hideCgpa ?? false,
+  }
+
+  return prisma.profile.upsert({
+    where: { userId },
+    update: profileData,
+    create: profileData,
   })
 }

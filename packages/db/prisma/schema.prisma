@@ -127,6 +127,7 @@ model Profile {
   userId             String              @unique
   firstName          String
   lastName           String
+  email              String
   bio                String?
   about              String?
   profilePicture     String?
@@ -299,7 +300,23 @@ model Post {
   id             String      @id @default(cuid())
   authorId       String
   clubId         String?
-  content        String?
+
+  // ==================== [NEW: EDITOR FIELDS] ====================
+  title          String?     // Story / Article Title (e.g. "Campus Hackathon 2026")
+  subtitle       String?     // Short description / Subheading
+  coverImage     String?     // Header / Cover banner image URL
+  
+  // Rich Document Structure: Stores array of LuminaBlock JSON objects
+  // [{ id, type, content, styles, metadata }]
+  blocks         Json?       // Native PostgreSQL JSONB for fast structured storage
+  
+  // Plain-text excerpt for fast database search, feed snippets & SEO
+  content        String?     @db.Text 
+  // ==============================================================
+  // 
+  topics         String[]    @default([])
+  category       String?     // Optional primary category (e.g. "Technology")
+
   visibility     Visibility  @default(PUBLIC)
   anonymous      Boolean     @default(false)
   isAnnouncement Boolean     @default(false)

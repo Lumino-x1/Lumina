@@ -11,15 +11,21 @@
     "@types/multer": "^2.2.0"
   },
   "dependencies": {
-    "@lumina/validators": "workspace:*",
+    "@aws-sdk/client-s3": "^3.1146.0",
+    "@aws-sdk/s3-request-presigner": "^3.1146.0",
     "@ffprobe-installer/ffprobe": "^2.1.2",
+    "@lumina/analytics": "workspace:*",
     "@lumina/auth": "workspace:*",
     "@lumina/constants": "workspace:*",
     "@lumina/contracts": "workspace:*",
     "@lumina/db": "workspace:*",
     "@lumina/env": "workspace:*",
     "@lumina/observability": "workspace:*",
+    "@lumina/realtime": "workspace:*",
     "@lumina/storage": "workspace:*",
+    "@lumina/transactional": "workspace:*",
+    "@lumina/validators": "workspace:*",
+    "@stream-io/node-sdk": "^0.7.63",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/dotenv": "^8.2.3",
@@ -38,12 +44,8 @@
     "ioredis": "^6.0.0",
     "mediainfo.js": "^0.3.7",
     "multer": "^2.2.0",
-    "@stream-io/node-sdk": "^0.7.63",
     "stream-chat": "^9.50.2",
-    "zod": "^4.4.3",
-    "@lumina/analytics": "workspace:*",
-    "@lumina/realtime": "workspace:*",
-    "@lumina/transactional": "workspace:*"
+    "zod": "^4.4.3"
   },
   "peerDependencies": {
     "typescript": "^5"

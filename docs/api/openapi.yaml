@@ -45,6 +45,25 @@ paths:
             schema: { type: object, additionalProperties: true }
       responses:
         '200': { description: Updated profile returned }
+  /api/profile/onboarding:
+    post:
+      summary: Save initial user onboarding profile and preferences
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: true }
+      responses:
+        '200': { description: Onboarding profile saved }
+    patch:
+      summary: Update onboarding profile details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: true }
+      responses:
+        '200': { description: Onboarding profile updated }
   /api/profile/{username}:
     get:
       summary: Get public profile by username
@@ -62,6 +81,48 @@ paths:
       summary: List accepted friends
       responses:
         '200': { description: Friends returned }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/feed:
+    get:
+      summary: Get posts from the authenticated user's college
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema: { type: integer, minimum: 1, maximum: 50, default: 20 }
+        - name: cursor
+          in: query
+          required: false
+          schema: { type: string }
+      responses:
+        '200':
+          description: College feed returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id: { type: string, example: "post-123" }
+                            title: { type: string, example: "Campus Hackathon" }
+                            subtitle: { type: string, nullable: true }
+                            likeCount: { type: integer, example: 10 }
+                            isLiked: { type: boolean, example: true }
+                            saveCount: { type: integer, example: 4 }
+                            isSaved: { type: boolean, example: false }
+                            commentCount: { type: integer, example: 2 }
+                            viewCount: { type: integer, example: 50 }
+                            shareCount: { type: integer, example: 1 }
+                      nextCursor: { type: string, nullable: true, example: "post-123" }
+        '400': { description: User is not associated with a college or the limit is invalid }
         '401': { $ref: '#/components/responses/Unauthorized' }
   /api/friends/request/{userId}:
     post:
@@ -160,16 +221,6 @@ paths:
           schema: { type: string }
       responses:
         '200': { description: Like toggled }
-  /api/posts/{id}/likes/count:
-    get:
-      summary: Get total likes count for a post
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema: { type: string }
-      responses:
-        '200': { description: Like count returned }
   /api/posts/{id}/save:
     post:
       summary: Save or unsave a post
@@ -179,7 +230,23 @@ paths:
           required: true
           schema: { type: string }
       responses:
-        '200': { description: Post save toggled }
+        '200':
+          description: Post save toggled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  saved: { type: boolean }
+                  isSaved: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      saved: { type: boolean }
+                      isSaved: { type: boolean }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { description: Post not found }
   /api/posts/saved:
     get:
       summary: Get list of saved posts

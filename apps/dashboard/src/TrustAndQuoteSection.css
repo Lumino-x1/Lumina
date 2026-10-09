@@ -1,0 +1,282 @@
+/* ==========================================================================
+   TrustAndQuoteSection Styling
+   Second Section matching Langbase reference:
+   - 6-column x 2-row partner logo grid with cell dividers
+   - Large featured quote with blocky quote mark
+   - Author attribution with Tom Preston-Werner, GitHub pill & Langbase pill
+   - Continuous dashed container frame (1280px) with extended grid lines and crosshairs (+)
+   ========================================================================== */
+
+.trust-quote-section {
+  position: relative;
+  width: 100%;
+  background-color: #000000;
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+/* Continuous Centered Container Frame with Vertical Dashed Guide Lines */
+.trust-quote-container-frame {
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+  border-left: 1px dashed rgba(255, 255, 255, 0.12);
+  border-right: 1px dashed rgba(255, 255, 255, 0.12);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  background-color: #000000;
+  box-sizing: border-box;
+}
+
+/* Full width bottom border extension */
+.trust-quote-container-frame::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   1. 6-Column x 2-Row Logo Grid
+   ========================================================================== */
+.trust-logo-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* Grid Cell */
+.trust-grid-cell {
+  position: relative;
+  min-height: 86px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  border-right: 1px dashed rgba(255, 255, 255, 0.12);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  background-color: #000000;
+  transition: background-color 0.2s ease;
+}
+
+.trust-grid-cell:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Remove right border on the 6th column */
+.trust-grid-cell:nth-child(6n) {
+  border-right: none;
+}
+
+/* Full-width horizontal line extension for Row 1 */
+.trust-logo-grid::after {
+  content: '';
+  position: absolute;
+  top: 86px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+/* Cell 1: Trusted text */
+.trust-grid-text-cell {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+  width: 100%;
+}
+
+.trust-grid-text-line1 {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 13px;
+  font-weight: 450;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.trust-grid-text-line2 {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.35;
+}
+
+/* Logo container in cell */
+.trust-logo-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  user-select: none;
+}
+
+.trust-logo-item:hover {
+  opacity: 1;
+  transform: scale(1.03);
+}
+
+/* ==========================================================================
+   2. Featured Quote Block
+   ========================================================================== */
+.trust-quote-block {
+  padding: 68px 56px 60px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  background-color: #000000;
+  position: relative;
+}
+
+/* Blocky Double Quote Mark */
+.trust-quote-icon {
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 24px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Large Headline Quote */
+.trust-quote-text {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: clamp(26px, 3.2vw, 38px);
+  font-weight: 450;
+  letter-spacing: -0.025em;
+  line-height: 1.28;
+  color: #ffffff;
+  max-width: 960px;
+  margin: 0 0 34px 0;
+  padding: 0;
+}
+
+/* Author Attribution Row */
+.trust-quote-author-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+/* Avatar */
+.trust-quote-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  background-color: #1a1a1a;
+}
+
+.trust-quote-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Author Name & Title */
+.trust-quote-name {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 14.5px;
+  font-weight: 450;
+  color: rgba(255, 255, 255, 0.72);
+  letter-spacing: -0.01em;
+}
+
+/* Rounded Pill Badge */
+.trust-quote-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9999px !important;
+  padding: 4px 12px;
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.trust-quote-pill-symbol {
+  font-family: monospace, ui-monospace, sans-serif;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* Lead Investor Role Text */
+.trust-quote-role {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .trust-logo-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .trust-grid-cell:nth-child(6n) {
+    border-right: 1px dashed rgba(255, 255, 255, 0.12);
+  }
+
+  .trust-grid-cell:nth-child(3n) {
+    border-right: none;
+  }
+
+  .trust-logo-grid::after {
+    display: none;
+  }
+
+  .trust-quote-block {
+    padding: 48px 32px 42px;
+  }
+}
+
+@media (max-width: 640px) {
+  .trust-logo-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trust-grid-cell:nth-child(3n) {
+    border-right: 1px dashed rgba(255, 255, 255, 0.12);
+  }
+
+  .trust-grid-cell:nth-child(2n) {
+    border-right: none;
+  }
+
+  .trust-quote-block {
+    padding: 36px 20px 32px;
+  }
+
+  .trust-quote-text {
+    font-size: 22px;
+    margin-bottom: 24px;
+  }
+
+  .trust-quote-author-row {
+    gap: 10px;
+  }
+}

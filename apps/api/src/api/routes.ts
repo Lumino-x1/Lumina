@@ -12,9 +12,11 @@ import {
 } from '../../middleware'
 import analyticsRouter from '../analytics/router'
 import * as controller from './controller'
-import { MSG_PROFILE_ROUTER_WORKS } from '@lumina/constants'
-import { Router } from 'express'
+import feedRouter from './feed/feed.routes'
+import postsRouter from './posts/posts.routes'
+import usersRouter from './users/users.routes'
 import { subscribe } from '@lumina/realtime'
+import { Router } from 'express'
 import rateLimit from 'express-rate-limit'
 
 import type { AuthenticatedRequest } from '@lumina/contracts'
@@ -48,34 +50,13 @@ const videoCallLimiter = rateLimit({
 const commentRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 60,
-  standardHeaders: 'draft-7',
+  sstandardHeaders: 'draft-7',
   legacyHeaders: false,
   message: { status: 'error', message: 'Too many comment requests, please try again later.' },
 })
 
-// --- Profile: /api/profile ---
-apiRouter.get('/profile/test', (_req, res) => {
-  res.json({ message: MSG_PROFILE_ROUTER_WORKS })
-})
-apiRouter.get('/profile/me', requireAuth, controller.getMyProfile)
-apiRouter.patch('/profile/me', requireAuth, controller.updateMyProfile)
-apiRouter.get('/profile/:username', optionalAuth, controller.getProfileByUsername as never)
-apiRouter.patch(
-  '/profile/avatar',
-  requireAuth,
-  boundConcurrentUploads,
-  upload.single('image'),
-  controller.uploadProfilePicture
-)
-apiRouter.delete('/profile/avatar', requireAuth, controller.deleteProfilePicture)
-apiRouter.patch(
-  '/profile/cover',
-  requireAuth,
-  boundConcurrentUploads,
-  upload.single('image'),
-  controller.uploadCoverImage
-)
-apiRouter.delete('/profile/cover', requireAuth, controller.deleteCoverImage)
+// --- Users: /api/profile ---
+apiRouter.use('/profile', usersRouter)
 
 // --- Friends: /api/friends ---
 apiRouter.post('/friends/request/:userId', requireAuth, controller.sendFriendRequest)
@@ -89,47 +70,10 @@ apiRouter.get('/friends/requests/incoming', requireAuth, controller.getIncomingR
 apiRouter.get('/friends/requests/outgoing', requireAuth, controller.getOutgoingRequests)
 
 // --- Posts: /api/posts ---
-apiRouter.get('/posts/saved', requireAuth, async (req: Request, res: Response) => {
-  await controller.getMySavedPosts(req as AuthenticatedRequest, res)
-})
-apiRouter.post(
-  '/posts',
-  requireAuth,
-  boundConcurrentUploads,
-  uploadPostMedia.array('media', 10),
-  async (req: Request, res: Response, next: NextFunction) => {
-    await controller.createPost(req as AuthenticatedRequest, res, next)
-  }
-)
-apiRouter.post('/posts/:id/like', requireAuth, async (req: Request, res: Response) => {
-  await controller.toggleLike(req as AuthenticatedRequest, res)
-})
-apiRouter.get('/posts/:id/likes/count', requireAuth, async (req: Request, res: Response) => {
-  await controller.getLikeCount(req as AuthenticatedRequest, res)
-})
-apiRouter.get('/posts/:id/comments', requireAuth, async (req: Request, res: Response) => {
-  await controller.listComments(req as AuthenticatedRequest, res)
-})
-apiRouter.post('/posts/:id/comments', requireAuth, async (req: Request, res: Response) => {
-  await controller.createComment(req as AuthenticatedRequest, res)
-})
-apiRouter.patch(
-  '/posts/:id/comments/:commentId/pin',
-  requireAuth,
-  async (req: Request, res: Response) => {
-    await controller.pinComment(req as AuthenticatedRequest, res)
-  }
-)
-apiRouter.delete(
-  '/posts/:id/comments/:commentId',
-  requireAuth,
-  async (req: Request, res: Response) => {
-    await controller.deleteComment(req as AuthenticatedRequest, res)
-  }
-)
-apiRouter.post('/posts/:id/save', requireAuth, async (req: Request, res: Response) => {
-  await controller.toggleSavePost(req as AuthenticatedRequest, res)
-})
+apiRouter.use('/posts', postsRouter)
+
+// --- Feed: /api/feed ---
+apiRouter.use('/feed', feedRouter)
 
 // --- Chat (Stream): /api/chat ---
 apiRouter.get('/chat/token', requireAuth, controller.getChatToken as never)
@@ -402,7 +346,12 @@ apiRouter.use('/alumni', alumniRouter)
 const notificationRouter = Router()
 notificationRouter.get('/stream', requireAuth, (req, res) => {
   const userId = (req as AuthenticatedRequest).user.id
-  res.status(200).set({ 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache, no-transform', Connection: 'keep-alive', 'X-Accel-Buffering': 'no' })
+  res.status(200).set({
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache, no-transform',
+    Connection: 'keep-alive',
+    'X-Accel-Buffering': 'no',
+  })
   res.flushHeaders?.()
   const unsubscribe = subscribe(userId, res)
   req.on('close', unsubscribe)
@@ -437,8 +386,16 @@ adminRouter.patch(
 adminRouter.get('/verification/queue', requireAuth, controller.listAdminVerificationQueue)
 adminRouter.get('/verification-queue', requireAuth, controller.listAdminVerificationQueue)
 adminRouter.post('/verification/approve', requireAuth, controller.approveAlumniVerification)
-adminRouter.post('/verification/:verificationId/approve', requireAuth, controller.approveAdminVerificationById)
-adminRouter.post('/verification/:verificationId/reject', requireAuth, controller.rejectAdminVerificationById)
+adminRouter.post(
+  '/verification/:verificationId/approve',
+  requireAuth,
+  controller.approveAdminVerificationById
+)
+adminRouter.post(
+  '/verification/:verificationId/reject',
+  requireAuth,
+  controller.rejectAdminVerificationById
+)
 adminRouter.get('/reports/queue', requireAuth, controller.listAdminReportsQueue)
 adminRouter.get('/reports', requireAuth, controller.listAdminReportsQueue)
 adminRouter.post('/moderation/action', requireAuth, controller.applyAdminModerationAction)

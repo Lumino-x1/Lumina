@@ -1,313 +1,187 @@
-/* Fixed Lumina Navbar - Pure Notion Dark (#191919) */
-.lumina-navbar-fixed {
-  position: fixed;
+/* ==========================================================================
+   SaasCN Navbar Section Styling
+   Distinct top section within the continuous dashed grid framework,
+   separated from the Hero section by a dividing border with crosshairs (+).
+   ========================================================================== */
+
+.saascn-nav-section {
+  position: sticky;
   top: 0;
   left: 0;
-  right: 0;
   width: 100%;
   z-index: 100;
-  background-color: #191919;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  color: #ffffff;
   box-sizing: border-box;
 }
 
-.lumina-nav-bar {
-  width: 100%;
-  max-width: 1560px;
+/* Continuous Centered Container Frame with Vertical Dashed Guide Lines */
+.saascn-nav-frame {
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 18px 36px;
+  height: 68px;
+  padding: 0 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+  border-left: 1px dashed rgba(255, 255, 255, 0.12);
+  border-right: 1px dashed rgba(255, 255, 255, 0.12);
+  background-color: transparent;
   box-sizing: border-box;
-  background-color: #191919;
 }
 
-.lumina-nav-left {
+/* Left: Logo & Links */
+.saascn-nav-left {
   display: flex;
   align-items: center;
-  gap: 32px;
 }
 
-.lumina-nav-logo-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  outline: none;
-}
-
-.lumina-nav-logo {
-  width: 26px;
-  height: 19px;
-  fill: currentColor;
-  color: #ffffff;
-  display: block;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.lumina-nav-logo-btn:hover .lumina-nav-logo {
-  opacity: 0.85;
-  transform: scale(1.05);
-}
-
-.lumina-nav-links {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-.lumina-nav-link-btn {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.75);
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 400;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 6px 0;
-  transition: color 0.15s ease;
-  outline: none;
-}
-
-.lumina-nav-link-btn:hover,
-.lumina-nav-link-btn.is-active {
-  color: #ffffff;
-}
-
-.lumina-chevron {
-  width: 12px;
-  height: 12px;
-  stroke: currentColor;
-  stroke-width: 2;
-  opacity: 0.8;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.lumina-nav-link-btn.is-active .lumina-chevron {
-  transform: rotate(180deg);
-  opacity: 1;
-}
-
-.lumina-nav-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.lumina-btn-demo,
-.lumina-btn-login {
-  background: #222224;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #f0f0f0;
-  font-family: var(--font-sans);
-  font-size: 13.5px;
-  font-weight: 500;
-  padding: 7px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
-  outline: none;
-}
-
-.lumina-btn-demo:hover,
-.lumina-btn-login:hover {
-  background: #2b2b2e;
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.lumina-btn-signup {
-  background: #ffffff;
-  border: 1px solid #ffffff;
-  color: #191919;
-  font-family: var(--font-sans);
-  font-size: 13.5px;
+.saascn-nav-logo {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 18px;
   font-weight: 600;
-  padding: 7px 18px;
-  border-radius: 6px;
-  cursor: pointer;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  text-decoration: none;
   transition: opacity 0.15s ease;
-  outline: none;
 }
 
-.lumina-btn-signup:hover {
+.saascn-nav-logo:hover {
   opacity: 0.9;
 }
 
-.lumina-mobile-toggle {
-  display: none;
-  background: none;
-  border: none;
-  color: #ffffff;
-  cursor: pointer;
-  padding: 4px;
-}
-
-/* Mega Menu Dropdown Panel */
-.lumina-megamenu-panel {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  width: 100%;
-  background-color: #191919;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.7);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(0);
-  transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1),
-              visibility 0.18s ease;
-  pointer-events: none;
-  z-index: 99;
-}
-
-.lumina-megamenu-panel.is-open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.lumina-megamenu-inner {
-  max-width: 1560px;
-  margin: 0 auto;
-  padding: 16px 36px 0;
+.saascn-nav-links {
   display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  align-items: center;
+  gap: 26px;
+  margin-left: 32px;
 }
 
-.lumina-megamenu-cols {
-  display: flex;
-  gap: 80px;
-  padding-bottom: 34px;
-}
-
-.lumina-megamenu-col {
-  display: flex;
-  flex-direction: column;
-  min-width: 190px;
-}
-
-.lumina-col-title {
-  font-family: var(--font-sans);
-  font-size: 13.5px;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.48);
-  margin-bottom: 18px;
-  letter-spacing: -0.01em;
-}
-
-.lumina-col-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 13px;
-}
-
-.lumina-col-item {
-  display: flex;
-}
-
-.lumina-menu-link {
-  font-family: var(--font-sans);
-  font-size: 19px;
-  font-weight: 500;
-  color: #ffffff;
+.saascn-nav-item {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.68);
   text-decoration: none;
-  letter-spacing: -0.025em;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: opacity 0.15s ease;
-}
-
-.lumina-menu-link:hover {
-  opacity: 0.8;
-}
-
-.lumina-menu-arrow {
-  font-size: 14px;
-  opacity: 0.65;
-  transition: transform 0.15s ease, opacity 0.15s ease;
-}
-
-.lumina-menu-link:hover .lumina-menu-arrow {
-  opacity: 1;
-  transform: translate(1px, -1px);
-}
-
-/* Bottom Sub-shelf */
-.lumina-megamenu-shelf {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 16px 0 20px;
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.lumina-megamenu-shelf::-webkit-scrollbar {
-  display: none;
-}
-
-.lumina-shelf-item {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.65);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
   transition: color 0.15s ease;
 }
 
-.lumina-shelf-item:hover {
+.saascn-nav-item:hover {
   color: #ffffff;
 }
 
-.lumina-badge-new {
-  font-size: 10px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.75);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  padding: 1px 6px;
+/* Right: Search Pill & Github Icon */
+.saascn-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.saascn-search-pill {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 9999px;
-  line-height: 1.25;
+  height: 36px;
+  padding: 0 12px 0 14px;
+  gap: 8px;
+  width: 220px;
+  box-sizing: border-box;
+  transition: border-color 0.18s ease, background-color 0.18s ease, width 0.2s ease;
 }
 
-@media (max-width: 960px) {
-  .lumina-nav-links {
+.saascn-search-pill.is-focused {
+  background-color: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.28);
+  width: 250px;
+}
+
+.saascn-search-icon {
+  color: rgba(255, 255, 255, 0.45);
+  flex-shrink: 0;
+}
+
+.saascn-search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 14px;
+  width: 100%;
+}
+
+.saascn-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.saascn-shortcut-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.saascn-key {
+  font-family: monospace, ui-monospace, sans-serif;
+  font-size: 11px;
+  background-color: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.55);
+  padding: 1.5px 5px;
+  border-radius: 4px;
+  line-height: 1.1;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.saascn-nav-github {
+  color: rgba(255, 255, 255, 0.75);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.saascn-nav-github:hover {
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.saascn-nav-dash-link {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 13px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 6px 12px;
+  border-radius: 0 !important;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.saascn-nav-dash-link:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .saascn-nav-frame {
+    padding: 0 20px;
+  }
+
+  .saascn-nav-links {
     display: none;
   }
 
-  .lumina-megamenu-panel {
-    display: none !important;
+  .saascn-search-pill {
+    width: 140px;
   }
 
-  .lumina-mobile-toggle {
-    display: block;
-  }
-}
-
-@media (max-width: 640px) {
-  .lumina-nav-bar {
-    padding: 14px 20px;
-  }
-
-  .lumina-btn-demo {
-    display: none;
+  .saascn-search-pill.is-focused {
+    width: 160px;
   }
 }

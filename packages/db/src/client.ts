@@ -9,7 +9,8 @@ export { Prisma } from '@prisma/client'
 export type { Profile, User, Visibility } from '@prisma/client'
 
 const pool = new pg.Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString:
+    'postgresql://lumina_user:lumina_password@localhost:5432/lumina_dev',
 })
 
 const adapter = new PrismaPg(pool)

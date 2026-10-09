@@ -1,0 +1,5 @@
+# Local PostgreSQL image for Lumina development.
+FROM postgres:16-alpine
+
+HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=5 \
+  CMD ["pg_isready", "-U", "lumina_user", "-d", "lumina_dev"]

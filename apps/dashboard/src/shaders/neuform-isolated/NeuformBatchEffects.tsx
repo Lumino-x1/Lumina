@@ -664,14 +664,13 @@ main > .group > [data-wireframe-visual] > :not(canvas) { display: none !importan
     title: "Topo Field",
     source: topoFieldSource,
     supportsMode: true,
-    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#191919"),
+    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#000000"),
     targets: [{ selector: "#topo-canvas", role: "background" }],
     patch(source, { length, density, mode }) {
       let next = source
         .replace("float noiseScale = 1.4;", `float noiseScale = ${glslFloat(1.4 * length, 3)};`)
         .replace("float numBands = 10.0;", `float numBands = ${glslFloat(10 * density, 2)};`);
       if (mode === "light") {
-        // Additive white-on-black does not invert cleanly — mix paper toward ink by line strength.
         next = next
           .replace("gridLines = clamp(gridLines, 0.0, 1.0) * 0.12;", "gridLines = clamp(gridLines, 0.0, 1.0) * 0.55;")
           .replace(
@@ -679,13 +678,9 @@ main > .group > [data-wireframe-visual] > :not(canvas) { display: none !importan
             "float topoLines = smoothstep(0.03, 0.00, triangleWave) * 0.95;",
           )
           .replace(
-            /vec3 color = vec3\([^)]+\);\s+color \+= vec3\(1\.0\) \* gridLines;\s+color \+= vec3\(1\.0\) \* topoLines;/,
-            "vec3 paper = vec3(0.933, 0.945, 0.965);\n                    vec3 ink = vec3(0.12, 0.14, 0.18);\n                    float lines = clamp(gridLines + topoLines, 0.0, 1.0);\n                    vec3 color = mix(paper, ink, lines);",
+            /float lineAlpha = clamp\(gridLines \* 0\.85 \+ topoLines \* 0\.85, 0\.0, 1\.0\);\s+gl_FragColor = vec4\(1\.0, 1\.0, 1\.0, lineAlpha\);/,
+            "float lines = clamp(gridLines + topoLines, 0.0, 1.0);\n                    gl_FragColor = vec4(0.12, 0.14, 0.18, lines * 0.7);",
           );
-      } else {
-        next = next
-          .replaceAll("#000", "#191919")
-          .replace("vec3 color = vec3(0.0);", "vec3 color = vec3(0.09804, 0.09804, 0.09804);");
       }
       return next;
     },

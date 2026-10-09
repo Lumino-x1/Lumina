@@ -1,13 +1,15 @@
 /* CTA & Newsletter Section Styling */
 .cta-section {
   position: relative;
+  z-index: 10;
   width: 100%;
-  background-color: #191919;
+  background-color: #000000;
   color: #ffffff;
   padding: 110px 32px 100px;
   overflow: hidden;
   box-sizing: border-box;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
 }
 
 .cta-container {
@@ -126,7 +128,7 @@
   font-size: 14.5px;
   font-weight: 600;
   padding: 12px 28px;
-  border-radius: 9999px;
+  border-radius: 0;
   border: 1px solid #1d70f5;
   cursor: pointer;
   box-shadow: none;
@@ -145,12 +147,12 @@
 .btn-cta-white,
 .btn-cta-primary {
   background-color: #ffffff;
-  color: #191919;
+  color: #000000;
   font-family: var(--font-sans);
   font-size: 14.5px;
   font-weight: 600;
   padding: 12px 28px;
-  border-radius: 9999px;
+  border-radius: 0;
   border: 1px solid #ffffff;
   cursor: pointer;
   box-shadow: none;
@@ -183,14 +185,14 @@
   color: #ffffff;
 }
 
-/* Newsletter Card - Aligned seamlessly with Notion black bg */
+/* Newsletter Card - Aligned seamlessly with pure dark black bg */
 .newsletter-card {
   position: relative;
   width: 100%;
   max-width: 1100px;
-  background-color: #191919;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
+  background-color: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0;
   overflow: hidden;
   padding: 44px 52px;
   box-shadow: none;
@@ -316,7 +318,7 @@
   display: flex;
   align-items: center;
   background-color: #ffffff;
-  border-radius: 9999px;
+  border-radius: 0;
   padding: 4px 4px 4px 18px;
   height: 48px;
   width: 100%;
@@ -345,7 +347,7 @@
   font-size: 13.5px;
   font-weight: 600;
   padding: 10px 24px;
-  border-radius: 9999px;
+  border-radius: 0;
   border: none;
   cursor: pointer;
   white-space: nowrap;
