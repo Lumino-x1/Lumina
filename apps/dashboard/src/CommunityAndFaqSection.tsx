@@ -84,7 +84,7 @@ export const CommunityAndFaqSection: React.FC<CommunityFaqProps> = ({
             {/* Left Card: For Students */}
             <div className="community-card card-left">
               <div className="community-card-icon" aria-hidden="true">
-                <GraduationCap className="w-6 h-6 text-white stroke-[1.6]" />
+                <GraduationCap className="w-6 h-6 stroke-[1.6]" />
               </div>
 
               <div className="community-card-body">
@@ -104,7 +104,7 @@ export const CommunityAndFaqSection: React.FC<CommunityFaqProps> = ({
             {/* Right Card: For Faculty & Alumni */}
             <div className="community-card card-right">
               <div className="community-card-icon" aria-hidden="true">
-                <Users className="w-6 h-6 text-white stroke-[1.6]" />
+                <Users className="w-6 h-6 stroke-[1.6]" />
               </div>
 
               <div className="community-card-body">
@@ -165,9 +165,9 @@ export const CommunityAndFaqSection: React.FC<CommunityFaqProps> = ({
                       <span className="faq-box-question">{item.question}</span>
                       <span className="faq-box-chevron" aria-hidden="true">
                         {isOpen ? (
-                          <ChevronUp className="w-4 h-4 text-white/50" />
+                          <ChevronUp className="w-4 h-4" />
                         ) : (
-                          <ChevronDown className="w-4 h-4 text-white/50" />
+                          <ChevronDown className="w-4 h-4" />
                         )}
                       </span>
                     </button>

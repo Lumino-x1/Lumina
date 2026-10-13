@@ -5,6 +5,7 @@ import {
   createPostCommentApi,
 } from '../api/feedApi'
 import { DEFAULT_WHATSAPP_AVATAR } from './WhatsAppDefaultAvatar'
+import { useTheme } from '../lib/themeContext'
 import './CommentsDrawer.css'
 
 export interface CommentsDrawerProps {
@@ -20,6 +21,7 @@ export interface CommentsDrawerProps {
     image?: string | null
   } | null
   onCommentAdded?: (newCount: number) => void
+  theme?: string
 }
 
 const DrawerIcons = {
@@ -67,7 +69,11 @@ export const CommentsDrawer: React.FC<CommentsDrawerProps> = ({
   initialCount = 0,
   currentUser,
   onCommentAdded,
+  theme: propTheme,
 }) => {
+  const { theme: contextTheme } = useTheme()
+  const activeTheme = propTheme ?? contextTheme ?? 'dark'
+  const isLight = activeTheme === 'bright' || activeTheme === 'light'
   const [comments, setComments] = useState<PostCommentItem[]>([])
   const [commentCount, setCommentCount] = useState<number>(initialCount || 0)
   const [commentText, setCommentText] = useState('')
@@ -261,7 +267,7 @@ export const CommentsDrawer: React.FC<CommentsDrawerProps> = ({
       <div className="lumina-comments-overlay" onClick={onClose} />
 
       {/* Right-Side Drawer Window */}
-      <aside className="lumina-comments-drawer" role="dialog" aria-modal="true">
+      <aside className={`lumina-comments-drawer ${isLight ? 'light' : 'dark'}`} role="dialog" aria-modal="true">
         {/* Header */}
         <div className="comments-drawer-header">
           <h2 className="comments-drawer-title">

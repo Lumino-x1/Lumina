@@ -401,3 +401,280 @@
     padding: 12px 20px 20px;
   }
 }
+
+/* ==========================================================================
+   Bright Mode Support (Pure White & Black)
+   ========================================================================== */
+[data-theme="bright"] .community-faq-section,
+[data-theme="light"] .community-faq-section,
+.bright .community-faq-section,
+.light .community-faq-section {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+[data-theme="bright"] .community-faq-frame,
+[data-theme="light"] .community-faq-frame,
+.bright .community-faq-frame,
+.light .community-faq-frame {
+  border-left-color: rgba(0, 0, 0, 0.14);
+  border-right-color: rgba(0, 0, 0, 0.14);
+}
+
+[data-theme="bright"] .community-title,
+[data-theme="light"] .community-title,
+.bright .community-title,
+.light .community-title {
+  color: #000000;
+}
+
+[data-theme="bright"] .community-subtitle,
+[data-theme="light"] .community-subtitle,
+.bright .community-subtitle,
+.light .community-subtitle {
+  color: rgba(0, 0, 0, 0.68);
+}
+
+[data-theme="bright"] .community-cards-grid,
+[data-theme="light"] .community-cards-grid,
+.bright .community-cards-grid,
+.light .community-cards-grid {
+  border-color: rgba(0, 0, 0, 0.14);
+  background-color: #ffffff;
+}
+
+[data-theme="bright"] .community-cards-grid::after,
+[data-theme="light"] .community-cards-grid::after,
+.bright .community-cards-grid::after,
+.light .community-cards-grid::after {
+  border-bottom-color: rgba(0, 0, 0, 0.14);
+}
+
+[data-theme="bright"] .community-card,
+[data-theme="light"] .community-card,
+.bright .community-card,
+.light .community-card {
+  background-color: transparent;
+}
+
+[data-theme="bright"] .community-card:hover,
+[data-theme="light"] .community-card:hover,
+.bright .community-card:hover,
+.light .community-card:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="bright"] .card-left,
+[data-theme="light"] .card-left,
+.bright .card-left,
+.light .card-left {
+  border-right-color: rgba(0, 0, 0, 0.14);
+}
+
+[data-theme="bright"] .community-card-icon,
+[data-theme="light"] .community-card-icon,
+.bright .community-card-icon,
+.light .community-card-icon,
+[data-theme="bright"] .community-card-icon svg,
+[data-theme="light"] .community-card-icon svg,
+.bright .community-card-icon svg,
+.light .community-card-icon svg {
+  color: #000000;
+}
+
+[data-theme="bright"] .community-card-headline,
+[data-theme="light"] .community-card-headline,
+.bright .community-card-headline,
+.light .community-card-headline {
+  color: #000000;
+}
+
+[data-theme="bright"] .community-card-text,
+[data-theme="light"] .community-card-text,
+.bright .community-card-text,
+.light .community-card-text {
+  color: rgba(0, 0, 0, 0.68);
+}
+
+[data-theme="bright"] .community-by-label,
+[data-theme="light"] .community-by-label,
+.bright .community-by-label,
+.light .community-by-label {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="bright"] .community-author-name,
+[data-theme="light"] .community-author-name,
+.bright .community-author-name,
+.light .community-author-name {
+  color: #000000;
+}
+
+[data-theme="bright"] .community-avatar-wrap,
+[data-theme="light"] .community-avatar-wrap,
+.bright .community-avatar-wrap,
+.light .community-avatar-wrap {
+  background-color: #f0f0f0;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="bright"] .community-hatch-gap,
+[data-theme="light"] .community-hatch-gap,
+.bright .community-hatch-gap,
+.light .community-hatch-gap {
+  border-top-color: rgba(0, 0, 0, 0.14);
+  border-bottom-color: rgba(0, 0, 0, 0.14);
+  background-color: #ffffff;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.06) 0px,
+    rgba(0, 0, 0, 0.06) 1px,
+    transparent 1px,
+    transparent 6px
+  );
+}
+
+[data-theme="bright"] .community-hatch-gap::before,
+[data-theme="light"] .community-hatch-gap::before,
+.bright .community-hatch-gap::before,
+.light .community-hatch-gap::before,
+[data-theme="bright"] .community-hatch-gap::after,
+[data-theme="light"] .community-hatch-gap::after,
+.bright .community-hatch-gap::after,
+.light .community-hatch-gap::after {
+  border-color: rgba(0, 0, 0, 0.14);
+}
+
+[data-theme="bright"] .faq-box-container,
+[data-theme="light"] .faq-box-container,
+.bright .faq-box-container,
+.light .faq-box-container {
+  border-bottom-color: rgba(0, 0, 0, 0.14);
+  background-color: #ffffff;
+}
+
+[data-theme="bright"] .faq-box-container::after,
+[data-theme="light"] .faq-box-container::after,
+.bright .faq-box-container::after,
+.light .faq-box-container::after {
+  border-bottom-color: rgba(0, 0, 0, 0.14);
+}
+
+[data-theme="bright"] .faq-box-left,
+[data-theme="light"] .faq-box-left,
+.bright .faq-box-left,
+.light .faq-box-left {
+  background-color: #ffffff;
+  border-right-color: rgba(0, 0, 0, 0.14);
+}
+
+[data-theme="bright"] .faq-box-title,
+[data-theme="light"] .faq-box-title,
+.bright .faq-box-title,
+.light .faq-box-title {
+  color: #000000;
+}
+
+[data-theme="bright"] .faq-box-sub,
+[data-theme="light"] .faq-box-sub,
+.bright .faq-box-sub,
+.light .faq-box-sub {
+  color: rgba(0, 0, 0, 0.68);
+}
+
+[data-theme="bright"] .faq-box-contact-link,
+[data-theme="light"] .faq-box-contact-link,
+.bright .faq-box-contact-link,
+.light .faq-box-contact-link {
+  color: #000000;
+}
+
+[data-theme="bright"] .faq-box-right,
+[data-theme="light"] .faq-box-right,
+.bright .faq-box-right,
+.light .faq-box-right {
+  background-color: #ffffff;
+}
+
+[data-theme="bright"] .faq-box-item,
+[data-theme="light"] .faq-box-item,
+.bright .faq-box-item,
+.light .faq-box-item {
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="bright"] .faq-box-btn,
+[data-theme="light"] .faq-box-btn,
+.bright .faq-box-btn,
+.light .faq-box-btn {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .faq-box-btn:hover,
+[data-theme="light"] .faq-box-btn:hover,
+.bright .faq-box-btn:hover,
+.light .faq-box-btn:hover {
+  color: #000000 !important;
+  background-color: rgba(0, 0, 0, 0.015) !important;
+}
+
+[data-theme="bright"] .faq-box-question,
+[data-theme="light"] .faq-box-question,
+.bright .faq-box-question,
+.light .faq-box-question {
+  color: #000000;
+}
+
+[data-theme="bright"] .faq-box-chevron,
+[data-theme="light"] .faq-box-chevron,
+.bright .faq-box-chevron,
+.light .faq-box-chevron,
+[data-theme="bright"] .faq-box-chevron svg,
+[data-theme="light"] .faq-box-chevron svg,
+.bright .faq-box-chevron svg,
+.light .faq-box-chevron svg {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="bright"] .faq-box-btn:hover .faq-box-chevron,
+[data-theme="light"] .faq-box-btn:hover .faq-box-chevron,
+.bright .faq-box-btn:hover .faq-box-chevron,
+.light .faq-box-btn:hover .faq-box-chevron,
+[data-theme="bright"] .faq-box-item.is-open .faq-box-chevron,
+[data-theme="light"] .faq-box-item.is-open .faq-box-chevron,
+.bright .faq-box-item.is-open .faq-box-chevron,
+.light .faq-box-item.is-open .faq-box-chevron,
+[data-theme="bright"] .faq-box-btn:hover .faq-box-chevron svg,
+[data-theme="light"] .faq-box-btn:hover .faq-box-chevron svg,
+.bright .faq-box-btn:hover .faq-box-chevron svg,
+.light .faq-box-btn:hover .faq-box-chevron svg,
+[data-theme="bright"] .faq-box-item.is-open .faq-box-chevron svg,
+[data-theme="light"] .faq-box-item.is-open .faq-box-chevron svg,
+.bright .faq-box-item.is-open .faq-box-chevron svg,
+.light .faq-box-item.is-open .faq-box-chevron svg {
+  color: #000000;
+}
+
+[data-theme="bright"] .faq-box-answer-text,
+[data-theme="light"] .faq-box-answer-text,
+.bright .faq-box-answer-text,
+.light .faq-box-answer-text {
+  color: rgba(0, 0, 0, 0.72);
+}
+
+@media (max-width: 900px) {
+  [data-theme="bright"] .card-left,
+  [data-theme="light"] .card-left,
+  .bright .card-left,
+  .light .card-left {
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+  }
+
+  [data-theme="bright"] .faq-box-left,
+  [data-theme="light"] .faq-box-left,
+  .bright .faq-box-left,
+  .light .faq-box-left {
+    border-bottom-color: rgba(0, 0, 0, 0.1);
+  }
+}
+

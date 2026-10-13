@@ -157,8 +157,8 @@
   color: #ffffff;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 6px 12px;
-  border-radius: 0 !important;
+  padding: 6px 14px;
+  border-radius: 9999px !important;
   cursor: pointer;
   transition: background-color 0.15s ease;
 }

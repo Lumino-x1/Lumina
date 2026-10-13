@@ -1,6 +1,6 @@
 import React from 'react'
-import { ArrowUpRight, Mail } from 'lucide-react'
-import { GradientBackground } from './components/GradientBackground'
+import { ArrowRight } from 'lucide-react'
+import { GridPulse } from './components/ui/grid-pulse'
 import './HeroSection.css'
 
 export interface HeroSectionProps {
@@ -12,61 +12,67 @@ export interface HeroSectionProps {
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onOpenAuth,
   user: _user,
-  onOpenDashboard: _onOpenDashboard,
+  onOpenDashboard,
 }) => {
   return (
     <section className="hero-section-root" aria-label="Hero Section">
       {/* Continuous Centered Container Frame with Vertical Dashed Guide Lines */}
       <div className="hero-container-frame">
-        {/* Dynamic Gradient & Animated Grain Noise Background */}
-        <GradientBackground
-          gradientType="radial-gradient"
-          gradientOrigin="bottom-middle"
-          gradientSize="130% 130%"
-          enableNoise={true}
-          noisePatternAlpha={40}
-          noiseIntensity={0.9}
-        />
+        {/* Top Boundary Crosshairs (+) */}
+        <span className="crosshair-marker crosshair-top-left" aria-hidden="true">+</span>
+        <span className="crosshair-marker crosshair-top-right" aria-hidden="true">+</span>
 
-        {/* Main Hero Content */}
-        <div className="hero-main-content">
-          {/* Announcement Pill Badge */}
-          <div className="hero-badge-wrap">
-            <a href="#announcement" className="saascn-hero-badge">
-              <span>Built for verified college communities</span>
-              <ArrowUpRight className="w-3.5 h-3.5 ml-1.5 opacity-80" />
-            </a>
-          </div>
-
-          {/* Large Hero Headline */}
-          <h1 className="saascn-hero-title">
-            Your College.<br />One Connected Community.
+        {/* ====================================================================
+            LEFT COLUMN: Left-Aligned Text & Actions
+            ==================================================================== */}
+        <div className="hero-text-col">
+          {/* Large Hero Headline (Left Aligned) */}
+          <h1 className="hero-split-title">
+            Your College.<br />
+            One Connected Community.
           </h1>
 
           {/* Subtitle Description */}
-          <p className="saascn-hero-subtitle">
-            Lumina brings students, faculty, alumni, communities, opportunities, and campus experiences together in one trusted platform.
+          <p className="hero-split-subtitle">
+            Lumina is an AI-powered campus ecosystem that unifies social networking, intelligent academic scheduling, AI-driven summarization, personalized learning, and career opportunities to redefine the college experience.
           </p>
 
           {/* Rectangular Action Buttons */}
-          <div className="saascn-hero-actions">
-            <a href="#features" className="saascn-hero-btn-secondary">
+          <div className="hero-split-actions">
+            <button
+              type="button"
+              className="hero-btn-primary"
+              onClick={() => (onOpenAuth ? onOpenAuth('signup') : (window.location.hash = 'signup'))}
+            >
               <span>Explore Lumina</span>
-              <Mail className="saascn-hero-btn-icon" aria-hidden="true" />
-            </a>
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            </button>
 
             <button
               type="button"
-              className="saascn-hero-btn-primary"
-              onClick={() => (onOpenAuth ? onOpenAuth('signup') : (window.location.hash = 'signup'))}
+              className="hero-btn-secondary"
+              onClick={() => {
+                if (onOpenDashboard) onOpenDashboard()
+                else window.location.hash = 'dashboard'
+              }}
             >
-              <span>Join Lumina</span>
-              <ArrowUpRight className="saascn-hero-btn-icon" aria-hidden="true" />
+              Talk to an engineer
             </button>
           </div>
         </div>
 
-        {/* Bottom Corner Crosshairs (+) at frame border intersections */}
+        {/* ====================================================================
+            RIGHT COLUMN: Interactive GridPulse Canvas (No Text)
+            ==================================================================== */}
+        <div className="hero-image-col hero-grid-pulse-col" aria-hidden="true">
+          <GridPulse cell={28} reach={3} ambient={4} maxLit={260} />
+
+          {/* Divider Crosshair Markers at column border intersections */}
+          <span className="crosshair-marker crosshair-top-divider" aria-hidden="true">+</span>
+          <span className="crosshair-marker crosshair-bottom-divider" aria-hidden="true">+</span>
+        </div>
+
+        {/* Bottom Corner Crosshairs (+) */}
         <span className="crosshair-marker crosshair-bottom-left" aria-hidden="true">+</span>
         <span className="crosshair-marker crosshair-bottom-right" aria-hidden="true">+</span>
       </div>

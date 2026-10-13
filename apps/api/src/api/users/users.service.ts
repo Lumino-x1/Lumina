@@ -1,12 +1,13 @@
-import { assertDeclaredMimeMatchesContent } from '../../../lib/file-signature'
-import { badRequest, notFound } from '../../../lib/http-error'
-import { UsersRepo } from './users.repo'
-import { deleteFile, uploadFile } from '@lumina/storage'
-import { profileUpdateSchema, protectedProfileFields } from '@lumina/validators'
-import { MSG_PROFILE_NOT_FOUND } from '@lumina/constants'
+import { assertDeclaredMimeMatchesContent } from '../../../lib/file-signature';
+import { badRequest, notFound } from '../../../lib/http-error';
+import { UsersRepo } from './users.repo';
+import { MSG_PROFILE_NOT_FOUND } from '@lumina/constants';
+import { prisma } from '@lumina/db';
+import { deleteFile, uploadFile } from '@lumina/storage';
+import { profileUpdateSchema, protectedProfileFields } from '@lumina/validators';
+import type { AuthenticatedRequest } from '@lumina/contracts';
+import type { Prisma, Profile, User, Visibility } from '@lumina/db';
 
-import type { AuthenticatedRequest } from '@lumina/contracts'
-import { prisma, type Prisma, type Profile, type User, type Visibility } from '@lumina/db'
 
 namespace UsersDto {
   const publicFields = [
@@ -146,29 +147,149 @@ export namespace UsersService {
       throw badRequest('USER_NOT_FOUND', 'Could not locate account to save onboarding profile')
     }
 
-    // 2. Resolve or create College
-    let collegeId: string | undefined = undefined
-    if (body.college && typeof body.college === 'string' && body.college.trim()) {
-      const collegeName = body.college.trim()
-      let college = await prisma.college.findFirst({
-        where: { name: { equals: collegeName, mode: 'insensitive' } },
-      })
+    // 2. Resolve or create College && Automatically identify College using the user's email domain
+    let collegeId: string | undefined
 
-      if (!college) {
-        const slug = collegeName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').slice(0, 30)
-        const domain = `${slug || 'campus'}-${Math.random().toString(36).slice(2, 7)}.lumina.edu`
-        college = await prisma.college.create({
-          data: {
-            name: collegeName,
-            domain,
+    const email = user.email.trim().toLowerCase()
+    const emailDomain = email.split('@')[1]
+
+    if (emailDomain) {
+      try {
+        const collegeEmailDomain = await prisma.collegeEmailDomain.findFirst({
+          where: {
+            domain: { equals: emailDomain, mode: 'insensitive' },
+          },
+          include: {
+            college: {
+              select: {
+                id: true,
+                name: true,
+                isActive: true,
+              },
+            },
           },
         })
+
+        if (collegeEmailDomain?.college?.isActive) {
+          collegeId = collegeEmailDomain.college.id
+        }
+
+        // Check College.domain directly if not matched in CollegeEmailDomain
+        if (!collegeId) {
+          const directCollege = await prisma.college.findFirst({
+            where: {
+              domain: { equals: emailDomain, mode: 'insensitive' },
+            },
+            select: {
+              id: true,
+              name: true,
+              isActive: true,
+            },
+          })
+          if (directCollege?.isActive) {
+            collegeId = directCollege.id
+          }
+        }
+
+        // Auto-provision college for institutional / college domains (e.g. psgtech.ac.in, .edu, .ac.in, etc.)
+        const genericWebmail = new Set([
+          'gmail.com',
+          'googlemail.com',
+          'yahoo.com',
+          'ymail.com',
+          'hotmail.com',
+          'outlook.com',
+          'live.com',
+          'icloud.com',
+          'proton.me',
+          'protonmail.com',
+          'aol.com',
+          'zoho.com',
+        ])
+
+        if (!collegeId && !genericWebmail.has(emailDomain)) {
+          let collegeName = 'Campus'
+          if (emailDomain.includes('psgtech')) {
+            collegeName = 'PSG College of Technology'
+          } else if (emailDomain.includes('stanford')) {
+            collegeName = 'Stanford University'
+          } else if (emailDomain.includes('mit.edu')) {
+            collegeName = 'Massachusetts Institute of Technology'
+          } else if (emailDomain.includes('harvard')) {
+            collegeName = 'Harvard University'
+          } else if (emailDomain.includes('berkeley')) {
+            collegeName = 'UC Berkeley'
+          } else {
+            const rawPart = emailDomain.split('.')[0] || 'Campus'
+            collegeName =
+              rawPart.length <= 4
+                ? rawPart.toUpperCase()
+                : rawPart.charAt(0).toUpperCase() + rawPart.slice(1)
+          }
+
+          const slug = emailDomain
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, '-')
+            .slice(0, 30)
+
+          const newCollege = await prisma.college.upsert({
+            where: { domain: emailDomain },
+            update: {
+              name: collegeName,
+              isActive: true,
+            },
+            create: {
+              name: collegeName,
+              domain: emailDomain,
+              slug: `${slug}-${Math.random().toString(36).slice(2, 6)}`,
+              isActive: true,
+              isVerified: true,
+              emailDomains: {
+                create: {
+                  domain: emailDomain,
+                },
+              },
+            },
+          })
+
+          collegeId = newCollege.id
+        }
+      } catch (err) {
+        console.warn('Could not auto-resolve college from domain:', err)
       }
-      collegeId = college.id
+    }
+
+    if (!collegeId && body.college && typeof body.college === 'string' && body.college.trim()) {
+      try {
+        const collegeName = body.college.trim()
+        let college = await prisma.college.findFirst({
+          where: { name: { equals: collegeName, mode: 'insensitive' } },
+        })
+
+        if (!college) {
+          const slug = collegeName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').slice(0, 30)
+          const domain = `${slug || 'campus'}-${Math.random().toString(36).slice(2, 7)}.lumina.edu`
+          college = await prisma.college.create({
+            data: {
+              name: collegeName,
+              domain,
+              slug,
+            },
+          })
+        }
+        collegeId = college.id
+      } catch (err) {
+        console.warn('Could not resolve college from body.college:', err)
+      }
     }
 
     let departmentId: string | undefined = undefined
-    if (collegeId && body.department && typeof body.department === 'string' && body.department.trim()) {
+    if (
+      collegeId &&
+      body.department &&
+      typeof body.department === 'string' &&
+      body.department.trim()
+    ) {
       const deptName = body.department.trim()
       let dept = await prisma.department.findFirst({
         where: {
@@ -193,27 +314,40 @@ export namespace UsersService {
       status: 'ACTIVE',
     }
 
-    const firstName = typeof body.firstName === 'string' ? body.firstName.trim() : ''
-    const lastName = typeof body.lastName === 'string' ? body.lastName.trim() : ''
-    const fullName = `${firstName} ${lastName}`.trim()
-    if (fullName) {
-      userUpdate.name = fullName
-    }
+   const firstName = typeof body.firstName === 'string' ? body.firstName.trim() : ''
+   const lastName = typeof body.lastName === 'string' ? body.lastName.trim() : ''
+   const fullName = `${firstName} ${lastName}`.trim()
 
-    if (body.username && typeof body.username === 'string') {
-      const cleanUsername = body.username.trim().replace(/^@+/, '')
-      if (cleanUsername) {
-        const existingUsername = await prisma.user.findFirst({
-          where: {
-            username: { equals: cleanUsername, mode: 'insensitive' },
-            id: { not: user.id },
-          },
-        })
-        if (!existingUsername) {
-          userUpdate.username = cleanUsername
-        }
-      }
-    }
+   if (fullName) {
+     userUpdate.name = fullName
+   }
+
+   if (body.username && typeof body.username === 'string') {
+     const cleanUsername = body.username.trim().replace(/^@+/, '')
+     if (cleanUsername) {
+       const existingUsername = await prisma.user.findFirst({
+         where: {
+           username: { equals: cleanUsername, mode: 'insensitive' },
+           id: { not: user.id },
+         },
+       })
+       if (!existingUsername) {
+         userUpdate.username = cleanUsername
+       }
+     }
+   } else if (!user.username) {
+     const usernameBase = (fullName || user.email.split('@')[0] || 'user')
+       .toLowerCase()
+       .replace(/[^a-z0-9]+/g, '')
+       .slice(0, 20)
+
+     const usernameSuffix = user.id
+       .replace(/[^a-zA-Z0-9]/g, '')
+       .slice(-8)
+       .toLowerCase()
+
+     userUpdate.username = `${usernameBase || 'user'}_${usernameSuffix}`
+   }
 
     if (body.profilePicture && typeof body.profilePicture === 'string') {
       userUpdate.image = body.profilePicture

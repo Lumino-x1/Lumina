@@ -1,10 +1,4 @@
 import React from 'react'
-import {
-  ShieldCheck,
-  BookOpen,
-  UsersRound,
-  BriefcaseBusiness,
-} from 'lucide-react'
 import './WhyUsSection.css'
 
 export interface WhyUsSectionProps {
@@ -50,62 +44,94 @@ export const WhyUsSection: React.FC<WhyUsSectionProps> = ({
 
             {/* Row 1 */}
             <div className="why-us-bento-row">
-              {/* Card 1: Verified Community (ShieldCheck) */}
+              {/* Card 1: Verified Community */}
               <div className="why-us-card card-wide-left">
-                <div className="why-us-card-icon-wrap" aria-hidden="true">
-                  <ShieldCheck className="w-7 h-7 text-white stroke-[1.6]" />
+                <div className="why-us-card-image-wrap" aria-hidden="true">
+                  <img
+                    src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80"
+                    alt="Verified Community"
+                    className="why-us-card-bg-img"
+                    loading="lazy"
+                  />
+                  <div className="why-us-card-overlay" />
                 </div>
 
-                <div className="why-us-card-body">
-                  <h3 className="why-us-card-title">Verified Community</h3>
-                  <p className="why-us-card-desc">
-                    Build meaningful connections inside a trusted network of students, faculty, and alumni.
-                  </p>
+                <div className="why-us-card-content">
+                  <div className="why-us-card-body">
+                    <h3 className="why-us-card-title">Verified Community</h3>
+                    <p className="why-us-card-desc">
+                      Build meaningful connections inside a trusted network of students, faculty, and alumni.
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              {/* Card 2: Academic Collaboration (BookOpen) */}
+              {/* Card 2: Academic Collaboration */}
               <div className="why-us-card card-narrow-right">
-                <div className="why-us-card-icon-wrap" aria-hidden="true">
-                  <BookOpen className="w-7 h-7 text-white stroke-[1.6]" />
+                <div className="why-us-card-image-wrap" aria-hidden="true">
+                  <img
+                    src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80"
+                    alt="Academic Collaboration"
+                    className="why-us-card-bg-img"
+                    loading="lazy"
+                  />
+                  <div className="why-us-card-overlay" />
                 </div>
 
-                <div className="why-us-card-body">
-                  <h3 className="why-us-card-title">Academic Collaboration</h3>
-                  <p className="why-us-card-desc">
-                    Create study groups, share knowledge, discuss academic work, and learn together.
-                  </p>
+                <div className="why-us-card-content">
+                  <div className="why-us-card-body">
+                    <h3 className="why-us-card-title">Academic Collaboration</h3>
+                    <p className="why-us-card-desc">
+                      Create study groups, share knowledge, discuss academic work, and learn together.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Row 2 */}
             <div className="why-us-bento-row">
-              {/* Card 3: Clubs & Communities (UsersRound) */}
+              {/* Card 3: Clubs & Communities */}
               <div className="why-us-card card-narrow-left">
-                <div className="why-us-card-icon-wrap" aria-hidden="true">
-                  <UsersRound className="w-7 h-7 text-white stroke-[1.6]" />
+                <div className="why-us-card-image-wrap" aria-hidden="true">
+                  <img
+                    src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1200&q=80"
+                    alt="Clubs & Communities"
+                    className="why-us-card-bg-img"
+                    loading="lazy"
+                  />
+                  <div className="why-us-card-overlay" />
                 </div>
 
-                <div className="why-us-card-body">
-                  <h3 className="why-us-card-title">Clubs & Communities</h3>
-                  <p className="why-us-card-desc">
-                    Discover communities and clubs that match your interests and become part of campus life.
-                  </p>
+                <div className="why-us-card-content">
+                  <div className="why-us-card-body">
+                    <h3 className="why-us-card-title">Clubs & Communities</h3>
+                    <p className="why-us-card-desc">
+                      Discover communities and clubs that match your interests and become part of campus life.
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              {/* Card 4: Career Opportunities (BriefcaseBusiness) */}
+              {/* Card 4: Career Opportunities */}
               <div className="why-us-card card-wide-right">
-                <div className="why-us-card-icon-wrap" aria-hidden="true">
-                  <BriefcaseBusiness className="w-7 h-7 text-white stroke-[1.6]" />
+                <div className="why-us-card-image-wrap" aria-hidden="true">
+                  <img
+                    src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1200&q=80"
+                    alt="Career Opportunities"
+                    className="why-us-card-bg-img"
+                    loading="lazy"
+                  />
+                  <div className="why-us-card-overlay" />
                 </div>
 
-                <div className="why-us-card-body">
-                  <h3 className="why-us-card-title">Career Opportunities</h3>
-                  <p className="why-us-card-desc">
-                    Discover internships, prepare for placements, and connect with mentors and alumni.
-                  </p>
+                <div className="why-us-card-content">
+                  <div className="why-us-card-body">
+                    <h3 className="why-us-card-title">Career Opportunities</h3>
+                    <p className="why-us-card-desc">
+                      Discover internships, prepare for placements, and connect with mentors and alumni.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

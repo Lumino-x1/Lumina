@@ -1,1305 +1,2467 @@
 /* ==========================================================================
-   Sharp Rectangular Geometry for Profile Page
-   All buttons, sections, cards, widgets, inputs, and pills are rectangular
+   LUMINA AI OS PROFILE PAGE - DUAL THEME (BRIGHT & DARK MODE)
+   Matches profile.png pixel-for-pixel using Geist Sans (Regular 400 baseline).
    ========================================================================== */
-.profile-page-wrapper button,
-.profile-page-wrapper input,
-.profile-page-wrapper .profile-card,
-.profile-page-wrapper .profile-widget,
-.profile-page-wrapper .profile-create-post-card,
-.profile-page-wrapper .profile-create-post-input,
-.profile-page-wrapper .profile-feed-post-card,
-.profile-page-wrapper .profile-feed-media-wrap,
-.profile-page-wrapper .profile-feed-ide-box,
-.profile-page-wrapper .profile-college-box,
-.profile-page-wrapper .profile-college-logo-sq,
-.profile-page-wrapper .profile-degree-box,
-.profile-page-wrapper .profile-pill-item,
-.profile-page-wrapper .profile-study-pill,
-.profile-page-wrapper .profile-achieve-icon-badge,
-.profile-page-wrapper .profile-community-avatar,
-.profile-page-wrapper .profile-community-joined-btn,
-.profile-page-wrapper .profile-nav-search,
-.profile-page-wrapper .profile-nav-search-kbd,
-.profile-page-wrapper .profile-nav-dash-btn,
-.profile-page-wrapper .profile-nav-icon-btn,
-.profile-page-wrapper .profile-btn-edit,
-.profile-page-wrapper .profile-btn-secondary,
-.profile-page-wrapper .profile-btn-icon,
-.profile-page-wrapper .profile-create-action-btn,
-.profile-page-wrapper .profile-load-more-btn,
-.profile-page-wrapper .profile-change-cover-btn,
-.profile-page-wrapper .profile-widget-edit-btn,
-.profile-page-wrapper .profile-card-edit-btn,
-.profile-page-wrapper .profile-verified-student-tag,
-.profile-page-wrapper .profile-visibility-select-box,
-.profile-page-wrapper .profile-lang-badge,
-.profile-page-wrapper .profile-lang-level,
-.profile-page-wrapper .profile-post-card,
-.profile-page-wrapper .profile-post-img-wrap {
-  border-radius: 0 !important;
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-sans/style.css');
+@import url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/style.css');
+
+:root {
+  --ai-profile-font-sans: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ai-profile-font-heading: 'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Base Light Theme (Default Bright Mode matching reference image profile.png) */
+.lumina-ai-profile-root,
+.lumina-ai-profile-root.light {
+  --ai-bg: #f8fafc;
+  --ai-sidebar-bg: #ffffff;
+  --ai-header-bg: #ffffff;
+  --ai-card-bg: #ffffff;
+  --ai-card-sub-bg: #f9fafb;
+  --ai-card-hover: #f3f4f6;
+  --ai-border: #eaecf0;
+  --ai-border-subtle: #f2f4f7;
+  --ai-border-focus: #2563eb;
+
+  --ai-text-primary: #101828;
+  --ai-text-secondary: #344054;
+  --ai-text-muted: #667085;
+  --ai-text-subtle: #98a2b3;
+
+  --ai-pill-active-bg: #09090b;
+  --ai-pill-active-text: #ffffff;
+  --ai-pill-inactive-bg: #f2f4f7;
+  --ai-pill-inactive-text: #344054;
+
+  --ai-accent-blue: #0284c7;
+  --ai-accent-blue-bg: #e0f2fe;
+  --ai-accent-blue-text: #0284c7;
+
+  --ai-btn-primary-bg: #09090b;
+  --ai-btn-primary-text: #ffffff;
+  --ai-btn-primary-hover: #27272a;
+
+  --ai-code-bg: #111827;
+  --ai-code-border: #1f2937;
+  --ai-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
+  --ai-shadow-md: 0 4px 8px -2px rgba(16, 24, 40, 0.06), 0 2px 4px -2px rgba(16, 24, 40, 0.04);
+}
+
+/* Symmetrical Dark Theme (Pure Landing Page Black) */
+.lumina-ai-profile-root.dark,
+[data-theme='dark'] .lumina-ai-profile-root {
+  --ai-bg: #000000;
+  --ai-sidebar-bg: #000000;
+  --ai-header-bg: #000000;
+  --ai-card-bg: #000000;
+  --ai-card-sub-bg: #0a0a0a;
+  --ai-card-hover: #141414;
+  --ai-border: rgba(255, 255, 255, 0.12);
+  --ai-border-subtle: rgba(255, 255, 255, 0.08);
+  --ai-border-focus: #ffffff;
+
+  --ai-text-primary: #ffffff;
+  --ai-text-secondary: rgba(255, 255, 255, 0.72);
+  --ai-text-muted: rgba(255, 255, 255, 0.45);
+  --ai-text-subtle: rgba(255, 255, 255, 0.3);
+
+  --ai-pill-active-bg: #ffffff;
+  --ai-pill-active-text: #000000;
+  --ai-pill-inactive-bg: rgba(255, 255, 255, 0.06);
+  --ai-pill-inactive-text: rgba(255, 255, 255, 0.72);
+
+  --ai-accent-blue: #ffffff;
+  --ai-accent-blue-bg: rgba(255, 255, 255, 0.08);
+  --ai-accent-blue-text: #ffffff;
+
+  --ai-btn-primary-bg: #ffffff;
+  --ai-btn-primary-text: #000000;
+  --ai-btn-primary-hover: #e5e5e5;
+
+  --ai-code-bg: #000000;
+  --ai-code-border: rgba(255, 255, 255, 0.12);
+  --ai-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.8);
+  --ai-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.8);
+}
+
+/* Master Root Container */
+.lumina-ai-profile-root {
+  display: flex;
+  height: 100vh;
+  max-height: 100vh;
+  width: 100%;
+  background-color: var(--ai-bg);
+  color: var(--ai-text-primary);
+  font-family: var(--ai-profile-font-sans, 'Quicksand', sans-serif);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: -0.01em;
+  box-sizing: border-box;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.lumina-ai-profile-root *,
+.lumina-ai-profile-root *::before,
+.lumina-ai-profile-root *::after {
+  box-sizing: border-box;
+}
+
+.lumina-ai-profile-root input,
+.lumina-ai-profile-root button,
+.lumina-ai-profile-root select,
+.lumina-ai-profile-root textarea,
+.lumina-ai-profile-root optgroup,
+.lumina-ai-profile-root .saascn-search-input {
+  font-family: var(--ai-profile-font-sans, 'Quicksand', sans-serif) !important;
+  font-optical-sizing: auto;
+}
+
+/* Headings, Brand Names, Titles, and User Display Names use Raleway */
+.lumina-ai-profile-root h1,
+.lumina-ai-profile-root h2,
+.lumina-ai-profile-root h3,
+.lumina-ai-profile-root h4,
+.lumina-ai-profile-root h5,
+.lumina-ai-profile-root h6,
+.lumina-ai-profile-root .ai-brand-name,
+.lumina-ai-profile-root .ai-profile-title,
+.lumina-ai-profile-root .ai-profile-name-block,
+.lumina-ai-profile-root .ai-profile-name-row,
+.lumina-ai-profile-root .ai-pinned-title,
+.lumina-ai-profile-root .ai-diagram-title,
+.lumina-ai-profile-root .ai-author-name,
+.lumina-ai-profile-root .ai-post-title,
+.lumina-ai-profile-root .ai-grant-title,
+.lumina-ai-profile-root .ai-card-title,
+.lumina-ai-profile-root .ai-coursework-title,
+.lumina-ai-profile-root .ai-course-name,
+.lumina-ai-profile-root .ai-paper-title,
+.lumina-ai-profile-root .ai-stat-btn,
+.lumina-ai-profile-root .ai-workspace-title,
+.lumina-ai-profile-root .ai-nav-category-title,
+.lumina-ai-profile-root .ai-user-name,
+.lumina-ai-profile-root .ai-popover-name,
+.lumina-ai-profile-root .ai-popover-ws-name {
+  font-family: var(--ai-profile-font-heading, 'Raleway', sans-serif) !important;
+  font-optical-sizing: auto;
 }
 
 /* ==========================================================================
-   ProfilePage Styling
-   Matches the Lumina Student Profile reference:
-   - Fixed top navbar with Lumina branding, links, search, dashboard button
-   - Full-width colorful mesh gradient cover banner with "Change cover" button
-   - Large overlapping circular avatar with camera badge
-   - Profile title, blue verified badge, bio, metadata tags, and follow stats
-   - 2-Column layout:
-     Left column: Create post bar + single-column feed posts (including IDE code post)
-     Right sidebar: College & Verification, Academic Snapshot, Skills, Links,
-                    Interests, Achievements, Communities (12)
-   - Continuous dashed container guidelines and crosshairs (+)
+   1. LEFT SIDEBAR
    ========================================================================== */
-
-.profile-page-wrapper {
-  min-height: 100vh;
-  width: 100%;
-  background-color: #000000;
-  color: #ffffff;
-  font-family: var(--font-family-primary, 'Geist', -apple-system, BlinkMacSystemFont, sans-serif);
+.lumina-ai-profile-root .ai-sidebar {
+  width: 320px;
+  min-width: 320px;
+  max-width: 320px;
+  height: 100vh;
+  max-height: 100vh;
+  background-color: var(--ai-sidebar-bg);
+  border-right: 1px solid var(--ai-border);
   display: flex;
   flex-direction: column;
-  position: relative;
-  box-sizing: border-box;
-}
-
-/* ==========================================================================
-   1. TOP NAVIGATION BAR
-   ========================================================================== */
-.profile-navbar {
+  flex-shrink: 0;
   position: sticky;
   top: 0;
-  z-index: 100;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
-  box-sizing: border-box;
+  z-index: 40;
+  overflow: hidden;
+  will-change: width, min-width, max-width;
+  transition: width 0.28s cubic-bezier(0.2, 0, 0, 1),
+              min-width 0.28s cubic-bezier(0.2, 0, 0, 1),
+              max-width 0.28s cubic-bezier(0.2, 0, 0, 1);
 }
 
-.profile-navbar-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 24px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
+/* Collapsed Icon-Only Sidebar Rail */
+.lumina-ai-profile-root .ai-sidebar.is-collapsed {
+  width: 68px !important;
+  min-width: 68px !important;
+  max-width: 68px !important;
 }
 
-.profile-nav-left {
-  display: flex;
-  align-items: center;
-  gap: 28px;
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-sidebar-top-section {
+  padding: 12px 18px 10px;
+  gap: 0;
 }
 
-.profile-nav-logo {
-  font-size: 18px;
-  font-weight: 700;
-  color: #ffffff;
-  text-decoration: none;
-  letter-spacing: -0.02em;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.profile-nav-links {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-}
-
-.profile-nav-link {
-  font-size: 13.5px;
-  color: rgba(255, 255, 255, 0.65);
-  text-decoration: none;
-  transition: color 0.15s ease;
-  cursor: pointer;
-}
-
-.profile-nav-link:hover {
-  color: #ffffff;
-}
-
-.profile-nav-right {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.profile-nav-search {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 0;
-  padding: 6px 14px;
-  height: 36px;
-  box-sizing: border-box;
-}
-
-.profile-nav-search-input {
-  background: none;
-  border: none;
-  outline: none;
-  color: #ffffff;
-  font-size: 13px;
-  width: 140px;
-}
-
-.profile-nav-search-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.profile-nav-search-kbd {
-  font-family: monospace;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
-  background-color: rgba(255, 255, 255, 0.08);
-  padding: 2px 6px;
-  border-radius: 0;
-}
-
-.profile-nav-icon-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 0;
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.7);
-  display: flex;
-  align-items: center;
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-sidebar-action-row {
   justify-content: center;
-  cursor: pointer;
-  transition: color 0.15s, background-color 0.15s;
 }
 
-.profile-nav-icon-btn:hover {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
-.profile-nav-dash-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background-color: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 0;
-  padding: 6px 14px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #ffffff;
-  cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s;
-}
-
-.profile-nav-dash-btn:hover {
-  background-color: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.28);
-}
-
-.profile-nav-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50% !important;
-  object-fit: cover;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-}
-
-/* ==========================================================================
-   2. COVER BANNER
-   ========================================================================== */
-.profile-cover-wrap {
-  width: 100%;
-  height: 220px;
-  position: relative;
-  background: linear-gradient(
-    135deg,
-    #fce7f3 0%,
-    #f472b6 22%,
-    #fb923c 48%,
-    #f97316 70%,
-    #c084fc 100%
-  );
-  background-size: cover;
-  background-position: center;
-  box-sizing: border-box;
-}
-
-.profile-cover-overlay {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at 75% 30%,
-    rgba(255, 255, 255, 0.2) 0%,
-    transparent 60%
-  );
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-sidebar-action-group {
+  opacity: 0;
+  max-width: 0;
+  transform: translateX(8px);
   pointer-events: none;
 }
 
-.profile-cover-action-bar {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 16px 24px;
-  height: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  box-sizing: border-box;
-  position: relative;
-  z-index: 2;
-}
-
-.profile-change-cover-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  background-color: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 0;
-  padding: 6px 13px;
-  font-size: 12.5px;
-  font-weight: 500;
-  color: #ffffff;
-  cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s;
-}
-
-.profile-change-cover-btn:hover {
-  background-color: rgba(0, 0, 0, 0.75);
-  border-color: rgba(255, 255, 255, 0.35);
-}
-
-/* ==========================================================================
-   3. PROFILE HEADER BLOCK
-   ========================================================================== */
-.profile-header-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 28px 24px 32px;
-  position: relative;
-  border-left: 1px dashed rgba(255, 255, 255, 0.12);
-  border-right: 1px dashed rgba(255, 255, 255, 0.12);
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
-  box-sizing: border-box;
-  background-color: #000000;
-}
-
-.profile-header-layout {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 32px;
-  position: relative;
-}
-
-.profile-header-left {
-  display: flex;
-  align-items: flex-start;
-  gap: 24px;
-  flex: 1;
-}
-
-/* Avatar inside header block next to name */
-.profile-avatar-container {
-  position: relative;
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-sidebar-search-box {
+  opacity: 0;
+  max-height: 0;
+  height: 0;
   margin-top: 0;
-  flex-shrink: 0;
-  width: 160px;
-  height: 160px;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-top-width: 0;
+  border-bottom-width: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
 }
 
-.profile-avatar-img {
-  width: 160px;
-  height: 160px;
-  border-radius: 50% !important;
-  object-fit: cover;
-  border: 3.5px solid rgba(255, 255, 255, 0.2);
-  background-color: #121212;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
-  display: block;
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-nav-scroll {
+  padding: 0 10px 16px;
+  overflow-x: hidden;
 }
 
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-nav-group {
+  margin-bottom: 8px;
+}
 
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-nav-category-title {
+  opacity: 0;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  pointer-events: none;
+}
 
-/* Profile Info details */
-.profile-info-wrap {
-  padding-top: 2px;
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-nav-item {
+  padding: 8px 12px;
+}
+
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-nav-label {
+  opacity: 0;
+  max-width: 0;
+  margin-left: 0;
+  transform: translateX(-8px);
+  pointer-events: none;
+}
+
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-nav-icon {
+  margin: 0;
+}
+
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-sidebar-user-footer {
+  padding: 12px 10px;
+}
+
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-user-profile-card {
+  padding: 6px;
+}
+
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-user-meta {
+  opacity: 0;
+  max-width: 0;
+  margin-left: 0;
+  transform: translateX(-8px);
+  pointer-events: none;
+}
+
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-settings-gear-btn {
+  opacity: 0;
+  max-width: 0;
+  transform: scale(0.6);
+  pointer-events: none;
+}
+
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-user-avatar-img {
+  width: 36px;
+  height: 36px;
+}
+
+.lumina-ai-profile-root .ai-sidebar.is-collapsed .ai-settings-popover {
+  left: 74px !important;
+  bottom: 12px !important;
+  width: 290px;
+}
+
+/* Sidebar Top Action Bar & Search Bar (Reference Match) */
+.lumina-ai-profile-root .ai-sidebar-top-section {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  padding: 12px 14px 10px;
+  gap: 12px;
+  box-sizing: border-box;
+  transition: padding 0.28s cubic-bezier(0.2, 0, 0, 1),
+              gap 0.28s cubic-bezier(0.2, 0, 0, 1);
 }
 
-.profile-name-row {
+.lumina-ai-profile-root .ai-sidebar-action-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  width: 100%;
+  height: 32px;
+  min-height: 32px;
+  box-sizing: border-box;
 }
 
-.profile-name-title {
-  font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: 28px;
-  font-weight: 500;
-  color: #ffffff;
-  margin: 0;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
-}
-
-.profile-verified-badge {
+.lumina-ai-profile-root .ai-sidebar-icon-btn {
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  color: #a1a1aa;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.15s ease;
+  position: relative;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.lumina-ai-profile-root .ai-sidebar-icon-btn:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.lumina-ai-profile-root .ai-sidebar-action-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 80px;
+  opacity: 1;
+  transform: translateX(0);
+  overflow: hidden;
+  transition: opacity 0.18s cubic-bezier(0.2, 0, 0, 1),
+              max-width 0.28s cubic-bezier(0.2, 0, 0, 1),
+              transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.lumina-ai-profile-root .ai-inbox-btn {
+  position: relative;
+}
+
+.lumina-ai-profile-root .ai-inbox-badge {
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  background-color: #eb5757;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 4px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border: 2px solid var(--ai-sidebar-bg, #000000);
+}
+
+.lumina-ai-profile-root .ai-sidebar-search-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 38px;
+  max-height: 38px;
+  padding: 0 8px 0 12px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.18s cubic-bezier(0.2, 0, 0, 1),
+              max-height 0.28s cubic-bezier(0.2, 0, 0, 1),
+              height 0.28s cubic-bezier(0.2, 0, 0, 1),
+              margin 0.28s cubic-bezier(0.2, 0, 0, 1),
+              padding 0.28s cubic-bezier(0.2, 0, 0, 1),
+              border-width 0.28s cubic-bezier(0.2, 0, 0, 1),
+              transform 0.2s cubic-bezier(0.2, 0, 0, 1),
+              background-color 0.15s ease,
+              border-color 0.15s ease;
+}
+
+.lumina-ai-profile-root .ai-sidebar-search-box:focus-within {
+  border-color: rgba(255, 255, 255, 0.28);
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.lumina-ai-profile-root .ai-sidebar-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--ai-text-primary, #ffffff);
+  padding: 0;
+  min-width: 0;
+}
+
+.lumina-ai-profile-root .ai-sidebar-search-input::placeholder {
+  color: #71717a;
+  font-weight: 400;
+}
+
+.lumina-ai-profile-root .ai-sidebar-kbd-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 5px;
+  color: #8e8e93;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  user-select: none;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+.lumina-ai-profile-root .ai-workspace-wrap {
+  position: relative;
+  padding: 0 16px 14px;
+}
+
+.lumina-ai-profile-root .ai-workspace-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+  border-radius: 9999px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.lumina-ai-profile-root .ai-workspace-btn:hover {
+  background-color: var(--ai-card-hover);
+}
+
+.lumina-ai-profile-root .ai-workspace-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #2563eb;
+  flex-shrink: 0;
+}
+
+.lumina-ai-profile-root .ai-workspace-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.lumina-ai-profile-root .ai-workspace-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ai-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.lumina-ai-profile-root .ai-workspace-sub {
+  font-size: 11px;
+  color: var(--ai-text-muted);
+  line-height: 1.2;
+}
+
+.lumina-ai-profile-root .ai-workspace-chevron {
+  color: var(--ai-text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.lumina-ai-profile-root .ai-nav-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 12px 16px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ai-border) transparent;
+  transition: padding 0.28s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.lumina-ai-profile-root .ai-nav-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.lumina-ai-profile-root .ai-nav-scroll::-webkit-scrollbar-thumb {
+  background: var(--ai-border);
+  border-radius: 4px;
+}
+
+.lumina-ai-profile-root .ai-nav-group {
+  margin-bottom: 16px;
+  transition: margin-bottom 0.28s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.lumina-ai-profile-root .ai-nav-category-title {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--ai-text-subtle);
+  letter-spacing: 0.06em;
+  padding: 6px 8px 4px;
+  text-transform: uppercase;
+  max-height: 26px;
+  overflow: hidden;
+  opacity: 1;
+  box-sizing: border-box;
+  transition: opacity 0.18s cubic-bezier(0.2, 0, 0, 1),
+              max-height 0.28s cubic-bezier(0.2, 0, 0, 1),
+              padding 0.28s cubic-bezier(0.2, 0, 0, 1),
+              margin 0.28s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.lumina-ai-profile-root .ai-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lumina-ai-profile-root .ai-nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: var(--ai-text-secondary);
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  text-align: left;
+  outline: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  transition: background-color 0.15s ease,
+              color 0.15s ease,
+              padding 0.28s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.lumina-ai-profile-root .ai-nav-item:hover {
+  background-color: var(--ai-card-hover);
+  color: var(--ai-text-primary);
+}
+
+.lumina-ai-profile-root .ai-nav-item.is-active {
+  background-color: var(--ai-btn-primary-bg);
+  color: var(--ai-btn-primary-text);
+  font-weight: 500;
+}
+
+.lumina-ai-profile-root .ai-nav-item.is-active .ai-nav-icon {
+  color: inherit;
+}
+
+.lumina-ai-profile-root .ai-nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  color: var(--ai-text-muted);
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.lumina-ai-profile-root .ai-nav-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  margin-left: 10px;
+  max-width: 220px;
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.18s cubic-bezier(0.2, 0, 0, 1),
+              max-width 0.28s cubic-bezier(0.2, 0, 0, 1),
+              margin-left 0.28s cubic-bezier(0.2, 0, 0, 1),
+              transform 0.22s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.lumina-ai-profile-root .ai-sidebar-user-footer {
+  padding: 12px 14px;
+  border-top: 1px solid var(--ai-border);
+  background-color: var(--ai-sidebar-bg);
+  position: relative;
+  box-sizing: border-box;
+  transition: padding 0.28s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.lumina-ai-profile-root .ai-settings-gear-btn {
+  background: none;
+  border: none;
+  color: var(--ai-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  opacity: 1;
+  transform: scale(1);
+  overflow: hidden;
+  transition: opacity 0.18s cubic-bezier(0.2, 0, 0, 1),
+              max-width 0.28s cubic-bezier(0.2, 0, 0, 1),
+              transform 0.2s cubic-bezier(0.2, 0, 0, 1),
+              color 0.15s ease,
+              background-color 0.15s ease;
+}
+
+.lumina-ai-profile-root .ai-settings-gear-btn:hover,
+.lumina-ai-profile-root .ai-settings-gear-btn.is-active {
+  color: var(--ai-text-primary);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.lumina-ai-profile-root .ai-settings-popover {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 6px;
+  right: 6px;
+  background-color: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  z-index: 100;
+  overflow: hidden;
+  padding: 6px 0;
+  display: flex;
+  flex-direction: column;
+  animation: ai-popover-in 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lumina-ai-profile-root .ai-popover-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px 6px;
+}
+
+.lumina-ai-profile-root .ai-popover-avatar-sq {
+  width: 34px;
+  height: 34px;
+  border-radius: 7px;
+  background-color: #171717;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14.5px;
+  font-weight: 600;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.lumina-ai-profile-root .ai-popover-header-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.lumina-ai-profile-root .ai-popover-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lumina-ai-profile-root .ai-popover-plan {
+  font-size: 11.5px;
+  color: #a1a1aa;
+  line-height: 1.25;
+  margin-top: 1px;
+}
+
+.lumina-ai-profile-root .ai-popover-divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin: 4px 0;
+}
+
+.lumina-ai-profile-root .ai-popover-menu-list {
+  display: flex;
+  flex-direction: column;
+  padding: 1px 6px;
+}
+
+.lumina-ai-profile-root .ai-popover-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: #f4f4f5;
+  font-size: 13.5px;
+  font-weight: 450;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background-color 0.12s ease;
+}
+
+.lumina-ai-profile-root .ai-popover-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.lumina-ai-profile-root .ai-popover-item-icon {
+  flex-shrink: 0;
+}
+
+.lumina-ai-profile-root .ai-popover-menu-item .text-blue,
+.lumina-ai-profile-root .ai-popover-ws-left.text-blue {
+  color: #3b82f6 !important;
+}
+
+.lumina-ai-profile-root .ai-popover-workspaces-section {
+  display: flex;
+  flex-direction: column;
+  padding: 1px 6px;
+}
+
+.lumina-ai-profile-root .ai-popover-email-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 10px 3px;
+}
+
+.lumina-ai-profile-root .ai-popover-email {
+  font-size: 12px;
+  color: #94949e;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lumina-ai-profile-root .ai-popover-more-btn {
+  background: transparent;
+  border: none;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  color: #85858d;
+  cursor: pointer;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lumina-ai-profile-root .ai-popover-more-btn:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.lumina-ai-profile-root .ai-popover-workspace-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5.5px 12px;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.12s ease;
+}
+
+.lumina-ai-profile-root .ai-popover-workspace-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.lumina-ai-profile-root .ai-popover-ws-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.lumina-ai-profile-root .ai-popover-avatar-sm {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: #0284c7;
+  background-color: #171717;
   color: #ffffff;
-  flex-shrink: 0;
-}
-
-.profile-subline-1 {
-  font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: 14.5px;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 0;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-}
-
-.profile-subline-2 {
-  font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.65);
-  margin: 0;
-  line-height: 1.6;
-  letter-spacing: -0.01em;
-}
-
-.profile-bio-text {
-  font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: 14px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.65);
-  margin: 4px 0 0;
-  max-width: 600px;
-  letter-spacing: -0.01em;
-}
-
-.profile-meta-tags-row {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-top: 6px;
-  flex-wrap: wrap;
-}
-
-.profile-meta-tag-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-/* Profile Header Right Column: Stats & Actions */
-.profile-header-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 28px;
-  padding-top: 18px;
-  flex-shrink: 0;
-}
-
-.profile-stats-row {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-
-.profile-stat-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-}
-
-.profile-stat-number {
-  font-size: 17px;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.profile-stat-label {
-  font-size: 11.5px;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.profile-actions-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.profile-btn-edit {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #fed7aa;
-  color: #000000;
-  border: none;
-  border-radius: 0;
-  padding: 8px 18px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.15s, transform 0.15s;
-}
-
-.profile-btn-edit:hover {
-  background-color: #fdba74;
-  transform: translateY(-1px);
-}
-
-.profile-btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 0;
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #ffffff;
-  cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s;
-}
-
-.profile-btn-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.28);
-}
-
-.profile-btn-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 0;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.16);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.7);
-  cursor: pointer;
-  transition: background-color 0.15s;
+  font-size: 10.5px;
+  font-weight: 700;
+  flex-shrink: 0;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.profile-btn-icon:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.lumina-ai-profile-root .ai-popover-avatar-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #f87171;
+  border: 1.5px solid #000000;
+}
+
+.lumina-ai-profile-root .ai-popover-ws-name {
+  font-size: 13.5px;
   color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lumina-ai-profile-root .ai-popover-check-icon {
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.lumina-ai-profile-root .ai-popover-guest-badge {
+  background-color: #3b3017;
+  color: #f59e0b;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  margin-left: 6px;
+}
+
+.lumina-ai-profile-root .ai-popover-footer {
+  padding: 1px 6px;
+}
+
+.lumina-ai-profile-root .ai-popover-logout-btn {
+  width: 100%;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: #f4f4f5;
+  font-size: 13.5px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.12s ease;
+}
+
+.lumina-ai-profile-root .ai-popover-logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #f87171;
+}
+
+.lumina-ai-profile-root .ai-user-profile-card {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+  transition: background-color 0.15s ease,
+              padding 0.28s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.lumina-ai-profile-root .ai-user-profile-card:hover {
+  background-color: var(--ai-card-hover);
+}
+
+.lumina-ai-profile-root .ai-user-avatar-img {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--ai-border);
+}
+
+.lumina-ai-profile-root .ai-user-meta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  margin-left: 10px;
+  max-width: 180px;
+  opacity: 1;
+  transform: translateX(0);
+  overflow: hidden;
+  transition: opacity 0.18s cubic-bezier(0.2, 0, 0, 1),
+              max-width 0.28s cubic-bezier(0.2, 0, 0, 1),
+              margin-left 0.28s cubic-bezier(0.2, 0, 0, 1),
+              transform 0.22s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.lumina-ai-profile-root .ai-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ai-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.lumina-ai-profile-root .ai-user-role {
+  font-size: 11px;
+  color: var(--ai-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 /* ==========================================================================
-   4. TWO-COLUMN MAIN CONTENT GRID
+   2. TOP BAR
    ========================================================================== */
-.profile-content-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  border-left: 1px dashed rgba(255, 255, 255, 0.12);
-  border-right: 1px dashed rgba(255, 255, 255, 0.12);
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
-  box-sizing: border-box;
-  background-color: #000000;
+.lumina-ai-profile-root .ai-app-main-layout {
   flex: 1;
-}
-
-/* Left Column: Feed Content (Full width within container) */
-.profile-content-left {
-  width: 100%;
-  max-width: 100%;
-  border-right: none;
-  padding: 24px 24px 48px;
-  box-sizing: border-box;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
 }
 
-/* Navigation Tabs Bar */
-.profile-tabs-bar {
+.lumina-ai-profile-root .ai-top-bar {
+  height: 56px;
+  min-height: 56px;
+  background-color: var(--ai-header-bg);
+  border-bottom: 1px solid var(--ai-border);
   display: flex;
   align-items: center;
-  gap: 26px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 12px;
-  overflow-x: auto;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  flex-shrink: 0;
 }
 
-.profile-tab-item {
-  display: inline-flex;
+.lumina-ai-profile-root .ai-breadcrumb {
+  display: flex;
   align-items: center;
   gap: 8px;
   font-size: 13.5px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px 0;
-  position: relative;
-  transition: color 0.15s;
-  white-space: nowrap;
 }
 
-.profile-tab-item:hover {
-  color: rgba(255, 255, 255, 0.85);
+.lumina-ai-profile-root .ai-breadcrumb-org {
+  color: var(--ai-text-secondary);
 }
 
-.profile-tab-item.is-active {
-  color: #ffffff;
+.lumina-ai-profile-root .ai-breadcrumb-divider {
+  color: var(--ai-text-subtle);
 }
 
-.profile-tab-item.is-active::after {
-  content: '';
-  position: absolute;
-  bottom: -13px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: #ffffff;
+.lumina-ai-profile-root .ai-breadcrumb-curr {
+  color: var(--ai-text-primary);
+  font-weight: 600;
 }
 
-/* Create Post Box */
-.profile-create-post-card {
-  background-color: #080808;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 0;
-  padding: 16px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.profile-create-post-top {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.profile-create-post-avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50% !important;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.profile-create-post-input {
-  flex: 1;
-  background-color: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0;
-  padding: 10px 14px;
-  font-size: 13px;
-  color: #ffffff;
-  outline: none;
-  transition: border-color 0.15s;
-}
-
-.profile-create-post-input:focus {
-  border-color: rgba(255, 255, 255, 0.25);
-}
-
-.profile-create-post-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.profile-create-post-actions {
+.lumina-ai-profile-root .ai-top-bar-right {
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
+  margin-left: auto;
 }
 
-.profile-create-action-btn {
+.lumina-ai-profile-root .ai-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 280px;
+  height: 34px;
+  padding: 0 10px;
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.lumina-ai-profile-root .ai-search-box:focus-within {
+  border-color: var(--ai-border-focus);
+  background-color: var(--ai-card-bg);
+}
+
+.lumina-ai-profile-root .ai-search-icon {
+  color: var(--ai-text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.lumina-ai-profile-root .ai-search-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-size: 12.5px;
+  color: var(--ai-text-primary);
+  outline: none;
+}
+
+.lumina-ai-profile-root .ai-search-input::placeholder {
+  color: var(--ai-text-muted);
+}
+
+.lumina-ai-profile-root .ai-search-cmd-badge {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--ai-text-muted);
+  border: 1px solid var(--ai-border);
+  background-color: var(--ai-card-bg);
+  border-radius: 4px;
+  padding: 1px 5px;
+  line-height: 1.2;
+}
+
+.lumina-ai-profile-root .ai-top-icon-btn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  color: var(--ai-text-secondary);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.lumina-ai-profile-root .ai-top-icon-btn:hover {
+  background-color: var(--ai-card-hover);
+  color: var(--ai-text-primary);
+}
+
+.lumina-ai-profile-root .ai-bell-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  border: 1.5px solid var(--ai-header-bg);
+}
+
+.lumina-ai-profile-root .ai-create-action-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 0;
-  padding: 5px 12px;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  height: 34px;
+  padding: 0 16px;
+  background-color: var(--ai-btn-primary-bg);
+  color: var(--ai-btn-primary-text);
+  border: none;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
+  transition: all 0.15s ease;
 }
 
-.profile-create-action-btn:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+.lumina-ai-profile-root .ai-create-action-btn:hover {
+  background-color: var(--ai-btn-primary-hover);
 }
 
-/* Feed Post Cards */
-.profile-feed-post-card {
-  background-color: #080808;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 0;
-  padding: 18px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  box-sizing: border-box;
-}
-
-.profile-feed-author-row {
+.lumina-ai-profile-root .ai-top-avatar-wrap {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  margin-left: 2px;
 }
 
-.profile-feed-author-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.profile-feed-author-avatar {
+.lumina-ai-profile-root .ai-top-avatar-img {
   width: 32px;
   height: 32px;
-  border-radius: 50% !important;
+  border-radius: 50%;
   object-fit: cover;
+  border: 1px solid var(--ai-border);
 }
 
-.profile-feed-author-name {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: #ffffff;
-  margin: 0;
-}
-
-.profile-feed-author-sub {
-  font-size: 11.5px;
-  color: rgba(255, 255, 255, 0.45);
-  margin: 1px 0 0;
-}
-
-.profile-feed-more-btn {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.4);
-  cursor: pointer;
-  padding: 4px;
-}
-
-.profile-feed-post-title {
-  font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: 17px;
-  font-weight: 500;
-  color: #ffffff;
-  margin: 0;
-  line-height: 1.3;
-  letter-spacing: -0.03em;
-}
-
-.profile-feed-post-desc {
-  font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: 14px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.65);
-  margin: 0;
-  letter-spacing: -0.01em;
-}
-
-.profile-feed-media-wrap {
+/* ==========================================================================
+   3. PROFILE WORKSPACE LAYOUT
+   ========================================================================== */
+.lumina-ai-profile-root .ai-content-columns {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  height: calc(100vh - 56px);
+  padding: 20px 32px 0;
+  gap: 32px;
   width: 100%;
-  height: 250px;
-  border-radius: 0;
+  box-sizing: border-box;
   overflow: hidden;
-  background-color: #121212;
-  margin-top: 4px;
 }
 
-.profile-feed-media-img {
+.lumina-ai-profile-root .profile-center-col {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+  padding-bottom: 32px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ai-border) transparent;
+}
+
+.lumina-ai-profile-root .profile-center-col::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lumina-ai-profile-root .profile-center-col::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.lumina-ai-profile-root .profile-center-col::-webkit-scrollbar-thumb {
+  background: var(--ai-border);
+  border-radius: 9999px;
+}
+
+.lumina-ai-profile-root .profile-center-col::-webkit-scrollbar-thumb:hover {
+  background: var(--ai-text-muted);
+}
+
+.lumina-ai-profile-root .profile-right-col {
+  width: 360px;
+  min-width: 360px;
+  max-width: 380px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-right: 4px;
+  padding-bottom: 32px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ai-border) transparent;
+}
+
+.lumina-ai-profile-root .profile-right-col::-webkit-scrollbar {
+  width: 4px;
+}
+
+.lumina-ai-profile-root .profile-right-col::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.lumina-ai-profile-root .profile-right-col::-webkit-scrollbar-thumb {
+  background: var(--ai-border);
+  border-radius: 9999px;
+}
+
+/* ==========================================================================
+   PROFILE HERO CARD & COVER
+   ========================================================================== */
+.ai-profile-hero-card {
+  background-color: var(--ai-card-bg);
+  border: 1px solid var(--ai-border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: var(--ai-shadow-sm);
+}
+
+.ai-profile-cover-wrap {
+  height: 160px;
+  background-color: var(--ai-card-sub-bg);
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--ai-border);
+}
+
+.ai-profile-constellation-svg {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  color: var(--ai-text-muted);
 }
 
-/* Post 3: Split IDE Terminal Block */
-.profile-feed-ide-box {
-  width: 100%;
-  background-color: #030303;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0;
-  padding: 16px;
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 16px;
-  box-sizing: border-box;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 12px;
-  margin-top: 4px;
-}
-
-.profile-ide-code-side {
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  padding-right: 14px;
-  line-height: 1.6;
-}
-
-.profile-code-line {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.code-lineno {
-  color: rgba(255, 255, 255, 0.25);
-  user-select: none;
-  width: 14px;
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.code-keyword {
-  color: #f43f5e;
-}
-
-.code-fn {
-  color: #38bdf8;
-}
-
-.code-string {
-  color: #34d399;
-}
-
-.code-prop {
-  color: #fbbf24;
-}
-
-.code-muted {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.profile-ide-tree-side {
-  padding-left: 6px;
-  color: rgba(255, 255, 255, 0.65);
-  line-height: 1.7;
-}
-
-.tree-folder {
-  color: #38bdf8;
-}
-
-.tree-file {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-/* Feed Post Footer Actions */
-.profile-feed-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.profile-feed-footer-left {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.profile-feed-action-btn {
+.ai-edit-cover-btn {
+  position: absolute;
+  top: 12px;
+  right: 14px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 12.5px;
+  padding: 6px 14px;
+  background: var(--ai-card-bg);
+  border: 1px solid var(--ai-border);
+  border-radius: 9999px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--ai-text-secondary);
   cursor: pointer;
-  padding: 0;
-  transition: color 0.15s;
+  box-shadow: var(--ai-shadow-sm);
+  transition: all 0.15s ease;
 }
 
-.profile-feed-action-btn:hover {
+.ai-edit-cover-btn:hover {
+  background-color: var(--ai-card-hover);
+  color: var(--ai-text-primary);
+}
+
+.ai-profile-details-section {
+  padding: 0 24px 18px;
+  position: relative;
+}
+
+.ai-profile-avatar-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: -55px;
+  margin-bottom: 14px;
+}
+
+.ai-profile-avatar-box {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  border-radius: 16px;
+  border: 4px solid var(--ai-card-bg);
+  background-color: var(--ai-card-bg);
+  box-shadow: var(--ai-shadow-md);
+  flex-shrink: 0;
+}
+
+.ai-profile-avatar-main {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.ai-avatar-cam-badge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: rgba(9, 9, 11, 0.85);
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: transform 0.15s ease;
+}
+
+.ai-avatar-cam-badge:hover {
+  transform: scale(1.08);
+}
+
+.ai-profile-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-profile-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 16px;
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+  border-radius: 9999px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ai-text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ai-profile-action-btn:hover {
+  background-color: var(--ai-card-hover);
+}
+
+.ai-profile-more-icon-btn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+  border-radius: 50%;
+  color: var(--ai-text-secondary);
+  cursor: pointer;
+}
+
+.ai-profile-more-icon-btn:hover {
+  background-color: var(--ai-card-hover);
+  color: var(--ai-text-primary);
+}
+
+.ai-profile-name-block {
+  margin-bottom: 8px;
+}
+
+.ai-profile-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ai-profile-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ai-text-primary);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.ai-verified-check-icon {
+  display: flex;
+  align-items: center;
+}
+
+.ai-profile-role-pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ai-role-pill {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+  color: var(--ai-text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.ai-profile-subhead {
+  font-size: 13px;
+  color: var(--ai-text-secondary);
+  margin: 4px 0 0;
+}
+
+.ai-profile-bio-text {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ai-text-secondary);
+  margin: 8px 0 12px;
+}
+
+.ai-profile-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--ai-text-muted);
+  margin-bottom: 14px;
+}
+
+.ai-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ai-meta-item.is-open-role {
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.ai-profile-counters-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--ai-text-secondary);
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--ai-border-subtle);
+  margin-bottom: 14px;
+}
+
+.ai-counter-item strong {
+  font-weight: 600;
+  color: var(--ai-text-primary);
+}
+
+/* Tabs Bar */
+.ai-profile-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ai-profile-tabs-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.ai-profile-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: var(--ai-text-muted);
+  font-size: 12.5px;
+  font-weight: 400;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.ai-profile-tab:hover {
+  color: var(--ai-text-primary);
+  background-color: var(--ai-card-hover);
+}
+
+.ai-profile-tab.is-active {
+  background-color: var(--ai-pill-active-bg);
+  color: var(--ai-pill-active-text);
+  font-weight: 500;
+}
+
+.ai-tab-dot-indicator {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.ai-tab-badge-num {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+  color: var(--ai-text-secondary);
+}
+
+.ai-profile-tab.is-active .ai-tab-badge-num {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: transparent;
   color: #ffffff;
 }
 
-.profile-feed-footer-right {
+/* ==========================================================================
+   MINIMAL POST COMPOSER ENTRY POINT
+   ========================================================================== */
+.lumina-ai-profile-root .ai-minimal-composer-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 16px;
+  background-color: var(--ai-card-bg);
+  border: 1px solid var(--ai-border);
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.lumina-ai-profile-root .ai-minimal-composer-card:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.lumina-ai-profile-root .ai-minimal-composer-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--ai-border);
+}
+
+.lumina-ai-profile-root .ai-minimal-composer-input-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.lumina-ai-profile-root .ai-minimal-composer-placeholder {
+  color: #71717a;
+  font-size: 14px;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.lumina-ai-profile-root .ai-minimal-composer-card:hover .ai-minimal-composer-placeholder {
+  color: #a1a1aa;
+}
+
+.lumina-ai-profile-root .ai-minimal-post-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 16px;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.lumina-ai-profile-root .ai-minimal-post-btn:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.lumina-ai-profile-root.light .ai-minimal-composer-card {
+  background-color: #ffffff;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.lumina-ai-profile-root.light .ai-minimal-composer-card:hover {
+  border-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.01);
+}
+
+.lumina-ai-profile-root.light .ai-minimal-composer-placeholder {
+  color: #94a3b8;
+}
+
+.lumina-ai-profile-root.light .ai-minimal-composer-card:hover .ai-minimal-composer-placeholder {
+  color: #64748b;
+}
+
+/* ==========================================================================
+   FEED POSTS & CARDS
+   ========================================================================== */
+.lumina-ai-profile-root .ai-feed-stream-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lumina-ai-profile-root .ai-feed-post-card {
+  background-color: var(--ai-card-bg);
+  border: 1px solid var(--ai-border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: var(--ai-shadow-sm);
+}
+
+/* PINNED WORK CARD */
+.ai-pinned-card {
+  border-left: 3px solid #2563eb;
+}
+
+.ai-pinned-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.ai-pinned-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.ai-pinned-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #2563eb;
+}
+
+.ai-pinned-sep {
+  color: var(--ai-text-subtle);
+}
+
+.ai-pinned-sub {
+  color: var(--ai-text-muted);
+}
+
+.ai-pinned-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+
+.ai-repo-badges-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.ai-repo-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+  color: var(--ai-text-secondary);
+}
+
+/* Architecture Diagram Box */
+.ai-diagram-card {
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 14px 0 10px;
+}
+
+.ai-diagram-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  margin-bottom: 14px;
+}
+
+.ai-diagram-title {
+  font-weight: 600;
+  color: var(--ai-text-secondary);
+}
+
+.ai-diagram-version {
+  color: var(--ai-text-muted);
+  font-family: var(--ai-font-mono, monospace);
+  font-size: 10.5px;
+}
+
+.ai-diagram-flow-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0 16px;
+}
+
+.ai-diag-node {
+  border: 1px solid var(--ai-border);
+  background-color: var(--ai-card-bg);
+  border-radius: 6px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-diag-node.is-leader {
+  border-left: 3px solid #2563eb;
+}
+
+.ai-diag-node.is-follower {
+  padding: 6px 10px;
+}
+
+.ai-diag-node.is-quorum {
+  border: 1px solid #10b981;
+  background-color: rgba(16, 185, 129, 0.08);
+}
+
+.ai-diag-node-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ai-text-primary);
+}
+
+.ai-diag-node-sub {
+  font-size: 10.5px;
+  color: var(--ai-text-muted);
+  font-family: var(--ai-font-mono, monospace);
+}
+
+.ai-diag-quorum-txt {
+  font-size: 12px;
+  font-weight: 600;
+  color: #10b981;
+}
+
+.ai-diag-quorum-sub {
+  font-size: 10.5px;
+  color: #10b981;
+}
+
+.ai-diag-arrows {
+  width: 70px;
+  color: var(--ai-text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.ai-diag-svg-arrows {
+  width: 100%;
+}
+
+.ai-diag-followers-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-diagram-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid var(--ai-border-subtle);
+  font-size: 11.5px;
+}
+
+.ai-diag-meta-left {
   display: flex;
   align-items: center;
   gap: 14px;
 }
 
-.profile-feed-share-btn {
-  display: inline-flex;
+.ai-lang-dot-item {
+  display: flex;
   align-items: center;
   gap: 5px;
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 12.5px;
-  cursor: pointer;
-  padding: 0;
+  color: var(--ai-text-secondary);
 }
 
-.profile-feed-share-btn:hover {
-  color: #ffffff;
+.ai-dot-rust {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #dea584;
 }
 
-/* Load More Button */
-.profile-load-more-btn {
-  display: inline-flex;
+.ai-dot-asm {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #6e7681;
+}
+
+.ai-diag-meta-right {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background-color: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 0;
-  padding: 10px 24px;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.85);
-  cursor: pointer;
-  margin: 8px auto 0;
-  transition: background-color 0.15s, color 0.15s;
-}
-
-.profile-load-more-btn:hover {
-  background-color: rgba(255, 255, 255, 0.09);
-  color: #ffffff;
-}
-
-/* ==========================================================================
-   5. RIGHT SIDEBAR WIDGETS
-   ========================================================================== */
-.profile-content-right {
-  padding: 24px 28px 48px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* Sidebar Widget Card */
-.profile-widget {
-  background-color: #080808;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 0;
-  padding: 18px 20px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
   gap: 12px;
 }
 
-.profile-widget-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.profile-widget-title-wrap {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.profile-widget-title {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: #ffffff;
-  margin: 0;
-}
-
-.profile-widget-view-all {
+.ai-diag-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #2563eb;
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 4px;
+}
+
+.ai-diag-link-btn:hover {
+  text-decoration: underline;
+}
+
+/* Standard Post Elements */
+.lumina-ai-profile-root .ai-post-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.lumina-ai-profile-root .ai-post-author-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lumina-ai-profile-root .ai-post-author-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.lumina-ai-profile-root .ai-post-author-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.lumina-ai-profile-root .ai-author-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lumina-ai-profile-root .ai-author-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ai-text-primary);
+}
+
+.lumina-ai-profile-root .ai-author-sep {
+  color: var(--ai-text-subtle);
+}
+
+.lumina-ai-profile-root .ai-author-time {
+  font-size: 12px;
+  color: var(--ai-text-muted);
+}
+
+.lumina-ai-profile-root .ai-author-sub {
+  font-size: 12px;
+  color: var(--ai-text-muted);
+}
+
+.lumina-ai-profile-root .ai-post-more-btn {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.45);
-  font-size: 11.5px;
+  color: var(--ai-text-muted);
   cursor: pointer;
+  width: 28px;
+  height: 28px;
   padding: 0;
-  transition: color 0.15s;
-}
-
-.profile-widget-view-all:hover {
-  color: #ffffff;
-}
-
-.profile-widget-edit-btn {
-  background: none;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 0;
-  padding: 3px 8px;
-  font-size: 11.5px;
-  color: rgba(255, 255, 255, 0.6);
-  cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
-}
-
-.profile-widget-edit-btn:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
-}
-
-.profile-verified-student-tag {
-  display: inline-flex;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
-  gap: 5px;
-  background-color: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  border-radius: 0;
-  padding: 3px 8px;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.lumina-ai-profile-root .ai-post-more-btn:hover {
+  color: var(--ai-text-primary);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.ai-pill-resource {
   font-size: 11px;
   font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+  color: var(--ai-text-secondary);
+}
+
+.ai-award-medal-icon {
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+}
+
+.lumina-ai-profile-root .ai-post-body {
+  margin-bottom: 14px;
+}
+
+.lumina-ai-profile-root .ai-post-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ai-text-primary);
+  margin: 0 0 8px;
+}
+
+.lumina-ai-profile-root .ai-post-paragraph {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ai-text-secondary);
+  margin: 0 0 12px;
+}
+
+/* Rust Code Box */
+.lumina-ai-profile-root .ai-code-snippet-box {
+  background-color: var(--ai-code-bg);
+  border: 1px solid var(--ai-code-border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.lumina-ai-profile-root .ai-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lumina-ai-profile-root .ai-code-filename {
+  font-family: var(--ai-font-mono, monospace);
+  font-size: 11.5px;
+  color: #94a3b8;
+}
+
+.lumina-ai-profile-root .ai-code-lang {
+  font-family: var(--ai-font-mono, monospace);
+  font-size: 11px;
+  color: #64748b;
+}
+
+.lumina-ai-profile-root .ai-code-pre {
+  margin: 0;
+  padding: 12px 14px;
+  font-family: var(--ai-font-mono, monospace);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #e2e8f0;
+  overflow-x: auto;
+}
+
+.lumina-ai-profile-root .code-kw {
+  color: #c084fc;
+}
+
+.lumina-ai-profile-root .code-fn {
+  color: #60a5fa;
+}
+
+.lumina-ai-profile-root .code-type {
   color: #34d399;
 }
 
-/* College & Verification Box */
-.profile-college-box {
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 0;
-  padding: 12px;
+.lumina-ai-profile-root .code-comment {
+  color: #64748b;
+  font-style: italic;
+}
+
+/* PDF Card */
+.lumina-ai-profile-root .ai-pdf-download-card {
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+  border-radius: 8px;
+  padding: 12px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  margin: 12px 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.profile-college-box-left {
+.lumina-ai-profile-root .ai-pdf-download-card:hover {
+  background-color: var(--ai-card-hover);
+}
+
+.lumina-ai-profile-root .ai-pdf-left {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.profile-college-logo-sq {
-  width: 36px;
-  height: 36px;
-  border-radius: 0;
-  background-color: #ffffff;
-  color: #000000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 12px;
-  letter-spacing: -0.04em;
-  flex-shrink: 0;
-}
-
-.profile-college-name {
-  font-size: 13px;
-  font-weight: 600;
+.lumina-ai-profile-root .ai-pdf-icon-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  background-color: #09090b;
   color: #ffffff;
-  margin: 0;
-}
-
-.profile-college-location {
-  font-size: 11.5px;
-  color: rgba(255, 255, 255, 0.45);
-  margin: 2px 0 0;
-}
-
-.profile-college-verified-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  color: #38bdf8;
-  margin-top: 2px;
-}
-
-.profile-degree-box {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 6px 4px 2px;
-}
-
-.profile-degree-title {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #ffffff;
-  margin: 0;
-}
-
-.profile-degree-sub {
-  font-size: 11.5px;
-  color: rgba(255, 255, 255, 0.45);
-  margin: 2px 0 0;
-}
-
-/* Academic Snapshot Key-Value List */
-.profile-kv-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.profile-kv-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 12.5px;
-}
-
-.profile-kv-label {
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.profile-kv-value {
-  color: rgba(255, 255, 255, 0.85);
-  font-weight: 500;
-  text-align: right;
-}
-
-.profile-studies-pills {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.profile-study-pill {
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0;
-  padding: 2px 8px;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-/* Pills Wrappers (Skills & Interests) */
-.profile-pills-wrap {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.profile-pill-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background-color: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0;
-  padding: 4px 11px;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.85);
-  transition: background-color 0.15s, border-color 0.15s;
-  cursor: default;
-}
-
-.profile-pill-item:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-/* Links Widget */
-.profile-links-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.profile-link-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.7);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-
-.profile-link-item:hover {
-  color: #ffffff;
-}
-
-.profile-link-item-left {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.profile-link-url {
-  color: rgba(255, 255, 255, 0.45);
-  font-size: 12px;
-}
-
-/* Achievements List */
-.profile-achieve-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.profile-achieve-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.profile-achieve-icon-badge {
-  width: 32px;
-  height: 32px;
-  border-radius: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.achieve-badge-leetcode {
-  background-color: rgba(249, 115, 22, 0.15);
-  color: #f97316;
-  border: 1px solid rgba(249, 115, 22, 0.25);
-}
-
-.achieve-badge-sih {
-  background-color: rgba(234, 179, 8, 0.15);
-  color: #eab308;
-  border: 1px solid rgba(234, 179, 8, 0.25);
-}
-
-.achieve-badge-codechef {
-  background-color: rgba(59, 130, 246, 0.15);
-  color: #60a5fa;
-  border: 1px solid rgba(59, 130, 246, 0.25);
-}
-
-.profile-achieve-title {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #ffffff;
-  margin: 0;
-}
-
-.profile-achieve-sub {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.45);
-  margin: 1px 0 0;
-}
-
-/* Communities List */
-.profile-community-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.profile-community-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.profile-community-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.profile-community-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 11px;
+  letter-spacing: 0.05em;
   flex-shrink: 0;
 }
 
-.comm-psg {
-  background-color: #ffffff;
-  color: #000000;
-}
-
-.comm-oss {
-  background-color: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #ffffff;
-}
-
-.comm-aiml {
-  background-color: rgba(168, 85, 247, 0.2);
-  border: 1px solid rgba(168, 85, 247, 0.3);
-  color: #c084fc;
-}
-
-.profile-community-name {
-  font-size: 12.5px;
+.lumina-ai-profile-root .ai-pdf-name {
+  display: block;
+  font-size: 13px;
   font-weight: 600;
+  color: var(--ai-text-primary);
+}
+
+.lumina-ai-profile-root .ai-pdf-details {
+  font-size: 11.5px;
+  color: var(--ai-text-muted);
+}
+
+.lumina-ai-profile-root .ai-pdf-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--ai-card-bg);
+  border: 1px solid var(--ai-border);
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--ai-text-primary);
+  cursor: pointer;
+}
+
+/* Grant Award Card */
+.ai-grant-award-card {
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12px 0;
+}
+
+.ai-grant-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ai-grant-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background-color: var(--ai-card-bg);
+  border: 1px solid var(--ai-border);
+  color: var(--ai-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ai-grant-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ai-text-primary);
+}
+
+.ai-grant-sub {
+  font-size: 11.5px;
+  color: var(--ai-text-muted);
+  margin: 2px 0 0;
+}
+
+.ai-grant-amount-badge {
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #09090b;
   color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+/* Post Footer */
+.lumina-ai-profile-root .ai-post-footer {
+  display: flex;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid var(--ai-border-subtle);
+}
+
+.lumina-ai-profile-root .ai-post-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.lumina-ai-profile-root .ai-post-action-btn {
+  background: transparent;
+  border: none;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 50%;
+  color: #8e8e93;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.lumina-ai-profile-root .ai-post-action-btn:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.lumina-ai-profile-root .ai-post-action-btn.is-liked {
+  color: #ef4444;
+}
+
+.lumina-ai-profile-root .ai-post-action-btn.is-liked:hover {
+  color: #f87171;
+  background-color: rgba(239, 68, 68, 0.12);
+}
+
+.lumina-ai-profile-root .ai-post-action-btn.is-saved {
+  color: #3b82f6;
+}
+
+.lumina-ai-profile-root .ai-post-action-btn.is-saved:hover {
+  color: #60a5fa;
+  background-color: rgba(59, 130, 246, 0.12);
+}
+
+.lumina-ai-profile-root .ai-post-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.lumina-ai-profile-root .ai-stat-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--ai-text-muted);
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.lumina-ai-profile-root .ai-stat-btn:hover,
+.lumina-ai-profile-root .ai-stat-btn.is-active {
+  color: var(--ai-text-primary);
+}
+
+.lumina-ai-profile-root .ai-post-share-btn {
+  background: none;
+  border: none;
+  color: var(--ai-text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.ai-download-count-txt {
+  font-size: 11.5px;
+  color: var(--ai-text-muted);
+}
+
+/* ==========================================================================
+   4. RIGHT SIDEBAR WIDGETS
+   ========================================================================== */
+.lumina-ai-profile-root .ai-widget-card {
+  background-color: var(--ai-card-bg);
+  border: 1px solid var(--ai-border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: var(--ai-shadow-sm);
+}
+
+.lumina-ai-profile-root .ai-card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.lumina-ai-profile-root .ai-card-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ai-text-primary);
   margin: 0;
 }
 
-.profile-community-sub {
+.lumina-ai-profile-root .ai-card-counter {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.45);
-  margin: 1px 0 0;
+  font-weight: 600;
+  color: var(--ai-text-muted);
+  letter-spacing: 0.05em;
 }
 
-.profile-community-joined-btn {
-  background-color: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 0;
-  padding: 4px 12px;
+.lumina-ai-profile-root .ai-header-icon {
+  color: var(--ai-text-muted);
+  display: flex;
+  align-items: center;
+}
+
+/* Technical Stack */
+.ai-tech-pills-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ai-tech-pill {
   font-size: 11.5px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
-  cursor: default;
+  font-weight: 400;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+  color: var(--ai-text-secondary);
 }
 
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-  .profile-content-container {
-    grid-template-columns: 1fr;
+.ai-tech-pill.is-primary {
+  background-color: var(--ai-btn-primary-bg);
+  color: var(--ai-btn-primary-text);
+  border-color: transparent;
+  font-weight: 500;
+}
+
+/* Education Widget */
+.ai-edu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.ai-edu-school {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ai-text-primary);
+}
+
+.ai-edu-gpa {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ai-text-primary);
+}
+
+.ai-edu-degree {
+  font-size: 12.5px;
+  color: var(--ai-text-secondary);
+}
+
+.ai-edu-sub {
+  font-size: 11.5px;
+  color: var(--ai-text-muted);
+  margin-bottom: 12px;
+}
+
+.ai-coursework-block {
+  padding-top: 10px;
+  border-top: 1px solid var(--ai-border-subtle);
+}
+
+.ai-coursework-title {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--ai-text-subtle);
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.ai-course-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 3px 0;
+}
+
+.ai-course-name {
+  color: var(--ai-text-secondary);
+}
+
+.ai-course-grade {
+  font-weight: 600;
+  color: var(--ai-text-primary);
+}
+
+/* Campus Leadership */
+.ai-leadership-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ai-leadership-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+}
+
+.ai-lead-icon-box {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background-color: var(--ai-btn-primary-bg);
+  color: var(--ai-btn-primary-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.ai-lead-role {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ai-text-primary);
+}
+
+.ai-lead-org {
+  font-size: 12px;
+  color: var(--ai-text-secondary);
+}
+
+.ai-lead-sub {
+  font-size: 11px;
+  color: var(--ai-text-muted);
+}
+
+/* Pre-prints & Papers */
+.ai-papers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ai-paper-item {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-paper-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10.5px;
+  margin-bottom: 4px;
+}
+
+.ai-paper-arxiv {
+  font-family: var(--ai-font-mono, monospace);
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.ai-paper-cites {
+  color: var(--ai-text-muted);
+}
+
+.ai-paper-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ai-text-primary);
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+
+.ai-paper-authors {
+  font-size: 11px;
+  color: var(--ai-text-muted);
+}
+
+/* Node Status Bar */
+.ai-node-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--ai-text-muted);
+  border-radius: 6px;
+  background-color: var(--ai-card-sub-bg);
+  border: 1px solid var(--ai-border);
+}
+
+.ai-node-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #10b981;
+  display: inline-block;
+  margin-right: -80px;
+}
+
+.ai-node-status-txt {
+  font-weight: 500;
+}
+
+.ai-node-uptime-txt {
+  color: var(--ai-text-muted);
+}
+
+/* ==========================================================================
+   RESPONSIVE QUERIES
+   ========================================================================== */
+@media (max-width: 1180px) {
+  .lumina-ai-profile-root .profile-right-col {
+    display: none;
   }
-  .profile-content-left {
-    border-right: none;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+  .lumina-ai-profile-root .profile-center-col {
+    max-width: 100%;
   }
 }
 
 @media (max-width: 768px) {
-  .profile-avatar-container,
-  .profile-avatar-img {
-    width: 120px;
-    height: 120px;
+  .lumina-ai-profile-root .ai-sidebar {
+    display: none;
   }
-  .profile-header-layout {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .profile-header-right {
-    align-items: flex-start;
-    width: 100%;
-  }
-  .profile-feed-ide-box {
-    grid-template-columns: 1fr;
+  .lumina-ai-profile-root .ai-search-box,
+  .lumina-ai-profile-root .saascn-search-pill {
+    display: none;
   }
 }

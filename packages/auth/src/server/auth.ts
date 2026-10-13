@@ -69,7 +69,7 @@ export const auth = betterAuth({
                   .slice(0, 30)
                 const domain = `${slug || 'campus'}-${Math.random().toString(36).slice(2, 7)}.lumina.edu`
                 collegeRecord = await prisma.college.create({
-                  data: { name: college, domain },
+                  data: { name: college, domain, slug },
                 })
               }
               collegeId = collegeRecord.id
@@ -98,6 +98,34 @@ export const auth = betterAuth({
               })
             } catch (err) {
               console.warn('Could not auto-link college in auth hook:', err)
+            }
+          } else {
+            const emailDomain = email.split('@')[1]
+            if (emailDomain) {
+              try {
+                const collegeEmailDomain = await prisma.collegeEmailDomain.findFirst({
+                  where: { domain: { equals: emailDomain, mode: 'insensitive' } },
+                  include: { college: { select: { id: true, name: true, isActive: true } } },
+                })
+                if (collegeEmailDomain?.college?.isActive) {
+                  collegeId = collegeEmailDomain.college.id
+                } else {
+                  const directCollege = await prisma.college.findFirst({
+                    where: { domain: { equals: emailDomain, mode: 'insensitive' } },
+                  })
+                  if (directCollege?.isActive) {
+                    collegeId = directCollege.id
+                  }
+                }
+                if (collegeId) {
+                  await prisma.user.update({
+                    where: { id: user.id },
+                    data: { collegeId },
+                  })
+                }
+              } catch (err) {
+                console.warn('Could not auto-link college from domain in auth hook:', err)
+              }
             }
           }
 

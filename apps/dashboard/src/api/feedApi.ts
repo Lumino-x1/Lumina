@@ -83,6 +83,7 @@ export interface FeedStory {
   authorUsername?: string | null
   authorRole?: string
   authorVerified?: boolean
+  media?: FeedMedia[]
 }
 
 export function mapFeedPostToStory(item: FeedPostItem): FeedStory {
@@ -93,44 +94,61 @@ export function mapFeedPostToStory(item: FeedPostItem): FeedStory {
     Default: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=80',
   }
 
-  const isSunil =
-    item.author?.name?.toLowerCase().includes('sunil') ||
-    item.title.toLowerCase().includes('internship')
-  const isPriya =
-    item.author?.name?.toLowerCase().includes('priya') ||
-    item.title.toLowerCase().includes('stress') ||
-    item.title.toLowerCase().includes('exam')
-  const isAlumni =
-    item.author?.name?.toLowerCase().includes('alumni') ||
-    item.author?.name?.toLowerCase().includes('stanford') ||
-    item.title.toLowerCase().includes('open source')
+  const isSeedPost = typeof item.id === 'string' && item.id.startsWith('post_seed_')
 
+  // Pick cover image or first media image
   let image = item.coverImage || item.media?.find((m) => m.type === 'IMAGE' || m.url)?.url
-  if (isSunil || item.title.toLowerCase().includes('internship')) {
-    image = 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80'
-  } else if (isPriya || item.title.toLowerCase().includes('stress')) {
-    image = 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80'
-  } else if (isAlumni || item.title.toLowerCase().includes('open source')) {
-    image = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&auto=format&fit=crop&q=80'
+
+  // If no cover image was set, check if post blocks contain an image block
+  if (!image && Array.isArray(item.blocks)) {
+    const firstImgBlock = item.blocks.find(
+      (b: any) =>
+        (b.type === 'image' || b.type === 'unsplash') &&
+        (b.metadata?.url || b.metadata?.publicUrl || (typeof b.content === 'string' && b.content.startsWith('http')))
+    )
+    if (firstImgBlock) {
+      image = firstImgBlock.metadata?.url || firstImgBlock.metadata?.publicUrl || firstImgBlock.content
+    }
+  }
+
+  // Only apply seed mock images to designated demo seed posts
+  if (isSeedPost) {
+    if (item.id === 'post_seed_leetcode_patterns') {
+      image = 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&auto=format&fit=crop&q=80'
+    } else if (item.id === 'post_seed_internship_30') {
+      image = 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80'
+    } else if (item.id === 'post_seed_stress_6') {
+      image = 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80'
+    } else if (item.id === 'post_seed_oss_15') {
+      image = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&auto=format&fit=crop&q=80'
+    }
   } else if (!image || image.includes('example.com')) {
     image = fallbackImages[item.category || ''] || fallbackImages.Default
   }
 
   let authorAvatar = item.author?.image
-  let authorRole = '3rd year CSE · PSG College of Technology'
+  let authorRole = 'Student · PSG College of Technology'
   let authorVerified = false
 
-  if (isSunil) {
-    authorAvatar = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'
-    authorRole = '3rd year CSE · PSG College of Technology'
-    authorVerified = true
-  } else if (isPriya) {
-    authorAvatar = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80'
-    authorRole = 'Final year · PSG College of Technology'
-  } else if (isAlumni) {
-    authorAvatar = 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80'
-    authorRole = 'Alumni · Product Designer'
-  } else if (!authorAvatar || authorAvatar.includes('example.com')) {
+  if (isSeedPost) {
+    if (item.id === 'post_seed_leetcode_patterns') {
+      authorAvatar = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'
+      authorRole = 'Software Architect · Google'
+      authorVerified = true
+    } else if (item.id === 'post_seed_internship_30') {
+      authorAvatar = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'
+      authorRole = '3rd year CSE · PSG College of Technology'
+      authorVerified = true
+    } else if (item.id === 'post_seed_stress_6') {
+      authorAvatar = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80'
+      authorRole = 'Final year · PSG College of Technology'
+    } else if (item.id === 'post_seed_oss_15') {
+      authorAvatar = 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80'
+      authorRole = 'Alumni · Product Designer'
+    }
+  }
+
+  if (!authorAvatar || authorAvatar.includes('example.com')) {
     authorAvatar = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'
   }
 
@@ -151,7 +169,7 @@ export function mapFeedPostToStory(item: FeedPostItem): FeedStory {
     authorAvatar,
     authorRole,
     authorVerified,
-    authorUsername: item.author?.username || undefined,
+    authorUsername: item.author?.username || item.author?.id || undefined,
     date: dateFormatted,
     image,
     likes: item.likeCount ?? 0,
@@ -169,6 +187,7 @@ export function mapFeedPostToStory(item: FeedPostItem): FeedStory {
     location: item.location || undefined,
     content: item.content || undefined,
     blocks: item.blocks || undefined,
+    media: item.media || undefined,
   }
 }
 
@@ -176,6 +195,34 @@ export function mapFeedPostToStory(item: FeedPostItem): FeedStory {
  * Standard default items matching the dashboard feed screenshot
  */
 export const DEFAULT_FEED_ITEMS: FeedPostItem[] = [
+  {
+    id: 'post_seed_leetcode_patterns',
+    title: '12 LeetCode Patterns That Cover 80% of FAANG Questions',
+    subtitle:
+      'A structured approach to pattern recognition for technical interviews, covering two-pointer, sliding window, topological sort, and monotonic stack techniques.',
+    coverImage: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&auto=format&fit=crop&q=80',
+    content:
+      'A structured approach to pattern recognition for technical interviews, covering two-pointer, sliding window, topological sort, and monotonic stack techniques.',
+    category: 'JavaScript in Plain English',
+    topics: ['leetcode', 'faang', 'algorithms', 'javascript'],
+    visibility: 'PUBLIC',
+    anonymous: false,
+    isAnnouncement: false,
+    createdAt: '2026-09-07T14:00:00.000Z',
+    updatedAt: '2026-09-07T14:00:00.000Z',
+    likeCount: 178,
+    commentCount: 1,
+    totalComments: 1,
+    viewCount: 1420,
+    shareCount: 1,
+    saveCount: 89,
+    author: {
+      id: 'user_santosh_yadav',
+      username: 'santoshyadav',
+      name: 'Santosh Yadav',
+      image: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80',
+    },
+  },
   {
     id: 'post_seed_internship_30',
     title: 'Finding Your First Internship – Part 30',

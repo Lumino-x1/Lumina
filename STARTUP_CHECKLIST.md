@@ -5,6 +5,7 @@ to a fully operational, investor-ready startup.
 
 ---
 
+
 ## 🏗️ Foundation
 
 ### Legal & Company

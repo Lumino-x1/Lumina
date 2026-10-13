@@ -61,6 +61,15 @@ export async function disconnectTestDatabase() {
 }
 
 export async function clearDatabase() {
+  const targetDb = process.env.DATABASE_URL || ''
+  // Safety guard: NEVER truncate the development database!
+  if (targetDb.includes('lumina_dev') && !targetDb.includes('lumina_test')) {
+    console.warn(
+      '[SAFETY GUARD] Prevented clearDatabase() from truncating lumina_dev! Tests must use an isolated test database.'
+    )
+    return
+  }
+
   const schemaResult = await prisma.$queryRaw<Array<{ schema_name: string }>>`
     SELECT current_schema()::text AS schema_name
   `

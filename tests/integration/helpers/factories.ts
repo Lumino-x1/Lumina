@@ -29,6 +29,7 @@ type CollegeOverrides = {
   id?: string
   name?: string
   shortName?: string | null
+  slug?: string
   domain?: string
   logo?: string | null
   website?: string | null
@@ -85,6 +86,7 @@ export async function createCollege(overrides: CollegeOverrides = {}) {
       id: overrides.id,
       name: overrides.name ?? `Lumina Institute ${token}`,
       shortName: overrides.shortName ?? `LI${token.slice(0, 4).toUpperCase()}`,
+      slug: overrides.slug ?? `lumina-institute-${token}`,
       domain: overrides.domain ?? `college-${token}.lumina.test`,
       logo: overrides.logo ?? `https://images.example.com/colleges/${token}.png`,
       website: overrides.website ?? `https://college-${token}.lumina.test`,

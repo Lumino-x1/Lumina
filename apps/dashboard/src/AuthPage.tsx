@@ -12,11 +12,14 @@ import DotGrid from '@/components/ui/dot-grid'
 import { GrainGradient } from '@paper-design/shaders-react'
 import { DEFAULT_WHATSAPP_AVATAR } from './components/WhatsAppDefaultAvatar'
 import {
+  Camera,
   Check,
   ChevronLeft,
   ChevronRight,
   Globe,
   MapPin,
+  Trash2,
+  Upload,
   X,
 } from 'lucide-react'
 import type { ReactNode } from 'react'
@@ -88,18 +91,6 @@ const SKILL_SUGGESTIONS = [
   'Machine Learning',
 ]
 
-const COLLEGE_SUGGESTIONS = [
-  'Stanford University',
-  'MIT',
-  'Harvard University',
-  'UC Berkeley',
-  'Carnegie Mellon University',
-  'Anna University',
-  'IIT Madras',
-  'IIT Delhi',
-  'Oxford University',
-  'Cambridge University',
-]
 
 const DEPARTMENT_SUGGESTIONS = [
   'Computer Science & Engineering',
@@ -126,13 +117,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   // Step 1: About you
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
-  const [username, setUsername] = useState('')
   const [profilePicture, setProfilePicture] = useState<string | null>(null)
+  const [isAvatarDragOver, setIsAvatarDragOver] = useState(false)
   const [signupEmail, setSignupEmail] = useState('')
   const [signupPassword, setSignupPassword] = useState('')
 
-  // Step 2: Your college
-  const [college, setCollege] = useState('')
+  // Step 2: Academics
   const [department, setDepartment] = useState('')
   const [year, setYear] = useState('')
 
@@ -213,6 +203,23 @@ export const AuthPage: React.FC<AuthPageProps> = ({
     }
   }
 
+  const handleRemoveAvatar = () => {
+    setProfilePicture(null)
+  }
+
+  const handleAvatarDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsAvatarDragOver(false)
+    const file = e.dataTransfer.files?.[0]
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        setProfilePicture(event.target?.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
   // Handle Interest Toggle
   const toggleInterest = (interest: string) => {
     if (selectedInterests.includes(interest)) {
@@ -241,10 +248,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
       setErrorMessage("Please enter your first name.")
       return false
     }
-    if (!username.trim()) {
-      setErrorMessage("Please choose a username.")
-      return false
-    }
     if (!signupEmail.trim() || !signupEmail.includes('@')) {
       setErrorMessage("Please enter a valid university email address.")
       return false
@@ -257,10 +260,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   }
 
   const validateStep2 = () => {
-    if (!college.trim()) {
-      setErrorMessage("Please enter the college you attend.")
-      return false
-    }
     if (!department.trim()) {
       setErrorMessage("Please enter your department.")
       return false
@@ -314,7 +313,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
     try {
       const fullName = `${firstName.trim()} ${lastName.trim()}`.trim() || firstName.trim()
-      const cleanUsername = username.trim().replace(/^@+/, '')
 
       // 1. Create user account
       const { data, error } = await signUpApi({
@@ -345,9 +343,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
         email: signupEmail.trim().toLowerCase(),
         firstName: firstName.trim(),
         lastName: lastName.trim(),
-        username: cleanUsername,
         profilePicture: profilePicture || undefined,
-        college: college.trim(),
         department: department.trim(),
         year: yearNum,
         interests: selectedInterests,
@@ -622,55 +618,69 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                       </div>
                     </div>
 
-                    <div className="lumina-auth-field">
-                      <label className="lumina-auth-label" htmlFor="signup-username">
-                        Username *
-                      </label>
-                      <div className="lumina-auth-input-prefix-wrap">
-                        <span className="lumina-auth-input-prefix">@</span>
-                        <input
-                          id="signup-username"
-                          type="text"
-                          className="lumina-auth-input has-prefix"
-                          placeholder="username"
-                          value={username}
-                          onChange={(e) =>
-                            setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))
-                          }
-                          required
-                        />
-                      </div>
-                    </div>
 
                     {/* Profile Picture (Optional) */}
                     <div className="lumina-auth-field">
                       <label className="lumina-auth-label">
                         Profile picture <span className="lumina-auth-label-opt">(optional)</span>
                       </label>
-                      <div className="lumina-avatar-picker-row">
-                        <div className="lumina-avatar-preview">
-                          {profilePicture ? (
-                            <img src={profilePicture} alt="Avatar preview" />
-                          ) : (
-                            <img
-                              src={DEFAULT_WHATSAPP_AVATAR}
-                              alt="Default avatar"
-                              style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
-                            />
-                          )}
-                        </div>
+                      <div
+                        className={`lumina-avatar-picker-row ${isAvatarDragOver ? 'is-drag-over' : ''} ${profilePicture ? 'has-avatar' : ''}`}
+                        onDragOver={(e) => {
+                          e.preventDefault()
+                          setIsAvatarDragOver(true)
+                        }}
+                        onDragLeave={() => setIsAvatarDragOver(false)}
+                        onDrop={handleAvatarDrop}
+                      >
+                        <label className="lumina-avatar-preview-wrap" htmlFor="signup-avatar-input" title="Click to upload profile photo">
+                          <div className="lumina-avatar-preview">
+                            {profilePicture ? (
+                              <img src={profilePicture} alt="Avatar preview" />
+                            ) : (
+                              <img
+                                src={DEFAULT_WHATSAPP_AVATAR}
+                                alt="Default avatar"
+                                className="lumina-avatar-default-img"
+                              />
+                            )}
+                          </div>
+                          <div className="lumina-avatar-badge" aria-hidden="true">
+                            <Camera className="w-3 h-3 text-white" />
+                          </div>
+                        </label>
+
                         <div className="lumina-avatar-controls">
-                          <label className="lumina-avatar-upload-btn">
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={handleAvatarFile}
-                              className="hidden"
-                              style={{ display: 'none' }}
-                            />
-                            <span>Choose Photo</span>
-                          </label>
-                          <span className="lumina-avatar-hint">PNG, JPG or WebP up to 5MB</span>
+                          <input
+                            id="signup-avatar-input"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleAvatarFile}
+                            style={{ display: 'none' }}
+                          />
+
+                          <div className="lumina-avatar-actions">
+                            <label htmlFor="signup-avatar-input" className="lumina-avatar-upload-btn">
+                              <Upload className="w-3.5 h-3.5" />
+                              <span>{profilePicture ? 'Change photo' : 'Choose photo'}</span>
+                            </label>
+
+                            {profilePicture && (
+                              <button
+                                type="button"
+                                className="lumina-avatar-remove-btn"
+                                onClick={handleRemoveAvatar}
+                                title="Remove photo"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                                <span>Remove</span>
+                              </button>
+                            )}
+                          </div>
+
+                          <span className="lumina-avatar-hint">
+                            {profilePicture ? 'Photo chosen • Click change or remove' : 'PNG, JPG or WebP up to 5MB'}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -729,29 +739,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   </>
                 )}
 
-                {/* STEP 2: YOUR COLLEGE */}
+                {/* STEP 2: ACADEMICS */}
                 {signupStep === 2 && (
                   <>
-                    <div className="lumina-auth-field">
-                      <label className="lumina-auth-label" htmlFor="college-name">
-                        College *
-                      </label>
-                      <input
-                        id="college-name"
-                        type="text"
-                        className="lumina-auth-input"
-                        placeholder="e.g. Stanford University"
-                        value={college}
-                        onChange={(e) => setCollege(e.target.value)}
-                        list="college-list"
-                        required
-                      />
-                      <datalist id="college-list">
-                        {COLLEGE_SUGGESTIONS.map((c) => (
-                          <option key={c} value={c} />
-                        ))}
-                      </datalist>
-                    </div>
 
                     <div className="lumina-auth-field">
                       <label className="lumina-auth-label" htmlFor="dept-name">

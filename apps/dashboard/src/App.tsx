@@ -35,8 +35,11 @@ function App() {
         hash === '#dashboard' ||
         hash === '#feed' ||
         hash === '#/feed' ||
+        hash.startsWith('#post') ||
+        hash.startsWith('#story') ||
         path === '/dashboard' ||
         path === '/feed' ||
+        path.startsWith('/post') ||
         path === '/api/feed'
       ) return 'dashboard'
       if (hash === '#editor' || hash === '#write' || path === '/editor') return 'editor'
@@ -86,8 +89,11 @@ function App() {
         hash === '#dashboard' ||
         hash === '#feed' ||
         hash === '#/feed' ||
+        hash.startsWith('#post') ||
+        hash.startsWith('#story') ||
         path === '/dashboard' ||
         path === '/feed' ||
+        path.startsWith('/post') ||
         path === '/api/feed'
       ) {
         setView('dashboard')
@@ -153,6 +159,7 @@ function App() {
     try {
       localStorage.removeItem('lumina_user')
       localStorage.removeItem('lumina_session_token')
+      localStorage.removeItem('better-auth.session_token')
     } catch {
       // ignore
     }
@@ -168,6 +175,7 @@ function App() {
         user={currentUser}
         onBackToDashboard={handleOpenDashboard}
         onNavigateHome={handleBackToLanding}
+        onLogout={handleLogout}
       />
     )
   }

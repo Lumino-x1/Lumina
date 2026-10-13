@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { type FeedStory, togglePostLikeApi } from './api/feedApi'
 import { CommentsDrawer } from './components/CommentsDrawer'
 import { DEFAULT_WHATSAPP_AVATAR } from './components/WhatsAppDefaultAvatar'
+import { useTheme } from './lib/themeContext'
+import { ThemeToggleButton3 } from './components/ThemeToggle'
 import './BlogReaderView.css'
 
 export interface BlogReaderViewProps {
@@ -78,6 +80,7 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
   currentUser,
   onCommentAdded,
 }) => {
+  const { theme, toggleTheme } = useTheme()
   const [copied, setCopied] = useState(false)
   const [likeCount, setLikeCount] = useState(story.likes || 0)
   const [localLiked, setLocalLiked] = useState(isLiked)
@@ -168,9 +171,32 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
     }
   }
 
-  // Derive readable content
-  const hasBlocks = Array.isArray(story.blocks) && story.blocks.length > 0
-  const isThielStory = story.title.toLowerCase().includes('thiel')
+  // Safely parse blocks
+  const parsedBlocks: any[] = React.useMemo(() => {
+    if (!story.blocks) return []
+    if (Array.isArray(story.blocks)) return story.blocks
+    if (typeof story.blocks === 'string') {
+      try {
+        const parsed = JSON.parse(story.blocks)
+        return Array.isArray(parsed) ? parsed : []
+      } catch {
+        return []
+      }
+    }
+    return []
+  }, [story.blocks])
+
+  const hasBlocks = parsedBlocks.length > 0
+  const isSeedPost = typeof story.id === 'string' && story.id.startsWith('post_seed')
+  const isThielStory = isSeedPost && story.title.toLowerCase().includes('thiel')
+
+  // Check if any text blocks exist
+  const hasTextBlocks = parsedBlocks.some(
+    (b) =>
+      ['paragraph', 'heading', 'heading-1', 'heading-2', 'heading-3', 'heading-4', 'h1', 'h2', 'h3', 'h4', 'quote', 'blockquote', 'code'].includes(b?.type) &&
+      typeof b?.content === 'string' &&
+      b.content.trim().length > 0
+  )
 
   // Derive topic tags
   const tags =
@@ -181,7 +207,7 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
       : ['Productivity', 'Campus', 'Inspiration', 'Technology']
 
   return (
-    <div className={`lumina-blog-reader-page ${isCommentsOpen ? 'has-drawer-open' : ''}`}>
+    <div className={`lumina-blog-reader-page ${theme === 'dark' ? 'dark' : 'light'} ${isCommentsOpen ? 'has-drawer-open' : ''}`}>
       {/* 1. Clean Top Navigation Header */}
       <header className="reader-top-bar">
         <div className="reader-top-bar-inner">
@@ -236,6 +262,8 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
             >
               {isSaved ? ReaderIcons.BookmarkFilled : ReaderIcons.Bookmark}
             </button>
+
+            <ThemeToggleButton3 theme={theme} onToggle={toggleTheme} />
           </div>
         </div>
       </header>
@@ -317,50 +345,256 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
 
           <div className="reader-divider" />
 
-          {/* Full-width Hero Cover Image */}
-          {story.image && (
-            <div className="reader-cover-wrap">
-              <img
-                src={story.image}
-                alt={story.title}
-                className="reader-cover-img"
-              />
-            </div>
-          )}
-
           {/* Article Body Content Stream */}
           <div className="reader-body-content">
             {hasBlocks ? (
-              story.blocks!.map((block: any, idx: number) => {
-                if (block.type === 'heading-1' || block.type === 'h1') {
-                  return <h2 key={block.id || idx} className="reader-h1">{block.content}</h2>
-                }
-                if (block.type === 'heading-2' || block.type === 'h2') {
-                  return <h3 key={block.id || idx} className="reader-h2">{block.content}</h3>
-                }
-                if (block.type === 'heading-3' || block.type === 'h3') {
-                  return <h4 key={block.id || idx} className="reader-h3">{block.content}</h4>
-                }
-                if (block.type === 'quote' || block.type === 'blockquote') {
+              <>
+                {parsedBlocks.map((block: any, idx: number) => {
+                  if (!block) return null
+
+                  // Headings
+                  if (
+                    block.type === 'heading-1' ||
+                    block.type === 'h1' ||
+                    (block.type === 'heading' && block.styles?.level === 1)
+                  ) {
+                    return (
+                      <h2 key={block.id || idx} className="reader-h1">
+                        {block.content}
+                      </h2>
+                    )
+                  }
+                  if (
+                    block.type === 'heading-2' ||
+                    block.type === 'h2' ||
+                    (block.type === 'heading' && block.styles?.level === 2)
+                  ) {
+                    return (
+                      <h3 key={block.id || idx} className="reader-h2">
+                        {block.content}
+                      </h3>
+                    )
+                  }
+                  if (
+                    block.type === 'heading-3' ||
+                    block.type === 'h3' ||
+                    (block.type === 'heading' && block.styles?.level === 3)
+                  ) {
+                    return (
+                      <h4 key={block.id || idx} className="reader-h3">
+                        {block.content}
+                      </h4>
+                    )
+                  }
+                  if (
+                    block.type === 'heading-4' ||
+                    block.type === 'h4' ||
+                    (block.type === 'heading' && block.styles?.level === 4) ||
+                    block.type === 'heading'
+                  ) {
+                    return (
+                      <h5 key={block.id || idx} className="reader-h4">
+                        {block.content}
+                      </h5>
+                    )
+                  }
+
+                  // Images & Unsplash Blocks
+                  if (block.type === 'image' || block.type === 'unsplash') {
+                    let imageUrl =
+                      block.metadata?.url ||
+                      block.metadata?.publicUrl ||
+                      (typeof block.content === 'string' && block.content.startsWith('http')
+                        ? block.content
+                        : '')
+
+                    // Resolve from story.media if direct URL is not in metadata
+                    if (!imageUrl && story.media && story.media.length > 0) {
+                      const matched = story.media.find(
+                        (m) =>
+                          (block.metadata?.mediaId &&
+                            (m.id === block.metadata.mediaId || m.key === block.metadata.mediaId)) ||
+                          (block.metadata?.key && m.key === block.metadata.key)
+                      )
+                      if (matched?.url) {
+                        imageUrl = matched.url
+                      }
+                    }
+
+                    if (!imageUrl) return null
+
+                    const caption = block.metadata?.caption || ''
+                    const width = block.styles?.width ? String(block.styles.width) : '100%'
+                    const alignment = block.styles?.textAlign || 'center'
+
+                    return (
+                      <figure
+                        key={block.id || idx}
+                        className="reader-image-figure"
+                        style={{ textAlign: alignment as any }}
+                      >
+                        <div
+                          className="reader-image-wrap"
+                          style={{ width: width === '100%' ? '100%' : width, maxWidth: '100%' }}
+                        >
+                          <img
+                            src={imageUrl}
+                            alt={caption || story.title || 'Post image'}
+                            className="reader-block-img"
+                            loading="lazy"
+                            onError={(e) => {
+                              const parent = (e.currentTarget as HTMLElement).closest('figure')
+                              if (parent) parent.style.display = 'none'
+                            }}
+                          />
+                          {caption && (
+                            <figcaption className="reader-image-caption">
+                              {caption}
+                            </figcaption>
+                          )}
+                        </div>
+                      </figure>
+                    )
+                  }
+
+                  // Video Blocks
+                  if (block.type === 'video') {
+                    let videoUrl =
+                      block.metadata?.url ||
+                      (typeof block.content === 'string' && block.content.startsWith('http')
+                        ? block.content
+                        : '')
+
+                    if (!videoUrl && story.media) {
+                      const matched = story.media.find(
+                        (m) => m.type === 'VIDEO' || m.key === block.metadata?.key
+                      )
+                      if (matched?.url) videoUrl = matched.url
+                    }
+
+                    if (!videoUrl) return null
+                    const caption = block.metadata?.caption || ''
+
+                    return (
+                      <figure key={block.id || idx} className="reader-video-wrap">
+                        <video src={videoUrl} controls className="reader-block-video" />
+                        {caption && (
+                          <figcaption className="reader-image-caption">
+                            {caption}
+                          </figcaption>
+                        )}
+                      </figure>
+                    )
+                  }
+
+                  // Quote / Blockquote
+                  if (block.type === 'quote' || block.type === 'blockquote') {
+                    return (
+                      <blockquote key={block.id || idx} className="reader-quote">
+                        {block.content}
+                      </blockquote>
+                    )
+                  }
+
+                  // Code
+                  if (block.type === 'code') {
+                    return (
+                      <pre key={block.id || idx} className="reader-code">
+                        <code>{block.content}</code>
+                      </pre>
+                    )
+                  }
+
+                  // Divider
+                  if (block.type === 'divider') {
+                    return <hr key={block.id || idx} className="reader-block-divider" />
+                  }
+
+                  // Callout
+                  if (block.type === 'callout') {
+                    return (
+                      <div key={block.id || idx} className="reader-callout">
+                        <span className="reader-callout-icon">💡</span>
+                        <div className="reader-callout-text">{block.content}</div>
+                      </div>
+                    )
+                  }
+
+                  // Bullet List
+                  if (
+                    block.type === 'bullet-list' ||
+                    block.type === 'bullet' ||
+                    block.type === 'ul'
+                  ) {
+                    return (
+                      <ul key={block.id || idx} className="reader-list">
+                        <li>{block.content}</li>
+                      </ul>
+                    )
+                  }
+
+                  // Numbered List
+                  if (
+                    block.type === 'number-list' ||
+                    block.type === 'numbered' ||
+                    block.type === 'ol'
+                  ) {
+                    return (
+                      <ol key={block.id || idx} className="reader-list reader-numbered-list">
+                        <li>{block.content}</li>
+                      </ol>
+                    )
+                  }
+
+                  // Checklist
+                  if (block.type === 'checklist') {
+                    return (
+                      <div key={block.id || idx} className="reader-checklist-item">
+                        <input
+                          type="checkbox"
+                          checked={Boolean(block.metadata?.checked)}
+                          readOnly
+                        />
+                        <span>{block.content}</span>
+                      </div>
+                    )
+                  }
+
+                  // Paragraph / Default text block
+                  if (!block.content || !block.content.trim()) {
+                    return null
+                  }
+
+                  if (/<[a-z][\s\S]*>/i.test(block.content)) {
+                    return (
+                      <p
+                        key={block.id || idx}
+                        className="reader-p"
+                        dangerouslySetInnerHTML={{ __html: block.content }}
+                      />
+                    )
+                  }
+
                   return (
-                    <blockquote key={block.id || idx} className="reader-quote">
+                    <p key={block.id || idx} className="reader-p">
                       {block.content}
-                    </blockquote>
+                    </p>
                   )
-                }
-                if (block.type === 'code') {
-                  return (
-                    <pre key={block.id || idx} className="reader-code">
-                      <code>{block.content}</code>
-                    </pre>
-                  )
-                }
-                return (
-                  <p key={block.id || idx} className="reader-p">
-                    {block.content}
-                  </p>
-                )
-              })
+                })}
+
+                {/* If post has separate text content not in blocks, render it */}
+                {story.content &&
+                  story.content.trim() !== story.description?.trim() &&
+                  !hasTextBlocks && (
+                    <div className="reader-extra-content">
+                      {story.content.split('\n\n').map((paragraph, index) => (
+                        <p key={index} className="reader-p">
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+              </>
             ) : isThielStory ? (
               <>
                 <p className="reader-p">

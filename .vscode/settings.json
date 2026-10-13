@@ -17,6 +17,7 @@
     "**/node_modules": true
   },
   "editor.tabSize": 2,
+  "editor.fontSize": 15,
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Chakra+Petch:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Covered+By+Your+Grace&family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Geist:wght@100..900&family=Geist+Mono:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@600;700;800;900&family=Oxanium:wght@400;500;600;700;800&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Reenie+Beanie&family=Righteous&family=Rock+Salt&family=Rubik+Glitch&family=Syne:wght@700;800&family=Unbounded:wght@600;700;800;900&display=swap');
 @import "tailwindcss";
+@import "./theme.css";
+@import "./Navbar.css";
 
 @theme {
   --font-sans: 'Plus Jakarta Sans', 'Inter', 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -99,7 +102,8 @@ a {
   text-decoration: none;
 }
 
-button,
+/* All buttons across the site default to smooth oval/pill shape, never sharp rectangles/squares */
+button:not(.faq-box-btn):not(.faq-row-btn),
 .btn,
 .btn-primary-pill,
 .btn-call-pill,
@@ -115,6 +119,8 @@ button,
 .lumina-btn-signup,
 .hero-nav-pill,
 .hero-version-pill,
+.hero-btn-primary,
+.hero-btn-secondary,
 .skiper-contact-btn,
 .skiper48-nav-btn,
 .process-book-btn,
@@ -123,9 +129,27 @@ button,
 .newsletter-input-pill,
 .footer-cta-pill,
 .integrations-label,
-[role="button"] {
+.saascn-btn-primary,
+.saascn-btn-secondary,
+.saascn-nav-dash-link {
   font-family: inherit;
-  border-radius: 0 !important;
+  border-radius: 9999px !important;
+}
+
+/* Icon and 1:1 action buttons are perfectly circular/round */
+.ai-sidebar-icon-btn,
+.ai-top-icon-btn,
+.ai-tool-btn,
+.ai-settings-gear-btn,
+.ai-post-more-btn,
+.ai-popover-more-btn,
+.profile-modal-close-btn,
+.ai-post-share-btn,
+.ai-inbox-btn,
+.saascn-user-btn,
+.lumina-theme-toggle,
+.theme-toggle-btn {
+  border-radius: 50% !important;
 }
 
 /* Grid Corner Crosshairs (+) */
@@ -158,4 +182,127 @@ button,
 .crosshair-bottom-right {
   bottom: -8px;
   right: -5px;
+}
+
+/* ==========================================================================
+   VARIABLE FONT CLASSES - QUICKSAND & RALEWAY
+   ========================================================================== */
+
+/* Quicksand: Variable font style classes (Weights 300 to 700) */
+.quicksand-body,
+.quicksand-normal,
+.quicksand-regular,
+.quicksand-400 {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.quicksand-light,
+.quicksand-300 {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.quicksand-medium,
+.quicksand-500 {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.quicksand-semibold,
+.quicksand-600 {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.quicksand-bold,
+.quicksand-700 {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Raleway: Variable font style classes (Weights 100 to 900) */
+.raleway-title,
+.raleway-heading,
+.raleway-bold,
+.raleway-700 {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.raleway-thin,
+.raleway-100 {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.raleway-extralight,
+.raleway-200 {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.raleway-light,
+.raleway-300 {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.raleway-normal,
+.raleway-regular,
+.raleway-400 {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.raleway-medium,
+.raleway-500 {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.raleway-semibold,
+.raleway-600 {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.raleway-extrabold,
+.raleway-800 {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.raleway-black,
+.raleway-900 {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 900;
+  font-style: normal;
 }

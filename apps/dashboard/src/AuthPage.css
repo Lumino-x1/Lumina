@@ -71,7 +71,7 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: rgba(255, 255, 255, 0.65);
   padding: 6px 14px;
-  border-radius: 0;
+  border-radius: 10px;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -156,7 +156,7 @@
 .lumina-progress-bar {
   flex: 1;
   height: 3.5px;
-  border-radius: 0;
+  border-radius: 9999px;
   background-color: rgba(255, 255, 255, 0.1);
   transition: background-color 0.3s ease;
 }
@@ -169,13 +169,13 @@
   background-color: rgba(255, 255, 255, 0.6);
 }
 
-/* Frosted Deep Dark Black Card with sharp rectangular edges */
+/* Frosted Deep Dark Black Card with modern rounded corners */
 .lumina-auth-card {
   width: 100%;
   background-color: rgba(6, 6, 6, 0.94);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-radius: 0;
+  border-radius: 20px;
   padding: 28px 24px;
   box-sizing: border-box;
   display: flex;
@@ -186,7 +186,8 @@
 
 @media (min-width: 640px) {
   .lumina-auth-card {
-    padding: 30px 28px;
+    padding: 32px 28px;
+    border-radius: 24px;
   }
 }
 
@@ -251,7 +252,7 @@
   width: 100%;
   height: 44px;
   padding: 0 14px;
-  border-radius: 0;
+  border-radius: 12px;
   background-color: #0c0c0c;
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #ffffff;
@@ -266,7 +267,7 @@
   width: 100%;
   height: 76px;
   padding: 10px 14px;
-  border-radius: 0;
+  border-radius: 12px;
   background-color: #0c0c0c;
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #ffffff;
@@ -297,61 +298,154 @@
   align-items: center;
   gap: 16px;
   margin-bottom: 16px;
-  padding: 12px 14px;
-  border-radius: 0;
+  padding: 14px 16px;
+  border-radius: 16px;
   background: #0c0c0c;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.2s ease;
+}
+
+.lumina-avatar-picker-row:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+  background: #111111;
+}
+
+.lumina-avatar-picker-row.is-drag-over {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.lumina-avatar-preview-wrap {
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: inline-block;
 }
 
 .lumina-avatar-preview {
-  width: 52px;
-  height: 52px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
-  background: #141414;
+  background: #181818;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.lumina-avatar-preview-wrap:hover .lumina-avatar-preview {
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: scale(1.03);
 }
 
 .lumina-avatar-preview img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+}
+
+.lumina-avatar-default-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.lumina-avatar-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #27272a;
+  border: 2px solid #0c0c0c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  transition: background-color 0.15s ease, transform 0.15s ease, color 0.15s ease;
+}
+
+.lumina-avatar-preview-wrap:hover .lumina-avatar-badge {
+  background: #ffffff;
+  color: #000000;
+  transform: scale(1.1);
+}
+
+.lumina-avatar-preview-wrap:hover .lumina-avatar-badge svg {
+  color: #000000 !important;
 }
 
 .lumina-avatar-controls {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   flex: 1;
+  min-width: 0;
+}
+
+.lumina-avatar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .lumina-avatar-upload-btn {
-  display: inline-block;
-  padding: 5px 12px;
-  border-radius: 0;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 15px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   color: #ffffff;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   text-align: center;
   transition: all 0.15s ease;
-  width: fit-content;
+  user-select: none;
 }
 
 .lumina-avatar-upload-btn:hover {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.lumina-avatar-remove-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 13px;
+  border-radius: 9999px;
+  background: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.lumina-avatar-remove-btn:hover {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #f87171;
 }
 
 .lumina-avatar-hint {
-  font-size: 11.5px;
-  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.35;
 }
 
 /* Year Selection Radio Pills */
@@ -364,7 +458,7 @@
 
 .lumina-year-pill-btn {
   padding: 10px 8px;
-  border-radius: 0;
+  border-radius: 12px;
   background: #0c0c0c;
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.75);
@@ -402,8 +496,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 12px;
-  border-radius: 0;
+  padding: 7px 14px;
+  border-radius: 9999px;
   background: #0c0c0c;
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 0.8);
@@ -454,7 +548,7 @@
   align-items: center;
   gap: 5px;
   padding: 4px 10px;
-  border-radius: 0;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.14);
   font-size: 12px;
@@ -486,7 +580,7 @@
 
 .lumina-skill-suggestion-btn {
   padding: 3px 8px;
-  border-radius: 0;
+  border-radius: 8px;
   background: transparent;
   border: 1px dashed rgba(255, 255, 255, 0.15);
   color: rgba(255, 255, 255, 0.5);
@@ -510,7 +604,7 @@
 .lumina-auth-secondary-btn {
   flex: 1;
   height: 46px;
-  border-radius: 0;
+  border-radius: 9999px;
   background-color: #0c0c0c;
   color: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -534,7 +628,7 @@
 .lumina-auth-submit-btn {
   flex: 2;
   height: 46px;
-  border-radius: 0;
+  border-radius: 9999px;
   background-color: #ffffff;
   color: #000000;
   border: none;
@@ -580,7 +674,7 @@
 .lumina-auth-social-btn {
   width: 100%;
   height: 44px;
-  border-radius: 0;
+  border-radius: 12px;
   background-color: #0c0c0c;
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -651,7 +745,7 @@
 /* Alerts */
 .lumina-auth-alert {
   padding: 10px 14px;
-  border-radius: 0;
+  border-radius: 12px;
   font-size: 13px;
   line-height: 1.4;
   margin-bottom: 14px;

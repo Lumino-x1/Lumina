@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Search } from 'lucide-react'
+import { ThemeToggle } from './components/ThemeToggle'
 import './Navbar.css'
 
 export interface NavbarProps {
@@ -9,12 +10,14 @@ export interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
-  onOpenAuth: _onOpenAuth,
-  user: _user,
+  onOpenAuth,
+  user,
   onOpenDashboard,
 }) => {
   const [searchFocused, setSearchFocused] = useState(false)
   const [searchValue, setSearchValue] = useState('')
+
+  const isLoggedIn = Boolean(user && (user.email || user.name || (user as any).id))
 
   return (
     <header className="saascn-nav-section" aria-label="Top Navigation">
@@ -54,17 +57,33 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </div>
 
-          {/* Dashboard Button */}
-          <button
-            type="button"
-            className="saascn-nav-dash-link"
-            onClick={() => {
-              if (onOpenDashboard) onOpenDashboard()
-              else window.location.hash = 'dashboard'
-            }}
-          >
-            Dashboard
-          </button>
+          {/* Theme Toggle (Bright Pure White/Black vs Existing Dark) */}
+          <ThemeToggle />
+
+          {/* Dashboard / Get Started Button */}
+          {isLoggedIn ? (
+            <button
+              type="button"
+              className="saascn-nav-dash-link"
+              onClick={() => {
+                if (onOpenDashboard) onOpenDashboard()
+                else window.location.hash = 'dashboard'
+              }}
+            >
+              Dashboard
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="saascn-nav-dash-link"
+              onClick={() => {
+                if (onOpenAuth) onOpenAuth('signup')
+                else window.location.hash = 'signup'
+              }}
+            >
+              Get started
+            </button>
+          )}
         </div>
 
         {/* Boundary Crosshair Markers (+) on the dividing bottom line */}

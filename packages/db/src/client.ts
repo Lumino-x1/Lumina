@@ -8,9 +8,14 @@ import pg from 'pg'
 export { Prisma } from '@prisma/client'
 export type { Profile, User, Visibility } from '@prisma/client'
 
+const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.VITEST)
+
+const connectionString = isTest
+  ? (process.env.DATABASE_URL_TEST || 'postgresql://lumina_user:lumina_password@localhost:5432/lumina_test')
+  : (process.env.DATABASE_URL_DEV || 'postgresql://lumina_user:lumina_password@localhost:5432/lumina_dev')
+
 const pool = new pg.Pool({
-  connectionString:
-    'postgresql://lumina_user:lumina_password@localhost:5432/lumina_dev',
+  connectionString,
 })
 
 const adapter = new PrismaPg(pool)

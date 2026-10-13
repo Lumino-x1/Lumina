@@ -13,6 +13,7 @@ import {
 import type { AuthenticatedRequest } from '@lumina/contracts'
 import type { NextFunction, Response } from 'express'
 
+
 export const createPost = async (
   req: AuthenticatedRequest,
   res: Response,
@@ -32,7 +33,6 @@ export const createPost = async (
     next(error)
   }
 }
-
 export const toggleLike = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const result = await PostsService.toggleLike(req.user.id, req.params.id as string)

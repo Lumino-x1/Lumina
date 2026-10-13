@@ -162,7 +162,7 @@
    ========================================================================== */
 .why-us-main-content {
   width: 100%;
-  padding: 64px 32px 110px;
+  padding: 64px 32px 0;
   box-sizing: border-box;
   position: relative;
 }
@@ -210,7 +210,7 @@
   line-height: 1;
   color: rgba(255, 255, 255, 0.45);
   pointer-events: none;
-  z-index: 2;
+  z-index: 10;
   user-select: none;
 }
 
@@ -268,14 +268,73 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 380px;
-  background-color: transparent;
-  transition: background-color 0.22s ease;
+  min-height: 390px;
+  background-color: #080808;
   position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: background-color 0.22s ease;
 }
 
-.why-us-card:hover {
-  background-color: rgba(255, 255, 255, 0.018);
+/* Card Background Image Wrap */
+.why-us-card-image-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.why-us-card-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transform: scale(1.005);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+}
+
+.why-us-card:hover .why-us-card-bg-img {
+  transform: scale(1.06);
+}
+
+/* Scrim Gradient Overlay for Contrast & Readability */
+.why-us-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.32) 0%,
+    rgba(0, 0, 0, 0.42) 35%,
+    rgba(0, 0, 0, 0.78) 70%,
+    rgba(0, 0, 0, 0.94) 100%
+  );
+  transition: background 0.3s ease;
+}
+
+.why-us-card:hover .why-us-card-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.24) 0%,
+    rgba(0, 0, 0, 0.36) 35%,
+    rgba(0, 0, 0, 0.72) 70%,
+    rgba(0, 0, 0, 0.92) 100%
+  );
+}
+
+/* Content Container Over Image */
+.why-us-card-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Row 1 Asymmetric Ratio */
@@ -298,13 +357,28 @@
   flex: 1.62;
 }
 
-/* Card Icon */
+/* Frosted Glass Badge for Icon */
 .why-us-card-icon-wrap {
   display: inline-flex;
   align-items: center;
-  justify-content: flex-start;
-  color: rgba(255, 255, 255, 0.82);
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.48);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
   margin-bottom: 48px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.why-us-card:hover .why-us-card-icon-wrap {
+  background: rgba(0, 0, 0, 0.65);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
 }
 
 /* Card Content (Anchored to Bottom) */
@@ -314,20 +388,22 @@
 
 .why-us-card-title {
   font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: 19.5px;
-  font-weight: 500;
+  font-size: 20px;
+  font-weight: 600;
   letter-spacing: -0.015em;
-  color: #ffffff;
-  margin: 0 0 9px 0;
+  color: #ffffff !important;
+  margin: 0 0 8px 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 .why-us-card-desc {
   font-family: var(--font-family-primary, 'Geist', sans-serif);
   font-size: 15px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.86) !important;
   margin: 0;
-  max-width: 380px;
+  max-width: 420px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* ==========================================================================
@@ -352,7 +428,7 @@
   .why-us-card {
     border-right: none !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    min-height: 300px;
+    min-height: 340px;
     padding: 32px 24px;
     flex: none !important;
     width: 100%;
@@ -370,7 +446,7 @@
   }
 
   .why-us-main-content {
-    padding: 48px 20px 80px;
+    padding: 48px 20px 0;
   }
 
   .why-us-title {

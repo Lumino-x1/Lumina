@@ -1,0 +1,1070 @@
+/* ==========================================================================
+   Lumina Theme System: Bright (Pure White & Black) vs Dark (Existing Colors)
+   Matches the Langbase / SaasCN Minimalist Architectural Design System
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Theme Variables Definition
+   -------------------------------------------------------------------------- */
+
+:root,
+[data-theme="dark"],
+.dark {
+  /* Dark Mode: Existing colors preserved */
+  --theme-bg-base: #000000;
+  --theme-bg-surface: #000000;
+  --theme-bg-surface-raised: #121212;
+  --theme-bg-surface-card: #0a0a0a;
+  --theme-bg-pill: rgba(255, 255, 255, 0.05);
+  --theme-bg-pill-hover: rgba(255, 255, 255, 0.1);
+  --theme-bg-nav: rgba(0, 0, 0, 0.85);
+
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: rgba(255, 255, 255, 0.68);
+  --theme-text-muted: rgba(255, 255, 255, 0.45);
+
+  --theme-border-dashed: rgba(255, 255, 255, 0.12);
+  --theme-border-solid: rgba(255, 255, 255, 0.12);
+  --theme-border-subtle: rgba(255, 255, 255, 0.08);
+
+  --theme-crosshair: rgba(255, 255, 255, 0.45);
+
+  --theme-btn-primary-bg: #ffffff;
+  --theme-btn-primary-text: #000000;
+  --theme-btn-secondary-bg: rgba(255, 255, 255, 0.05);
+  --theme-btn-secondary-text: #ffffff;
+  --theme-btn-secondary-border: rgba(255, 255, 255, 0.18);
+
+  --theme-hatch-pattern: rgba(255, 255, 255, 0.055);
+  color-scheme: dark;
+}
+
+[data-theme="bright"],
+[data-theme="light"],
+.bright,
+.light {
+  /* Bright Mode: Pure White and Black */
+  --theme-bg-base: #ffffff;
+  --theme-bg-surface: #ffffff;
+  --theme-bg-surface-raised: #f7f7f7;
+  --theme-bg-surface-card: #ffffff;
+  --theme-bg-pill: rgba(0, 0, 0, 0.04);
+  --theme-bg-pill-hover: rgba(0, 0, 0, 0.08);
+  --theme-bg-nav: rgba(255, 255, 255, 0.92);
+
+  --theme-text-primary: #000000;
+  --theme-text-secondary: rgba(0, 0, 0, 0.68);
+  --theme-text-muted: rgba(0, 0, 0, 0.45);
+
+  --theme-border-dashed: rgba(0, 0, 0, 0.14);
+  --theme-border-solid: rgba(0, 0, 0, 0.14);
+  --theme-border-subtle: rgba(0, 0, 0, 0.08);
+
+  --theme-crosshair: rgba(0, 0, 0, 0.45);
+
+  --theme-btn-primary-bg: #000000;
+  --theme-btn-primary-text: #ffffff;
+  --theme-btn-secondary-bg: #ffffff;
+  --theme-btn-secondary-text: #000000;
+  --theme-btn-secondary-border: rgba(0, 0, 0, 0.22);
+
+  --theme-hatch-pattern: rgba(0, 0, 0, 0.06);
+  color-scheme: light;
+}
+
+/* --------------------------------------------------------------------------
+   2. Global Document & Wrapper Overrides in Bright Mode
+   -------------------------------------------------------------------------- */
+
+[data-theme="bright"],
+[data-theme="bright"] body,
+[data-theme="bright"] #root,
+[data-theme="bright"] .app-main-wrapper {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .crosshair-marker {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. Navbar (Top Navigation) in Bright Mode
+   -------------------------------------------------------------------------- */
+
+[data-theme="bright"] .saascn-nav-section {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .saascn-nav-frame {
+  border-left: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  border-right: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  background-color: transparent !important;
+}
+
+[data-theme="bright"] .saascn-nav-logo {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .saascn-nav-item {
+  color: rgba(0, 0, 0, 0.65) !important;
+}
+
+[data-theme="bright"] .saascn-nav-item:hover {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .saascn-search-pill {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="bright"] .saascn-search-pill.is-focused {
+  background-color: rgba(0, 0, 0, 0.07) !important;
+  border-color: rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="bright"] .saascn-search-icon {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="bright"] .saascn-search-input {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .saascn-search-input::placeholder {
+  color: rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="bright"] .saascn-key {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  border-color: rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .saascn-nav-dash-link {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
+}
+
+[data-theme="bright"] .saascn-nav-dash-link:hover {
+  background-color: #222222 !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. Hero Section in Bright Mode
+   -------------------------------------------------------------------------- */
+
+[data-theme="bright"] .hero-section-root {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .hero-container-frame {
+  background-color: #ffffff !important;
+  border-left: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  border-right: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .hero-section-root::after {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+/* In Bright Mode, keep background crisp white and subtle */
+[data-theme="bright"] .hero-bg-canvas {
+  opacity: 0.18;
+  filter: grayscale(0.5);
+}
+
+[data-theme="bright"] .saascn-hero-badge {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.18) !important;
+  color: #000000 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="bright"] .saascn-hero-badge:hover {
+  background-color: #f7f7f7 !important;
+  border-color: rgba(0, 0, 0, 0.35) !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .saascn-hero-title {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .saascn-hero-subtitle {
+  color: rgba(0, 0, 0, 0.72) !important;
+}
+
+[data-theme="bright"] .saascn-hero-btn-primary {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
+}
+
+[data-theme="bright"] .saascn-hero-btn-primary:hover {
+  background-color: #222222 !important;
+}
+
+[data-theme="bright"] .saascn-hero-btn-secondary {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.22) !important;
+  color: #000000 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="bright"] .saascn-hero-btn-secondary:hover {
+  background-color: #f7f7f7 !important;
+  border-color: rgba(0, 0, 0, 0.4) !important;
+  color: #000000 !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Trust & Quote Section in Bright Mode
+   -------------------------------------------------------------------------- */
+
+[data-theme="bright"] .trust-quote-section {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .trust-quote-container-frame {
+  background-color: #ffffff !important;
+  border-left: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  border-right: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .trust-quote-container-frame::after {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .trust-grid-cell {
+  background-color: #ffffff !important;
+  border-right: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .trust-grid-cell:hover {
+  background-color: rgba(0, 0, 0, 0.025) !important;
+}
+
+[data-theme="bright"] .trust-logo-grid::after {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .trust-grid-text-line1 {
+  color: rgba(0, 0, 0, 0.55) !important;
+}
+
+[data-theme="bright"] .trust-grid-text-line2 {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .trust-logo-item svg {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .trust-quote-block {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .trust-quote-icon {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .trust-quote-text {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .trust-quote-avatar {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+  background-color: #e5e5e5 !important;
+}
+
+[data-theme="bright"] .trust-quote-name {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .trust-quote-pill {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid rgba(0, 0, 0, 0.18) !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .trust-quote-role {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* --------------------------------------------------------------------------
+   6. Why Us Section in Bright Mode
+   -------------------------------------------------------------------------- */
+
+[data-theme="bright"] .why-us-section {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .why-us-container-frame {
+  border-left: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  border-right: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .why-us-trust-bar {
+  background-color: #ffffff !important;
+  border-top: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .why-us-trust-bar::before,
+[data-theme="bright"] .why-us-trust-bar::after {
+  border-color: rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .why-us-trust-text {
+  color: rgba(0, 0, 0, 0.65) !important;
+}
+
+[data-theme="bright"] .why-us-logo-item {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .why-us-logo-label {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .why-us-hatch-gap {
+  background-color: #ffffff !important;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.06) 0px,
+    rgba(0, 0, 0, 0.06) 1px,
+    transparent 1px,
+    transparent 6px
+  ) !important;
+}
+
+[data-theme="bright"] .why-us-hatch-gap::after {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .why-us-title {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .why-us-subtitle {
+  color: rgba(0, 0, 0, 0.68) !important;
+}
+
+[data-theme="bright"] .why-us-bento-grid {
+  border-color: rgba(0, 0, 0, 0.14) !important;
+  background-color: #ffffff !important;
+}
+
+[data-theme="bright"] .why-us-bento-row {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .why-us-bento-row::after {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .why-us-card {
+  background-color: #0a0a0a !important;
+}
+
+[data-theme="bright"] .why-us-card:hover {
+  background-color: #0a0a0a !important;
+}
+
+[data-theme="bright"] .card-wide-left,
+[data-theme="bright"] .card-narrow-left {
+  border-right: 1px dashed rgba(255, 255, 255, 0.16) !important;
+}
+
+[data-theme="bright"] .why-us-bento-row {
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.16) !important;
+}
+
+[data-theme="bright"] .why-us-card-icon-wrap {
+  color: #ffffff !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+[data-theme="bright"] .why-us-card-title {
+  color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="bright"] .why-us-card-desc {
+  color: rgba(255, 255, 255, 0.86) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* --------------------------------------------------------------------------
+   7. Command Code Section in Bright Mode
+   -------------------------------------------------------------------------- */
+
+[data-theme="bright"] .command-section {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .command-container-frame {
+  background-color: #ffffff !important;
+  border-left: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  border-right: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .command-container-frame::after {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .command-top-row,
+[data-theme="bright"] .command-middle-row {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .command-top-row::after,
+[data-theme="bright"] .command-middle-row::after {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .command-trace-col {
+  background-color: #ffffff !important;
+  border-right: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .command-trace-row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="bright"] .command-trace-tag {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="bright"] .command-trace-node-box {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  color: #000000 !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="bright"] .command-trace-text {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .command-trace-text-muted {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="bright"] .command-hero-col {
+  background-color: #ffffff !important;
+}
+
+[data-theme="bright"] .command-brand-slash {
+  color: rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="bright"] .command-brand-name {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .command-desc-col {
+  border-right: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .command-desc-text {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .command-btn-primary {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #000000 !important;
+}
+
+[data-theme="bright"] .command-btn-primary:hover {
+  background-color: #222222 !important;
+}
+
+[data-theme="bright"] .command-btn-secondary {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid rgba(0, 0, 0, 0.22) !important;
+}
+
+[data-theme="bright"] .command-btn-secondary:hover {
+  background-color: #f7f7f7 !important;
+  border-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="bright"] .command-stats-grid,
+.bright .command-stats-grid {
+  border-top: 1px dashed rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="bright"] .command-stat-cell,
+.bright .command-stat-cell {
+  border-right: 1px dashed rgba(0, 0, 0, 0.12) !important;
+  background-color: #ffffff !important;
+}
+
+[data-theme="bright"] .command-stat-cell:last-child,
+.bright .command-stat-cell:last-child {
+  border-right: none !important;
+}
+
+[data-theme="bright"] .command-stat-icon-box,
+.bright .command-stat-icon-box {
+  border-color: rgba(0, 0, 0, 0.16) !important;
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .command-stat-index,
+.bright .command-stat-index {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="bright"] .command-stat-value,
+.bright .command-stat-value {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .command-stat-desc,
+.bright .command-stat-desc {
+  color: rgba(0, 0, 0, 0.68) !important;
+}
+
+/* --------------------------------------------------------------------------
+   8. Community & FAQ Section in Bright Mode
+   -------------------------------------------------------------------------- */
+
+[data-theme="bright"] .community-faq-section,
+[data-theme="light"] .community-faq-section,
+.bright .community-faq-section,
+.light .community-faq-section {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .community-faq-frame,
+[data-theme="light"] .community-faq-frame,
+.bright .community-faq-frame,
+.light .community-faq-frame {
+  border-left: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  border-right: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .community-title,
+[data-theme="light"] .community-title,
+.bright .community-title,
+.light .community-title {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .community-subtitle,
+[data-theme="light"] .community-subtitle,
+.bright .community-subtitle,
+.light .community-subtitle {
+  color: rgba(0, 0, 0, 0.68) !important;
+}
+
+[data-theme="bright"] .community-cards-grid,
+[data-theme="light"] .community-cards-grid,
+.bright .community-cards-grid,
+.light .community-cards-grid {
+  border-color: rgba(0, 0, 0, 0.14) !important;
+  background-color: #ffffff !important;
+}
+
+[data-theme="bright"] .community-cards-grid::after,
+[data-theme="light"] .community-cards-grid::after,
+.bright .community-cards-grid::after,
+.light .community-cards-grid::after {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .community-card,
+[data-theme="light"] .community-card,
+.bright .community-card,
+.light .community-card {
+  background-color: #ffffff !important;
+}
+
+[data-theme="bright"] .community-card:hover,
+[data-theme="light"] .community-card:hover,
+.bright .community-card:hover,
+.light .community-card:hover {
+  background-color: rgba(0, 0, 0, 0.02) !important;
+}
+
+[data-theme="bright"] .card-left,
+[data-theme="light"] .card-left,
+.bright .card-left,
+.light .card-left {
+  border-right: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .community-card-icon,
+[data-theme="light"] .community-card-icon,
+.bright .community-card-icon,
+.light .community-card-icon,
+[data-theme="bright"] .community-card-icon svg,
+[data-theme="light"] .community-card-icon svg,
+.bright .community-card-icon svg,
+.light .community-card-icon svg {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .community-card-headline,
+[data-theme="light"] .community-card-headline,
+.bright .community-card-headline,
+.light .community-card-headline {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .community-card-text,
+[data-theme="light"] .community-card-text,
+.bright .community-card-text,
+.light .community-card-text {
+  color: rgba(0, 0, 0, 0.68) !important;
+}
+
+[data-theme="bright"] .community-by-label,
+[data-theme="light"] .community-by-label,
+.bright .community-by-label,
+.light .community-by-label {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="bright"] .community-author-name,
+[data-theme="light"] .community-author-name,
+.bright .community-author-name,
+.light .community-author-name {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .community-avatar-wrap,
+[data-theme="light"] .community-avatar-wrap,
+.bright .community-avatar-wrap,
+.light .community-avatar-wrap {
+  background-color: #f0f0f0 !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="bright"] .community-hatch-gap,
+[data-theme="light"] .community-hatch-gap,
+.bright .community-hatch-gap,
+.light .community-hatch-gap {
+  background-color: #ffffff !important;
+  border-top: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.06) 0px,
+    rgba(0, 0, 0, 0.06) 1px,
+    transparent 1px,
+    transparent 6px
+  ) !important;
+}
+
+[data-theme="bright"] .community-hatch-gap::before,
+[data-theme="bright"] .community-hatch-gap::after,
+[data-theme="light"] .community-hatch-gap::before,
+[data-theme="light"] .community-hatch-gap::after,
+.bright .community-hatch-gap::before,
+.bright .community-hatch-gap::after,
+.light .community-hatch-gap::before,
+.light .community-hatch-gap::after {
+  border-color: rgba(0, 0, 0, 0.14) !important;
+}
+
+/* Frequently Asked Questions (CommunityAndFaqSection) */
+[data-theme="bright"] .faq-box-container,
+[data-theme="light"] .faq-box-container,
+.bright .faq-box-container,
+.light .faq-box-container {
+  background-color: #ffffff !important;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .faq-box-container::after,
+[data-theme="light"] .faq-box-container::after,
+.bright .faq-box-container::after,
+.light .faq-box-container::after {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .faq-box-left,
+[data-theme="light"] .faq-box-left,
+.bright .faq-box-left,
+.light .faq-box-left {
+  background-color: #ffffff !important;
+  border-right: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .faq-box-title,
+[data-theme="light"] .faq-box-title,
+.bright .faq-box-title,
+.light .faq-box-title {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .faq-box-sub,
+[data-theme="light"] .faq-box-sub,
+.bright .faq-box-sub,
+.light .faq-box-sub {
+  color: rgba(0, 0, 0, 0.68) !important;
+}
+
+[data-theme="bright"] .faq-box-contact-link,
+[data-theme="light"] .faq-box-contact-link,
+.bright .faq-box-contact-link,
+.light .faq-box-contact-link {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .faq-box-right,
+[data-theme="light"] .faq-box-right,
+.bright .faq-box-right,
+.light .faq-box-right {
+  background-color: #ffffff !important;
+}
+
+[data-theme="bright"] .faq-box-item,
+[data-theme="light"] .faq-box-item,
+.bright .faq-box-item,
+.light .faq-box-item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="bright"] .faq-box-btn,
+[data-theme="light"] .faq-box-btn,
+.bright .faq-box-btn,
+.light .faq-box-btn {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .faq-box-btn:hover,
+[data-theme="light"] .faq-box-btn:hover,
+.bright .faq-box-btn:hover,
+.light .faq-box-btn:hover {
+  color: #000000 !important;
+  background-color: rgba(0, 0, 0, 0.015) !important;
+}
+
+[data-theme="bright"] .faq-box-question,
+[data-theme="light"] .faq-box-question,
+.bright .faq-box-question,
+.light .faq-box-question {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .faq-box-chevron,
+[data-theme="light"] .faq-box-chevron,
+.bright .faq-box-chevron,
+.light .faq-box-chevron,
+[data-theme="bright"] .faq-box-chevron svg,
+[data-theme="light"] .faq-box-chevron svg,
+.bright .faq-box-chevron svg,
+.light .faq-box-chevron svg {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="bright"] .faq-box-btn:hover .faq-box-chevron,
+[data-theme="light"] .faq-box-btn:hover .faq-box-chevron,
+.bright .faq-box-btn:hover .faq-box-chevron,
+.light .faq-box-btn:hover .faq-box-chevron,
+[data-theme="bright"] .faq-box-item.is-open .faq-box-chevron,
+[data-theme="light"] .faq-box-item.is-open .faq-box-chevron,
+.bright .faq-box-item.is-open .faq-box-chevron,
+.light .faq-box-item.is-open .faq-box-chevron,
+[data-theme="bright"] .faq-box-btn:hover .faq-box-chevron svg,
+[data-theme="light"] .faq-box-btn:hover .faq-box-chevron svg,
+.bright .faq-box-btn:hover .faq-box-chevron svg,
+.light .faq-box-btn:hover .faq-box-chevron svg,
+[data-theme="bright"] .faq-box-item.is-open .faq-box-chevron svg,
+[data-theme="light"] .faq-box-item.is-open .faq-box-chevron svg,
+.bright .faq-box-item.is-open .faq-box-chevron svg,
+.light .faq-box-item.is-open .faq-box-chevron svg {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .faq-box-answer-text,
+[data-theme="light"] .faq-box-answer-text,
+.bright .faq-box-answer-text,
+.light .faq-box-answer-text {
+  color: rgba(0, 0, 0, 0.72) !important;
+}
+
+/* Standalone FAQ (FaqSection.tsx) */
+[data-theme="bright"] .faq-section,
+[data-theme="light"] .faq-section,
+.bright .faq-section,
+.light .faq-section {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .faq-framed-container,
+[data-theme="light"] .faq-framed-container,
+.bright .faq-framed-container,
+.light .faq-framed-container {
+  border-color: rgba(0, 0, 0, 0.14) !important;
+  background-color: #ffffff !important;
+}
+
+[data-theme="bright"] .faq-left-col,
+[data-theme="light"] .faq-left-col,
+.bright .faq-left-col,
+.light .faq-left-col {
+  border-right-color: rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .faq-kicker,
+[data-theme="light"] .faq-kicker,
+.bright .faq-kicker,
+.light .faq-kicker {
+  color: rgba(0, 0, 0, 0.55) !important;
+}
+
+[data-theme="bright"] .faq-serif-title,
+[data-theme="bright"] .faq-title,
+[data-theme="light"] .faq-serif-title,
+[data-theme="light"] .faq-title,
+.bright .faq-serif-title,
+.bright .faq-title,
+.light .faq-serif-title,
+.light .faq-title {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .faq-description,
+[data-theme="bright"] .faq-subtitle,
+[data-theme="light"] .faq-description,
+[data-theme="light"] .faq-subtitle,
+.bright .faq-description,
+.bright .faq-subtitle,
+.light .faq-description,
+.light .faq-subtitle {
+  color: rgba(0, 0, 0, 0.68) !important;
+}
+
+[data-theme="bright"] .faq-row-item,
+[data-theme="bright"] .faq-item,
+[data-theme="light"] .faq-row-item,
+[data-theme="light"] .faq-item,
+.bright .faq-row-item,
+.bright .faq-item,
+.light .faq-row-item,
+.light .faq-item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="bright"] .faq-row-btn,
+[data-theme="bright"] .faq-question-btn,
+[data-theme="light"] .faq-row-btn,
+[data-theme="light"] .faq-question-btn,
+.bright .faq-row-btn,
+.bright .faq-question-btn,
+.light .faq-row-btn,
+.light .faq-question-btn {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .faq-row-btn:hover,
+[data-theme="bright"] .faq-question-btn:hover,
+[data-theme="light"] .faq-row-btn:hover,
+[data-theme="light"] .faq-question-btn:hover,
+.bright .faq-row-btn:hover,
+.bright .faq-question-btn:hover,
+.light .faq-row-btn:hover,
+.light .faq-question-btn:hover {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .faq-row-question,
+[data-theme="light"] .faq-row-question,
+.bright .faq-row-question,
+.light .faq-row-question {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .faq-row-chevron,
+[data-theme="bright"] .faq-icon,
+[data-theme="light"] .faq-row-chevron,
+[data-theme="light"] .faq-icon,
+.bright .faq-row-chevron,
+.bright .faq-icon,
+.light .faq-row-chevron,
+.light .faq-icon,
+[data-theme="bright"] .faq-row-chevron svg,
+[data-theme="light"] .faq-row-chevron svg,
+.bright .faq-row-chevron svg,
+.light .faq-row-chevron svg {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="bright"] .faq-row-btn:hover .faq-row-chevron,
+[data-theme="bright"] .faq-row-item.is-open .faq-row-chevron,
+[data-theme="light"] .faq-row-btn:hover .faq-row-chevron,
+[data-theme="light"] .faq-row-item.is-open .faq-row-chevron,
+.bright .faq-row-btn:hover .faq-row-chevron,
+.bright .faq-row-item.is-open .faq-row-chevron,
+.light .faq-row-btn:hover .faq-row-chevron,
+.light .faq-row-item.is-open .faq-row-chevron,
+[data-theme="bright"] .faq-row-btn:hover .faq-row-chevron svg,
+[data-theme="bright"] .faq-row-item.is-open .faq-row-chevron svg,
+[data-theme="light"] .faq-row-btn:hover .faq-row-chevron svg,
+[data-theme="light"] .faq-row-item.is-open .faq-row-chevron svg,
+.bright .faq-row-btn:hover .faq-row-chevron svg,
+.bright .faq-row-item.is-open .faq-row-chevron svg,
+.light .faq-row-btn:hover .faq-row-chevron svg,
+.light .faq-row-item.is-open .faq-row-chevron svg {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .faq-row-answer-text,
+[data-theme="bright"] .faq-answer-text,
+[data-theme="light"] .faq-row-answer-text,
+[data-theme="light"] .faq-answer-text,
+.bright .faq-row-answer-text,
+.bright .faq-answer-text,
+.light .faq-row-answer-text,
+.light .faq-answer-text {
+  color: rgba(0, 0, 0, 0.72) !important;
+}
+
+/* --------------------------------------------------------------------------
+   9. Footer Section in Bright Mode
+   -------------------------------------------------------------------------- */
+
+[data-theme="bright"] .saascn-footer-section {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .saascn-footer-frame {
+  background-color: #ffffff !important;
+  border-left: 1px dashed rgba(0, 0, 0, 0.14) !important;
+  border-right: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .saascn-cta-title {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .saascn-cta-desc {
+  color: rgba(0, 0, 0, 0.68) !important;
+}
+
+[data-theme="bright"] .saascn-btn-primary {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 1px solid #000000 !important;
+}
+
+[data-theme="bright"] .saascn-btn-primary:hover {
+  background-color: #222222 !important;
+}
+
+[data-theme="bright"] .saascn-btn-secondary {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid rgba(0, 0, 0, 0.22) !important;
+}
+
+[data-theme="bright"] .saascn-btn-secondary:hover {
+  background-color: #f7f7f7 !important;
+  border-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="bright"] .saascn-pricing-icon {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .saascn-divider-line {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .saascn-divider-line::after {
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .saascn-col-title {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="bright"] .saascn-link {
+  color: rgba(0, 0, 0, 0.68) !important;
+}
+
+[data-theme="bright"] .saascn-link:hover {
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .saascn-bottom-bar {
+  border-top: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .saascn-bottom-bar::before {
+  border-top: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="bright"] .saascn-copyright {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="bright"] .saascn-status-badge {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.16) !important;
+  color: #000000 !important;
+}
+
+/* --------------------------------------------------------------------------
+   10. Dashboard, Profile, and Auth Views Support in Bright Mode
+   -------------------------------------------------------------------------- */
+
+[data-theme="bright"] .lumina-dashboard-layout,
+[data-theme="bright"] .lumina-ai-dashboard-root,
+[data-theme="bright"] .lumina-ai-profile-root {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+[data-theme="dark"] .lumina-ai-dashboard-root,
+.dark .lumina-ai-dashboard-root,
+[data-theme="dark"] .lumina-ai-profile-root,
+.dark .lumina-ai-profile-root {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="bright"] .untitled-sidebar {
+  background-color: #ffffff !important;
+  border-right-color: rgba(0, 0, 0, 0.1) !important;
+  color: #000000 !important;
+}
+
+[data-theme="bright"] .lumina-right-sidebar {
+  background-color: transparent !important;
+  border-left-color: transparent !important;
+}
+
+[data-theme="bright"] .auth-page-root,
+[data-theme="bright"] .profile-page-root {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
