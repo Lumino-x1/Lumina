@@ -3,6 +3,7 @@ import {
   buildCookieHeader,
   clearCapturedEmails,
   getSetCookieHeader,
+  installResendFetchMock,
   signUpWithEmail,
 } from '../helpers/auth'
 import {
@@ -21,6 +22,8 @@ describe('Comments Domain (FR-06-001 through FR-06-007)', () => {
   const app = createTestApp()
 
   beforeAll(async () => {
+    installResendFetchMock()
+    clearCapturedEmails()
     setTestDatabaseUrl()
     await prepareTestDatabase()
     await connectTestDatabase()
@@ -44,6 +47,11 @@ describe('Comments Domain (FR-06-001 through FR-06-007)', () => {
 
     const signupAuthor = await signUpWithEmail(app, author)
     const signupCommenter = await signUpWithEmail(app, commenter)
+
+    await prisma.user.updateMany({
+      where: { email: { in: [author.email, commenter.email] } },
+      data: { emailVerified: true },
+    })
 
     const cookieAuthor = buildCookieHeader(getSetCookieHeader(signupAuthor))
     const cookieCommenter = buildCookieHeader(getSetCookieHeader(signupCommenter))
@@ -101,6 +109,10 @@ describe('Comments Domain (FR-06-001 through FR-06-007)', () => {
   it('FR-06-002 & FR-06-003: supports reactions, emoji format validation, edit history log, and optimistic concurrency', async () => {
     const author = generateRandomUser({ email: 'reaction.user@example.test' })
     const signup = await signUpWithEmail(app, author)
+    await prisma.user.updateMany({
+      where: { email: author.email },
+      data: { emailVerified: true },
+    })
     const cookie = buildCookieHeader(getSetCookieHeader(signup))
 
     const dbUser = await prisma.user.findUnique({ where: { email: author.email } })
@@ -172,6 +184,11 @@ describe('Comments Domain (FR-06-001 through FR-06-007)', () => {
     const signupPostAuthor = await signUpWithEmail(app, postAuthor)
     const signupMentioned = await signUpWithEmail(app, mentionedUser)
     const signupReporter = await signUpWithEmail(app, reporter)
+
+    await prisma.user.updateMany({
+      where: { email: { in: [postAuthor.email, mentionedUser.email, reporter.email] } },
+      data: { emailVerified: true },
+    })
 
     const cookieAuthor = buildCookieHeader(getSetCookieHeader(signupPostAuthor))
     const cookieReporter = buildCookieHeader(getSetCookieHeader(signupReporter))
@@ -255,5 +272,117 @@ describe('Comments Domain (FR-06-001 through FR-06-007)', () => {
 
     expect(deletedReactRes.status).toBe(400)
     expect(deletedReactRes.body.message).toBe('CANNOT_REACT_TO_DELETED_COMMENT')
+  })
+
+  it('Comment like, pin, and creator-only delete operations with authorization checks', async () => {
+    const postOwner = generateRandomUser({ email: 'owner.post@example.test' })
+    const commentCreator = generateRandomUser({ email: 'creator.comment@example.test' })
+    const stranger = generateRandomUser({ email: 'stranger.user@example.test' })
+
+    const signupOwner = await signUpWithEmail(app, postOwner)
+    const signupCreator = await signUpWithEmail(app, commentCreator)
+    const signupStranger = await signUpWithEmail(app, stranger)
+
+    await prisma.user.updateMany({
+      where: { email: { in: [postOwner.email, commentCreator.email, stranger.email] } },
+      data: { emailVerified: true },
+    })
+
+    const cookieOwner = buildCookieHeader(getSetCookieHeader(signupOwner))
+    const cookieCreator = buildCookieHeader(getSetCookieHeader(signupCreator))
+    const cookieStranger = buildCookieHeader(getSetCookieHeader(signupStranger))
+
+    const dbOwner = await prisma.user.findUnique({ where: { email: postOwner.email } })
+    const dbCreator = await prisma.user.findUnique({ where: { email: commentCreator.email } })
+
+    const post = await prisma.post.create({
+      data: { authorId: dbOwner!.id, content: 'Interactive Comments Post' },
+    })
+
+    // 1. Creator creates a comment
+    const commentRes = await request(app)
+      .post(`/api/comments/posts/${post.id}/comments`)
+      .set('Cookie', cookieCreator ?? '')
+      .send({ content: 'Awesome post! Here is my feedback.' })
+
+    expect(commentRes.status).toBe(201)
+    const commentId = commentRes.body.id
+    expect(commentId).toBeTruthy()
+
+    // 2. Like comment via POST /api/comments/:commentId/like
+    const likeRes1 = await request(app)
+      .post(`/api/comments/${commentId}/like`)
+      .set('Cookie', cookieCreator ?? '')
+      .send()
+
+    expect(likeRes1.status).toBe(200)
+    expect(likeRes1.body.action).toBe('added')
+    expect(likeRes1.body.isLiked).toBe(true)
+    expect(likeRes1.body.likesCount).toBe(1)
+
+    // Stranger also likes comment
+    const likeRes2 = await request(app)
+      .post(`/api/comments/${commentId}/like`)
+      .set('Cookie', cookieStranger ?? '')
+      .send()
+
+    expect(likeRes2.status).toBe(200)
+    expect(likeRes2.body.action).toBe('added')
+    expect(likeRes2.body.likesCount).toBe(2)
+
+    // Creator unlikes comment (toggle)
+    const unlikeRes = await request(app)
+      .post(`/api/comments/${commentId}/like`)
+      .set('Cookie', cookieCreator ?? '')
+      .send()
+
+    expect(unlikeRes.status).toBe(200)
+    expect(unlikeRes.body.action).toBe('removed')
+    expect(unlikeRes.body.isLiked).toBe(false)
+    expect(unlikeRes.body.likesCount).toBe(1)
+
+    // 3. Fetch comments tree as creator - verify permission flags and likesCount
+    const listRes = await request(app)
+      .get(`/api/comments/posts/${post.id}/comments`)
+      .set('Cookie', cookieCreator ?? '')
+
+    expect(listRes.status).toBe(200)
+    const fetchedComment = listRes.body.comments[0]
+    expect(fetchedComment.id).toBe(commentId)
+    expect(fetchedComment.likesCount).toBe(1)
+    expect(fetchedComment.isLiked).toBe(false)
+    expect(fetchedComment.canDelete).toBe(true) // Creator can delete
+    expect(fetchedComment.canPin).toBe(false) // Creator is not post owner, cannot pin
+
+    // 4. Pin authorization: Stranger cannot pin
+    const strangerPinRes = await request(app)
+      .post(`/api/comments/${commentId}/pin`)
+      .set('Cookie', cookieStranger ?? '')
+
+    expect(strangerPinRes.status).toBe(403)
+
+    // Post owner can pin
+    const ownerPinRes = await request(app)
+      .post(`/api/comments/${commentId}/pin`)
+      .set('Cookie', cookieOwner ?? '')
+
+    expect(ownerPinRes.status).toBe(200)
+    expect(ownerPinRes.body.isPinned).toBe(true)
+
+    // 5. Delete authorization: Stranger cannot delete creator's comment
+    const strangerDeleteRes = await request(app)
+      .delete(`/api/comments/${commentId}`)
+      .set('Cookie', cookieStranger ?? '')
+
+    expect(strangerDeleteRes.status).toBe(403)
+
+    // Creator can delete their own comment
+    const creatorDeleteRes = await request(app)
+      .delete(`/api/comments/${commentId}`)
+      .set('Cookie', cookieCreator ?? '')
+
+    expect(creatorDeleteRes.status).toBe(200)
+    expect(creatorDeleteRes.body.comment.isDeleted).toBe(true)
+    expect(creatorDeleteRes.body.comment.content).toBe('[Comment deleted]')
   })
 })

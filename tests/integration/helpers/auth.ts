@@ -126,8 +126,22 @@ export function buildCookieHeader(setCookieHeaders: string[], cookieName = SESSI
   return value ? `${cookieName}=${value}` : null
 }
 
+export async function verifyOtp(
+  app: Express,
+  payload: { email: string; otp: string }
+) {
+  return request(app).post('/api/auth/verify-otp').set('Origin', TEST_ORIGIN).send(payload)
+}
+
+export async function resendOtp(
+  app: Express,
+  payload: { email: string }
+) {
+  return request(app).post('/api/auth/resend-otp').set('Origin', TEST_ORIGIN).send(payload)
+}
+
 export async function createTestUserWithSession(
-  overrides: { collegeId?: string; name?: string; email?: string; role?: string } = {}
+  overrides: { collegeId?: string; name?: string; email?: string; role?: string; emailVerified?: boolean } = {}
 ) {
   const { prisma } = await import('@db/client')
   const token = createHash('sha256')
@@ -141,8 +155,17 @@ export async function createTestUserWithSession(
       username: `user_${token}`,
       role: (overrides.role as any) ?? 'STUDENT',
       status: 'ACTIVE',
-      emailVerified: true,
+      emailVerified: overrides.emailVerified ?? true,
       collegeId: overrides.collegeId ?? null,
+    },
+  })
+
+  await prisma.profile.create({
+    data: {
+      userId: user.id,
+      firstName: (overrides.name ?? `Test User ${token}`).split(' ')[0] || 'Test',
+      lastName: (overrides.name ?? `Test User ${token}`).split(' ').slice(1).join(' ') || 'User',
+      email: user.email,
     },
   })
 

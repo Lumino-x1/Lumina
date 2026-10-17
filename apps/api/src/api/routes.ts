@@ -15,6 +15,8 @@ import * as controller from './controller'
 import feedRouter from './feed/feed.routes'
 import postsRouter from './posts/posts.routes'
 import usersRouter from './users/users.routes'
+import authRouter from './auth/auth.routes'
+import commentsRouter from './comments/comments.routes'
 import { subscribe } from '@lumina/realtime'
 import { Router } from 'express'
 import rateLimit from 'express-rate-limit'
@@ -47,13 +49,8 @@ const videoCallLimiter = rateLimit({
   message: { status: 'error', message: 'Too many call creation attempts, please try again later.' },
 })
 
-const commentRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 60,
-  sstandardHeaders: 'draft-7',
-  legacyHeaders: false,
-  message: { status: 'error', message: 'Too many comment requests, please try again later.' },
-})
+// --- Auth: /api/auth ---
+apiRouter.use('/auth', authRouter)
 
 // --- Users: /api/profile ---
 apiRouter.use('/profile', usersRouter)
@@ -99,55 +96,7 @@ apiRouter.post('/video/calls/:callId/respond', requireAuth, controller.respondTo
 apiRouter.post('/video/calls/:callId/end', requireAuth, controller.endCall)
 
 // --- Comments module: /api/comments (OpenAPI contract) ---
-apiRouter.post(
-  '/comments/posts/:postId/comments',
-  requireAuth,
-  commentRateLimiter,
-  async (req: Request, res: Response) => {
-    await controller.createCommentHandler(req as AuthenticatedRequest, res)
-  }
-)
-apiRouter.get(
-  '/comments/posts/:postId/comments',
-  requireAuth,
-  async (req: Request, res: Response) => {
-    await controller.getCommentsForPostHandler(req as AuthenticatedRequest, res)
-  }
-)
-apiRouter.patch(
-  '/comments/:commentId',
-  requireAuth,
-  commentRateLimiter,
-  async (req: Request, res: Response) => {
-    await controller.editCommentHandler(req as AuthenticatedRequest, res)
-  }
-)
-apiRouter.get('/comments/:commentId/history', requireAuth, async (req: Request, res: Response) => {
-  await controller.getCommentEditHistoryHandler(req as AuthenticatedRequest, res)
-})
-apiRouter.delete('/comments/:commentId', requireAuth, async (req: Request, res: Response) => {
-  await controller.deleteCommentHandler(req as AuthenticatedRequest, res)
-})
-apiRouter.post(
-  '/comments/:commentId/reactions',
-  requireAuth,
-  async (req: Request, res: Response) => {
-    await controller.toggleReactionHandler(req as AuthenticatedRequest, res)
-  }
-)
-apiRouter.delete(
-  '/comments/:commentId/reactions',
-  requireAuth,
-  async (req: Request, res: Response) => {
-    await controller.removeReactionHandler(req as AuthenticatedRequest, res)
-  }
-)
-apiRouter.post('/comments/:commentId/pin', requireAuth, async (req: Request, res: Response) => {
-  await controller.togglePinHandler(req as AuthenticatedRequest, res)
-})
-apiRouter.post('/comments/:commentId/report', requireAuth, async (req: Request, res: Response) => {
-  await controller.reportCommentHandler(req as AuthenticatedRequest, res)
-})
+apiRouter.use('/comments', commentsRouter)
 
 // Study groups: same router on /api/v1/study-groups and legacy /api/study-group
 const studyGroupRouter = Router()

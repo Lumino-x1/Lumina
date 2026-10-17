@@ -1,5 +1,5 @@
 import React from 'react'
-import { Layers, Clock, Rocket } from 'lucide-react'
+import { UsersRound, BrainCircuit, Rocket } from 'lucide-react'
 import { Testimonial } from './components/Testimonial'
 import './CommandCodeSection.css'
 
@@ -13,80 +13,89 @@ export const CommandCodeSection: React.FC = () => {
         <span className="crosshair-marker crosshair-top-right" aria-hidden="true">+</span>
 
         {/* ====================================================================
-            1. TOP ROW: Unified Testimonial Section
+            1. TOP ROW: The Lumina Difference Section
             ==================================================================== */}
         <div className="command-testimonial-row">
           <Testimonial />
         </div>
 
         {/* ====================================================================
-            2. MIDDLE ROW: Model Description vs Action Buttons (50/50 split)
+            2. MIDDLE ROW: Platform Description vs Action Buttons (50/50 split)
             ==================================================================== */}
         <div className="command-middle-row">
           <div className="command-desc-col">
             <p className="command-desc-text">
-              Lumina is an AI-powered campus ecosystem that unifies social networking, intelligent academic scheduling, AI-driven summarization, personalized learning, and career opportunities to redefine the college experience.
+              Lumina brings the campus experience to life through meaningful connections, smarter learning, and limitless possibilities—empowering students to discover, grow, and shape their future in one connected space.
             </p>
           </div>
           <div className="command-actions-col">
-            <button type="button" className="command-btn-primary">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <button
+              type="button"
+              className="command-btn-primary"
+              onClick={() => {
+                window.location.hash = 'signup'
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3z" />
               </svg>
               <span>Getting started with Lumina</span>
             </button>
-            <button type="button" className="command-btn-secondary">
-              Docs
-            </button>
+            <a
+              href="#features"
+              className="command-btn-secondary"
+            >
+              Explore the platform
+            </a>
           </div>
         </div>
 
         {/* ====================================================================
-            3. BOTTOM ROW: 4 Columns (Empty Visual Slot + [1], [2], [3] Stat Cards)
+            3. BOTTOM ROW: Three-Column Highlights (Card 01, Card 02, Card 03)
             ==================================================================== */}
         <div className="command-stats-grid">
-          {/* Column 1: Left slot (empty placeholder frame without image as requested) */}
-          <div className="command-stat-cell command-stat-empty-cell" aria-hidden="true" />
-
-          {/* Column 2: [1] 80% */}
+          {/* Card 01: [01] Connected Campus */}
           <div className="command-stat-cell">
             <div className="command-stat-header">
               <div className="command-stat-icon-box" aria-hidden="true">
-                <Layers className="w-4 h-4" />
+                <UsersRound className="w-4 h-4" />
               </div>
-              <span className="command-stat-index">[1]</span>
+              <span className="command-stat-index">[01]</span>
             </div>
-            <div className="command-stat-value">80%</div>
+            <div className="command-stat-category">CONNECTED CAMPUS</div>
+            <h3 className="command-stat-headline">One connected campus</h3>
             <p className="command-stat-desc">
-              of enterprise data is unstructured. Most of it sits in PDFs, scans, and spreadsheets your LLMs can&apos;t read.
+              Bring students, communities, and alumni together in one space to share ideas, build relationships, and discover opportunities across campus.
             </p>
           </div>
 
-          {/* Column 3: [2] 6+ months */}
+          {/* Card 02: [02] Intelligent Learning */}
           <div className="command-stat-cell">
             <div className="command-stat-header">
               <div className="command-stat-icon-box" aria-hidden="true">
-                <Clock className="w-4 h-4" />
+                <BrainCircuit className="w-4 h-4" />
               </div>
-              <span className="command-stat-index">[2]</span>
+              <span className="command-stat-index">[02]</span>
             </div>
-            <div className="command-stat-value">6+ months</div>
+            <div className="command-stat-category">INTELLIGENT LEARNING</div>
+            <h3 className="command-stat-headline">Learning, reimagined</h3>
             <p className="command-stat-desc">
-              AI teams spend stitching parsers, OCR, and post-processing. Pipelines break the moment a layout changes.
+              Turn complex academic material into clear insights with AI-powered summaries, personalized learning, and intelligent study assistance.
             </p>
           </div>
 
-          {/* Column 4: [3] <10% */}
+          {/* Card 03: [03] Career & Growth */}
           <div className="command-stat-cell">
             <div className="command-stat-header">
               <div className="command-stat-icon-box" aria-hidden="true">
                 <Rocket className="w-4 h-4" />
               </div>
-              <span className="command-stat-index">[3]</span>
+              <span className="command-stat-index">[03]</span>
             </div>
-            <div className="command-stat-value">&lt;10%</div>
+            <div className="command-stat-category">CAREER &amp; GROWTH</div>
+            <h3 className="command-stat-headline">Built for what&apos;s next</h3>
             <p className="command-stat-desc">
-              of in-house document pipelines reach production. The rest stall in the pilot.
+              Discover career opportunities, learn from alumni, expand your network, and turn your campus experience into a foundation for the future.
             </p>
           </div>
         </div>

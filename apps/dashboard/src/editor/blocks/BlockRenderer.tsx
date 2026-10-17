@@ -327,7 +327,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
                     height="18"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="#2563eb"
+                    stroke="currentColor"
                     strokeWidth="1.8"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -357,7 +357,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
                     setIsBarOpen(false)
                   }}
                 >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="#2563eb">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M7.5 6.75V0h9v6.75h-9zm9 3.75H24V24H0V10.5h7.5v6.75h9V10.5z" />
                   </svg>
                 </button>
@@ -389,7 +389,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
                     height="18"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="#2563eb"
+                    stroke="currentColor"
                     strokeWidth="1.8"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -438,7 +438,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({
                     height="18"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="#2563eb"
+                    stroke="currentColor"
                     strokeWidth="1.8"
                     strokeLinecap="round"
                     strokeLinejoin="round"

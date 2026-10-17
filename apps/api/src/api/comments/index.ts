@@ -1,0 +1,5 @@
+export * from './comments.controller'
+export * from './comments.repo'
+export * from './comments.routes'
+export * from './comments.service'
+export { default as commentsRouter } from './comments.routes'

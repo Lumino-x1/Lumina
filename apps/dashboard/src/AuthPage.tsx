@@ -6,23 +6,19 @@ import {
   initiateSocialAuth,
   signInApi,
   signUpApi,
-  updateProfileApi,
 } from '@/api/authApi'
 import DotGrid from '@/components/ui/dot-grid'
 import { GrainGradient } from '@paper-design/shaders-react'
-import { DEFAULT_WHATSAPP_AVATAR } from './components/WhatsAppDefaultAvatar'
 import {
-  Camera,
   Check,
   ChevronLeft,
   ChevronRight,
   Globe,
   MapPin,
-  Trash2,
-  Upload,
   X,
 } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { useTheme } from './lib/themeContext'
 import './AuthPage.css'
 
 class ShaderErrorBoundary extends React.Component<
@@ -51,6 +47,7 @@ export interface AuthPageProps {
   initialMode?: 'login' | 'signup'
   onBack?: () => void
   onSuccess?: (user: any) => void
+  onRequireVerification?: (email: string) => void
 }
 
 const INTERESTS_LIST = [
@@ -106,9 +103,17 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   initialMode = 'login',
   onBack,
   onSuccess,
+  onRequireVerification,
 }) => {
+  const { isDark } = useTheme()
   const [mode, setMode] = useState<'login' | 'signup'>(initialMode)
   const [signupStep, setSignupStep] = useState<1 | 2 | 3 | 4>(1)
+
+  const [prevInitialMode, setPrevInitialMode] = useState(initialMode)
+  if (prevInitialMode !== initialMode) {
+    setPrevInitialMode(initialMode)
+    setMode(initialMode)
+  }
 
   // Login credentials
   const [loginEmail, setLoginEmail] = useState('')
@@ -117,8 +122,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   // Step 1: About you
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
-  const [profilePicture, setProfilePicture] = useState<string | null>(null)
-  const [isAvatarDragOver, setIsAvatarDragOver] = useState(false)
   const [signupEmail, setSignupEmail] = useState('')
   const [signupPassword, setSignupPassword] = useState('')
 
@@ -180,6 +183,20 @@ export const AuthPage: React.FC<AuthPageProps> = ({
       setSuccessMessage('Signed in successfully!')
       setLoading(false)
 
+      if (data?.user && data.user.emailVerified === false) {
+        try {
+          localStorage.setItem('lumina_pending_verification_email', loginEmail.trim().toLowerCase())
+        } catch {
+          // ignore
+        }
+        if (onRequireVerification) {
+          onRequireVerification(loginEmail.trim().toLowerCase())
+        } else {
+          window.location.hash = 'verify-email'
+        }
+        return
+      }
+
       if (onSuccess && data?.user) {
         onSuccess(data.user)
       } else {
@@ -188,35 +205,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
     } catch (err: any) {
       setErrorMessage(err?.message || 'Login failed. Please try again.')
       setLoading(false)
-    }
-  }
-
-  // Handle Avatar Upload
-  const handleAvatarFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        setProfilePicture(event.target?.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleRemoveAvatar = () => {
-    setProfilePicture(null)
-  }
-
-  const handleAvatarDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsAvatarDragOver(false)
-    const file = e.dataTransfer.files?.[0]
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        setProfilePicture(event.target?.result as string)
-      }
-      reader.readAsDataURL(file)
     }
   }
 
@@ -343,7 +331,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
         email: signupEmail.trim().toLowerCase(),
         firstName: firstName.trim(),
         lastName: lastName.trim(),
-        profilePicture: profilePicture || undefined,
         department: department.trim(),
         year: yearNum,
         interests: selectedInterests,
@@ -356,27 +343,24 @@ export const AuthPage: React.FC<AuthPageProps> = ({
         location: location.trim() || undefined,
       }
 
-      // 2. Persist profile to backend & local storage
-      const profileResult = await updateProfileApi(profilePayload)
-      if (profileResult.error) {
-        console.error('Failed to sync profile to backend:', profileResult.error)
-        setErrorMessage(`Profile setup error: ${profileResult.error}`)
-        setLoading(false)
-        return
+      // Persist onboarding profile and pending verification email for post-verification completion
+      try {
+        localStorage.setItem('lumina_pending_verification_email', signupEmail.trim().toLowerCase())
+        localStorage.setItem('lumina_onboarding_profile', JSON.stringify(profilePayload))
+      } catch {
+        // ignore
       }
 
-      localStorage.setItem('lumina_onboarding_profile', JSON.stringify(profilePayload))
-
-      setSuccessMessage('Welcome to Lumina! Setting up your campus network...')
+      setSuccessMessage('Account created! Please check your email for your 6-digit verification code.')
       setLoading(false)
 
       setTimeout(() => {
-        if (onSuccess && data?.user) {
-          onSuccess(data.user)
+        if (onRequireVerification) {
+          onRequireVerification(signupEmail.trim().toLowerCase())
         } else {
-          window.location.hash = 'dashboard'
+          window.location.hash = 'verify-email'
         }
-      }, 700)
+      }, 500)
     } catch (err: any) {
       setErrorMessage(err?.message || 'Registration failed. Please try again.')
       setLoading(false)
@@ -392,13 +376,13 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   }
 
   return (
-    <div className="lumina-split-root">
+    <div className={`lumina-split-root ${!isDark ? 'light bright' : 'dark'}`} data-theme={!isDark ? 'light' : 'dark'}>
       {/* ====================================================================
           LEFT PANE: AUTH & ONBOARDING FLOW (WITH DOT GRID BACKGROUND)
          ==================================================================== */}
       <div className="lumina-split-left">
         {/* DotGrid background strictly confined to left pane */}
-        <DotGrid theme="dark" spacing={20} />
+        <DotGrid theme={!isDark ? 'light' : 'dark'} spacing={20} />
 
         {/* Top: Back Navigation & Step Badge */}
         <div className="lumina-auth-top-bar">
@@ -435,12 +419,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({
         <div className="lumina-auth-form-wrap">
           {/* Header */}
           <div className="lumina-auth-header">
-            <div className="lumina-auth-logo-wrap">
-              <LuminaLogoIcon className="lumina-auth-brand-logo" />
-            </div>
-
             <h1 className="lumina-auth-title">
-              {mode === 'login' ? 'Login' : 'Create an account'}
+              {mode === 'login' ? 'Sign In' : 'Create an account'}
             </h1>
 
             {mode === 'signup' && (
@@ -461,8 +441,38 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             )}
           </div>
 
-          {/* Card Container */}
+          {/* Card Container with Architectural Dashed Lines & Corner Crosshairs */}
           <div className="lumina-auth-card">
+            {/* Corner Crosshairs (+) matching landing page */}
+            <span className="crosshair-marker crosshair-top-left" aria-hidden="true">+</span>
+            <span className="crosshair-marker crosshair-top-right" aria-hidden="true">+</span>
+            <span className="crosshair-marker crosshair-bottom-left" aria-hidden="true">+</span>
+            <span className="crosshair-marker crosshair-bottom-right" aria-hidden="true">+</span>
+
+            {/* Segmented Mode Switch Tabs: Sign In / Sign Up */}
+            <div className="lumina-auth-mode-tabs" role="tablist" aria-label="Sign in or Sign up">
+              <button
+                type="button"
+                role="tab"
+                id="lumina-tab-login"
+                aria-selected={mode === 'login'}
+                className={`lumina-auth-mode-tab ${mode === 'login' ? 'active' : ''}`}
+                onClick={() => switchMode('login')}
+              >
+                Sign In
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="lumina-tab-signup"
+                aria-selected={mode === 'signup'}
+                className={`lumina-auth-mode-tab ${mode === 'signup' ? 'active' : ''}`}
+                onClick={() => switchMode('signup')}
+              >
+                Sign Up
+              </button>
+            </div>
+
             {errorMessage && (
               <div className="lumina-auth-alert lumina-auth-alert-error" role="alert">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -539,15 +549,22 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                     {loading ? (
                       <>
                         <span className="lumina-auth-spinner" />
-                        <span>Logging in...</span>
+                        <span>Signing in...</span>
                       </>
                     ) : (
                       <>
-                        <span>Login</span>
+                        <span>Sign In</span>
                         <ChevronRight className="size-4" />
                       </>
                     )}
                   </button>
+                </div>
+
+                {/* Hairline Divider */}
+                <div className="lumina-auth-divider">
+                  <span className="lumina-auth-divider-line" />
+                  <span className="lumina-auth-divider-text">Or continue with</span>
+                  <span className="lumina-auth-divider-line" />
                 </div>
 
                 {/* Social Login */}
@@ -615,73 +632,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value)}
                         />
-                      </div>
-                    </div>
-
-
-                    {/* Profile Picture (Optional) */}
-                    <div className="lumina-auth-field">
-                      <label className="lumina-auth-label">
-                        Profile picture <span className="lumina-auth-label-opt">(optional)</span>
-                      </label>
-                      <div
-                        className={`lumina-avatar-picker-row ${isAvatarDragOver ? 'is-drag-over' : ''} ${profilePicture ? 'has-avatar' : ''}`}
-                        onDragOver={(e) => {
-                          e.preventDefault()
-                          setIsAvatarDragOver(true)
-                        }}
-                        onDragLeave={() => setIsAvatarDragOver(false)}
-                        onDrop={handleAvatarDrop}
-                      >
-                        <label className="lumina-avatar-preview-wrap" htmlFor="signup-avatar-input" title="Click to upload profile photo">
-                          <div className="lumina-avatar-preview">
-                            {profilePicture ? (
-                              <img src={profilePicture} alt="Avatar preview" />
-                            ) : (
-                              <img
-                                src={DEFAULT_WHATSAPP_AVATAR}
-                                alt="Default avatar"
-                                className="lumina-avatar-default-img"
-                              />
-                            )}
-                          </div>
-                          <div className="lumina-avatar-badge" aria-hidden="true">
-                            <Camera className="w-3 h-3 text-white" />
-                          </div>
-                        </label>
-
-                        <div className="lumina-avatar-controls">
-                          <input
-                            id="signup-avatar-input"
-                            type="file"
-                            accept="image/*"
-                            onChange={handleAvatarFile}
-                            style={{ display: 'none' }}
-                          />
-
-                          <div className="lumina-avatar-actions">
-                            <label htmlFor="signup-avatar-input" className="lumina-avatar-upload-btn">
-                              <Upload className="w-3.5 h-3.5" />
-                              <span>{profilePicture ? 'Change photo' : 'Choose photo'}</span>
-                            </label>
-
-                            {profilePicture && (
-                              <button
-                                type="button"
-                                className="lumina-avatar-remove-btn"
-                                onClick={handleRemoveAvatar}
-                                title="Remove photo"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                                <span>Remove</span>
-                              </button>
-                            )}
-                          </div>
-
-                          <span className="lumina-avatar-hint">
-                            {profilePicture ? 'Photo chosen • Click change or remove' : 'PNG, JPG or WebP up to 5MB'}
-                          </span>
-                        </div>
                       </div>
                     </div>
 
@@ -1102,9 +1052,13 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             noise={0.25}
             shape="corners"
             frame={2854.5}
-            colors={['#FFFFFF', '#FC7819', '#FC7819', '#FFFFFF']}
-            colorBack="#00000000"
-            className="absolute inset-0 bg-black w-full h-full"
+            colors={
+              !isDark
+                ? ['#FFFFFF', '#C15F3C', '#C15F3C', '#F4F3EE']
+                : ['#FFFFFF', '#C15F3C', '#C15F3C', '#FFFFFF']
+            }
+            colorBack={!isDark ? '#F4F3EE' : '#000000'}
+            className="absolute inset-0 w-full h-full"
           />
         </ShaderErrorBoundary>
 
@@ -1121,23 +1075,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 }
 
 export default AuthPage
-
-/* Lumina Official Brand Logo Icon */
-function LuminaLogoIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 88 64"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M6.2 38.6L20.8 13.2L27.6 17.1L13 42.5L6.2 38.6Z" />
-      <path d="M18.4 47.8L37.2 9.4L44.4 13.6L25.6 52L18.4 47.8Z" />
-      <path d="M32.8 54.4L54.6 5.8L62 10.2L40.2 58.8L32.8 54.4Z" />
-      <path d="M48.2 59.6L69.8 11.4L77 15.6L55.4 63.8L48.2 59.6Z" />
-    </svg>
-  )
-}
 
 /* Google G Logo Icon */
 function GoogleIcon() {
@@ -1175,7 +1112,7 @@ function FacebookIcon() {
 /* GitHub Official Icon */
 function GitHubIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="#ffffff">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
       <path
         fillRule="evenodd"
         clipRule="evenodd"

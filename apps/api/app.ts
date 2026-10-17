@@ -1,25 +1,32 @@
-import { redis } from './config/config.redis.ts'
-import apiRouter from './src/api/routes.ts'
-import { auth } from '@lumina/auth'
-import { MSG_OK } from '@lumina/constants'
-import { prisma } from '@lumina/db'
-import {
-  errorTrackingMiddleware,
-  getMetricsContentType,
-  getMetricsText,
-  httpLoggerMiddleware,
-  logger,
-} from '@lumina/observability'
-import { toNodeHandler } from 'better-auth/node'
-import cors from 'cors'
-import express from 'express'
-import rateLimit from 'express-rate-limit'
-import type { NextFunction, Request, Response } from 'express'
-import mediaRouter from './src/api/media/media.router.ts'
-import feedRouter from './src/api/feed/feed.routes.ts'
+import { redis } from './config/config.redis.ts';
+import authRouter from './src/api/auth/auth.routes.ts';
+import commentsRouter from './src/api/comments/comments.routes.ts';
+import feedRouter from './src/api/feed/feed.routes.ts';
+import mediaRouter from './src/api/media/media.router.ts';
+import postsRouter from './src/api/posts/posts.routes.ts';
+import apiRouter from './src/api/routes.ts';
+import { auth } from '@lumina/auth';
+import { MSG_OK } from '@lumina/constants';
+import { prisma } from '@lumina/db';
+import { errorTrackingMiddleware, getMetricsContentType, getMetricsText, httpLoggerMiddleware, logger } from '@lumina/observability';
+import { toNodeHandler } from 'better-auth/node';
+import cors from 'cors';
+import express from 'express';
+import rateLimit from 'express-rate-limit';
+
+
+
+import type { NextFunction, Request, Response } from 'express';
+
+
+
+
 
 export function createApp() {
   const app = express()
+
+  // Trust first proxy hop (Vite dev server / ngrok)
+  app.set('trust proxy', 1)
 
   const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -29,7 +36,9 @@ export function createApp() {
     skip: (req) =>
       process.env.NODE_ENV === 'test' ||
       req.path === '/health' ||
+      req.path === '/api/health' ||
       req.path === '/ready' ||
+      req.path === '/api/ready' ||
       req.path === '/ok' ||
       req.path === '/metrics',
     message: {
@@ -43,33 +52,93 @@ export function createApp() {
   app.use(express.json({ limit: '25mb' }))
   app.use(express.urlencoded({ limit: '25mb', extended: true }))
 
+  function isAllowedOrigin(origin?: string | null): boolean {
+    if (!origin) return true
+    try {
+      const url = new URL(origin)
+      const hostname = url.hostname.toLowerCase()
+      if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1') {
+        return true
+      }
+      if (
+        hostname.endsWith('.ngrok-free.dev') ||
+        hostname.endsWith('.ngrok.app') ||
+        hostname === 'untolerative-len-rumblingly.ngrok-free.dev'
+      ) {
+        return true
+      }
+      const envOrigins = (process.env.CORS_ORIGIN || '')
+        .split(',')
+        .map((s) => s.trim().toLowerCase())
+        .filter(Boolean)
+      if (
+        envOrigins.some((allowed) => {
+          try {
+            return (
+              hostname === new URL(allowed).hostname.toLowerCase() ||
+              origin.toLowerCase().startsWith(allowed)
+            )
+          } catch {
+            return origin.toLowerCase().startsWith(allowed)
+          }
+        })
+      ) {
+        return true
+      }
+    } catch {
+      if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+        return true
+      }
+    }
+    return false
+  }
+
+  // 1. CORS middleware registered before routes and origin checks
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        if (!origin || isAllowedOrigin(origin)) {
+          return callback(null, true)
+        }
+        return callback(null, false)
+      },
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'Accept',
+        'Origin',
+        'X-Requested-With',
+        'ngrok-skip-browser-warning',
+      ],
+      exposedHeaders: ['set-cookie'],
+    })
+  )
+
+  // 2. State-changing CSRF protection middleware
   app.use((req: Request, res: Response, next: NextFunction) => {
     const isStateChanging = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)
     if (isStateChanging) {
-      const origin = req.headers.origin || req.headers.referer
-      const allowedOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173'
-      if (origin && !origin.startsWith(allowedOrigin) && !origin.startsWith('http://localhost:')) {
+      const origin =
+        req.headers.origin ||
+        (req.headers.referer ? new URL(req.headers.referer).origin : undefined)
+      if (origin && !isAllowedOrigin(origin)) {
         return res.status(403).json({ message: 'CSRF protection: Invalid request origin' })
       }
     }
     next()
   })
 
-  app.use(
-    cors({
-      origin: process.env.CORS_ORIGIN ?? 'http://localhost:5173',
-      credentials: true,
-    })
-  )
-
-
+  app.use('/api/auth', authRouter)
   app.all('/api/auth/*path', toNodeHandler(auth))
   app.use('/api', apiRouter)
+  app.use('/posts', postsRouter)
+  app.use('/comments', commentsRouter)
   app.use('/api/media', mediaRouter)
   app.use('/api/feed' , feedRouter);
 
-
-  app.get('/health', (_req: Request, res: Response) => {
+  app.get(['/health', '/api/health'], (_req: Request, res: Response) => {
     res.status(200).json({
       status: 'ok',
       service: 'api',
@@ -85,7 +154,7 @@ export function createApp() {
     ])
   }
 
-  app.get('/ready', async (_req: Request, res: Response) => {
+  app.get(['/ready', '/api/ready'], async (_req: Request, res: Response) => {
     const checks: Record<string, string> = {
       database: 'unknown',
       redis: 'unknown',

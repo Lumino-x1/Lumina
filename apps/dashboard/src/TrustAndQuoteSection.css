@@ -174,8 +174,8 @@
 
 /* Avatar */
 .trust-quote-avatar {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 9999px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -187,6 +187,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 22%;
   display: block;
 }
 
@@ -250,13 +251,23 @@
   }
 
   .trust-quote-block {
-    padding: 48px 32px 42px;
+    padding: 44px 28px 38px;
   }
 }
 
 @media (max-width: 640px) {
   .trust-logo-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trust-grid-cell {
+    min-height: 48px;
+    padding: 10px 14px;
+  }
+
+  /* Keep 6 decorative cells on mobile to avoid excessive dead space */
+  .trust-grid-cell:nth-child(n+7) {
+    display: none;
   }
 
   .trust-grid-cell:nth-child(3n) {
@@ -268,15 +279,46 @@
   }
 
   .trust-quote-block {
-    padding: 36px 20px 32px;
+    padding: 32px 18px 28px;
   }
 
   .trust-quote-text {
-    font-size: 22px;
-    margin-bottom: 24px;
+    font-size: clamp(19px, 5.2vw, 24px);
+    line-height: 1.35;
+    margin-bottom: 20px;
   }
 
   .trust-quote-author-row {
-    gap: 10px;
+    gap: 8px 12px;
+  }
+
+  .trust-quote-avatar {
+    width: 38px;
+    height: 38px;
+  }
+
+  .trust-quote-name {
+    font-size: 13.5px;
+  }
+
+  .trust-quote-role {
+    font-size: 12.5px;
+  }
+
+  .trust-quote-pill {
+    font-size: 12px;
+    padding: 3px 10px;
   }
 }
+
+@media (max-width: 380px) {
+  .trust-quote-block {
+    padding: 28px 14px 24px;
+  }
+
+  .trust-quote-text {
+    font-size: 18px;
+  }
+}
+
+

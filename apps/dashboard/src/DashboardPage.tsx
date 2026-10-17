@@ -13,9 +13,10 @@ import {
   Plus,
   Bookmark,
   MessageSquare,
-  ThumbsDown,
   Repeat,
   Heart,
+  Menu,
+  X,
 } from 'lucide-react'
 import './DashboardPage.css'
 import './Navbar.css'
@@ -25,13 +26,13 @@ import {
   togglePostLikeApi,
   toggleSavePostApi,
   mapFeedPostToStory,
+  DEFAULT_FEED_ITEMS,
   type FeedStory,
   type FeedPostItem,
 } from './api/feedApi'
 import BlogReaderView from './BlogReaderView'
 import { DEFAULT_WHATSAPP_AVATAR } from './components/WhatsAppDefaultAvatar'
 import { useTheme } from './lib/themeContext'
-import { MovingBorderButton } from './components/ui/moving-border'
 
 export type DashboardUser = MergedUser
 
@@ -398,6 +399,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   const [selectedStoryForRead, setSelectedStoryForRead] = useState<FeedStory | null>(null)
   const [initialOpenCommentsForRead, setInitialOpenCommentsForRead] = useState<boolean>(false)
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false)
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false)
 
   // Interactive state for posts and communities
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({})
@@ -429,7 +431,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       const hash = window.location.hash
       if (hash.startsWith('#post/')) {
         const postId = hash.replace('#post/', '')
-        const found = feedPosts.find((p) => p.id === postId)
+        const pool = feedPosts.length > 0 ? feedPosts : DEFAULT_FEED_ITEMS
+        const found = pool.find((p) => p.id === postId)
         if (found) {
           setSelectedStoryForRead(mapFeedPostToStory(found))
         }
@@ -478,7 +481,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     fetchFeedApi()
       .then((items) => {
         if (isMounted) {
-          const list = items || []
+          const list = items && items.length > 0 ? items : DEFAULT_FEED_ITEMS
           setFeedPosts(list)
           const hash = window.location.hash
           if (hash.startsWith('#post/')) {
@@ -491,7 +494,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         }
       })
       .catch(() => {
-        if (isMounted) setFeedPosts([])
+        if (isMounted) setFeedPosts(DEFAULT_FEED_ITEMS)
       })
       .finally(() => {
         if (isMounted) setLoadingFeed(false)
@@ -612,26 +615,35 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   return (
     <div className={`lumina-ai-dashboard-root ${theme === 'dark' ? 'dark' : 'light'}`}>
       {/* 1. LEFT SIDEBAR */}
-      <aside className={`ai-sidebar ${isSidebarCollapsed ? 'is-collapsed' : ''}`}>
+      <aside className={`ai-sidebar ${isSidebarCollapsed ? 'is-collapsed' : ''} ${isMobileSidebarOpen ? 'is-mobile-open' : ''}`}>
         {/* Sidebar Header matching reference image */}
         <div className="ai-sidebar-top-section">
           <div className="ai-sidebar-action-row">
             <button
               type="button"
-              className="ai-sidebar-icon-btn"
+              className="ai-sidebar-icon-btn ai-desktop-collapse-btn"
               title={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
               aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
               onClick={() => setIsSidebarCollapsed((prev) => !prev)}
             >
               <PanelLeft size={18} />
             </button>
+            <button
+              type="button"
+              className="ai-sidebar-icon-btn ai-mobile-close-btn"
+              title="Close menu"
+              aria-label="Close menu"
+              onClick={() => setIsMobileSidebarOpen(false)}
+            >
+              <X size={18} />
+            </button>
             <div className="ai-sidebar-action-group">
               <button
                 type="button"
-                className="ai-sidebar-icon-btn ai-inbox-btn"
-                title="Inbox (2 new)"
+                className="ai-sidebar-icon-btn ai-inbox-btn is-unimplemented"
+                title="Inbox (Coming soon)"
                 aria-label="Inbox"
-                onClick={() => alert('2 unread messages')}
+                tabIndex={-1}
               >
                 <Inbox size={18} />
                 <span className="ai-inbox-badge">2</span>
@@ -675,28 +687,35 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 type="button"
                 className={`ai-nav-item ${activeNav === 'Overview' ? 'is-active' : ''}`}
                 title="Overview"
-                onClick={() => setActiveNav('Overview')}
+                onClick={() => {
+                  setActiveNav('Overview')
+                  setIsMobileSidebarOpen(false)
+                }}
               >
                 <span className="ai-nav-icon">{Icons.LayoutGrid}</span>
                 <span className="ai-nav-label">Overview</span>
               </button>
               <button
                 type="button"
-                className={`ai-nav-item ${activeNav === 'Intelligence Hub' ? 'is-active' : ''}`}
-                title="Intelligence Hub"
-                onClick={() => setActiveNav('Intelligence Hub')}
-              >
-                <span className="ai-nav-icon">{Icons.Sparkles}</span>
-                <span className="ai-nav-label">Intelligence Hub</span>
-              </button>
-              <button
-                type="button"
                 className={`ai-nav-item ${activeNav === 'Feed & Discussions' ? 'is-active' : ''}`}
                 title="Feed & Discussions"
-                onClick={() => setActiveNav('Feed & Discussions')}
+                onClick={() => {
+                  setActiveNav('Feed & Discussions')
+                  setIsMobileSidebarOpen(false)
+                }}
               >
                 <span className="ai-nav-icon">{Icons.MessageSquare}</span>
                 <span className="ai-nav-label">Feed & Discussions</span>
+              </button>
+              <button
+                type="button"
+                className="ai-nav-item is-unimplemented"
+                title="Intelligence Hub (Coming soon)"
+                tabIndex={-1}
+              >
+                <span className="ai-nav-icon">{Icons.Sparkles}</span>
+                <span className="ai-nav-label">Intelligence Hub</span>
+                <span className="ai-soon-badge">Soon</span>
               </button>
             </nav>
           </div>
@@ -707,30 +726,33 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             <nav className="ai-nav-list">
               <button
                 type="button"
-                className={`ai-nav-item ${activeNav === 'Courses & Modules' ? 'is-active' : ''}`}
-                title="Courses & Modules"
-                onClick={() => setActiveNav('Courses & Modules')}
+                className="ai-nav-item is-unimplemented"
+                title="Courses & Modules (Coming soon)"
+                tabIndex={-1}
               >
                 <span className="ai-nav-icon">{Icons.BookOpen}</span>
                 <span className="ai-nav-label">Courses & Modules</span>
+                <span className="ai-soon-badge">Soon</span>
               </button>
               <button
                 type="button"
-                className={`ai-nav-item ${activeNav === 'Research Synthesizer' ? 'is-active' : ''}`}
-                title="Research Synthesizer"
-                onClick={() => setActiveNav('Research Synthesizer')}
+                className="ai-nav-item is-unimplemented"
+                title="Research Synthesizer (Coming soon)"
+                tabIndex={-1}
               >
                 <span className="ai-nav-icon">{Icons.Atom}</span>
                 <span className="ai-nav-label">Research Synthesizer</span>
+                <span className="ai-soon-badge">Soon</span>
               </button>
               <button
                 type="button"
-                className={`ai-nav-item ${activeNav === 'Paper Repository' ? 'is-active' : ''}`}
-                title="Paper Repository"
-                onClick={() => setActiveNav('Paper Repository')}
+                className="ai-nav-item is-unimplemented"
+                title="Paper Repository (Coming soon)"
+                tabIndex={-1}
               >
                 <span className="ai-nav-icon">{Icons.FileText}</span>
                 <span className="ai-nav-label">Paper Repository</span>
+                <span className="ai-soon-badge">Soon</span>
               </button>
             </nav>
           </div>
@@ -741,30 +763,33 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             <nav className="ai-nav-list">
               <button
                 type="button"
-                className={`ai-nav-item ${activeNav === 'Events & Calendar' ? 'is-active' : ''}`}
-                title="Events & Calendar"
-                onClick={() => setActiveNav('Events & Calendar')}
+                className="ai-nav-item is-unimplemented"
+                title="Events & Calendar (Coming soon)"
+                tabIndex={-1}
               >
                 <span className="ai-nav-icon">{Icons.Calendar}</span>
                 <span className="ai-nav-label">Events & Calendar</span>
+                <span className="ai-soon-badge">Soon</span>
               </button>
               <button
                 type="button"
-                className={`ai-nav-item ${activeNav === 'Faculty & Directory' ? 'is-active' : ''}`}
-                title="Faculty & Directory"
-                onClick={() => setActiveNav('Faculty & Directory')}
+                className="ai-nav-item is-unimplemented"
+                title="Faculty & Directory (Coming soon)"
+                tabIndex={-1}
               >
                 <span className="ai-nav-icon">{Icons.Users}</span>
                 <span className="ai-nav-label">Faculty & Directory</span>
+                <span className="ai-soon-badge">Soon</span>
               </button>
               <button
                 type="button"
-                className={`ai-nav-item ${activeNav === 'Labs & Facilities' ? 'is-active' : ''}`}
-                title="Labs & Facilities"
-                onClick={() => setActiveNav('Labs & Facilities')}
+                className="ai-nav-item is-unimplemented"
+                title="Labs & Facilities (Coming soon)"
+                tabIndex={-1}
               >
                 <span className="ai-nav-icon">{Icons.Building2}</span>
                 <span className="ai-nav-label">Labs & Facilities</span>
+                <span className="ai-soon-badge">Soon</span>
               </button>
             </nav>
           </div>
@@ -775,21 +800,23 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             <nav className="ai-nav-list">
               <button
                 type="button"
-                className={`ai-nav-item ${activeNav === 'My Notes' ? 'is-active' : ''}`}
-                title="My Notes"
-                onClick={() => setActiveNav('My Notes')}
+                className="ai-nav-item is-unimplemented"
+                title="My Notes (Coming soon)"
+                tabIndex={-1}
               >
                 <span className="ai-nav-icon">{Icons.FileEdit}</span>
                 <span className="ai-nav-label">My Notes</span>
+                <span className="ai-soon-badge">Soon</span>
               </button>
               <button
                 type="button"
-                className={`ai-nav-item ${activeNav === 'Citations Library' ? 'is-active' : ''}`}
-                title="Citations Library"
-                onClick={() => setActiveNav('Citations Library')}
+                className="ai-nav-item is-unimplemented"
+                title="Citations Library (Coming soon)"
+                tabIndex={-1}
               >
                 <span className="ai-nav-icon">{Icons.Bookmark}</span>
                 <span className="ai-nav-label">Citations Library</span>
+                <span className="ai-soon-badge">Soon</span>
               </button>
             </nav>
           </div>
@@ -811,7 +838,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                       ? activeAccount.name
                       : `${activeAccount.name}'s`}
                   </div>
-                  <div className="ai-popover-plan">Free Plan · 5 members</div>
+                  <div className="ai-popover-plan is-unimplemented">Free Plan · 5 members</div>
                 </div>
               </div>
 
@@ -821,7 +848,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               <div className="ai-popover-menu-list">
                 <button
                   type="button"
-                  className="ai-popover-menu-item is-upgrade"
+                  className="ai-popover-menu-item is-upgrade is-unimplemented"
                   onClick={() => {
                     setSettingsMenuOpen(false)
                     alert('Upgrade to Lumina Pro')
@@ -835,6 +862,18 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                   className="ai-popover-menu-item"
                   onClick={() => {
                     setSettingsMenuOpen(false)
+                    if (onOpenProfile) onOpenProfile()
+                    else window.location.hash = 'profile'
+                  }}
+                >
+                  <Users size={16} className="ai-popover-item-icon" />
+                  <span>My Profile</span>
+                </button>
+                <button
+                  type="button"
+                  className="ai-popover-menu-item is-unimplemented"
+                  onClick={() => {
+                    setSettingsMenuOpen(false)
                     setShowProfileModal(true)
                   }}
                 >
@@ -843,7 +882,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 </button>
                 <button
                   type="button"
-                  className="ai-popover-menu-item"
+                  className="ai-popover-menu-item is-unimplemented"
                   onClick={() => {
                     setSettingsMenuOpen(false)
                     alert('Invite members link copied to clipboard!')
@@ -854,7 +893,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 </button>
                 <button
                   type="button"
-                  className="ai-popover-menu-item"
+                  className="ai-popover-menu-item is-unimplemented"
                   onClick={() => {
                     setSettingsMenuOpen(false)
                     alert('Add another account')
@@ -870,10 +909,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               {/* Workspaces Section */}
               <div className="ai-popover-workspaces-section">
                 <div className="ai-popover-email-row">
-                  <span className="ai-popover-email">{user?.email || 'sunilbe2006@gmail.com'}</span>
+                  <span className="ai-popover-email">{user?.email || '24z275@psgtech.ac.in'}</span>
                   <button
                     type="button"
-                    className="ai-popover-more-btn"
+                    className="ai-popover-more-btn is-unimplemented"
                     title="Account options"
                     onClick={() => alert('Account options')}
                   >
@@ -883,7 +922,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
                 <button
                   type="button"
-                  className={`ai-popover-workspace-item ${currentWorkspace === 'primary' ? 'is-active' : ''}`}
+                  className={`ai-popover-workspace-item is-unimplemented ${currentWorkspace === 'primary' ? 'is-active' : ''}`}
                   onClick={() => setCurrentWorkspace('primary')}
                 >
                   <div className="ai-popover-ws-left">
@@ -903,7 +942,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
                 <button
                   type="button"
-                  className={`ai-popover-workspace-item ${currentWorkspace === 'secondary' ? 'is-active' : ''}`}
+                  className={`ai-popover-workspace-item is-unimplemented ${currentWorkspace === 'secondary' ? 'is-active' : ''}`}
                   onClick={() => setCurrentWorkspace('secondary')}
                 >
                   <div className="ai-popover-ws-left">
@@ -925,7 +964,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
                 <button
                   type="button"
-                  className="ai-popover-workspace-item is-new-ws"
+                  className="ai-popover-workspace-item is-new-ws is-unimplemented"
                   onClick={() => {
                     const wsName = prompt('Enter new workspace name:')
                     if (wsName) alert(`Created workspace: ${wsName}`)
@@ -992,10 +1031,31 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         </div>
       </aside>
 
+      {/* Mobile Sidebar Backdrop */}
+      {isMobileSidebarOpen && (
+        <div
+          className="ai-mobile-sidebar-backdrop"
+          onClick={() => setIsMobileSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* 2. MAIN APP CONTENT CONTAINER */}
       <div className="ai-app-main-layout">
         {/* TOP BAR */}
         <header className="ai-top-bar">
+          <div className="ai-top-bar-left">
+            <button
+              type="button"
+              className="ai-mobile-menu-btn"
+              onClick={() => setIsMobileSidebarOpen(true)}
+              aria-label="Open sidebar menu"
+              title="Menu"
+            >
+              <Menu size={18} />
+            </button>
+          </div>
+
           <div className="ai-top-bar-right">
             {/* Search Input (Landing Page Search Bar) */}
             <div className={`saascn-search-pill ${searchFocused ? 'is-focused' : ''}`}>
@@ -1019,9 +1079,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             {/* Sparkline / Activity */}
             <button
               type="button"
-              className="ai-top-icon-btn"
-              title="Telemetry Analytics"
-              onClick={() => alert('Cluster Telemetry: 99.98% operational uptime across Stanford edge nodes.')}
+              className="ai-top-icon-btn is-unimplemented"
+              title="Telemetry Analytics (Coming Soon)"
+              tabIndex={-1}
             >
               {Icons.Activity}
             </button>
@@ -1029,9 +1089,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             {/* Bell Notifications */}
             <button
               type="button"
-              className="ai-top-icon-btn ai-bell-btn"
-              title="Notifications"
-              onClick={() => alert('You have 3 unread campus research notifications.')}
+              className="ai-top-icon-btn ai-bell-btn is-unimplemented"
+              title="Notifications (Coming Soon)"
+              tabIndex={-1}
             >
               {Icons.Bell}
               <span className="ai-bell-dot" />
@@ -1094,45 +1154,23 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                 </button>
                 <button
                   type="button"
-                  className={`ai-filter-pill ${activeTab === 'following' ? 'is-active' : ''}`}
-                  onClick={() => setActiveTab('following')}
+                  className="ai-filter-pill is-unimplemented"
+                  title="Following feed (Coming soon)"
+                  tabIndex={-1}
                 >
                   <span className="ai-tab-icon">{Icons.UserCheck}</span>
                   <span>Following</span>
+                  <span className="ai-soon-badge">Soon</span>
                 </button>
                 <button
                   type="button"
-                  className={`ai-filter-pill ${activeTab === 'communities' ? 'is-active' : ''}`}
-                  onClick={() => setActiveTab('communities')}
+                  className="ai-filter-pill is-unimplemented"
+                  title="Communities (Coming soon)"
+                  tabIndex={-1}
                 >
-                  <span className="ai-tab-icon">{Icons.Users}</span>
+                  <span className="ai-tab-icon" style={{ filter: 'blur(2px)' }}>{Icons.Users}</span>
                   <span>Communities</span>
-                  <span className="ai-count-badge">12</span>
-                </button>
-                <MovingBorderButton
-                  type="button"
-                  borderRadius="9999px"
-                  rx="17"
-                  ry="17"
-                  duration={3000}
-                  containerClassName={`ai-intel-moving-border-btn ${activeTab === 'academic-ai' ? 'is-active' : ''}`}
-                  borderClassName="bg-[radial-gradient(#ffffff_20%,rgba(255,255,255,0.4)_50%,transparent_75%)] opacity-40 h-16 w-16"
-                  className="ai-intel-moving-border-inner"
-                  onClick={() => setActiveTab('academic-ai')}
-                  aria-label="Academic Intelligence"
-                  title="Academic Intelligence"
-                >
-                  <span className="ai-tab-icon">{Icons.Sparkles}</span>
-                  <span>Academic Intelligence</span>
-                </MovingBorderButton>
-              </div>
-
-              <div className="ai-filter-tools">
-                <button type="button" className="ai-tool-btn" title="Filter settings">
-                  {Icons.SlidersHorizontal}
-                </button>
-                <button type="button" className="ai-tool-btn" title="Sort feed">
-                  {Icons.ArrowUpDown}
+                  <span className="ai-soon-badge">Soon</span>
                 </button>
               </div>
             </div>
@@ -1272,25 +1310,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             {/* FEED ITEMS */}
             <div className="ai-feed-stream-list">
               {loadingFeed ? (
-                <div className="ai-feed-skeleton-container">
-                  {[1, 2, 3].map((n) => (
-                    <div key={n} className="ai-feed-skeleton-card">
-                      <div className="ai-skeleton-left">
-                        <div className="ai-skeleton-byline">
-                          <div className="ai-skeleton-badge" />
-                          <div className="ai-skeleton-line short" />
-                        </div>
-                        <div className="ai-skeleton-line title" />
-                        <div className="ai-skeleton-line title half" />
-                        <div className="ai-skeleton-footer-line">
-                          <div className="ai-skeleton-icon" />
-                          <div className="ai-skeleton-icon" />
-                          <div className="ai-skeleton-icon" />
-                        </div>
-                      </div>
-                      <div className="ai-skeleton-thumbnail" />
-                    </div>
-                  ))}
+                <div className="ai-feed-loader-container" role="status" aria-label="Loading feed">
+                  <div className="ai-feed-spinner" />
                 </div>
               ) : feedPosts.length > 0 ? (
                 feedPosts.map((post) => {
@@ -1304,8 +1325,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                         : post.isLiked ? -1 : 0
                       : 0
                   const displayLikes = Math.max(0, baseLikes + likeDiff)
-                  const authorName = post.author?.name || post.author?.username || 'Student'
-                  const authorHandle = post.author?.username || post.author?.id || null
+                  const rawUsername = post.author?.username ? post.author.username.replace(/^@/, '') : null
+                  const postAuthor = rawUsername ? `@${rawUsername}` : (post.author?.name || 'Student')
                   const postTitle = post.title || 'Untitled Post'
                   const postSubtitle =
                     post.subtitle ||
@@ -1364,22 +1385,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                         <div className="ai-post-header-line">
                           <img
                             src={post.author?.image || DEFAULT_WHATSAPP_AVATAR}
-                            alt={authorName}
+                            alt={postAuthor}
                             className="ai-post-author-mini-avatar"
                             onError={(e) => {
                               e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
                             }}
                           />
                           <div className="ai-post-byline">
-                            <span className="ai-byline-author">{authorName}</span>
-                            {authorHandle && (
-                              <span
-                                className="ai-byline-handle"
-                                title={post.author?.id ? `User ID: ${post.author.id}` : undefined}
-                              >
-                                @{authorHandle}
-                              </span>
-                            )}
+                            <span className="ai-byline-author">{postAuthor}</span>
                             <span className="ai-byline-dot">·</span>
                             <span className="ai-byline-date">{formatPostDate(post.createdAt)}</span>
                           </div>
@@ -1447,36 +1460,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                           <div className="ai-post-footer-right">
                             <button
                               type="button"
-                              className="ai-post-icon-btn"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                alert('Show less like this')
-                              }}
-                              title="Show less like this"
-                            >
-                              <ThumbsDown size={16} />
-                            </button>
-                            <button
-                              type="button"
                               className={`ai-post-icon-btn ${isPostSaved ? 'is-saved' : ''}`}
                               onClick={(e) => {
                                 e.stopPropagation()
                                 handleToggleSave(post.id)
                               }}
-                              title="Save story"
+                              title={isPostSaved ? 'Remove from bookmarks' : 'Save story'}
+                              aria-label={isPostSaved ? 'Remove from bookmarks' : 'Save story'}
                             >
-                              <Bookmark size={16} fill={isPostSaved ? 'currentColor' : 'none'} />
-                            </button>
-                            <button
-                              type="button"
-                              className="ai-post-icon-btn"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                alert('More options')
-                              }}
-                              title="More options"
-                            >
-                              <MoreHorizontal size={17} />
+                              <Bookmark size={17} strokeWidth={2} fill={isPostSaved ? 'currentColor' : 'none'} />
                             </button>
                           </div>
                         </div>
@@ -1502,120 +1494,125 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
           {/* 4. RIGHT SIDEBAR WIDGETS */}
           <aside className="ai-right-sidebar">
-            {/* DAILY BRIEF */}
-            <div className="ai-daily-brief-card">
-              <div className="ai-brief-header">
-                <span className="ai-brief-label">DAILY BRIEF</span>
-                <span className="ai-brief-date">Monday, Oct 12, 2026</span>
+            {/* DAILY BRIEF (Blurred, Coming Soon overlay removed) */}
+            <div className="ai-blurred-card-wrap ai-daily-brief-wrap">
+              <div className="ai-blurred-content">
+                <div className="ai-daily-brief-card">
+                  <div className="ai-brief-header">
+                    <span className="ai-brief-label">DAILY BRIEF</span>
+                    <span className="ai-brief-date">Monday, Oct 12, 2026</span>
+                  </div>
+                  <h3 className="ai-brief-greeting">Good morning, {activeAccount.name.split(' ')[0] || 'Student'}.</h3>
+                  <p className="ai-brief-desc">
+                    You have <strong>2 lectures</strong> and <strong>1 project milestone</strong> scheduled
+                    today.
+                  </p>
+                </div>
               </div>
-              <h3 className="ai-brief-greeting">Good morning, Sunilkumar.</h3>
-              <p className="ai-brief-desc">
-                You have <strong>2 lectures</strong> and <strong>1 project milestone</strong> scheduled
-                today.
-              </p>
             </div>
 
+            {/* Suggested Communities (Blurred / Hidden per User Request) */}
+            <div className="ai-blurred-card-wrap ai-suggested-communities-wrap">
+              <div className="ai-blurred-content">
+                <div className="ai-widget-card">
+                  <div className="ai-card-header-row">
+                    <h4 className="ai-card-title">Suggested Communities</h4>
+                    <span className="ai-card-counter">Recommended</span>
+                  </div>
 
+                  <div className="ai-community-list">
+                    {/* Community 1 */}
+                    <div className="ai-community-row">
+                      <div className="ai-community-left">
+                        <div className="ai-community-icon-box">
+                          {Icons.Bot}
+                        </div>
+                        <div className="ai-community-info">
+                          <strong className="ai-community-name">AI &amp; Robotics Guild</strong>
+                          <span className="ai-community-meta">1.4k members</span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        className={`ai-community-join-btn ${joinedCommunities.c1 ? 'is-joined' : ''}`}
+                        onClick={() => handleToggleJoin('c1')}
+                      >
+                        {joinedCommunities.c1 ? (
+                          <>
+                            {Icons.Check}
+                            <span>Joined</span>
+                          </>
+                        ) : (
+                          'Join'
+                        )}
+                      </button>
+                    </div>
 
+                    {/* Community 2 */}
+                    <div className="ai-community-row">
+                      <div className="ai-community-left">
+                        <div className="ai-community-icon-box">
+                          {Icons.Terminal}
+                        </div>
+                        <div className="ai-community-info">
+                          <strong className="ai-community-name">Competitive Programming</strong>
+                          <span className="ai-community-meta">890 members</span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        className={`ai-community-join-btn ${joinedCommunities.c2 ? 'is-joined' : ''}`}
+                        onClick={() => handleToggleJoin('c2')}
+                      >
+                        {joinedCommunities.c2 ? (
+                          <>
+                            {Icons.Check}
+                            <span>Joined</span>
+                          </>
+                        ) : (
+                          'Join'
+                        )}
+                      </button>
+                    </div>
 
-            {/* Suggested Communities */}
-            <div className="ai-widget-card">
-              <div className="ai-card-header-row">
-                <h4 className="ai-card-title">Suggested Communities</h4>
-                <span className="ai-card-counter">Recommended</span>
+                    {/* Community 3 */}
+                    <div className="ai-community-row">
+                      <div className="ai-community-left">
+                        <div className="ai-community-icon-box">
+                          {Icons.GraduationCap}
+                        </div>
+                        <div className="ai-community-info">
+                          <strong className="ai-community-name">CS 2026 Cohort</strong>
+                          <span className="ai-community-meta">420 members</span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        className={`ai-community-join-btn ${joinedCommunities.c3 ? 'is-joined' : ''}`}
+                        onClick={() => handleToggleJoin('c3')}
+                      >
+                        {joinedCommunities.c3 ? (
+                          <>
+                            {Icons.Check}
+                            <span>Joined</span>
+                          </>
+                        ) : (
+                          'Join'
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="ai-community-explore-more-btn"
+                    onClick={() => setActiveTab('communities')}
+                  >
+                    <span>Explore More</span>
+                    {Icons.ArrowRight}
+                  </button>
+                </div>
               </div>
-
-              <div className="ai-community-list">
-                {/* Community 1 */}
-                <div className="ai-community-row">
-                  <div className="ai-community-left">
-                    <div className="ai-community-icon-box">
-                      {Icons.Bot}
-                    </div>
-                    <div className="ai-community-info">
-                      <strong className="ai-community-name">AI &amp; Robotics Guild</strong>
-                      <span className="ai-community-meta">1.4k members</span>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className={`ai-community-join-btn ${joinedCommunities.c1 ? 'is-joined' : ''}`}
-                    onClick={() => handleToggleJoin('c1')}
-                  >
-                    {joinedCommunities.c1 ? (
-                      <>
-                        {Icons.Check}
-                        <span>Joined</span>
-                      </>
-                    ) : (
-                      'Join'
-                    )}
-                  </button>
-                </div>
-
-                {/* Community 2 */}
-                <div className="ai-community-row">
-                  <div className="ai-community-left">
-                    <div className="ai-community-icon-box">
-                      {Icons.Terminal}
-                    </div>
-                    <div className="ai-community-info">
-                      <strong className="ai-community-name">Competitive Programming</strong>
-                      <span className="ai-community-meta">890 members</span>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className={`ai-community-join-btn ${joinedCommunities.c2 ? 'is-joined' : ''}`}
-                    onClick={() => handleToggleJoin('c2')}
-                  >
-                    {joinedCommunities.c2 ? (
-                      <>
-                        {Icons.Check}
-                        <span>Joined</span>
-                      </>
-                    ) : (
-                      'Join'
-                    )}
-                  </button>
-                </div>
-
-                {/* Community 3 */}
-                <div className="ai-community-row">
-                  <div className="ai-community-left">
-                    <div className="ai-community-icon-box">
-                      {Icons.GraduationCap}
-                    </div>
-                    <div className="ai-community-info">
-                      <strong className="ai-community-name">CS 2026 Cohort</strong>
-                      <span className="ai-community-meta">420 members</span>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className={`ai-community-join-btn ${joinedCommunities.c3 ? 'is-joined' : ''}`}
-                    onClick={() => handleToggleJoin('c3')}
-                  >
-                    {joinedCommunities.c3 ? (
-                      <>
-                        {Icons.Check}
-                        <span>Joined</span>
-                      </>
-                    ) : (
-                      'Join'
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                className="ai-community-explore-more-btn"
-                onClick={() => setActiveTab('communities')}
-              >
-                <span>Explore More</span>
-                {Icons.ArrowRight}
-              </button>
             </div>
           </aside>
         </div>
@@ -1666,7 +1663,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
               <div className="profile-modal-user-info">
                 <h3 className="profile-modal-name">{activeAccount.name}</h3>
-                <p className="profile-modal-handle">{user?.username || '@sunilkumar56sd'}</p>
+                <p className="profile-modal-handle">{user?.username ? `@${user.username.replace(/^@/, '')}` : '@sunilkumar56sd'}</p>
                 <div className="profile-modal-badges">
                   <span className="profile-badge-pill is-college">
                     {Icons.GraduationCap}
@@ -1706,6 +1703,23 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                   <div className="profile-info-card">
                     <div className="profile-info-label">Institutional Email</div>
                     <div className="profile-info-value">{activeAccount.email}</div>
+                  </div>
+                  <div className="profile-info-card">
+                    <div className="profile-info-label">Profile Page</div>
+                    <div className="profile-info-value">
+                      <button
+                        type="button"
+                        className="profile-logout-btn"
+                        style={{ borderColor: 'rgba(255,255,255,0.3)', color: '#ffffff' }}
+                        onClick={() => {
+                          setShowProfileModal(false)
+                          if (onOpenProfile) onOpenProfile()
+                          else window.location.hash = 'profile'
+                        }}
+                      >
+                        Open Full Profile
+                      </button>
+                    </div>
                   </div>
                   <div className="profile-info-card">
                     <div className="profile-info-label">Session Control</div>

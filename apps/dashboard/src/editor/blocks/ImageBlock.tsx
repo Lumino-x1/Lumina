@@ -306,7 +306,7 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({ block, isSelected }) => 
             <div className={`lumina-image-dropzone ${isDraggingOver ? 'is-dragging' : ''}`}>
               <div className="image-dropzone-inner">
                 <div className="image-dropzone-icon">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C15F3C" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="3" y="3" width="18" height="18" rx="4" />
                     <circle cx="8.5" cy="8.5" r="1.5" />
                     <polyline points="21 15 16 10 5 21" />

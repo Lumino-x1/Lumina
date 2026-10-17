@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { type FeedStory, togglePostLikeApi } from './api/feedApi'
-import { CommentsDrawer } from './components/CommentsDrawer'
+import { CommentsSection } from './components/CommentsDrawer'
 import { DEFAULT_WHATSAPP_AVATAR } from './components/WhatsAppDefaultAvatar'
 import { useTheme } from './lib/themeContext'
-import { ThemeToggleButton3 } from './components/ThemeToggle'
+import { parseVideoUrl } from './editor/blocks/VideoBlock'
+import { getEmbedProvider, renderFallbackPreviewCard } from './editor/embeds/embedProviders'
 import './BlogReaderView.css'
 
 export interface BlogReaderViewProps {
@@ -23,50 +24,13 @@ export interface BlogReaderViewProps {
   onCommentAdded?: (storyId: string, newCount?: number) => void
 }
 
-// Icons for the Reader view
-const ReaderIcons = {
-  ArrowLeft: (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="19" y1="12" x2="5" y2="12" />
-      <polyline points="12 19 5 12 12 5" />
-    </svg>
-  ),
-  ThumbsUp: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3z" />
-      <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
-    </svg>
-  ),
-  ThumbsUpFilled: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3z" />
-      <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
-    </svg>
-  ),
-  ChatBubble: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-    </svg>
-  ),
-  Bookmark: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-    </svg>
-  ),
-  BookmarkFilled: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-    </svg>
-  ),
-  Share: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="18" cy="5" r="3" />
-      <circle cx="6" cy="12" r="3" />
-      <circle cx="18" cy="19" r="3" />
-      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-    </svg>
-  ),
+import { ArrowLeft, Heart, MessageSquare, Share2, Bookmark, Check, Repeat, MoreHorizontal } from 'lucide-react'
+
+function formatNumber(num: number): string {
+  if (!num) return '0'
+  if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M'
+  if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K'
+  return String(num)
 }
 
 export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
@@ -80,14 +44,31 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
   currentUser,
   onCommentAdded,
 }) => {
-  const { theme, toggleTheme } = useTheme()
+  const { theme } = useTheme()
   const [copied, setCopied] = useState(false)
   const [likeCount, setLikeCount] = useState(story.likes || 0)
   const [localLiked, setLocalLiked] = useState(isLiked)
   const [commentsCount, setCommentsCount] = useState(
     story.totalComments ?? story.comments ?? 0
   )
-  const [isCommentsOpen, setIsCommentsOpen] = useState(Boolean(initialOpenComments))
+  const [repostCount, setRepostCount] = useState(68)
+  const [isReposted, setIsReposted] = useState(false)
+
+  const authorDisplayName =
+    story.authorName ||
+    (story.authorUsername ? `@${story.authorUsername.replace(/^@/, '')}` : 'Matt Lillywhite')
+  const authorFirstName = story.authorName
+    ? story.authorName.split(' ')[0]
+    : story.authorUsername
+    ? `@${story.authorUsername.replace(/^@/, '')}`
+    : 'Matt'
+
+  const scrollToComments = () => {
+    const el = document.getElementById('comments-section')
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
 
   // Keep localLiked in sync when parent prop changes
   useEffect(() => {
@@ -104,10 +85,12 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
     setCommentsCount(story.totalComments ?? story.comments ?? 0)
   }, [story.totalComments, story.comments, story.id])
 
-  // If instructed to open comments initially (e.g. user clicked comment button on feed card)
+  // If instructed to jump to comments initially
   useEffect(() => {
     if (initialOpenComments) {
-      setIsCommentsOpen(true)
+      setTimeout(() => {
+        scrollToComments()
+      }, 150)
     }
   }, [initialOpenComments])
 
@@ -119,13 +102,13 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
   // Key listener for Escape to return to feed
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !isCommentsOpen) {
+      if (e.key === 'Escape') {
         onBack()
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [onBack, isCommentsOpen])
+  }, [onBack])
 
   const handleLikeClick = async () => {
     if (localLiked) {
@@ -207,7 +190,7 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
       : ['Productivity', 'Campus', 'Inspiration', 'Technology']
 
   return (
-    <div className={`lumina-blog-reader-page ${theme === 'dark' ? 'dark' : 'light'} ${isCommentsOpen ? 'has-drawer-open' : ''}`}>
+    <div className={`lumina-blog-reader-page ${theme === 'dark' ? 'dark' : 'light'}`}>
       {/* 1. Clean Top Navigation Header */}
       <header className="reader-top-bar">
         <div className="reader-top-bar-inner">
@@ -218,7 +201,7 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
               onClick={onBack}
               title="Return to feed"
             >
-              {ReaderIcons.ArrowLeft}
+              <ArrowLeft size={16} strokeWidth={2} />
               <span>Back to feed</span>
             </button>
           </div>
@@ -226,21 +209,27 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
           <div className="reader-top-right">
             <button
               type="button"
-              className={`reader-icon-btn ${localLiked ? 'is-active' : ''}`}
+              className={`reader-icon-btn ${localLiked ? 'is-active is-liked' : ''}`}
               onClick={handleLikeClick}
               title="Like this blog"
             >
-              {localLiked ? ReaderIcons.ThumbsUpFilled : ReaderIcons.ThumbsUp}
+              <Heart
+                size={16}
+                fill={localLiked ? '#ef4444' : 'none'}
+                color={localLiked ? '#ef4444' : 'currentColor'}
+                strokeWidth={2}
+                className={`ai-heart-icon ${localLiked ? 'is-liked' : ''}`}
+              />
               <span>{likeCount}</span>
             </button>
 
             <button
               type="button"
-              className={`reader-icon-btn ${isCommentsOpen ? 'is-active' : ''}`}
-              onClick={() => setIsCommentsOpen((prev) => !prev)}
+              className="reader-icon-btn"
+              onClick={scrollToComments}
               title="Responses"
             >
-              {ReaderIcons.ChatBubble}
+              <MessageSquare size={15} strokeWidth={2} />
               <span>{commentsCount}</span>
             </button>
 
@@ -250,20 +239,18 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
               onClick={handleShareClick}
               title="Share article"
             >
-              {ReaderIcons.Share}
+              {copied ? <Check size={15} strokeWidth={2.5} /> : <Share2 size={15} strokeWidth={2} />}
               <span>{copied ? 'Copied!' : 'Share'}</span>
             </button>
 
             <button
               type="button"
-              className={`reader-icon-btn ${isSaved ? 'is-active' : ''}`}
+              className={`reader-icon-btn ${isSaved ? 'is-active is-saved' : ''}`}
               onClick={() => onToggleSave && onToggleSave(story.id)}
               title={isSaved ? 'Remove from bookmarks' : 'Save bookmark'}
             >
-              {isSaved ? ReaderIcons.BookmarkFilled : ReaderIcons.Bookmark}
+              <Bookmark size={16} fill={isSaved ? 'currentColor' : 'none'} strokeWidth={2} />
             </button>
-
-            <ThemeToggleButton3 theme={theme} onToggle={toggleTheme} />
           </div>
         </div>
       </header>
@@ -308,10 +295,11 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
               />
               <div className="reader-author-text">
                 <div className="reader-author-name-line">
-                  <span className="reader-author-name">{story.authorName}</span>
-                  {story.authorUsername && (
-                    <span className="reader-author-username">@{story.authorUsername}</span>
-                  )}
+                  <span className="reader-author-name">
+                    {story.authorUsername
+                      ? `@${story.authorUsername.replace(/^@/, '')}`
+                      : (story.authorName || 'Student')}
+                  </span>
                 </div>
                 <div className="reader-post-meta-sub">
                   <span>{story.date}</span>
@@ -328,16 +316,22 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
                 className={`reader-pill-btn ${localLiked ? 'is-liked' : ''}`}
                 onClick={handleLikeClick}
               >
-                {localLiked ? ReaderIcons.ThumbsUpFilled : ReaderIcons.ThumbsUp}
+                <Heart
+                  size={16}
+                  fill={localLiked ? '#ef4444' : 'none'}
+                  color={localLiked ? '#ef4444' : 'currentColor'}
+                  strokeWidth={2}
+                  className={`ai-heart-icon ${localLiked ? 'is-liked' : ''}`}
+                />
                 <span>{likeCount}</span>
               </button>
               <button
                 type="button"
-                className={`reader-pill-btn ${isCommentsOpen ? 'is-active' : ''}`}
-                onClick={() => setIsCommentsOpen((prev) => !prev)}
+                className="reader-pill-btn"
+                onClick={scrollToComments}
                 title="Responses"
               >
-                {ReaderIcons.ChatBubble}
+                <MessageSquare size={15} strokeWidth={2} />
                 <span>{commentsCount}</span>
               </button>
             </div>
@@ -467,17 +461,76 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
 
                     if (!videoUrl && story.media) {
                       const matched = story.media.find(
-                        (m) => m.type === 'VIDEO' || m.key === block.metadata?.key
+                        (m) =>
+                          m.type === 'VIDEO' ||
+                          m.key === block.metadata?.key ||
+                          (block.metadata?.mediaId && m.id === block.metadata.mediaId)
                       )
                       if (matched?.url) videoUrl = matched.url
                     }
 
                     if (!videoUrl) return null
                     const caption = block.metadata?.caption || ''
+                    const parsed = parseVideoUrl(videoUrl)
+                    const isIframeVideo = parsed.type !== 'html5' && parsed.type !== 'generic'
 
                     return (
                       <figure key={block.id || idx} className="reader-video-wrap">
-                        <video src={videoUrl} controls className="reader-block-video" />
+                        <div className="reader-video-container">
+                          {isIframeVideo ? (
+                            <iframe
+                              src={parsed.embedUrl}
+                              title={caption || story.title || 'Embedded video'}
+                              className="reader-block-iframe"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              allowFullScreen
+                              loading="lazy"
+                            />
+                          ) : (
+                            <video
+                              src={parsed.embedUrl || videoUrl}
+                              controls
+                              playsInline
+                              preload="metadata"
+                              className="reader-block-video"
+                            />
+                          )}
+                        </div>
+                        {caption && (
+                          <figcaption className="reader-image-caption">
+                            {caption}
+                          </figcaption>
+                        )}
+                      </figure>
+                    )
+                  }
+
+                  // Embed Blocks
+                  if (block.type === 'embed') {
+                    const embedUrl =
+                      block.metadata?.url ||
+                      (typeof block.content === 'string' && block.content.startsWith('http')
+                        ? block.content
+                        : '')
+
+                    if (!embedUrl) return null
+                    const caption = block.metadata?.caption || ''
+                    const provider = getEmbedProvider(embedUrl)
+                    const parsedData = provider ? provider.parse(embedUrl) : null
+
+                    return (
+                      <figure key={block.id || idx} className="reader-embed-wrap">
+                        <div className="reader-embed-inner">
+                          {provider && parsedData ? (
+                            provider.render(parsedData, embedUrl)
+                          ) : (
+                            renderFallbackPreviewCard(
+                              embedUrl,
+                              block.metadata?.title,
+                              block.metadata?.description
+                            )
+                          )}
+                        </div>
                         {caption && (
                           <figcaption className="reader-image-caption">
                             {caption}
@@ -652,76 +705,127 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
             </div>
           )}
 
-          {/* Article Footer Card */}
-          <div className="reader-article-footer">
-            <div className="reader-author-bio-card">
+          {/* Article Action Bar */}
+          <div className="reader-article-action-bar">
+            <div className="reader-action-bar-left">
+              <button
+                type="button"
+                className={`reader-toolbar-stat-btn ${localLiked ? 'is-active is-liked' : ''}`}
+                onClick={handleLikeClick}
+                title={localLiked ? 'Unlike' : 'Like'}
+              >
+                <Heart
+                  size={18}
+                  fill={localLiked ? '#ef4444' : 'none'}
+                  color={localLiked ? '#ef4444' : 'currentColor'}
+                  strokeWidth={2}
+                  className={`ai-heart-icon ${localLiked ? 'is-liked' : ''}`}
+                />
+                <span>{formatNumber(likeCount)}</span>
+              </button>
+
+              <button
+                type="button"
+                className="reader-toolbar-stat-btn"
+                onClick={scrollToComments}
+                title="Responses"
+              >
+                <MessageSquare size={17} strokeWidth={1.8} />
+                <span>{commentsCount}</span>
+              </button>
+
+              <button
+                type="button"
+                className={`reader-toolbar-stat-btn ${isReposted ? 'is-active' : ''}`}
+                onClick={() => {
+                  setIsReposted((prev) => !prev)
+                  setRepostCount((prev) => (isReposted ? prev - 1 : prev + 1))
+                }}
+                title="Repost"
+              >
+                <Repeat size={16} strokeWidth={2} />
+                <span>{repostCount}</span>
+              </button>
+            </div>
+
+            <div className="reader-action-bar-right">
+              <button
+                type="button"
+                className={`reader-toolbar-icon-btn ${isSaved ? 'is-active is-saved' : ''}`}
+                onClick={() => onToggleSave && onToggleSave(story.id)}
+                title={isSaved ? 'Remove from bookmarks' : 'Save story'}
+              >
+                <Bookmark size={18} fill={isSaved ? 'currentColor' : 'none'} strokeWidth={1.8} />
+              </button>
+
+              <button
+                type="button"
+                className="reader-toolbar-icon-btn"
+                onClick={handleShareClick}
+                title="Share article"
+              >
+                {copied ? <Check size={18} strokeWidth={2.5} /> : <Share2 size={18} strokeWidth={1.8} />}
+              </button>
+
+              <button
+                type="button"
+                className="reader-toolbar-icon-btn"
+                onClick={() => alert('Article options')}
+                title="More options"
+              >
+                <MoreHorizontal size={18} strokeWidth={2} />
+              </button>
+            </div>
+          </div>
+
+          {/* Author Profile Card matching reference */}
+          <div className="reader-medium-author-card">
+            <div className="reader-author-avatar-wrap">
               <img
                 src={story.authorAvatar || DEFAULT_WHATSAPP_AVATAR}
-                alt={story.authorName}
-                className="reader-bio-avatar"
+                alt={authorDisplayName}
+                className="reader-author-card-avatar"
                 onError={(e) => {
                   ;(e.target as HTMLImageElement).src = DEFAULT_WHATSAPP_AVATAR
                 }}
               />
-              <div className="reader-bio-content">
-                <h4 className="reader-bio-name">{story.authorName}</h4>
-                <p className="reader-bio-desc">
-                  Student Creator on Lumina. Sharing insights, technical notes, and campus stories with students and innovators.
-                </p>
-              </div>
+              <span className="reader-author-avatar-badge" title="Verified Creator">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+              </span>
             </div>
 
-            <div className="reader-footer-actions">
-              <button
-                type="button"
-                className={`reader-footer-btn ${localLiked ? 'is-liked' : ''}`}
-                onClick={handleLikeClick}
-              >
-                {localLiked ? ReaderIcons.ThumbsUpFilled : ReaderIcons.ThumbsUp}
-                <span>{likeCount} Likes</span>
-              </button>
+            <h3 className="reader-author-card-title">Written by {authorDisplayName}</h3>
 
-              <button
-                type="button"
-                className={`reader-footer-btn ${isCommentsOpen ? 'is-active' : ''}`}
-                onClick={() => setIsCommentsOpen(true)}
-              >
-                {ReaderIcons.ChatBubble}
-                <span>{commentsCount} Responses</span>
-              </button>
+            <p className="reader-author-card-bio">
+              Hi, I'm {authorFirstName}. Welcome to my corner on Lumina where I share campus perspectives, research notes, and stories. Explore more articles across our college community.
+            </p>
 
-              <button
-                type="button"
-                className="reader-footer-btn"
-                onClick={handleShareClick}
-              >
-                {ReaderIcons.Share}
-                <span>Share</span>
-              </button>
-
-              <button
-                type="button"
-                className="reader-footer-btn primary-back-btn"
-                onClick={onBack}
-              >
-                {ReaderIcons.ArrowLeft}
-                <span>Return to feed</span>
-              </button>
-            </div>
+            <button
+              type="button"
+              className="reader-author-access-btn"
+              onClick={() => {
+                if (onBack) onBack()
+                else window.location.hash = 'feed'
+              }}
+            >
+              Explore More on Lumina
+            </button>
           </div>
+
+          {/* In-page Comments Section */}
+          <CommentsSection
+            postId={story.id}
+            postTitle={story.title}
+            postAuthorId={story.authorId}
+            initialCount={commentsCount}
+            currentUser={currentUser}
+            onCommentAdded={handleCommentCreated}
+            theme={theme}
+          />
         </article>
       </main>
-
-      {/* Right Side Window (Responses Drawer) */}
-      <CommentsDrawer
-        isOpen={isCommentsOpen}
-        onClose={() => setIsCommentsOpen(false)}
-        postId={story.id}
-        postTitle={story.title}
-        initialCount={commentsCount}
-        currentUser={currentUser}
-        onCommentAdded={handleCommentCreated}
-      />
     </div>
   )
 }

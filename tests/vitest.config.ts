@@ -19,7 +19,7 @@ export default {
         find: '@db/client',
         replacement: path.resolve(repoRoot, 'packages/db/src/client.ts'),
       },
-      { find: '@db', replacement: path.resolve(repoRoot, 'packages/db/src') },
+      { find: '@lumina/db', replacement: path.resolve(repoRoot, 'packages/db/src/index.ts') },
       { find: '@test', replacement: path.resolve(repoRoot, 'tests') },
       {
         find: '@stream-io/node-sdk',

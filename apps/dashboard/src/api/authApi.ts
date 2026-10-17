@@ -3,8 +3,53 @@ export function getAuthBaseUrl(): string {
     const env = (import.meta as any).env
     if (env?.VITE_API_URL) return env.VITE_API_URL.replace(/\/$/, '')
     if (env?.VITE_AUTH_SERVER_URL) return env.VITE_AUTH_SERVER_URL.replace(/\/$/, '')
+    return ''
   }
-  return 'http://localhost:3002'
+  return ''
+}
+
+/**
+ * Global response interceptor for authentication & verification errors.
+ * Redirects to #login on 401 (if on a protected route) or #verify-email on 403 (EMAIL_NOT_VERIFIED).
+ */
+export function handleAuthResponseError(res: Response): void {
+  if (typeof window === 'undefined') return
+  const hash = window.location.hash
+  const isProtected =
+    hash === '#feed' ||
+    hash === '#dashboard' ||
+    hash === '#/feed' ||
+    hash.startsWith('#post') ||
+    hash.startsWith('#story') ||
+    hash === '#profile' ||
+    hash === '#/profile' ||
+    hash === '#editor' ||
+    hash === '#write'
+
+  if (res.status === 401) {
+    if (isProtected) {
+      try {
+        localStorage.removeItem('lumina_user')
+        localStorage.removeItem('lumina_session_token')
+        localStorage.removeItem('better-auth.session_token')
+      } catch {
+        // ignore
+      }
+      window.location.hash = 'login'
+    }
+  } else if (res.status === 403) {
+    res
+      .clone()
+      .json()
+      .then((body) => {
+        if (body?.code === 'EMAIL_NOT_VERIFIED') {
+          if (window.location.hash !== '#verify-email') {
+            window.location.hash = 'verify-email'
+          }
+        }
+      })
+      .catch(() => {})
+  }
 }
 
 export interface SignUpPayload {
@@ -48,6 +93,7 @@ export async function signUpApi(payload: SignUpPayload): Promise<{ data?: AuthRe
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        'ngrok-skip-browser-warning': 'true',
         Origin: origin,
       },
       credentials: 'include',
@@ -96,6 +142,7 @@ export async function signInApi(payload: SignInPayload): Promise<{ data?: AuthRe
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        'ngrok-skip-browser-warning': 'true',
         Origin: origin,
       },
       credentials: 'include',
@@ -146,6 +193,7 @@ export async function signOutApi(): Promise<void> {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true',
         Origin: origin,
       },
       credentials: 'include',
@@ -169,6 +217,7 @@ export async function getSessionApi(): Promise<AuthResponse | null> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
+    'ngrok-skip-browser-warning': 'true',
     Origin: origin,
   }
 
@@ -217,6 +266,7 @@ export async function updateProfileApi(profileData: any): Promise<{ data?: any; 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
+    'ngrok-skip-browser-warning': 'true',
     Origin: origin,
   }
 
@@ -270,5 +320,125 @@ export async function updateProfileApi(profileData: any): Promise<{ data?: any; 
     return { error: err?.message || 'Network error updating profile' }
   }
 }
+
+export interface VerifyOtpPayload {
+  email: string
+  otp: string
+}
+
+export interface VerifyOtpResponse {
+  success?: boolean
+  status?: boolean
+  alreadyVerified?: boolean
+  message?: string
+  token?: string | null
+  user?: {
+    id: string
+    email: string
+    name?: string
+    emailVerified?: boolean
+    [key: string]: any
+  }
+}
+
+export interface ResendOtpResponse {
+  success?: boolean
+  alreadyVerified?: boolean
+  message?: string
+  retryAfter?: number
+}
+
+export async function verifyOtpApi(
+  payload: VerifyOtpPayload
+): Promise<{ data?: VerifyOtpResponse; error?: string; code?: string }> {
+  const baseUrl = getAuthBaseUrl()
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
+
+  try {
+    const res = await fetch(`${baseUrl}/api/auth/verify-otp`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'ngrok-skip-browser-warning': 'true',
+        Origin: origin,
+      },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    })
+
+    const data = await res.json().catch(() => ({}))
+
+    if (!res.ok) {
+      return {
+        error: data.message || `Verification failed (${res.status})`,
+        code: data.code,
+      }
+    }
+
+    if (data.token) {
+      try {
+        localStorage.setItem('lumina_session_token', data.token)
+      } catch {
+        // ignore
+      }
+    }
+
+    if (data.user) {
+      try {
+        const stored = localStorage.getItem('lumina_user')
+        const current = stored ? JSON.parse(stored) : {}
+        localStorage.setItem(
+          'lumina_user',
+          JSON.stringify({ ...current, ...data.user, emailVerified: true })
+        )
+      } catch {
+        // ignore
+      }
+    }
+
+    return { data }
+  } catch (err: any) {
+    console.error('Verify OTP network error:', err)
+    return { error: err?.message || 'Network error connecting to auth server' }
+  }
+}
+
+export async function resendOtpApi(payload: {
+  email: string
+}): Promise<{ data?: ResendOtpResponse; error?: string; code?: string; retryAfter?: number }> {
+  const baseUrl = getAuthBaseUrl()
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
+
+  try {
+    const res = await fetch(`${baseUrl}/api/auth/resend-otp`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'ngrok-skip-browser-warning': 'true',
+        Origin: origin,
+      },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    })
+
+    const data = await res.json().catch(() => ({}))
+
+    if (!res.ok) {
+      return {
+        error: data.message || `Failed to resend code (${res.status})`,
+        code: data.code,
+        retryAfter: data.retryAfter,
+      }
+    }
+
+    return { data }
+  } catch (err: any) {
+    console.error('Resend OTP network error:', err)
+    return { error: err?.message || 'Network error connecting to auth server' }
+  }
+}
+
 
 

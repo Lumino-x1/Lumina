@@ -7,123 +7,612 @@ servers:
   - url: http://localhost:3002
 security:
   - sessionCookie: []
+  - bearerAuth: []
 paths:
   /ok:
     get:
       summary: Simple health ping check
       responses:
-        '200': { description: OK message returned }
+        "200":
+          description: OK message returned
+      tags:
+        - System
+      operationId: getOk
+      parameters: []
   /health:
     get:
       summary: Liveness probe check for API process
       responses:
-        '200': { description: Liveness status returned }
+        "200":
+          description: Liveness status returned
+      tags:
+        - System
+      operationId: getHealth
+      parameters: []
   /ready:
     get:
       summary: Readiness probe check for Database and Redis dependencies
       responses:
-        '200': { description: Dependencies ready }
-        '530': { description: Service unavailable }
+        "200":
+          description: Dependencies ready
+        "530":
+          description: Service unavailable
+      tags:
+        - System
+      operationId: getReady
+      parameters: []
   /metrics:
     get:
       summary: Prometheus metrics endpoint
       responses:
-        '200': { description: Prometheus text metrics returned }
-
-  /api/profile/me:
-    get:
-      summary: Get current user profile
-      responses:
-        '200': { description: Profile returned }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-    patch:
-      summary: Update or create current user profile
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { type: object, additionalProperties: true }
-      responses:
-        '200': { description: Updated profile returned }
-  /api/profile/onboarding:
+        "200":
+          description: Prometheus text metrics returned
+      tags:
+        - System
+      operationId: getMetrics
+      parameters: []
+  /api/auth/sign-up/email:
     post:
-      summary: Save initial user onboarding profile and preferences
+      summary: Register a new user account with email and password
+      description: Creates a new user record in the database, establishes a Better
+        Auth session, triggers user profile initialization hooks, and sets the
+        HTTP session cookie.
+      operationId: signUpWithEmail
+      tags:
+        - Authentication
+      security: []
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object, additionalProperties: true }
+            schema:
+              $ref: "#/components/schemas/SignUpInput"
       responses:
-        '200': { description: Onboarding profile saved }
-    patch:
-      summary: Update onboarding profile details
+        "200":
+          description: User registered and authenticated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "422":
+          description: User already exists or unprocessable input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - $ref: "#/components/parameters/OriginHeader"
+        - $ref: "#/components/parameters/JsonContentType"
+  /api/auth/sign-in/email:
+    post:
+      summary: Sign in to Lumina with email and password
+      description: Authenticates credentials using Better Auth, returns user and
+        session metadata, and attaches the HTTP-only session cookie.
+      operationId: signInWithEmail
+      tags:
+        - Authentication
+      security: []
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object, additionalProperties: true }
+            schema:
+              $ref: "#/components/schemas/SignInInput"
       responses:
-        '200': { description: Onboarding profile updated }
-  /api/profile/{username}:
-    get:
-      summary: Get public profile by username
+        "200":
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
       parameters:
-        - name: username
-          in: path
-          required: true
-          schema: { type: string }
+        - $ref: "#/components/parameters/OriginHeader"
+        - $ref: "#/components/parameters/JsonContentType"
+  /api/auth/verify-otp:
+    post:
+      summary: Verify email address with 6-digit OTP
+      description: Validates the 6-digit verification code, consumes the OTP atomically, and marks the user's email as verified.
+      operationId: verifyEmailOtp
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyOtpInput"
       responses:
-        '200': { description: User profile returned }
-        '404': { description: Profile not found }
-
-  /api/friends:
-    get:
-      summary: List accepted friends
-      responses:
-        '200': { description: Friends returned }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-  /api/feed:
-    get:
-      summary: Get posts from the authenticated user's college
+        "200":
+          description: Email verified successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerifyOtpResponse"
+        "400":
+          description: Invalid, expired, or incorrect OTP code
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Too many verification attempts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
       parameters:
-        - name: limit
-          in: query
-          required: false
-          schema: { type: integer, minimum: 1, maximum: 50, default: 20 }
-        - name: cursor
-          in: query
-          required: false
-          schema: { type: string }
+        - $ref: "#/components/parameters/OriginHeader"
+        - $ref: "#/components/parameters/JsonContentType"
+  /api/auth/resend-otp:
+    post:
+      summary: Resend email verification OTP
+      description: Issues a replacement 6-digit verification OTP and dispatches it via Resend with a 60-second cooldown period.
+      operationId: resendEmailOtp
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResendOtpInput"
       responses:
-        '200':
-          description: College feed returned
+        "200":
+          description: Verification code sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResendOtpResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "429":
+          description: Resend cooldown active or rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - $ref: "#/components/parameters/OriginHeader"
+        - $ref: "#/components/parameters/JsonContentType"
+  /api/auth/sign-out:
+    post:
+      summary: Sign out and revoke active session
+      description: Revokes the active Better Auth session in database and clears the
+        session cookie.
+      operationId: signOut
+      tags:
+        - Authentication
+      responses:
+        "200":
+          description: Successfully signed out
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  success: { type: boolean, example: true }
+                  success:
+                    type: boolean
+                    example: true
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      parameters:
+        - $ref: "#/components/parameters/OriginHeader"
+  /api/auth/get-session:
+    get:
+      summary: Retrieve active authenticated session
+      description: Returns the current session details and associated user profile for
+        the requesting client.
+      operationId: getSession
+      tags:
+        - Authentication
+      responses:
+        "200":
+          description: Active session returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      parameters: []
+  /api/profile/test:
+    get:
+      summary: Test profile router connectivity
+      description: Health ping for profile router confirming the route handler is
+        responsive.
+      operationId: testProfileRouter
+      tags:
+        - Users
+      security: []
+      responses:
+        "200":
+          description: Profile router is working
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Profile router is working
+      parameters: []
+  /api/profile/me:
+    get:
+      summary: Get current user profile
+      description: Retrieves comprehensive profile information for the authenticated
+        user, including education, stats, and skills.
+      operationId: getMyProfile
+      tags:
+        - Users
+      responses:
+        "200":
+          description: Profile returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+      parameters: []
+    patch:
+      summary: Update current user profile
+      description: Updates editable fields of the user profile. If leetcodeUsername is
+        modified, enqueues background profile sync.
+      operationId: updateMyProfile
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProfileInput"
+      responses:
+        "200":
+          description: Updated profile returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
+  /api/profile/onboarding:
+    post:
+      summary: Save initial onboarding profile
+      description: Persists initial profile details, college affiliation, and topic
+        preferences during user onboarding.
+      operationId: saveOnboardingProfile
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OnboardingInput"
+      responses:
+        "200":
+          description: Onboarding profile saved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  profile:
+                    $ref: "#/components/schemas/Profile"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
+    patch:
+      summary: Update onboarding profile details
+      description: Modifies incomplete onboarding steps or student profile fields.
+      operationId: updateOnboardingProfile
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OnboardingInput"
+      responses:
+        "200":
+          description: Onboarding profile updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  profile:
+                    $ref: "#/components/schemas/Profile"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
+  /api/profile/{username}:
+    get:
+      summary: Get public profile by username
+      description: Retrieves a user public profile by their unique username.
+      operationId: getProfileByUsername
+      tags:
+        - Users
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique username of the target profile
+          example: janedoe
+      responses:
+        "200":
+          description: Public profile returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/profile/avatar:
+    patch:
+      summary: Upload user profile avatar
+      description: Uploads and updates the user avatar picture via multipart
+        form-data. Concurrently bounded.
+      operationId: uploadProfileAvatar
+      tags:
+        - Users
+        - Media
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - image
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: Avatar image file (JPEG, PNG, WebP up to 5MB)
+      responses:
+        "200":
+          description: Avatar uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    format: uri
+                    example: https://lumina-bucket.s3.us-east-1.amazonaws.com/avatars/user-123.jpg
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/FormDataContentType"
+    delete:
+      summary: Delete user profile avatar
+      description: Removes the current user avatar and resets it to default null.
+      operationId: deleteProfileAvatar
+      tags:
+        - Users
+        - Media
+      responses:
+        "200":
+          description: Avatar deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+  /api/profile/cover:
+    patch:
+      summary: Upload user profile cover banner
+      description: Uploads and updates the user profile background cover banner image
+        via multipart form-data.
+      operationId: uploadProfileCover
+      tags:
+        - Users
+        - Media
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - image
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: Cover image file (JPEG, PNG, WebP up to 5MB)
+      responses:
+        "200":
+          description: Cover image uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    format: uri
+                    example: https://lumina-bucket.s3.us-east-1.amazonaws.com/covers/cover-123.png
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/FormDataContentType"
+    delete:
+      summary: Delete user profile cover banner
+      description: Removes the user cover image and resets it to null.
+      operationId: deleteProfileCover
+      tags:
+        - Users
+        - Media
+      responses:
+        "200":
+          description: Cover image deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+  /api/feed:
+    get:
+      summary: Get posts feed from the authenticated user's college
+      description: Retrieves a paginated list of posts published within the user's
+        campus community, enriched with like and save status for the viewer.
+      operationId: getCollegeFeed
+      tags:
+        - Feed
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+          description: Number of posts to return (1-50, default 20)
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Pagination cursor (post ID from previous page)
+      responses:
+        "200":
+          description: College feed returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - data
+                properties:
+                  success:
+                    type: boolean
+                    example: true
                   data:
                     type: object
+                    required:
+                      - items
+                      - nextCursor
                     properties:
                       items:
                         type: array
                         items:
-                          type: object
-                          properties:
-                            id: { type: string, example: "post-123" }
-                            title: { type: string, example: "Campus Hackathon" }
-                            subtitle: { type: string, nullable: true }
-                            likeCount: { type: integer, example: 10 }
-                            isLiked: { type: boolean, example: true }
-                            saveCount: { type: integer, example: 4 }
-                            isSaved: { type: boolean, example: false }
-                            commentCount: { type: integer, example: 2 }
-                            viewCount: { type: integer, example: 50 }
-                            shareCount: { type: integer, example: 1 }
-                      nextCursor: { type: string, nullable: true, example: "post-123" }
-        '400': { description: User is not associated with a college or the limit is invalid }
-        '401': { $ref: '#/components/responses/Unauthorized' }
+                          allOf:
+                            - $ref: "#/components/schemas/Post"
+                            - type: object
+                              properties:
+                                isLiked:
+                                  type: boolean
+                                  example: false
+                                isSaved:
+                                  type: boolean
+                                  example: false
+                                totalComments:
+                                  type: integer
+                                  example: 5
+                      nextCursor:
+                        type: string
+                        nullable: true
+                        example: clpost999
+        "400":
+          description: User not associated with a college or invalid limit parameter
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /api/friends:
+    get:
+      summary: List accepted friends
+      responses:
+        "200":
+          description: Friends returned
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      tags:
+        - Friends
+      operationId: getFriends
+      parameters: []
   /api/friends/request/{userId}:
     post:
       summary: Send a friend request to a user
@@ -131,10 +620,17 @@ paths:
         - name: userId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '201': { description: Friend request sent }
-        '400': { description: Cannot send request }
+        "201":
+          description: Friend request sent
+        "400":
+          description: Cannot send request
+      tags:
+        - Friends
+      operationId: postFriendsRequestByUserId
   /api/friends/request/{requestId}/accept:
     patch:
       summary: Accept a pending friend request
@@ -142,9 +638,15 @@ paths:
         - name: requestId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Friend request accepted }
+        "200":
+          description: Friend request accepted
+      tags:
+        - Friends
+      operationId: patchFriendsRequestByRequestIdAccept
   /api/friends/request/{requestId}/reject:
     patch:
       summary: Reject a pending friend request
@@ -152,9 +654,15 @@ paths:
         - name: requestId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Friend request rejected }
+        "200":
+          description: Friend request rejected
+      tags:
+        - Friends
+      operationId: patchFriendsRequestByRequestIdReject
   /api/friends/request/{requestId}:
     delete:
       summary: Cancel an outgoing friend request
@@ -162,9 +670,15 @@ paths:
         - name: requestId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Request cancelled }
+        "200":
+          description: Request cancelled
+      tags:
+        - Friends
+      operationId: deleteFriendsRequestByRequestId
   /api/friends/{friendId}:
     delete:
       summary: Remove a friend
@@ -172,9 +686,15 @@ paths:
         - name: friendId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Friend removed }
+        "200":
+          description: Friend removed
+      tags:
+        - Friends
+      operationId: deleteFriendsByFriendId
   /api/friends/mutual/{userId}:
     get:
       summary: Get mutual friends with a user
@@ -182,82 +702,663 @@ paths:
         - name: userId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Mutual friends array returned }
+        "200":
+          description: Mutual friends array returned
+      tags:
+        - Friends
+      operationId: getFriendsMutualByUserId
   /api/friends/requests/incoming:
     get:
       summary: List pending incoming friend requests
       responses:
-        '200': { description: Incoming requests returned }
+        "200":
+          description: Incoming requests returned
+      tags:
+        - Friends
+      operationId: getFriendsRequestsIncoming
+      parameters: []
   /api/friends/requests/outgoing:
     get:
       summary: List pending outgoing friend requests
       responses:
-        '200': { description: Outgoing requests returned }
-
+        "200":
+          description: Outgoing requests returned
+      tags:
+        - Friends
+      operationId: getFriendsRequestsOutgoing
+      parameters: []
   /api/posts:
     post:
-      summary: Create a post with optional media
+      summary: Create a new post
+      description: Creates a post with rich blocks, text content, cover image, topics,
+        and pre-uploaded or attached media.
+      operationId: createPost
+      tags:
+        - Posts
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
-              type: object
-              properties:
-                content: { type: string }
-                visibility: { type: string, enum: [PUBLIC, COLLEGE, FRIENDS, PRIVATE] }
-                media: { type: array, items: { type: string, format: binary } }
+              $ref: "#/components/schemas/CreatePostInput"
       responses:
-        '201': { description: Post created }
-  /api/posts/{id}/like:
-    post:
-      summary: Toggle like on a post
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema: { type: string }
-      responses:
-        '200': { description: Like toggled }
-  /api/posts/{id}/save:
-    post:
-      summary: Save or unsave a post
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema: { type: string }
-      responses:
-        '200':
-          description: Post save toggled
+        "201":
+          description: Post created successfully
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  success: { type: boolean }
-                  saved: { type: boolean }
-                  isSaved: { type: boolean }
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Post created successfully
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
+  /api/posts/{id}/like:
+    post:
+      summary: Toggle like on a post
+      description: Toggles the current authenticated user like on the specified post.
+      operationId: togglePostLike
+      tags:
+        - Posts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique post ID
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+      responses:
+        "200":
+          description: Like status updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Like status updated successfully
                   data:
                     type: object
                     properties:
-                      saved: { type: boolean }
-                      isSaved: { type: boolean }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '404': { description: Post not found }
+                      liked:
+                        type: boolean
+                        example: true
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
+  /api/posts/{id}/save:
+    post:
+      summary: Toggle bookmark save on a post
+      description: Saves or removes the post from the authenticated user personal
+        saved collection.
+      operationId: togglePostSave
+      tags:
+        - Posts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique post ID
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+      responses:
+        "200":
+          description: Post save toggled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  saved:
+                    type: boolean
+                    example: true
+                  isSaved:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      saved:
+                        type: boolean
+                        example: true
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalError"
   /api/posts/saved:
     get:
-      summary: Get list of saved posts
+      summary: List authenticated user saved posts
+      description: Retrieves all posts bookmarked by the authenticated user.
+      operationId: getMySavedPosts
+      tags:
+        - Posts
       responses:
-        '200': { description: Saved posts returned }
-
+        "200":
+          description: Saved posts retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  savedPosts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: save-123
+                        createdAt:
+                          type: string
+                          format: date-time
+                        post:
+                          $ref: "#/components/schemas/Post"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalError"
+      parameters: []
+  /api/posts/{id}/comments:
+    get:
+      summary: List comments for a post
+      description: Fetches paginated comments associated with the post.
+      operationId: listPostComments
+      tags:
+        - Posts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Post ID
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Comments list returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Comment"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      summary: Add a comment to a post
+      description: Creates a top-level comment or reply on the specified post.
+      operationId: createPostComment
+      tags:
+        - Posts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Post ID
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - content
+              properties:
+                content:
+                  type: string
+                  example: Great article!
+                parentId:
+                  type: string
+                  nullable: true
+                  example: null
+      responses:
+        "201":
+          description: Comment created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Comment"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/posts/{id}/comments/{commentId}/pin:
+    patch:
+      summary: Pin or unpin a comment on a post
+      description: Allows the post author to pin an important comment to the top of
+        the comment section.
+      operationId: pinPostComment
+      tags:
+        - Posts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Post ID
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Comment ID
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isPinned:
+                  type: boolean
+                  default: true
+      responses:
+        "200":
+          description: Comment pin status updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Comment"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/posts/{id}/comments/{commentId}:
+    delete:
+      summary: Delete a comment from a post
+      description: Deletes a comment. Only the comment author or post author is authorized.
+      operationId: deletePostComment
+      tags:
+        - Posts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Post ID
+        - name: commentId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Comment ID
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+      responses:
+        "204":
+          description: Comment deleted successfully
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/posts/scheduled:
+    get:
+      summary: List the authenticated author's scheduled posts
+      description: Retrieves all upcoming scheduled posts belonging to the
+        authenticated author, ordered ascending by scheduled publishing time.
+      operationId: getScheduledPosts
+      tags:
+        - Publishing
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Scheduled posts returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Post"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /api/posts/{id}/schedule:
+    post:
+      summary: Schedule a draft post for publication
+      description: Schedules an eligible draft post to be automatically published at a
+        future timestamp. Dispatches an outbox event and schedules a BullMQ
+        background job.
+      operationId: schedulePost
+      tags:
+        - Publishing
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Post ID to schedule
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SchedulePostInput"
+      responses:
+        "201":
+          description: Post scheduled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Post scheduled successfully
+                  data:
+                    $ref: "#/components/schemas/Post"
+        "400":
+          description: Invalid scheduling time or post not in eligible draft state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          description: Only the author may schedule this post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: Concurrent update conflict (optimistic lock version mismatch)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      summary: Reschedule an existing scheduled post
+      description: Updates the scheduled publishing time of a currently scheduled
+        post. Increments scheduleVersion and reschedules the background
+        publishing job.
+      operationId: reschedulePost
+      tags:
+        - Publishing
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Post ID to reschedule
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SchedulePostInput"
+      responses:
+        "200":
+          description: Post rescheduled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Post scheduled successfully
+                  data:
+                    $ref: "#/components/schemas/Post"
+        "400":
+          description: Invalid scheduling time or post is not currently scheduled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+    delete:
+      summary: Cancel scheduled publishing and revert to draft
+      description: Cancels scheduled publishing, removes the pending queue job, and
+        reverts post status from SCHEDULED back to DRAFT.
+      operationId: cancelScheduledPost
+      tags:
+        - Publishing
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Post ID whose schedule should be cancelled
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+      responses:
+        "200":
+          description: Schedule cancelled and post reverted to draft
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: "#/components/schemas/Post"
+        "400":
+          description: Post is not currently scheduled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /api/posts/{id}/publish:
+    post:
+      summary: Publish an eligible post immediately
+      description: Publishes a draft or scheduled post immediately, transitioning
+        status to PUBLISHED and updating publishedAt.
+      operationId: publishPostImmediately
+      tags:
+        - Publishing
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Post ID to publish
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+      responses:
+        "200":
+          description: Post published successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Post published successfully
+                  data:
+                    $ref: "#/components/schemas/Post"
+        "400":
+          description: Invalid publishing state (e.g., already published or archived)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/Conflict"
+  /api/media/upload-url:
+    post:
+      summary: Generate presigned S3 upload URL for post media
+      description: Generates a secure presigned S3 PUT URL for client-side direct
+        upload of JPEG, PNG, or WebP images up to 5MB.
+      operationId: getPresignedUploadUrl
+      tags:
+        - Media
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MediaUploadUrlRequest"
+      responses:
+        "200":
+          description: Presigned upload URL generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaUploadUrlResponse"
+        "400":
+          description: Invalid image metadata or unsupported MIME type / file size
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid image metadata
+        "500":
+          description: Failed to generate presigned upload URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Failed to generate upload URL
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/chat/token:
     get:
       summary: Generate Stream Chat token
       responses:
-        '200': { description: Stream token returned }
+        "200":
+          description: Stream token returned
+      tags:
+        - Chat
+      operationId: getChatToken
+      parameters: []
   /api/chat/conversations:
     post:
       summary: Create 1-on-1 chat conversation
@@ -267,41 +1368,73 @@ paths:
           application/json:
             schema:
               type: object
-              required: [targetUserId]
+              required:
+                - targetUserId
               properties:
-                targetUserId: { type: string }
+                targetUserId:
+                  type: string
       responses:
-        '201': { description: Conversation created }
+        "201":
+          description: Conversation created
+      tags:
+        - Chat
+      operationId: postChatConversations
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
     get:
       summary: List user conversations
       responses:
-        '200': { description: Conversations array returned }
-
+        "200":
+          description: Conversations array returned
+      tags:
+        - Chat
+      operationId: getChatConversations
+      parameters: []
   /api/leaderboard:
     get:
       summary: Get paginated LeetCode leaderboard
       parameters:
         - name: page
           in: query
-          schema: { type: integer, default: 1 }
+          schema:
+            type: integer
+            default: 1
         - name: limit
           in: query
-          schema: { type: integer, default: 20 }
+          schema:
+            type: integer
+            default: 20
         - name: query
           in: query
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Leaderboard returned }
+        "200":
+          description: Leaderboard returned
+      tags:
+        - Leaderboard
+      operationId: getLeaderboard
   /api/leaderboard/me/around:
     get:
       summary: Get leaderboard users around the current user
       responses:
-        '200': { description: Surrounding leaderboard users returned }
+        "200":
+          description: Surrounding leaderboard users returned
+      tags:
+        - Leaderboard
+      operationId: getLeaderboardMeAround
+      parameters: []
   /api/leaderboard/me:
     get:
       summary: Get current user leaderboard rank and stats
       responses:
-        '200': { description: Current user stats returned }
+        "200":
+          description: Current user stats returned
+      tags:
+        - Leaderboard
+      operationId: getLeaderboardMe
+      parameters: []
   /api/leaderboard/{userId}:
     get:
       summary: Get specific user leaderboard rank and stats
@@ -309,23 +1442,40 @@ paths:
         - name: userId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: User leaderboard stats returned }
-
+        "200":
+          description: User leaderboard stats returned
+      tags:
+        - Leaderboard
+      operationId: getLeaderboardByUserId
   /api/leetcode/sync:
     post:
       summary: Manually trigger LeetCode profile metrics synchronization
       responses:
-        '200': { description: Sync initiated }
-
+        "200":
+          description: Sync initiated
+      tags:
+        - LeetCode
+      operationId: postLeetcodeSync
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
   /api/video/token:
     post:
       summary: Generate Stream Video authentication token
       responses:
-        '200': { description: Token and Stream API Key returned }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '429': { description: Rate limit exceeded }
+        "200":
+          description: Token and Stream API Key returned
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          description: Rate limit exceeded
+      tags:
+        - Video
+      operationId: postVideoToken
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
   /api/video/calls:
     post:
       summary: Initialize a new 1-on-1 or group video call
@@ -337,21 +1487,42 @@ paths:
               type: object
               properties:
                 type:
-                  {
-                    type: string,
-                    enum: [ONE_ON_ONE, GROUP, MENTORSHIP, CLUB_MEETING, FACULTY_SESSION],
-                  }
-                title: { type: string }
-                participantIds: { type: array, items: { type: string } }
+                  type: string
+                  enum:
+                    - ONE_ON_ONE
+                    - GROUP
+                    - MENTORSHIP
+                    - CLUB_MEETING
+                    - FACULTY_SESSION
+                title:
+                  type: string
+                participantIds:
+                  type: array
+                  items:
+                    type: string
       responses:
-        '201': { description: Video call created }
-        '401': { $ref: '#/components/responses/Unauthorized' }
+        "201":
+          description: Video call created
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      tags:
+        - Video
+      operationId: postVideoCalls
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/video/calls/history:
     get:
       summary: List past video calls for the authenticated user
       responses:
-        '200': { description: Call history array returned }
-        '401': { $ref: '#/components/responses/Unauthorized' }
+        "200":
+          description: Call history array returned
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      tags:
+        - Video
+      operationId: getVideoCallsHistory
+      parameters: []
   /api/video/calls/{callId}:
     get:
       summary: Get details of a specific video call
@@ -359,9 +1530,14 @@ paths:
         - name: callId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Call details returned }
+        "200":
+          description: Call details returned
+      tags:
+        - Video
+      operationId: getVideoCallsByCallId
   /api/video/calls/{callId}/join:
     post:
       summary: Join an active video call
@@ -369,9 +1545,15 @@ paths:
         - name: callId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Call joined }
+        "200":
+          description: Call joined
+      tags:
+        - Video
+      operationId: postVideoCallsByCallIdJoin
   /api/video/calls/{callId}/respond:
     post:
       summary: Accept or decline a video call invite
@@ -379,18 +1561,27 @@ paths:
         - name: callId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [accept]
+              required:
+                - accept
               properties:
-                accept: { type: boolean }
+                accept:
+                  type: boolean
       responses:
-        '200': { description: Response recorded }
+        "200":
+          description: Response recorded
+      tags:
+        - Video
+      operationId: postVideoCallsByCallIdRespond
   /api/video/calls/{callId}/end:
     post:
       summary: End an active video call
@@ -398,10 +1589,15 @@ paths:
         - name: callId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Call ended }
-
+        "200":
+          description: Call ended
+      tags:
+        - Video
+      operationId: postVideoCallsByCallIdEnd
   /api/comments/posts/{postId}/comments:
     post:
       summary: Create a root comment or nested reply attached to a post
@@ -409,69 +1605,111 @@ paths:
         - name: postId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [content]
+              required:
+                - content
               properties:
-                content: { type: string }
-                parentId: { type: string }
+                content:
+                  type: string
+                parentId:
+                  type: string
       responses:
-        '201': { description: Comment or reply created }
-        '400': { description: Invalid content or parent post mismatch }
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '422': { description: Max comment depth 10 exceeded }
+        "201":
+          description: Comment or reply created
+        "400":
+          description: Invalid content or parent post mismatch
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          description: Max comment depth 10 exceeded
+      tags:
+        - Comments
+      operationId: postCommentsPostsByPostIdComments
     get:
-      summary: Fetch comments tree for a post with cursor pagination and formatted reaction counts
+      summary: Fetch comments tree for a post with cursor pagination and formatted
+        reaction counts
       parameters:
         - name: postId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
         - name: cursor
           in: query
-          schema: { type: string }
+          schema:
+            type: string
         - name: limit
           in: query
-          schema: { type: integer, default: 20 }
+          schema:
+            type: integer
+            default: 20
       responses:
-        '200': { description: Comments tree returned }
-        '404': { description: Post not found }
+        "200":
+          description: Comments tree returned
+        "404":
+          description: Post not found
+      tags:
+        - Comments
+      operationId: getCommentsPostsByPostIdComments
   /api/comments/{commentId}:
     patch:
-      summary: Edit a comment (owner-only, tracked in edit history, concurrent-edit safe)
+      summary: Edit a comment (owner-only, tracked in edit history, concurrent-edit
+        safe)
       parameters:
         - name: commentId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [content]
+              required:
+                - content
               properties:
-                content: { type: string }
+                content:
+                  type: string
       responses:
-        '200': { description: Comment updated }
-        '403': { description: Not authorized to edit comment }
-        '409': { description: Stale comment version concurrent conflict }
+        "200":
+          description: Comment updated
+        "403":
+          description: Not authorized to edit comment
+        "409":
+          description: Stale comment version concurrent conflict
+      tags:
+        - Comments
+      operationId: patchCommentsByCommentId
     delete:
       summary: Soft delete comment (tombstone preserving reply tree)
       parameters:
         - name: commentId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Comment soft deleted }
-        '403': { description: Not authorized to delete comment }
+        "200":
+          description: Comment soft deleted
+        "403":
+          description: Not authorized to delete comment
+      tags:
+        - Comments
+      operationId: deleteCommentsByCommentId
   /api/comments/{commentId}/history:
     get:
       summary: Fetch edit history log for a comment
@@ -479,10 +1717,16 @@ paths:
         - name: commentId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Array of edit history entries returned }
-        '404': { description: Comment not found }
+        "200":
+          description: Array of edit history entries returned
+        "404":
+          description: Comment not found
+      tags:
+        - Comments
+      operationId: getCommentsByCommentIdHistory
   /api/comments/{commentId}/reactions:
     post:
       summary: Toggle or add emoji reaction to a comment
@@ -490,49 +1734,77 @@ paths:
         - name: commentId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [emoji]
+              required:
+                - emoji
               properties:
-                emoji: { type: string }
+                emoji:
+                  type: string
       responses:
-        '200': { description: Reaction toggled }
-        '400': { description: Cannot react to deleted comment }
+        "200":
+          description: Reaction toggled
+        "400":
+          description: Cannot react to deleted comment
+      tags:
+        - Comments
+      operationId: postCommentsByCommentIdReactions
     delete:
       summary: Remove emoji reaction from a comment
       parameters:
         - name: commentId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [emoji]
+              required:
+                - emoji
               properties:
-                emoji: { type: string }
+                emoji:
+                  type: string
       responses:
-        '200': { description: Reaction removed }
+        "200":
+          description: Reaction removed
+      tags:
+        - Comments
+      operationId: deleteCommentsByCommentIdReactions
   /api/comments/{commentId}/pin:
     post:
-      summary: Pin or unpin a comment (post owner, admin, or moderator, max 3 pins per post)
+      summary: Pin or unpin a comment (post owner, admin, or moderator, max 3 pins per
+        post)
       parameters:
         - name: commentId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Pin state toggled }
-        '400': { description: Max pinned comments limit exceeded }
-        '403': { description: Not authorized to pin comment }
+        "200":
+          description: Pin state toggled
+        "400":
+          description: Max pinned comments limit exceeded
+        "403":
+          description: Not authorized to pin comment
+      tags:
+        - Comments
+      operationId: postCommentsByCommentIdPin
   /api/comments/{commentId}/report:
     post:
       summary: Report a comment for moderation
@@ -540,27 +1812,43 @@ paths:
         - name: commentId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [reason]
+              required:
+                - reason
               properties:
-                reason: { type: string }
-                details: { type: string }
+                reason:
+                  type: string
+                details:
+                  type: string
       responses:
-        '201': { description: Report submitted }
-        '409': { description: Already reported comment }
-
+        "201":
+          description: Report submitted
+        "409":
+          description: Already reported comment
+      tags:
+        - Comments
+      operationId: postCommentsByCommentIdReport
   /api/v1/study-groups:
     get:
       summary: List study groups the current user belongs to
       responses:
-        '200': { description: Study groups returned }
-        '401': { $ref: '#/components/responses/Unauthorized' }
+        "200":
+          description: Study groups returned
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      tags:
+        - Study Groups
+      operationId: getStudyGroups
+      parameters: []
     post:
       summary: Create a study group (SUBJECT, EXAM, PROJECT, or ASSIGNMENT)
       requestBody:
@@ -569,18 +1857,47 @@ paths:
           application/json:
             schema:
               type: object
-              required: [name, type, visibility, subject, semester]
+              required:
+                - name
+                - type
+                - visibility
+                - subject
+                - semester
               properties:
-                name: { type: string }
-                type: { type: string, enum: [SUBJECT, EXAM, PROJECT, ASSIGNMENT] }
-                visibility: { type: string, enum: [PUBLIC, PRIVATE] }
-                subject: { type: string }
-                semester: { type: integer }
-                description: { type: string, nullable: true }
+                name:
+                  type: string
+                type:
+                  type: string
+                  enum:
+                    - SUBJECT
+                    - EXAM
+                    - PROJECT
+                    - ASSIGNMENT
+                visibility:
+                  type: string
+                  enum:
+                    - PUBLIC
+                    - PRIVATE
+                subject:
+                  type: string
+                semester:
+                  type: integer
+                description:
+                  type: string
+                  nullable: true
       responses:
-        '201': { description: Study group created }
-        '400': { description: Invalid payload }
-        '401': { $ref: '#/components/responses/Unauthorized' }
+        "201":
+          description: Study group created
+        "400":
+          description: Invalid payload
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      tags:
+        - Study Groups
+      operationId: postStudyGroups
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/study-groups/search:
     get:
       summary: Search groups and content the current user can access
@@ -588,40 +1905,71 @@ paths:
         - name: q
           in: query
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Search results returned }
-        '401': { $ref: '#/components/responses/Unauthorized' }
+        "200":
+          description: Search results returned
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsSearch
   /api/v1/study-groups/{groupId}:
     parameters:
       - name: groupId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: Get a study group by id
       responses:
-        '200': { description: Study group returned }
-        '404': { description: Study group not found }
+        "200":
+          description: Study group returned
+        "404":
+          description: Study group not found
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupId
+      parameters: []
     patch:
       summary: Update a study group (owner or admin)
       parameters:
         - name: If-Match
           in: header
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         content:
           application/json:
-            schema: { type: object, additionalProperties: true }
+            schema:
+              type: object
+              additionalProperties: true
       responses:
-        '200': { description: Study group updated }
-        '403': { description: Insufficient permissions }
-        '412': { description: Version conflict }
+        "200":
+          description: Study group updated
+        "403":
+          description: Insufficient permissions
+        "412":
+          description: Version conflict
+      tags:
+        - Study Groups
+      operationId: patchStudyGroupsByGroupId
     delete:
       summary: Delete a study group (owner)
       responses:
-        '200': { description: Study group deleted }
-        '403': { description: Insufficient permissions }
+        "200":
+          description: Study group deleted
+        "403":
+          description: Insufficient permissions
+      tags:
+        - Study Groups
+      operationId: deleteStudyGroupsByGroupId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
   /api/v1/study-groups/{groupId}/join:
     post:
       summary: Join a public study group or accept a private invitation
@@ -629,10 +1977,17 @@ paths:
         - name: groupId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Membership created }
-        '403': { description: Invitation required for private groups }
+        "200":
+          description: Membership created
+        "403":
+          description: Invitation required for private groups
+      tags:
+        - Study Groups
+      operationId: postStudyGroupsByGroupIdJoin
   /api/v1/study-groups/{groupId}/leave:
     post:
       summary: Leave a study group
@@ -640,10 +1995,17 @@ paths:
         - name: groupId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Left the group }
-        '403': { description: Owner cannot leave }
+        "200":
+          description: Left the group
+        "403":
+          description: Owner cannot leave
+      tags:
+        - Study Groups
+      operationId: postStudyGroupsByGroupIdLeave
   /api/v1/study-groups/{groupId}/members:
     get:
       summary: List study group members
@@ -651,9 +2013,14 @@ paths:
         - name: groupId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Members returned }
+        "200":
+          description: Members returned
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdMembers
   /api/v1/study-groups/{groupId}/invitations:
     post:
       summary: Invite a user to a study group
@@ -661,30 +2028,43 @@ paths:
         - name: groupId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [userId]
+              required:
+                - userId
               properties:
-                userId: { type: string }
-                message: { type: string }
+                userId:
+                  type: string
+                message:
+                  type: string
       responses:
-        '201': { description: Invitation created }
-        '409': { description: Already a member }
+        "201":
+          description: Invitation created
+        "409":
+          description: Already a member
+      tags:
+        - Study Groups
+      operationId: postStudyGroupsByGroupIdInvitations
   /api/v1/study-groups/{groupId}/members/{userId}:
     parameters:
       - name: groupId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
       - name: userId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     patch:
       summary: Change a member role (ADMIN or MEMBER)
       requestBody:
@@ -693,26 +2073,51 @@ paths:
           application/json:
             schema:
               type: object
-              required: [role]
+              required:
+                - role
               properties:
-                role: { type: string, enum: [ADMIN, MEMBER] }
+                role:
+                  type: string
+                  enum:
+                    - ADMIN
+                    - MEMBER
       responses:
-        '200': { description: Member role updated }
-        '403': { description: Insufficient permissions }
+        "200":
+          description: Member role updated
+        "403":
+          description: Insufficient permissions
+      tags:
+        - Study Groups
+      operationId: patchStudyGroupsByGroupIdMembersByUserId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
     delete:
       summary: Remove a member from the group
       responses:
-        '200': { description: Member removed }
+        "200":
+          description: Member removed
+      tags:
+        - Study Groups
+      operationId: deleteStudyGroupsByGroupIdMembersByUserId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
   /api/v1/study-groups/{groupId}/discussions:
     parameters:
       - name: groupId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: List discussion threads
       responses:
-        '200': { description: Discussions returned }
+        "200":
+          description: Discussions returned
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdDiscussions
+      parameters: []
     post:
       summary: Create a discussion thread
       requestBody:
@@ -721,53 +2126,94 @@ paths:
           application/json:
             schema:
               type: object
-              required: [title, body]
+              required:
+                - title
+                - body
               properties:
-                title: { type: string }
-                body: { type: string }
+                title:
+                  type: string
+                body:
+                  type: string
       responses:
-        '201': { description: Discussion created }
+        "201":
+          description: Discussion created
+      tags:
+        - Study Groups
+      operationId: postStudyGroupsByGroupIdDiscussions
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/study-groups/{groupId}/discussions/{discussionId}:
     parameters:
       - name: groupId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
       - name: discussionId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: Get a discussion thread
       responses:
-        '200': { description: Discussion returned }
-        '404': { description: Discussion not found }
+        "200":
+          description: Discussion returned
+        "404":
+          description: Discussion not found
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdDiscussionsByDiscussionId
+      parameters: []
     patch:
       summary: Edit own discussion (or moderate)
       requestBody:
         content:
           application/json:
-            schema: { type: object, additionalProperties: true }
+            schema:
+              type: object
+              additionalProperties: true
       responses:
-        '200': { description: Discussion updated }
+        "200":
+          description: Discussion updated
+      tags:
+        - Study Groups
+      operationId: patchStudyGroupsByGroupIdDiscussionsByDiscussionId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
     delete:
       summary: Delete own discussion (or moderate)
       responses:
-        '200': { description: Discussion deleted }
+        "200":
+          description: Discussion deleted
+      tags:
+        - Study Groups
+      operationId: deleteStudyGroupsByGroupIdDiscussionsByDiscussionId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
   /api/v1/study-groups/{groupId}/discussions/{discussionId}/replies:
     parameters:
       - name: groupId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
       - name: discussionId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: List discussion replies
       responses:
-        '200': { description: Replies returned }
+        "200":
+          description: Replies returned
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdDiscussionsByDiscussionIdReplies
+      parameters: []
     post:
       summary: Reply to a discussion
       requestBody:
@@ -776,25 +2222,37 @@ paths:
           application/json:
             schema:
               type: object
-              required: [body]
+              required:
+                - body
               properties:
-                body: { type: string }
+                body:
+                  type: string
       responses:
-        '201': { description: Reply created }
+        "201":
+          description: Reply created
+      tags:
+        - Study Groups
+      operationId: postStudyGroupsByGroupIdDiscussionsByDiscussionIdReplies
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/study-groups/{groupId}/discussions/{discussionId}/replies/{replyId}:
     parameters:
       - name: groupId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
       - name: discussionId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
       - name: replyId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     patch:
       summary: Edit own reply (or moderate)
       requestBody:
@@ -803,25 +2261,46 @@ paths:
           application/json:
             schema:
               type: object
-              required: [body]
+              required:
+                - body
               properties:
-                body: { type: string }
+                body:
+                  type: string
       responses:
-        '200': { description: Reply updated }
+        "200":
+          description: Reply updated
+      tags:
+        - Study Groups
+      operationId: patchStudyGroupsByGroupIdDiscussionsByDiscussionIdRepliesByReplyId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
     delete:
       summary: Delete own reply (or moderate)
       responses:
-        '200': { description: Reply deleted }
+        "200":
+          description: Reply deleted
+      tags:
+        - Study Groups
+      operationId: deleteStudyGroupsByGroupIdDiscussionsByDiscussionIdRepliesByReplyId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
   /api/v1/study-groups/{groupId}/notes:
     parameters:
       - name: groupId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: List shared notes
       responses:
-        '200': { description: Notes returned }
+        "200":
+          description: Notes returned
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdNotes
+      parameters: []
     post:
       summary: Create a shared note
       requestBody:
@@ -830,43 +2309,77 @@ paths:
           application/json:
             schema:
               type: object
-              required: [title, body]
+              required:
+                - title
+                - body
               properties:
-                title: { type: string }
-                body: { type: string }
+                title:
+                  type: string
+                body:
+                  type: string
       responses:
-        '201': { description: Note created }
+        "201":
+          description: Note created
+      tags:
+        - Study Groups
+      operationId: postStudyGroupsByGroupIdNotes
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/study-groups/{groupId}/notes/{noteId}:
     parameters:
       - name: groupId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
       - name: noteId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: Get a shared note
       responses:
-        '200': { description: Note returned }
+        "200":
+          description: Note returned
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdNotesByNoteId
+      parameters: []
     patch:
       summary: Edit a note and append a version snapshot
       parameters:
         - name: If-Match
           in: header
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         content:
           application/json:
-            schema: { type: object, additionalProperties: true }
+            schema:
+              type: object
+              additionalProperties: true
       responses:
-        '200': { description: Note updated }
-        '412': { description: Version conflict }
+        "200":
+          description: Note updated
+        "412":
+          description: Version conflict
+      tags:
+        - Study Groups
+      operationId: patchStudyGroupsByGroupIdNotesByNoteId
     delete:
       summary: Delete a note
       responses:
-        '200': { description: Note deleted }
+        "200":
+          description: Note deleted
+      tags:
+        - Study Groups
+      operationId: deleteStudyGroupsByGroupIdNotesByNoteId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
   /api/v1/study-groups/{groupId}/notes/{noteId}/versions:
     get:
       summary: List note version history
@@ -874,13 +2387,19 @@ paths:
         - name: groupId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
         - name: noteId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Note versions returned }
+        "200":
+          description: Note versions returned
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdNotesByNoteIdVersions
   /api/v1/study-groups/{groupId}/notes/{noteId}/versions/{version}:
     get:
       summary: Get a specific note version
@@ -888,18 +2407,26 @@ paths:
         - name: groupId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
         - name: noteId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
         - name: version
           in: path
           required: true
-          schema: { type: integer }
+          schema:
+            type: integer
       responses:
-        '200': { description: Note version returned }
-        '404': { description: Version not found }
+        "200":
+          description: Note version returned
+        "404":
+          description: Version not found
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdNotesByNoteIdVersionsByVersion
   /api/v1/study-groups/{groupId}/files/upload-url:
     post:
       summary: Create a validated object-storage upload URL
@@ -907,31 +2434,51 @@ paths:
         - name: groupId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [fileName, mimeType, sizeBytes]
+              required:
+                - fileName
+                - mimeType
+                - sizeBytes
               properties:
-                fileName: { type: string }
-                mimeType: { type: string }
-                sizeBytes: { type: integer }
+                fileName:
+                  type: string
+                mimeType:
+                  type: string
+                sizeBytes:
+                  type: integer
       responses:
-        '200': { description: Presigned upload URL returned }
-        '400': { description: File validation failed }
+        "200":
+          description: Presigned upload URL returned
+        "400":
+          description: File validation failed
+      tags:
+        - Study Groups
+      operationId: postStudyGroupsByGroupIdFilesUploadUrl
   /api/v1/study-groups/{groupId}/files:
     parameters:
       - name: groupId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: List academic files
       responses:
-        '200': { description: Files returned }
+        "200":
+          description: Files returned
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdFiles
+      parameters: []
     post:
       summary: Register an uploaded academic file
       requestBody:
@@ -940,33 +2487,62 @@ paths:
           application/json:
             schema:
               type: object
-              required: [key, fileName, mimeType, sizeBytes]
+              required:
+                - key
+                - fileName
+                - mimeType
+                - sizeBytes
               properties:
-                key: { type: string }
-                fileName: { type: string }
-                mimeType: { type: string }
-                sizeBytes: { type: integer }
+                key:
+                  type: string
+                fileName:
+                  type: string
+                mimeType:
+                  type: string
+                sizeBytes:
+                  type: integer
       responses:
-        '201': { description: File registered }
+        "201":
+          description: File registered
+      tags:
+        - Study Groups
+      operationId: postStudyGroupsByGroupIdFiles
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/study-groups/{groupId}/files/{fileId}:
     parameters:
       - name: groupId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
       - name: fileId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: Get academic file metadata
       responses:
-        '200': { description: File returned }
-        '404': { description: File not found }
+        "200":
+          description: File returned
+        "404":
+          description: File not found
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdFilesByFileId
+      parameters: []
     delete:
       summary: Delete an academic file
       responses:
-        '200': { description: File deleted }
+        "200":
+          description: File deleted
+      tags:
+        - Study Groups
+      operationId: deleteStudyGroupsByGroupIdFilesByFileId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
   /api/v1/study-groups/{groupId}/files/{fileId}/download-url:
     get:
       summary: Create a time-limited download URL
@@ -974,61 +2550,100 @@ paths:
         - name: groupId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
         - name: fileId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Presigned download URL returned }
+        "200":
+          description: Presigned download URL returned
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdFilesByFileIdDownloadUrl
   /api/v1/study-groups/{groupId}/timetable:
     parameters:
       - name: groupId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: View the group timetable
       responses:
-        '200': { description: Timetable returned }
-        '404': { description: Timetable not found }
+        "200":
+          description: Timetable returned
+        "404":
+          description: Timetable not found
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdTimetable
+      parameters: []
     post:
       summary: Create or replace the group timetable
       parameters:
         - name: If-Match
           in: header
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [entries]
+              required:
+                - entries
               properties:
                 entries:
                   type: array
-                  items: { type: object, additionalProperties: true }
+                  items:
+                    type: object
+                    additionalProperties: true
       responses:
-        '200': { description: Timetable saved }
+        "200":
+          description: Timetable saved
+      tags:
+        - Study Groups
+      operationId: postStudyGroupsByGroupIdTimetable
     patch:
       summary: Update the group timetable
       parameters:
         - name: If-Match
           in: header
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object, additionalProperties: true }
+            schema:
+              type: object
+              additionalProperties: true
       responses:
-        '200': { description: Timetable updated }
-        '412': { description: Version conflict }
+        "200":
+          description: Timetable updated
+        "412":
+          description: Version conflict
+      tags:
+        - Study Groups
+      operationId: patchStudyGroupsByGroupIdTimetable
     delete:
       summary: Delete the group timetable
       responses:
-        '200': { description: Timetable deleted }
+        "200":
+          description: Timetable deleted
+      tags:
+        - Study Groups
+      operationId: deleteStudyGroupsByGroupIdTimetable
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
   /api/v1/study-groups/{groupId}/timetable/versions:
     get:
       summary: List timetable versions
@@ -1036,9 +2651,14 @@ paths:
         - name: groupId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Timetable versions returned }
+        "200":
+          description: Timetable versions returned
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdTimetableVersions
   /api/v1/study-groups/{groupId}/search:
     get:
       summary: Search content inside a study group
@@ -1046,28 +2666,47 @@ paths:
         - name: groupId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
         - name: q
           in: query
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Search results returned }
+        "200":
+          description: Search results returned
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdSearch
   /api/v1/study-groups/{groupId}/chat:
     parameters:
       - name: groupId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: Get existing group chat channel
       responses:
-        '200': { description: Chat channel returned }
-        '404': { description: Chat not created }
+        "200":
+          description: Chat channel returned
+        "404":
+          description: Chat not created
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdChat
+      parameters: []
     post:
       summary: Open or create the group chat via the existing Chat service
       responses:
-        '200': { description: Chat channel opened }
+        "200":
+          description: Chat channel opened
+      tags:
+        - Study Groups
+      operationId: postStudyGroupsByGroupIdChat
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
   /api/v1/study-groups/{groupId}/audit:
     get:
       summary: List study group audit and domain events
@@ -1075,50 +2714,84 @@ paths:
         - name: groupId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Audit events returned }
-        '403': { description: Insufficient permissions }
-
+        "200":
+          description: Audit events returned
+        "403":
+          description: Insufficient permissions
+      tags:
+        - Study Groups
+      operationId: getStudyGroupsByGroupIdAudit
   /api/v1/clubs:
     get:
       summary: List clubs in current user's college
       responses:
-        '200': { description: Clubs returned }
-        '401': { $ref: '#/components/responses/Unauthorized' }
+        "200":
+          description: Clubs returned
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+      tags:
+        - Clubs
+      operationId: getClubs
+      parameters: []
     post:
       summary: Create a new club in user's college
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '201': { description: Club created }
-        '400': { description: Invalid payload }
-
+        "201":
+          description: Club created
+        "400":
+          description: Invalid payload
+      tags:
+        - Clubs
+      operationId: postClubs
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/clubs/{clubId}:
     parameters:
       - name: clubId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: Get details of a club
       responses:
-        '200': { description: Club details returned }
-        '404': { description: Club not found }
+        "200":
+          description: Club details returned
+        "404":
+          description: Club not found
+      tags:
+        - Clubs
+      operationId: getClubsByClubId
+      parameters: []
     patch:
       summary: Update club details
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Club updated }
-        '403': { description: Not authorized }
-
+        "200":
+          description: Club updated
+        "403":
+          description: Not authorized
+      tags:
+        - Clubs
+      operationId: patchClubsByClubId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/clubs/{clubId}/archive:
     post:
       summary: Archive a club
@@ -1126,11 +2799,17 @@ paths:
         - name: clubId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Club archived }
-        '403': { description: Only President or Faculty can archive }
-
+        "200":
+          description: Club archived
+        "403":
+          description: Only President or Faculty can archive
+      tags:
+        - Clubs
+      operationId: postClubsByClubIdArchive
   /api/v1/clubs/{clubId}/join:
     post:
       summary: Join a club as a member
@@ -1138,11 +2817,17 @@ paths:
         - name: clubId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Joined club }
-        '409': { description: Already a member }
-
+        "200":
+          description: Joined club
+        "409":
+          description: Already a member
+      tags:
+        - Clubs
+      operationId: postClubsByClubIdJoin
   /api/v1/clubs/{clubId}/leave:
     post:
       summary: Leave a club
@@ -1150,10 +2835,15 @@ paths:
         - name: clubId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Left club }
-
+        "200":
+          description: Left club
+      tags:
+        - Clubs
+      operationId: postClubsByClubIdLeave
   /api/v1/clubs/{clubId}/members:
     get:
       summary: List members of a club
@@ -1161,10 +2851,14 @@ paths:
         - name: clubId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Members list returned }
-
+        "200":
+          description: Members list returned
+      tags:
+        - Clubs
+      operationId: getClubsByClubIdMembers
   /api/v1/clubs/{clubId}/invitations:
     post:
       summary: Invite a user to join a club
@@ -1172,15 +2866,22 @@ paths:
         - name: clubId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '201': { description: Invitation sent }
-
+        "201":
+          description: Invitation sent
+      tags:
+        - Clubs
+      operationId: postClubsByClubIdInvitations
   /api/v1/clubs/invitations/{invitationId}/respond:
     post:
       summary: Respond to a club invitation
@@ -1188,39 +2889,61 @@ paths:
         - name: invitationId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Invitation response recorded }
-
+        "200":
+          description: Invitation response recorded
+      tags:
+        - Clubs
+      operationId: postClubsInvitationsByInvitationIdRespond
   /api/v1/clubs/{clubId}/members/{userId}:
     parameters:
       - name: clubId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
       - name: userId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     patch:
       summary: Update member role in club
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Member role updated }
+        "200":
+          description: Member role updated
+      tags:
+        - Clubs
+      operationId: patchClubsByClubIdMembersByUserId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
     delete:
       summary: Remove member from club
       responses:
-        '200': { description: Member removed }
-
+        "200":
+          description: Member removed
+      tags:
+        - Clubs
+      operationId: deleteClubsByClubIdMembersByUserId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
   /api/v1/clubs/{clubId}/logo:
     post:
       summary: Upload club logo image
@@ -1228,10 +2951,15 @@ paths:
         - name: clubId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Logo uploaded }
-
+        "200":
+          description: Logo uploaded
+      tags:
+        - Clubs
+      operationId: postClubsByClubIdLogo
   /api/v1/clubs/{clubId}/banner:
     post:
       summary: Upload club banner image
@@ -1239,65 +2967,103 @@ paths:
         - name: clubId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Banner uploaded }
-
+        "200":
+          description: Banner uploaded
+      tags:
+        - Clubs
+      operationId: postClubsByClubIdBanner
   /api/v1/clubs/{clubId}/events:
     parameters:
       - name: clubId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: List events for a club
       responses:
-        '200': { description: Events listed }
+        "200":
+          description: Events listed
+      tags:
+        - Clubs
+      operationId: getClubsByClubIdEvents
+      parameters: []
     post:
       summary: Create an event for a club
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '201': { description: Event created }
-
+        "201":
+          description: Event created
+      tags:
+        - Clubs
+      operationId: postClubsByClubIdEvents
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/clubs/{clubId}/events/{eventId}:
     parameters:
       - name: clubId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
       - name: eventId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     delete:
       summary: Delete a club event
       responses:
-        '200': { description: Event deleted }
-
+        "200":
+          description: Event deleted
+      tags:
+        - Clubs
+      operationId: deleteClubsByClubIdEventsByEventId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
   /api/v1/clubs/{clubId}/posts:
     parameters:
       - name: clubId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: List posts and announcements for a club
       responses:
-        '200': { description: Posts listed }
+        "200":
+          description: Posts listed
+      tags:
+        - Clubs
+      operationId: getClubsByClubIdPosts
+      parameters: []
     post:
       summary: Create a post or announcement for a club
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '201': { description: Post created }
-
+        "201":
+          description: Post created
+      tags:
+        - Clubs
+      operationId: postClubsByClubIdPosts
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/clubs/{clubId}/analytics:
     get:
       summary: Get analytics and engagement metrics for a club
@@ -1305,96 +3071,164 @@ paths:
         - name: clubId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Club analytics returned }
-
+        "200":
+          description: Club analytics returned
+      tags:
+        - Clubs
+      operationId: getClubsByClubIdAnalytics
   /api/v1/internships/companies:
     get:
       summary: List registered companies
       responses:
-        '200': { description: Companies listed }
+        "200":
+          description: Companies listed
+      tags:
+        - Internships
+      operationId: getInternshipsCompanies
+      parameters: []
     post:
       summary: Create a company record
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '201': { description: Company created }
-
+        "201":
+          description: Company created
+      tags:
+        - Internships
+      operationId: postInternshipsCompanies
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/internships/companies/{companyId}:
     parameters:
       - name: companyId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: Get company profile and listings
       responses:
-        '200': { description: Company profile returned }
+        "200":
+          description: Company profile returned
+      tags:
+        - Internships
+      operationId: getInternshipsCompaniesByCompanyId
+      parameters: []
     patch:
       summary: Update company profile
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Company updated }
-
+        "200":
+          description: Company updated
+      tags:
+        - Internships
+      operationId: patchInternshipsCompaniesByCompanyId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/internships:
     get:
       summary: Search and filter published internships
       responses:
-        '200': { description: Internships listed }
+        "200":
+          description: Internships listed
+      tags:
+        - Internships
+      operationId: getInternships
+      parameters: []
     post:
       summary: Post a new internship listing
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '201': { description: Internship created }
-
+        "201":
+          description: Internship created
+      tags:
+        - Internships
+      operationId: postInternships
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/internships/my-applications:
     get:
       summary: Get student submitted applications
       responses:
-        '200': { description: Applications list returned }
-
+        "200":
+          description: Applications list returned
+      tags:
+        - Internships
+      operationId: getInternshipsMyApplications
+      parameters: []
   /api/v1/internships/applications/me:
     get:
       summary: Alias for getting student submitted applications
       responses:
-        '200': { description: Applications list returned }
-
+        "200":
+          description: Applications list returned
+      tags:
+        - Internships
+      operationId: getInternshipsApplicationsMe
+      parameters: []
   /api/v1/internships/{internshipId}:
     parameters:
       - name: internshipId
         in: path
         required: true
-        schema: { type: string }
+        schema:
+          type: string
     get:
       summary: Get internship details
       responses:
-        '200': { description: Internship details returned }
+        "200":
+          description: Internship details returned
+      tags:
+        - Internships
+      operationId: getInternshipsByInternshipId
+      parameters: []
     patch:
       summary: Update internship listing
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Internship updated }
+        "200":
+          description: Internship updated
+      tags:
+        - Internships
+      operationId: patchInternshipsByInternshipId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
     delete:
       summary: Delete an internship listing
       responses:
-        '200': { description: Internship deleted }
-
+        "200":
+          description: Internship deleted
+      tags:
+        - Internships
+      operationId: deleteInternshipsByInternshipId
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
   /api/v1/internships/{internshipId}/apply:
     post:
       summary: Submit student internship application
@@ -1402,15 +3236,22 @@ paths:
         - name: internshipId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '201': { description: Application submitted }
-
+        "201":
+          description: Application submitted
+      tags:
+        - Internships
+      operationId: postInternshipsByInternshipIdApply
   /api/v1/internships/{internshipId}/withdraw:
     post:
       summary: Withdraw submitted internship application
@@ -1418,10 +3259,15 @@ paths:
         - name: internshipId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Application withdrawn }
-
+        "200":
+          description: Application withdrawn
+      tags:
+        - Internships
+      operationId: postInternshipsByInternshipIdWithdraw
   /api/v1/internships/{internshipId}/applications:
     get:
       summary: List all applications submitted to an internship (Reviewer view)
@@ -1429,10 +3275,14 @@ paths:
         - name: internshipId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Applicants list returned }
-
+        "200":
+          description: Applicants list returned
+      tags:
+        - Internships
+      operationId: getInternshipsByInternshipIdApplications
   /api/v1/internships/applications/{applicationId}/status:
     patch:
       summary: Update applicant status (Reviewer action)
@@ -1440,15 +3290,22 @@ paths:
         - name: applicationId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Application status updated }
-
+        "200":
+          description: Application status updated
+      tags:
+        - Internships
+      operationId: patchInternshipsApplicationsByApplicationIdStatus
   /api/v1/internships/resume:
     post:
       summary: Upload student resume file (PDF/DOCX)
@@ -1463,8 +3320,14 @@ paths:
                   type: string
                   format: binary
       responses:
-        '200': { description: Resume uploaded successfully }
-
+        "200":
+          description: Resume uploaded successfully
+      tags:
+        - Internships
+      operationId: postInternshipsResume
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/FormDataContentType"
   /api/v1/alumni/profile:
     post:
       summary: Create or update alumni profile
@@ -1472,10 +3335,17 @@ paths:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Alumni profile updated }
-
+        "200":
+          description: Alumni profile updated
+      tags:
+        - Alumni
+      operationId: postAlumniProfile
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/alumni/profile/{userId}:
     get:
       summary: Get alumni profile by user ID
@@ -1483,16 +3353,24 @@ paths:
         - name: userId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Alumni profile details returned }
-
+        "200":
+          description: Alumni profile details returned
+      tags:
+        - Alumni
+      operationId: getAlumniProfileByUserId
   /api/v1/alumni/directory:
     get:
       summary: Search alumni directory
       responses:
-        '200': { description: List of alumni profiles returned }
-
+        "200":
+          description: List of alumni profiles returned
+      tags:
+        - Alumni
+      operationId: getAlumniDirectory
+      parameters: []
   /api/v1/alumni/verification/approve:
     post:
       summary: Approve or reject alumni verification (Admin / Career Office)
@@ -1500,10 +3378,17 @@ paths:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Alumni verification updated }
-
+        "200":
+          description: Alumni verification updated
+      tags:
+        - Alumni
+      operationId: postAlumniVerificationApprove
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/alumni/connections:
     post:
       summary: Send alumni connection request
@@ -1511,14 +3396,26 @@ paths:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '201': { description: Connection request created }
+        "201":
+          description: Connection request created
+      tags:
+        - Alumni
+      operationId: postAlumniConnections
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
     get:
       summary: List user alumni connections
       responses:
-        '200': { description: Connections list returned }
-
+        "200":
+          description: Connections list returned
+      tags:
+        - Alumni
+      operationId: getAlumniConnections
+      parameters: []
   /api/v1/alumni/connections/{connectionId}:
     patch:
       summary: Respond to connection request
@@ -1526,15 +3423,22 @@ paths:
         - name: connectionId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Connection status updated }
-
+        "200":
+          description: Connection status updated
+      tags:
+        - Alumni
+      operationId: patchAlumniConnectionsByConnectionId
   /api/v1/alumni/mentorship/sessions:
     post:
       summary: Request mentorship session
@@ -1542,14 +3446,26 @@ paths:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '201': { description: Mentorship session requested }
+        "201":
+          description: Mentorship session requested
+      tags:
+        - Alumni
+      operationId: postAlumniMentorshipSessions
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
     get:
       summary: List mentorship sessions
       responses:
-        '200': { description: Mentorship sessions list returned }
-
+        "200":
+          description: Mentorship sessions list returned
+      tags:
+        - Alumni
+      operationId: getAlumniMentorshipSessions
+      parameters: []
   /api/v1/alumni/mentorship/sessions/{sessionId}:
     patch:
       summary: Update mentorship session status or meeting details
@@ -1557,15 +3473,22 @@ paths:
         - name: sessionId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Mentorship session updated }
-
+        "200":
+          description: Mentorship session updated
+      tags:
+        - Alumni
+      operationId: patchAlumniMentorshipSessionsBySessionId
   /api/v1/alumni/referrals:
     post:
       summary: Post alumni referral opportunity
@@ -1573,14 +3496,26 @@ paths:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '201': { description: Alumni referral created }
+        "201":
+          description: Alumni referral created
+      tags:
+        - Alumni
+      operationId: postAlumniReferrals
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
     get:
       summary: List active alumni referral opportunities
       responses:
-        '200': { description: Referrals list returned }
-
+        "200":
+          description: Referrals list returned
+      tags:
+        - Alumni
+      operationId: getAlumniReferrals
+      parameters: []
   /api/v1/alumni/events:
     post:
       summary: Post alumni event
@@ -1588,26 +3523,46 @@ paths:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '201': { description: Alumni event created }
+        "201":
+          description: Alumni event created
+      tags:
+        - Alumni
+      operationId: postAlumniEvents
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
     get:
       summary: List upcoming alumni events
       responses:
-        '200': { description: Events list returned }
-
+        "200":
+          description: Events list returned
+      tags:
+        - Alumni
+      operationId: getAlumniEvents
+      parameters: []
   /api/v1/notifications:
     get:
       summary: List user notifications
       responses:
-        '200': { description: Notifications list returned }
-
+        "200":
+          description: Notifications list returned
+      tags:
+        - Notifications
+      operationId: getNotifications
+      parameters: []
   /api/v1/notifications/unread-count:
     get:
       summary: Get unread notification count
       responses:
-        '200': { description: Unread count returned }
-
+        "200":
+          description: Unread count returned
+      tags:
+        - Notifications
+      operationId: getNotificationsUnreadCount
+      parameters: []
   /api/v1/notifications/read:
     post:
       summary: Mark specific notifications as read
@@ -1615,16 +3570,28 @@ paths:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Notifications marked as read }
-
+        "200":
+          description: Notifications marked as read
+      tags:
+        - Notifications
+      operationId: postNotificationsRead
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/notifications/read-all:
     post:
       summary: Mark all notifications as read
       responses:
-        '200': { description: All notifications marked as read }
-
+        "200":
+          description: All notifications marked as read
+      tags:
+        - Notifications
+      operationId: postNotificationsReadAll
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
   /api/v1/notifications/{notificationId}/archive:
     patch:
       summary: Archive a notification
@@ -1632,10 +3599,15 @@ paths:
         - name: notificationId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Notification archived }
-
+        "200":
+          description: Notification archived
+      tags:
+        - Notifications
+      operationId: patchNotificationsByNotificationIdArchive
   /api/v1/notifications/{notificationId}:
     get:
       summary: Get notification details by ID
@@ -1643,45 +3615,70 @@ paths:
         - name: notificationId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
       responses:
-        '200': { description: Notification details returned }
+        "200":
+          description: Notification details returned
+      tags:
+        - Notifications
+      operationId: getNotificationsByNotificationId
     delete:
       summary: Delete a notification
       parameters:
         - name: notificationId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Notification deleted }
-
+        "200":
+          description: Notification deleted
+      tags:
+        - Notifications
+      operationId: deleteNotificationsByNotificationId
   /api/v1/notifications/stream:
     get:
       summary: Server-Sent Events stream for real-time notifications
       responses:
-        '200':
+        "200":
           description: Event stream established
           content:
             text/event-stream:
               schema:
                 type: string
-
+      tags:
+        - Notifications
+      operationId: getNotificationsStream
+      parameters: []
   /api/v1/notifications/preferences:
     get:
       summary: Get notification channel and category preferences
       responses:
-        '200': { description: Notification preferences returned }
+        "200":
+          description: Notification preferences returned
+      tags:
+        - Notifications
+      operationId: getNotificationsPreferences
+      parameters: []
     patch:
       summary: Update notification preferences
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Notification preferences updated }
-
+        "200":
+          description: Notification preferences updated
+      tags:
+        - Notifications
+      operationId: patchNotificationsPreferences
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/notifications/devices:
     post:
       summary: Register device token for push notifications
@@ -1689,14 +3686,26 @@ paths:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '201': { description: Device token registered }
+        "201":
+          description: Device token registered
+      tags:
+        - Notifications
+      operationId: postNotificationsDevices
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
     get:
       summary: List registered device tokens
       responses:
-        '200': { description: Device tokens list returned }
-
+        "200":
+          description: Device tokens list returned
+      tags:
+        - Notifications
+      operationId: getNotificationsDevices
+      parameters: []
   /api/v1/notifications/devices/{token}:
     delete:
       summary: Revoke device token
@@ -1704,22 +3713,35 @@ paths:
         - name: token
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Device token revoked }
-
+        "200":
+          description: Device token revoked
+      tags:
+        - Notifications
+      operationId: deleteNotificationsDevicesByToken
   /api/v1/admin/summary:
     get:
       summary: Get admin dashboard metrics summary
       responses:
-        '200': { description: Metrics summary returned }
-
+        "200":
+          description: Metrics summary returned
+      tags:
+        - Admin
+      operationId: getAdminSummary
+      parameters: []
   /api/v1/admin/users:
     get:
       summary: List users for admin management
       responses:
-        '200': { description: Users list returned }
-
+        "200":
+          description: Users list returned
+      tags:
+        - Admin
+      operationId: getAdminUsers
+      parameters: []
   /api/v1/admin/users/{targetUserId}:
     patch:
       summary: Update user role or status (Admin action)
@@ -1727,21 +3749,32 @@ paths:
         - name: targetUserId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: User updated }
-
+        "200":
+          description: User updated
+      tags:
+        - Admin
+      operationId: patchAdminUsersByTargetUserId
   /api/v1/admin/verification/queue:
     get:
       summary: List pending student/alumni verification requests
       responses:
-        '200': { description: Verification queue returned }
-
+        "200":
+          description: Verification queue returned
+      tags:
+        - Admin
+      operationId: getAdminVerificationQueue
+      parameters: []
   /api/v1/admin/verification/approve:
     post:
       summary: Legacy approve verification request
@@ -1749,10 +3782,17 @@ paths:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Verification approved }
-
+        "200":
+          description: Verification approved
+      tags:
+        - Admin
+      operationId: postAdminVerificationApprove
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/admin/verification/{verificationId}/approve:
     post:
       summary: Approve verification request by ID
@@ -1760,10 +3800,15 @@ paths:
         - name: verificationId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: Verification approved }
-
+        "200":
+          description: Verification approved
+      tags:
+        - Admin
+      operationId: postAdminVerificationByVerificationIdApprove
   /api/v1/admin/verification/{verificationId}/reject:
     post:
       summary: Reject verification request by ID
@@ -1771,23 +3816,34 @@ paths:
         - name: verificationId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                rejectionReason: { type: string }
+                rejectionReason:
+                  type: string
       responses:
-        '200': { description: Verification rejected }
-
+        "200":
+          description: Verification rejected
+      tags:
+        - Admin
+      operationId: postAdminVerificationByVerificationIdReject
   /api/v1/admin/reports/queue:
     get:
       summary: List content reports queue
       responses:
-        '200': { description: Reports queue returned }
-
+        "200":
+          description: Reports queue returned
+      tags:
+        - Admin
+      operationId: getAdminReportsQueue
+      parameters: []
   /api/v1/admin/moderation/action:
     post:
       summary: Apply moderation action (warn, hide, suspend, ban)
@@ -1795,37 +3851,64 @@ paths:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Moderation action applied }
-
+        "200":
+          description: Moderation action applied
+      tags:
+        - Admin
+      operationId: postAdminModerationAction
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/admin/audit-logs:
     get:
       summary: List admin audit log history
       responses:
-        '200': { description: Audit logs returned }
-
+        "200":
+          description: Audit logs returned
+      tags:
+        - Admin
+      operationId: getAdminAuditLogs
+      parameters: []
   /api/v1/admin/audit-logs/export:
     get:
       summary: Export admin audit logs as JSON/CSV
       responses:
-        '200': { description: Audit logs export returned }
-
+        "200":
+          description: Audit logs export returned
+      tags:
+        - Admin
+      operationId: getAdminAuditLogsExport
+      parameters: []
   /api/v1/admin/settings:
     get:
       summary: List system settings and feature flags
       responses:
-        '200': { description: System settings returned }
+        "200":
+          description: System settings returned
+      tags:
+        - Admin
+      operationId: getAdminSettings
+      parameters: []
     patch:
       summary: Update system setting
       requestBody:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: System setting updated }
-
+        "200":
+          description: System setting updated
+      tags:
+        - Admin
+      operationId: patchAdminSettings
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/admin/announcements:
     post:
       summary: Broadcast admin global announcement
@@ -1833,26 +3916,46 @@ paths:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '201': { description: Announcement created }
+        "201":
+          description: Announcement created
+      tags:
+        - Admin
+      operationId: postAdminAnnouncements
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
     get:
       summary: List announcements
       responses:
-        '200': { description: Announcements list returned }
-
+        "200":
+          description: Announcements list returned
+      tags:
+        - Admin
+      operationId: getAdminAnnouncements
+      parameters: []
   /api/v1/communities:
     get:
       summary: List managed communities and study groups for admin
       responses:
-        '200': { description: Communities list returned }
-
+        "200":
+          description: Communities list returned
+      tags:
+        - Admin
+      operationId: getCommunities
+      parameters: []
   /api/v1/events:
     get:
       summary: List all campus events for admin
       responses:
-        '200': { description: Events list returned }
-
+        "200":
+          description: Events list returned
+      tags:
+        - Admin
+      operationId: getEvents
+      parameters: []
   /api/v1/analytics/events:
     post:
       summary: Ingest analytics telemetry events (rate-limited)
@@ -1860,22 +3963,37 @@ paths:
         required: true
         content:
           application/json:
-            schema: { type: object }
+            schema:
+              type: object
       responses:
-        '200': { description: Event recorded }
-
+        "200":
+          description: Event recorded
+      tags:
+        - Analytics
+      operationId: postAnalyticsEvents
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
   /api/v1/analytics/dashboard:
     get:
       summary: Get system product analytics summary and metrics
       responses:
-        '200': { description: Analytics dashboard metrics returned }
-
+        "200":
+          description: Analytics dashboard metrics returned
+      tags:
+        - Analytics
+      operationId: getAnalyticsDashboard
+      parameters: []
   /api/v1/analytics/export:
     get:
       summary: Export product analytics data
       responses:
-        '200': { description: Analytics data exported }
-
+        "200":
+          description: Analytics data exported
+      tags:
+        - Analytics
+      operationId: getAnalyticsExport
+      parameters: []
   /api/v1/analytics/privacy/{userId}:
     post:
       summary: Anonymize or purge user analytics data
@@ -1883,16 +4001,926 @@ paths:
         - name: userId
           in: path
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
       responses:
-        '200': { description: User data anonymized }
-
+        "200":
+          description: User data anonymized
+      tags:
+        - Analytics
+      operationId: postAnalyticsPrivacyByUserId
 components:
   securitySchemes:
     sessionCookie:
       type: apiKey
       in: cookie
       name: better-auth.session_token
+      description: HTTP-only session cookie set by Better Auth upon sign-in or registration.
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: BetterAuth Token
+      description: "Bearer token passed in the Authorization header (e.g.
+        `Authorization: Bearer <session_token>`)."
   responses:
     Unauthorized:
-      description: Authentication required
+      description: Authentication required or invalid/expired session
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: Unauthorized
+            code: UNAUTHORIZED
+    Forbidden:
+      description: Access forbidden - insufficient permissions or not the resource owner
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: Forbidden
+            code: FORBIDDEN
+    NotFound:
+      description: Requested resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: Resource not found
+            code: NOT_FOUND
+    BadRequest:
+      description: Invalid request parameters or payload validation failure
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: Invalid payload
+            code: BAD_REQUEST
+    Conflict:
+      description: Conflict due to existing resource or optimistic locking version conflict
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: Concurrent update conflict
+            code: CONFLICT
+    InternalError:
+      description: Unexpected internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+          example:
+            message: An unexpected error occurred.
+            code: INTERNAL_ERROR
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: Resource not found
+        code:
+          type: string
+          example: NOT_FOUND
+        errors:
+          type: array
+          items:
+            type: object
+    User:
+      type: object
+      required:
+        - id
+        - email
+      properties:
+        id:
+          type: string
+          example: cluser123456789
+        email:
+          type: string
+          format: email
+          example: student@lumina.edu
+        name:
+          type: string
+          example: Jane Doe
+        role:
+          type: string
+          enum:
+            - STUDENT
+            - ALUMNI
+            - FACULTY
+            - ADMIN
+          example: STUDENT
+        status:
+          type: string
+          enum:
+            - PENDING
+            - ACTIVE
+            - SUSPENDED
+            - DELETED
+          example: ACTIVE
+        collegeId:
+          type: string
+          nullable: true
+          example: col-123
+        departmentId:
+          type: string
+          nullable: true
+          example: dept-456
+        image:
+          type: string
+          nullable: true
+          example: https://lumina-bucket.s3.us-east-1.amazonaws.com/avatars/user-123.jpg
+        emailVerified:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          format: date-time
+          example: 2026-09-01T12:00:00.000Z
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2026-10-15T12:00:00.000Z
+    Profile:
+      type: object
+      required:
+        - id
+        - userId
+        - firstName
+        - lastName
+        - email
+      properties:
+        id:
+          type: string
+          example: clprof123
+        userId:
+          type: string
+          example: cluser123456789
+        firstName:
+          type: string
+          example: Jane
+        lastName:
+          type: string
+          example: Doe
+        email:
+          type: string
+          format: email
+          example: jane.doe@lumina.edu
+        bio:
+          type: string
+          nullable: true
+          example: Computer Science student passionate about distributed systems.
+        about:
+          type: string
+          nullable: true
+          example: Senior undergrad working on open source publishing platforms.
+        profilePicture:
+          type: string
+          nullable: true
+          example: https://lumina-bucket.s3.us-east-1.amazonaws.com/avatars/avatar-123.png
+        coverImage:
+          type: string
+          nullable: true
+          example: https://lumina-bucket.s3.us-east-1.amazonaws.com/covers/cover-123.png
+        gender:
+          type: string
+          nullable: true
+          enum:
+            - MALE
+            - FEMALE
+            - OTHER
+        year:
+          type: integer
+          nullable: true
+          example: 4
+        skills:
+          type: array
+          items:
+            type: string
+          example:
+            - TypeScript
+            - React
+            - Node.js
+            - PostgreSQL
+        interests:
+          type: array
+          items:
+            type: string
+          example:
+            - Cloud Computing
+            - AI/ML
+            - Web Development
+        github:
+          type: string
+          nullable: true
+          example: https://github.com/janedoe
+        linkedin:
+          type: string
+          nullable: true
+          example: https://linkedin.com/in/janedoe
+        portfolio:
+          type: string
+          nullable: true
+          example: https://janedoe.dev
+        location:
+          type: string
+          nullable: true
+          example: San Francisco, CA
+        leetcodeUsername:
+          type: string
+          nullable: true
+          example: janedoe_codes
+        createdAt:
+          type: string
+          format: date-time
+          example: 2026-09-01T12:00:00.000Z
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2026-10-15T12:00:00.000Z
+    Post:
+      type: object
+      required:
+        - id
+        - authorId
+        - visibility
+        - status
+      properties:
+        id:
+          type: string
+          example: clpost123456
+        authorId:
+          type: string
+          example: cluser123456789
+        clubId:
+          type: string
+          nullable: true
+          example: null
+        title:
+          type: string
+          nullable: true
+          example: Building Distributed Systems with Node.js
+        subtitle:
+          type: string
+          nullable: true
+          example: A practical guide to fault tolerance and consensus
+        coverImage:
+          type: string
+          nullable: true
+          example: https://lumina-bucket.s3.us-east-1.amazonaws.com/posts/cover.jpg
+        blocks:
+          type: array
+          nullable: true
+          items:
+            type: object
+            additionalProperties: true
+          example:
+            - id: b1
+              type: paragraph
+              content: Distributed systems require careful consensus design...
+        content:
+          type: string
+          nullable: true
+          example: Distributed systems require careful consensus design...
+        topics:
+          type: array
+          items:
+            type: string
+          example:
+            - Technology
+            - Engineering
+        category:
+          type: string
+          nullable: true
+          example: Technology
+        visibility:
+          type: string
+          enum:
+            - PUBLIC
+            - COLLEGE
+            - FRIENDS
+            - PRIVATE
+          example: PUBLIC
+        status:
+          type: string
+          enum:
+            - DRAFT
+            - SCHEDULED
+            - PUBLISHED
+            - ARCHIVED
+          example: PUBLISHED
+        anonymous:
+          type: boolean
+          example: false
+        location:
+          type: string
+          nullable: true
+          example: Main Campus
+        likeCount:
+          type: integer
+          example: 42
+        commentCount:
+          type: integer
+          example: 7
+        viewCount:
+          type: integer
+          example: 180
+        shareCount:
+          type: integer
+          example: 12
+        saveCount:
+          type: integer
+          example: 15
+        scheduledAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: 2026-10-20T09:00:00.000Z
+        publishedAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: 2026-10-15T10:00:00.000Z
+        scheduleVersion:
+          type: integer
+          example: 1
+        media:
+          type: array
+          items:
+            $ref: "#/components/schemas/PostMedia"
+        createdAt:
+          type: string
+          format: date-time
+          example: 2026-10-15T09:00:00.000Z
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2026-10-15T09:30:00.000Z
+    PostMedia:
+      type: object
+      required:
+        - id
+        - postId
+        - type
+        - url
+        - key
+        - mimeType
+        - size
+      properties:
+        id:
+          type: string
+          example: clmedia123
+        postId:
+          type: string
+          example: clpost123456
+        type:
+          type: string
+          enum:
+            - IMAGE
+            - VIDEO
+          example: IMAGE
+        url:
+          type: string
+          format: uri
+          example: https://lumina-bucket.s3.us-east-1.amazonaws.com/posts/photo.jpg
+        key:
+          type: string
+          example: posts/uuid-photo.jpg
+        mimeType:
+          type: string
+          example: image/jpeg
+        size:
+          type: integer
+          example: 204800
+        width:
+          type: integer
+          nullable: true
+          example: 1920
+        height:
+          type: integer
+          nullable: true
+          example: 1080
+        duration:
+          type: integer
+          nullable: true
+          example: null
+        order:
+          type: integer
+          example: 0
+        createdAt:
+          type: string
+          format: date-time
+          example: 2026-10-15T09:00:00.000Z
+    PostMediaInput:
+      type: object
+      required:
+        - key
+        - url
+      properties:
+        key:
+          type: string
+          example: posts/uuid-photo.jpg
+        url:
+          type: string
+          format: uri
+          example: https://lumina-bucket.s3.us-east-1.amazonaws.com/posts/uuid-photo.jpg
+        type:
+          type: string
+          enum:
+            - IMAGE
+            - VIDEO
+          default: IMAGE
+        mimeType:
+          type: string
+          example: image/jpeg
+        size:
+          type: integer
+          example: 204800
+        width:
+          type: integer
+          nullable: true
+          example: 1920
+        height:
+          type: integer
+          nullable: true
+          example: 1080
+        duration:
+          type: integer
+          nullable: true
+          example: null
+    Comment:
+      type: object
+      required:
+        - id
+        - content
+        - postId
+        - userId
+      properties:
+        id:
+          type: string
+          example: cmnt-123456
+        content:
+          type: string
+          example: Great write-up! Thanks for sharing.
+        postId:
+          type: string
+          example: clpost123456
+        userId:
+          type: string
+          example: cluser123456789
+        parentId:
+          type: string
+          nullable: true
+          example: null
+        depth:
+          type: integer
+          example: 0
+        isDeleted:
+          type: boolean
+          example: false
+        isPinned:
+          type: boolean
+          example: false
+        version:
+          type: integer
+          example: 1
+        createdAt:
+          type: string
+          format: date-time
+          example: 2026-10-15T09:15:00.000Z
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2026-10-15T09:15:00.000Z
+    CreatePostInput:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Campus Hackathon 2026 Recap
+        subtitle:
+          type: string
+          example: Highlights and winning projects from Lumina annual hackathon
+        coverImage:
+          type: string
+          format: uri
+          example: https://lumina-bucket.s3.us-east-1.amazonaws.com/posts/cover.jpg
+        content:
+          type: string
+          example: Over 50 teams participated in this year hackathon...
+        blocks:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+          example:
+            - id: b1
+              type: paragraph
+              content: Over 50 teams participated in this year hackathon...
+        category:
+          type: string
+          example: Technology
+        topics:
+          type: array
+          items:
+            type: string
+          maxItems: 20
+          example:
+            - Hackathon
+            - Engineering
+            - Innovation
+        visibility:
+          type: string
+          enum:
+            - PUBLIC
+            - COLLEGE
+            - FRIENDS
+            - PRIVATE
+          default: PUBLIC
+        anonymous:
+          type: boolean
+          default: false
+        location:
+          type: string
+          example: Main Auditorium
+        media:
+          type: array
+          items:
+            $ref: "#/components/schemas/PostMediaInput"
+    SchedulePostInput:
+      type: object
+      required:
+        - scheduleTime
+      properties:
+        scheduleTime:
+          type: string
+          format: date-time
+          example: 2026-10-20T09:00:00.000Z
+          description: Future ISO-8601 UTC timestamp at which the post will be
+            automatically published.
+    MediaUploadUrlRequest:
+      type: object
+      required:
+        - filename
+        - contentType
+        - size
+      properties:
+        filename:
+          type: string
+          example: screenshot.png
+        contentType:
+          type: string
+          enum:
+            - image/jpeg
+            - image/png
+            - image/webp
+          example: image/png
+        size:
+          type: integer
+          minimum: 1
+          maximum: 5242880
+          example: 1048576
+          description: File size in bytes (maximum 5MB allowed).
+    MediaUploadUrlResponse:
+      type: object
+      required:
+        - uploadUrl
+        - key
+        - publicUrl
+      properties:
+        uploadUrl:
+          type: string
+          format: uri
+          example: https://lumina-bucket.s3.us-east-1.amazonaws.com/posts/uuid.png?X-Amz-Algorithm=...
+          description: Presigned S3 PUT URL valid for 300 seconds.
+        key:
+          type: string
+          example: posts/uuid.png
+          description: S3 object key to be referenced in createPost media payload.
+        publicUrl:
+          type: string
+          format: uri
+          example: https://lumina-bucket.s3.us-east-1.amazonaws.com/posts/uuid.png
+          description: Public HTTP URL of the asset after upload.
+    SignUpInput:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          example: Jane Doe
+        email:
+          type: string
+          format: email
+          example: student@lumina.edu
+        password:
+          type: string
+          format: password
+          minLength: 8
+          example: P@ssword123!
+    VerifyOtpInput:
+      type: object
+      required:
+        - email
+        - otp
+      properties:
+        email:
+          type: string
+          format: email
+          example: student@lumina.edu
+        otp:
+          type: string
+          pattern: "^[0-9]{6}$"
+          example: "123456"
+          description: Six-digit numeric email verification code
+    ResendOtpInput:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          example: student@lumina.edu
+    VerifyOtpResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Email verified successfully.
+        alreadyVerified:
+          type: boolean
+          example: false
+        token:
+          type: string
+          nullable: true
+          example: tok_session_12345
+        user:
+          $ref: "#/components/schemas/User"
+    ResendOtpResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: A new verification code has been sent to your email address.
+        alreadyVerified:
+          type: boolean
+          example: false
+        retryAfter:
+          type: integer
+          example: 60
+          description: Cooldown seconds remaining before next request can be made
+    SignInInput:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: student@lumina.edu
+        password:
+          type: string
+          format: password
+          example: P@ssword123!
+        rememberMe:
+          type: boolean
+          default: true
+    AuthSessionResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: tok_session_12345
+        user:
+          $ref: "#/components/schemas/User"
+        session:
+          type: object
+          properties:
+            id:
+              type: string
+              example: sess_12345
+            token:
+              type: string
+              example: tok_session_12345
+            userId:
+              type: string
+              example: cluser123456789
+            expiresAt:
+              type: string
+              format: date-time
+              example: 2026-11-15T12:00:00.000Z
+    UpdateProfileInput:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Jane
+        lastName:
+          type: string
+          example: Doe
+        bio:
+          type: string
+          example: Computer Science student passionate about distributed systems.
+        about:
+          type: string
+          example: Senior undergrad working on open source publishing platforms.
+        skills:
+          type: array
+          items:
+            type: string
+          example:
+            - TypeScript
+            - React
+            - Node.js
+        interests:
+          type: array
+          items:
+            type: string
+          example:
+            - Cloud Computing
+            - AI/ML
+        year:
+          type: integer
+          example: 4
+        github:
+          type: string
+          example: https://github.com/janedoe
+        linkedin:
+          type: string
+          example: https://linkedin.com/in/janedoe
+        portfolio:
+          type: string
+          example: https://janedoe.dev
+        location:
+          type: string
+          example: San Francisco, CA
+        leetcodeUsername:
+          type: string
+          example: janedoe_codes
+    OnboardingInput:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Jane
+        lastName:
+          type: string
+          example: Doe
+        college:
+          type: string
+          example: Stanford University
+        department:
+          type: string
+          example: Computer Science
+        year:
+          type: integer
+          example: 2
+        skills:
+          type: array
+          items:
+            type: string
+          example:
+            - TypeScript
+            - Python
+        interests:
+          type: array
+          items:
+            type: string
+          example:
+            - Artificial Intelligence
+            - Web Development
+        bio:
+          type: string
+          example: Passionate CS major
+  parameters:
+    OriginHeader:
+      name: Origin
+      in: header
+      required: true
+      description: The origin of the frontend application making the request.
+      schema:
+        type: string
+        format: uri
+        example: http://localhost:3002
+      examples:
+        default:
+          summary: Local development origin
+          value: http://localhost:3002
+        frontend:
+          summary: Configured frontend origin (CORS_ORIGIN)
+          value: http://localhost:5173
+    OriginHeaderRequired:
+      name: Origin
+      in: header
+      required: true
+      description: The origin of the frontend application making the request. Required
+        for CSRF protection by Better Auth on authentication endpoints.
+      schema:
+        type: string
+        format: uri
+        example: http://localhost:3002
+      examples:
+        default:
+          summary: Local development origin
+          value: http://localhost:3002
+        frontend:
+          summary: Configured frontend origin (CORS_ORIGIN)
+          value: http://localhost:5173
+    OriginHeaderOptional:
+      name: Origin
+      in: header
+      required: false
+      description: The origin of the frontend application making the request.
+        Validated by backend CSRF protection middleware on state-changing
+        operations.
+      schema:
+        type: string
+        format: uri
+        example: http://localhost:3002
+      examples:
+        default:
+          summary: Local development origin
+          value: http://localhost:3002
+        frontend:
+          summary: Configured frontend origin (CORS_ORIGIN)
+          value: http://localhost:5173
+    JsonContentType:
+      name: Content-Type
+      in: header
+      required: true
+      description: The media type of the request body.
+      schema:
+        type: string
+        example: application/json
+    FormDataContentType:
+      name: Content-Type
+      in: header
+      required: true
+      description: The media type of the multipart request body.
+      schema:
+        type: string
+        example: multipart/form-data
+tags:
+  - name: System
+    description: Core liveness, readiness, and metrics monitoring probes
+  - name: Authentication
+    description: User registration, email authentication, session management, and
+      sign-out via Better Auth
+  - name: Users
+    description: User profile retrieval, profile updates, onboarding, and
+      avatar/cover uploads
+  - name: Posts
+    description: Post creation, likes, bookmarks, and threaded commenting
+  - name: Publishing
+    description: Scheduled post publishing lifecycle, rescheduling, cancellations,
+      and immediate publishing
+  - name: Feed
+    description: Campus-scoped feed retrieval with cursor pagination
+  - name: Media
+    description: Direct media uploads and S3 presigned URL generation
+  - name: Friends
+    description: Friend requests, mutual friend discovery, and friendship management
+  - name: Chat
+    description: Stream Chat tokens and direct conversation management
+  - name: Leaderboard
+    description: Campus competitive rankings and user stats
+  - name: LeetCode
+    description: LeetCode profile sync and problem-solving analytics
+  - name: Video
+    description: Stream Video calling tokens, signaling, and call lifecycle
+  - name: Comments
+    description: Unified comment tree, reactions, reporting, and moderation
+  - name: Study Groups
+    description: Collaborative study groups, discussions, notes, and file sharing
+  - name: Clubs
+    description: Student organizations, club events, announcements, and memberships
+  - name: Internships
+    description: Internship listings, applications, and student resume management
+  - name: Alumni
+    description: Alumni network directory, mentorship sessions, and referrals
+  - name: Notifications
+    description: Real-time user notifications, preference management, and device
+      token registration
+  - name: Admin
+    description: System administration, user moderation, report queues, and audit logging
+  - name: Analytics
+    description: Product analytics telemetry ingestion, dashboards, and GDPR privacy actions

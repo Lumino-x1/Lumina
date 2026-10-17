@@ -122,14 +122,14 @@
 }
 
 .btn-cta-blue {
-  background-color: #1d70f5;
+  background-color: #C15F3C;
   color: #ffffff;
   font-family: var(--font-sans);
   font-size: 14.5px;
   font-weight: 600;
   padding: 12px 28px;
-  border-radius: 0;
-  border: 1px solid #1d70f5;
+  border-radius: 9999px !important;
+  border: 1px solid #C15F3C;
   cursor: pointer;
   box-shadow: none;
   display: inline-flex;
@@ -140,32 +140,35 @@
 }
 
 .btn-cta-blue:hover {
-  background-color: #1660d5;
+  background-color: #A94F30;
+  border-color: #A94F30;
   opacity: 0.95;
 }
 
 .btn-cta-white,
 .btn-cta-primary {
-  background-color: #ffffff;
-  color: #000000;
+  background-color: #C15F3C;
+  color: #FFFFFF;
   font-family: var(--font-sans);
   font-size: 14.5px;
   font-weight: 600;
   padding: 12px 28px;
-  border-radius: 0;
-  border: 1px solid #ffffff;
+  border-radius: 9999px !important;
+  border: 1px solid #C15F3C;
   cursor: pointer;
   box-shadow: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  transition: opacity 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .btn-cta-white:hover,
 .btn-cta-primary:hover {
-  opacity: 0.9;
+  background-color: #A94F30;
+  border-color: #A94F30;
+  color: #FFFFFF;
 }
 
 .btn-cta-link {
@@ -341,7 +344,7 @@
 }
 
 .newsletter-submit-btn {
-  background-color: #1d70f5;
+  background-color: #C15F3C;
   color: #ffffff;
   font-family: var(--font-sans);
   font-size: 13.5px;
@@ -355,7 +358,7 @@
 }
 
 .newsletter-submit-btn:hover {
-  background-color: #2b7cf8;
+  background-color: #A94F30;
 }
 
 .newsletter-disclaimer {

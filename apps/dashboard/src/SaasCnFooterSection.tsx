@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { ArrowUpRight, Sun, Moon, User } from 'lucide-react'
+import { useTheme } from './lib/themeContext'
 import './SaasCnFooterSection.css'
 
 export interface SaasCnFooterSectionProps {
@@ -7,7 +8,8 @@ export interface SaasCnFooterSectionProps {
 }
 
 export const SaasCnFooterSection: React.FC<SaasCnFooterSectionProps> = ({ onOpenAuth }) => {
-  const [isDarkMode, setIsDarkMode] = useState(true)
+  const { theme, toggleTheme } = useTheme()
+  const isDarkMode = theme === 'dark'
 
   const handleGetStarted = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -78,7 +80,7 @@ export const SaasCnFooterSection: React.FC<SaasCnFooterSectionProps> = ({ onOpen
           {/* Brand Column / Description */}
           <div className="saascn-col">
             <h3 className="saascn-col-title">Lumina</h3>
-            <p className="text-sm text-white/60 leading-relaxed max-w-[200px] mb-3">
+            <p className="saascn-brand-tagline">
               Your college, connected.
             </p>
           </div>
@@ -130,10 +132,10 @@ export const SaasCnFooterSection: React.FC<SaasCnFooterSectionProps> = ({ onOpen
                   href="https://github.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="saascn-link saascn-link-github"
+                  className="saascn-link saascn-social-link"
                 >
                   <svg
-                    className="w-4 h-4 mr-2"
+                    className="saascn-social-icon"
                     viewBox="0 0 24 24"
                     fill="currentColor"
                     aria-hidden="true"
@@ -152,10 +154,10 @@ export const SaasCnFooterSection: React.FC<SaasCnFooterSectionProps> = ({ onOpen
                   href="https://linkedin.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="saascn-link"
+                  className="saascn-link saascn-social-link"
                 >
                   <svg
-                    className="w-4 h-4 mr-2"
+                    className="saascn-social-icon"
                     viewBox="0 0 24 24"
                     fill="currentColor"
                     aria-hidden="true"
@@ -180,7 +182,7 @@ export const SaasCnFooterSection: React.FC<SaasCnFooterSectionProps> = ({ onOpen
             onClick={handleUserClick}
             aria-label="User Account"
           >
-            <User className="w-4 h-4 text-white/70" />
+            <User className="w-4 h-4 text-current" />
           </button>
 
           {/* Copyright Center Text */}
@@ -192,12 +194,21 @@ export const SaasCnFooterSection: React.FC<SaasCnFooterSectionProps> = ({ onOpen
           <button
             type="button"
             className="saascn-theme-toggle"
-            onClick={() => setIsDarkMode((prev) => !prev)}
-            aria-label="Toggle Theme"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
+            title={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
           >
-            <Sun className={`w-3.5 h-3.5 ${!isDarkMode ? 'text-white' : 'text-white/40'}`} />
-            <div className={`saascn-theme-active-indicator ${isDarkMode ? 'is-dark' : 'is-light'}`}>
-              <Moon className="w-3.5 h-3.5 text-white" />
+            <div
+              className={`saascn-theme-active-indicator ${!isDarkMode ? 'is-active is-light' : ''}`}
+              title="Light mode"
+            >
+              <Sun className={`w-3.5 h-3.5 saascn-theme-icon ${!isDarkMode ? 'saascn-icon-active' : 'saascn-icon-inactive'}`} />
+            </div>
+            <div
+              className={`saascn-theme-active-indicator ${isDarkMode ? 'is-dark is-active' : ''}`}
+              title="Dark mode"
+            >
+              <Moon className={`w-3.5 h-3.5 saascn-theme-icon ${isDarkMode ? 'saascn-icon-active' : 'saascn-icon-inactive'}`} />
             </div>
           </button>
         </div>

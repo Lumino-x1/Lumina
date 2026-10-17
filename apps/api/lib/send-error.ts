@@ -71,6 +71,51 @@ function mapKnownError(message: string): { status: number; message: string; code
       message: 'INVALID_PARENT_COMMENT',
       code: 'INVALID_PARENT_COMMENT',
     },
+    ONLY_AUTHOR_CAN_SCHEDULE: {
+      status: 403,
+      message: 'ONLY_AUTHOR_CAN_SCHEDULE',
+      code: 'ONLY_AUTHOR_CAN_SCHEDULE',
+    },
+    ONLY_AUTHOR_CAN_RESCHEDULE: {
+      status: 403,
+      message: 'ONLY_AUTHOR_CAN_RESCHEDULE',
+      code: 'ONLY_AUTHOR_CAN_RESCHEDULE',
+    },
+    ONLY_AUTHOR_CAN_DELETE_SCHEDULED_POST: {
+      status: 403,
+      message: 'ONLY_AUTHOR_CAN_DELETE_SCHEDULED_POST',
+      code: 'ONLY_AUTHOR_CAN_DELETE_SCHEDULED_POST',
+    },
+    ONLY_AUTHOR_CAN_PUBLISH: {
+      status: 403,
+      message: 'ONLY_AUTHOR_CAN_PUBLISH',
+      code: 'ONLY_AUTHOR_CAN_PUBLISH',
+    },
+    INVALID_SCHEDULE_TIME: {
+      status: 400,
+      message: 'INVALID_SCHEDULE_TIME',
+      code: 'INVALID_SCHEDULE_TIME',
+    },
+    POST_CANNOT_BE_SCHEDULED: {
+      status: 400,
+      message: 'POST_CANNOT_BE_SCHEDULED',
+      code: 'POST_CANNOT_BE_SCHEDULED',
+    },
+    POST_NOT_SCHEDULED: {
+      status: 400,
+      message: 'POST_NOT_SCHEDULED',
+      code: 'POST_NOT_SCHEDULED',
+    },
+    POST_ALREADY_PUBLISHED: {
+      status: 409,
+      message: 'POST_ALREADY_PUBLISHED',
+      code: 'POST_ALREADY_PUBLISHED',
+    },
+    POST_UPDATE_CONFLICT: {
+      status: 409,
+      message: 'POST_UPDATE_CONFLICT',
+      code: 'POST_UPDATE_CONFLICT',
+    },
   }
   return table[message] ?? null
 }

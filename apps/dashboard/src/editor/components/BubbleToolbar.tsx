@@ -110,9 +110,23 @@ export const BubbleToolbar: React.FC = () => {
 
         if (rect.width > 0) {
           lastTextRef.current = text
+          const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 800
+          const approxHalfWidth = Math.min(190, screenWidth * 0.44)
+          const targetLeft = Math.round(rect.left + rect.width / 2)
+          const clampedLeft = Math.max(
+            approxHalfWidth + 10,
+            Math.min(screenWidth - approxHalfWidth - 10, targetLeft)
+          )
+
+          // If selection is close to the sticky topbar (56px), position below selection
+          let targetTop = Math.round(rect.top - 54)
+          if (targetTop < 60) {
+            targetTop = Math.round(rect.bottom + 12)
+          }
+
           setPosition({
-            top: Math.max(10, Math.round(rect.top - 54)),
-            left: Math.round(rect.left + rect.width / 2),
+            top: Math.max(10, targetTop),
+            left: clampedLeft,
           })
           checkFormatStates()
         }

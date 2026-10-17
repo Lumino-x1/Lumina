@@ -128,9 +128,9 @@
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  background-color: #ffffff;
-  color: #000000;
-  border: 1px solid #ffffff;
+  background-color: #C15F3C;
+  color: #FFFFFF;
+  border: 1px solid #C15F3C;
   border-radius: 9999px !important;
   padding: 12px 24px;
   font-family: var(--font-family-primary, 'Geist', sans-serif);
@@ -144,7 +144,9 @@
 }
 
 .command-btn-primary:hover {
-  background-color: #e5e5e5;
+  background-color: #A94F30;
+  border-color: #A94F30;
+  color: #FFFFFF;
   transform: translateY(-1px);
 }
 
@@ -172,11 +174,11 @@
 }
 
 /* ==========================================================================
-   3. BOTTOM ROW: 4 Columns (Empty Visual Slot + [1], [2], [3] Metric Cards)
+   3. BOTTOM ROW: Three-Column Highlights (Card 01, Card 02, Card 03)
    ========================================================================== */
 .command-stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   width: 100%;
   box-sizing: border-box;
 }
@@ -191,24 +193,23 @@
   background-color: #000000;
   position: relative;
   text-align: left;
+  transition: background-color 0.2s ease;
 }
 
 .command-stat-cell:last-child {
   border-right: none;
 }
 
-/* Empty visual slot on the left (as requested: "dont put the image leave it now") */
-.command-stat-empty-cell {
-  background-color: transparent;
-  min-height: 240px;
+.command-stat-cell:hover {
+  background-color: rgba(255, 255, 255, 0.02);
 }
 
 /* Header row inside each stat cell */
 .command-stat-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 38px;
+  margin-bottom: 24px;
   width: 100%;
 }
 
@@ -217,12 +218,17 @@
   height: 36px;
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: rgba(193, 95, 60, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
+  color: #C15F3C;
   flex-shrink: 0;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.command-stat-cell:hover .command-stat-icon-box {
+  border-color: #C15F3C;
 }
 
 .command-stat-index {
@@ -234,27 +240,39 @@
   user-select: none;
 }
 
-/* Large Stat Value (e.g. 80%, 6+ months, <10%) */
+/* Category Eyebrow */
+.command-stat-category {
+  font-family: 'Open Sans', var(--font-sans, sans-serif);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #C15F3C;
+  margin-bottom: 10px;
+}
+
+/* Card Headline (replacing old stat value) */
+.command-stat-headline,
 .command-stat-value {
-  font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: clamp(38px, 4vw, 54px);
-  font-weight: 500;
-  letter-spacing: -0.035em;
-  line-height: 1.1;
+  font-family: 'Open Sans', var(--font-sans, sans-serif);
+  font-size: clamp(20px, 1.8vw, 24px);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
   color: #ffffff;
-  margin: 0 0 32px 0;
+  margin: 0 0 14px 0;
   text-align: left;
 }
 
-/* Stat Subtitle Description */
+/* Card Description */
 .command-stat-desc {
-  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-family: 'Open Sans', var(--font-sans, sans-serif);
   font-size: 14.5px;
-  line-height: 22px;
-  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.62;
+  color: rgba(255, 255, 255, 0.68);
   margin: 0;
   text-align: left;
-  max-width: 280px;
+  max-width: 100%;
 }
 
 
@@ -275,38 +293,39 @@
 .bright .command-container-frame,
 .light .command-container-frame {
   background-color: #ffffff;
-  border-left-color: rgba(0, 0, 0, 0.12);
-  border-right-color: rgba(0, 0, 0, 0.12);
-  border-top-color: rgba(0, 0, 0, 0.12);
-  border-bottom-color: rgba(0, 0, 0, 0.12);
+  border-left-color: #B1ADA1;
+  border-right-color: #B1ADA1;
+  border-top-color: #B1ADA1;
+  border-bottom-color: #B1ADA1;
 }
 
 [data-theme="bright"] .command-container-frame::before,
 [data-theme="light"] .command-container-frame::before,
 .bright .command-container-frame::before,
 .light .command-container-frame::before {
-  border-top-color: rgba(0, 0, 0, 0.12);
+  border-top-color: #B1ADA1;
 }
 
 [data-theme="bright"] .command-container-frame::after,
 [data-theme="light"] .command-container-frame::after,
 .bright .command-container-frame::after,
 .light .command-container-frame::after {
-  border-bottom-color: rgba(0, 0, 0, 0.12);
+  border-bottom-color: #B1ADA1;
 }
 
 [data-theme="bright"] .command-testimonial-row,
 [data-theme="light"] .command-testimonial-row,
 .bright .command-testimonial-row,
 .light .command-testimonial-row {
-  border-bottom-color: rgba(0, 0, 0, 0.12);
+  background-color: #FFFFFF;
+  border-bottom-color: #B1ADA1;
 }
 
 [data-theme="bright"] .command-testimonial-row::after,
 [data-theme="light"] .command-testimonial-row::after,
 .bright .command-testimonial-row::after,
 .light .command-testimonial-row::after {
-  border-bottom-color: rgba(0, 0, 0, 0.12);
+  border-bottom-color: #B1ADA1;
 }
 
 [data-theme="bright"] .command-middle-row,
@@ -374,29 +393,55 @@
 [data-theme="light"] .command-stat-cell,
 .bright .command-stat-cell,
 .light .command-stat-cell {
-  background-color: #ffffff;
-  border-right-color: rgba(0, 0, 0, 0.12);
+  background-color: #FFFFFF;
+  border-right-color: #B1ADA1;
+}
+
+[data-theme="bright"] .command-stat-cell:hover,
+[data-theme="light"] .command-stat-cell:hover,
+.bright .command-stat-cell:hover,
+.light .command-stat-cell:hover {
+  background-color: #F4F3EE;
 }
 
 [data-theme="bright"] .command-stat-icon-box,
 [data-theme="light"] .command-stat-icon-box,
 .bright .command-stat-icon-box,
 .light .command-stat-icon-box {
-  border-color: rgba(0, 0, 0, 0.18);
-  background-color: rgba(0, 0, 0, 0.04);
-  color: #000000;
+  border-color: #B1ADA1;
+  background-color: #F4F3EE;
+  color: #C15F3C;
+}
+
+[data-theme="bright"] .command-stat-cell:hover .command-stat-icon-box,
+[data-theme="light"] .command-stat-cell:hover .command-stat-icon-box,
+.bright .command-stat-cell:hover .command-stat-icon-box,
+.light .command-stat-cell:hover .command-stat-icon-box {
+  border-color: #C15F3C;
+  background-color: #FFFFFF;
 }
 
 [data-theme="bright"] .command-stat-index,
 [data-theme="light"] .command-stat-index,
 .bright .command-stat-index,
 .light .command-stat-index {
-  color: rgba(0, 0, 0, 0.45);
+  color: #8E897D;
 }
 
+[data-theme="bright"] .command-stat-category,
+[data-theme="light"] .command-stat-category,
+.bright .command-stat-category,
+.light .command-stat-category {
+  color: #C15F3C;
+}
+
+[data-theme="bright"] .command-stat-headline,
 [data-theme="bright"] .command-stat-value,
+[data-theme="light"] .command-stat-headline,
 [data-theme="light"] .command-stat-value,
+.bright .command-stat-headline,
 .bright .command-stat-value,
+.light .command-stat-headline,
 .light .command-stat-value {
   color: #000000;
 }
@@ -405,7 +450,7 @@
 [data-theme="light"] .command-stat-desc,
 .bright .command-stat-desc,
 .light .command-stat-desc {
-  color: rgba(0, 0, 0, 0.65);
+  color: #635F55;
 }
 
 [data-theme="bright"] .crosshair-marker,
@@ -434,35 +479,9 @@
   .light .command-desc-col {
     border-bottom-color: rgba(0, 0, 0, 0.12);
   }
-
-  .command-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .command-stat-cell {
-    border-right: 1px dashed rgba(255, 255, 255, 0.12);
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
-  }
-
-  [data-theme="bright"] .command-stat-cell,
-  [data-theme="light"] .command-stat-cell,
-  .bright .command-stat-cell,
-  .light .command-stat-cell {
-    border-right-color: rgba(0, 0, 0, 0.12);
-    border-bottom-color: rgba(0, 0, 0, 0.12);
-  }
-
-  .command-stat-empty-cell {
-    display: none;
-  }
 }
 
-@media (max-width: 640px) {
-  .command-desc-col,
-  .command-actions-col {
-    padding: 36px 20px;
-  }
-
+@media (max-width: 900px) {
   .command-stats-grid {
     grid-template-columns: 1fr;
   }
@@ -470,5 +489,85 @@
   .command-stat-cell {
     border-right: none;
     border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+    padding: 32px 24px;
+  }
+
+  .command-stat-cell:last-child {
+    border-bottom: none;
+  }
+
+  [data-theme="bright"] .command-stat-cell,
+  [data-theme="light"] .command-stat-cell,
+  .bright .command-stat-cell,
+  .light .command-stat-cell {
+    border-right: none !important;
+    border-bottom: 1px dashed #B1ADA1 !important;
+  }
+
+  [data-theme="bright"] .command-stat-cell:last-child,
+  [data-theme="light"] .command-stat-cell:last-child,
+  .bright .command-stat-cell:last-child,
+  .light .command-stat-cell:last-child {
+    border-bottom: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .command-desc-col,
+  .command-actions-col {
+    padding: 30px 18px;
+  }
+
+  .command-desc-text {
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+
+  .command-actions-col {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+    gap: 10px;
+    box-sizing: border-box;
+  }
+
+  .command-btn-primary,
+  .command-btn-secondary {
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 12px 18px;
+    font-size: 14px;
+    white-space: normal;
+  }
+
+  .command-stat-cell {
+    padding: 24px 18px;
+  }
+
+  .command-stat-header {
+    margin-bottom: 18px;
+  }
+
+  .command-stat-headline,
+  .command-stat-value {
+    font-size: 19px;
+    margin-bottom: 10px;
+  }
+
+  .command-stat-desc {
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+}
+
+@media (max-width: 380px) {
+  .command-desc-col,
+  .command-actions-col {
+    padding: 24px 14px;
+  }
+
+  .command-stat-cell {
+    padding: 20px 14px;
   }
 }

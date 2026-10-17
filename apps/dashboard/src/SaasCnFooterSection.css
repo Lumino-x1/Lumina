@@ -72,9 +72,9 @@
 
 /* Clean Sharp Rectangular Buttons */
 .saascn-btn-primary {
-  background-color: #ffffff;
-  color: #000000;
-  border: 1px solid #ffffff;
+  background-color: #C15F3C;
+  color: #ffffff;
+  border: 1px solid #C15F3C;
   border-radius: 9999px !important;
   padding: 11px 24px;
   font-family: var(--font-family-primary, 'Geist', sans-serif);
@@ -92,8 +92,8 @@
 }
 
 .saascn-btn-primary:hover {
-  background-color: #e5e5e5;
-  border-color: #e5e5e5;
+  background-color: #A94F30;
+  border-color: #A94F30;
 }
 
 .saascn-btn-secondary {
@@ -184,6 +184,15 @@
   letter-spacing: 0.01em;
 }
 
+.saascn-brand-tagline {
+  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 200px;
+  margin: 0 0 12px 0;
+}
+
 .saascn-col-list {
   list-style: none;
   padding: 0;
@@ -194,7 +203,7 @@
 }
 
 .saascn-link {
-  font-family: var(--font-family-primary, 'Geist', sans-serif);
+  font-family: var(--font-sans, 'Open Sans', sans-serif);
   font-size: 15px;
   color: rgba(255, 255, 255, 0.65);
   text-decoration: none;
@@ -212,9 +221,20 @@
   font-weight: 500;
 }
 
+.saascn-social-link,
 .saascn-link-github {
   display: inline-flex;
   align-items: center;
+  gap: 8px;
+  line-height: 1.5;
+  vertical-align: middle;
+}
+
+.saascn-social-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  display: block;
 }
 
 /* ==========================================================================
@@ -244,24 +264,26 @@
 .saascn-user-btn {
   width: 32px;
   height: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 50% !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   padding: 0;
-  transition: background-color 0.18s ease, border-color 0.18s ease;
+  color: rgba(255, 255, 255, 0.7);
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
 .saascn-user-btn:hover {
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
 }
 
 .saascn-copyright {
-  font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-family: var(--font-sans, 'Open Sans', sans-serif);
   font-size: 13px;
   color: rgba(255, 255, 255, 0.45);
 }
@@ -269,27 +291,139 @@
 .saascn-theme-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 3px 5px;
+  gap: 3px;
+  padding: 3px 4px;
   border-radius: 9999px !important; /* Theme toggle pill */
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.05);
   cursor: pointer;
-  transition: border-color 0.18s ease;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+  box-sizing: border-box;
 }
 
 .saascn-theme-toggle:hover {
-  border-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .saascn-theme-active-indicator {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.12);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: rgba(255, 255, 255, 0.45);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.saascn-theme-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.saascn-theme-icon.saascn-icon-inactive {
+  opacity: 0.45;
+}
+
+/* Dark mode active indicator */
+.saascn-theme-active-indicator.is-active {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.saascn-theme-active-indicator.is-active .saascn-icon-active {
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Light / Bright Theme Overrides for Footer Controls
+   ========================================================================== */
+[data-theme="bright"] .saascn-theme-toggle,
+[data-theme="light"] .saascn-theme-toggle,
+.bright .saascn-theme-toggle,
+.light .saascn-theme-toggle {
+  background-color: #F4F3EE !important;
+  border: 1px solid #B1ADA1 !important;
+  box-shadow: 0 1px 2px rgba(177, 173, 161, 0.25) !important;
+}
+
+[data-theme="bright"] .saascn-theme-toggle:hover,
+[data-theme="light"] .saascn-theme-toggle:hover,
+.bright .saascn-theme-toggle:hover,
+.light .saascn-theme-toggle:hover {
+  background-color: #FFFFFF !important;
+  border-color: #C15F3C !important;
+}
+
+[data-theme="bright"] .saascn-theme-active-indicator,
+[data-theme="light"] .saascn-theme-active-indicator,
+.bright .saascn-theme-active-indicator,
+.light .saascn-theme-active-indicator {
+  background: transparent !important;
+  color: #8E897D !important;
+}
+
+[data-theme="bright"] .saascn-theme-active-indicator.is-active,
+[data-theme="light"] .saascn-theme-active-indicator.is-active,
+.bright .saascn-theme-active-indicator.is-active,
+.light .saascn-theme-active-indicator.is-active {
+  background-color: #C15F3C !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 1px 4px rgba(193, 95, 60, 0.35) !important;
+}
+
+[data-theme="bright"] .saascn-theme-active-indicator.is-active .saascn-icon-active,
+[data-theme="light"] .saascn-theme-active-indicator.is-active .saascn-icon-active,
+.bright .saascn-theme-active-indicator.is-active .saascn-icon-active,
+.light .saascn-theme-active-indicator.is-active .saascn-icon-active {
+  color: #FFFFFF !important;
+  opacity: 1 !important;
+}
+
+[data-theme="bright"] .saascn-theme-active-indicator .saascn-icon-inactive,
+[data-theme="light"] .saascn-theme-active-indicator .saascn-icon-inactive,
+.bright .saascn-theme-active-indicator .saascn-icon-inactive,
+.light .saascn-theme-active-indicator .saascn-icon-inactive {
+  color: #8E897D !important;
+  opacity: 0.6 !important;
+}
+
+[data-theme="bright"] .saascn-user-btn,
+[data-theme="light"] .saascn-user-btn,
+.bright .saascn-user-btn,
+.light .saascn-user-btn {
+  background-color: #F4F3EE !important;
+  border: 1px solid #B1ADA1 !important;
+  color: #1C1A17 !important;
+}
+
+[data-theme="bright"] .saascn-user-btn:hover,
+[data-theme="light"] .saascn-user-btn:hover,
+.bright .saascn-user-btn:hover,
+.light .saascn-user-btn:hover {
+  background-color: #FFFFFF !important;
+  border-color: #C15F3C !important;
+  color: #C15F3C !important;
+}
+
+[data-theme="bright"] .saascn-social-link,
+[data-theme="light"] .saascn-social-link,
+.bright .saascn-social-link,
+.light .saascn-social-link {
+  color: #635F55 !important;
+}
+
+[data-theme="bright"] .saascn-social-link:hover,
+[data-theme="light"] .saascn-social-link:hover,
+.bright .saascn-social-link:hover,
+.light .saascn-social-link:hover {
+  color: #C15F3C !important;
 }
 
 /* ==========================================================================
@@ -299,7 +433,7 @@
   .saascn-cta-block {
     flex-direction: column;
     padding: 56px 32px 48px;
-    gap: 32px;
+    gap: 28px;
   }
 
   .saascn-cta-right {
@@ -307,13 +441,13 @@
   }
 
   .saascn-links-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     padding: 48px 32px 36px;
     gap: 32px;
   }
 
-  .saascn-col-posts {
-    grid-column: span 2;
+  .saascn-col:first-child {
+    grid-column: span 3;
   }
 
   .saascn-bottom-bar {
@@ -323,30 +457,80 @@
 
 @media (max-width: 640px) {
   .saascn-cta-block {
-    padding: 48px 20px 36px;
+    padding: 40px 18px 32px;
+    gap: 22px;
   }
 
   .saascn-cta-title {
-    font-size: 28px;
+    font-size: clamp(25px, 6.5vw, 34px);
+    line-height: 1.15;
+  }
+
+  .saascn-cta-desc {
+    font-size: 14.5px;
+    line-height: 1.55;
+    margin-bottom: 20px;
+  }
+
+  .saascn-cta-actions {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+    gap: 10px;
+    box-sizing: border-box;
+  }
+
+  .saascn-btn-primary,
+  .saascn-btn-secondary {
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 12px 18px;
+    font-size: 14px;
+  }
+
+  .saascn-links-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 32px 18px 24px;
+    gap: 28px 18px;
+  }
+
+  .saascn-col:first-child {
+    grid-column: span 2;
+  }
+
+  .saascn-bottom-bar {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 18px 18px 36px;
+  }
+
+  .saascn-copyright {
+    order: 3;
+    width: 100%;
+    text-align: left;
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 380px) {
+  .saascn-cta-block {
+    padding: 32px 14px 24px;
   }
 
   .saascn-links-grid {
     grid-template-columns: 1fr;
-    padding: 36px 20px 28px;
+    padding: 28px 14px 20px;
   }
 
-  .saascn-col-posts {
+  .saascn-col:first-child {
     grid-column: span 1;
   }
 
   .saascn-bottom-bar {
-    flex-direction: column;
-    gap: 18px;
-    align-items: flex-start;
-    padding: 16px 20px 36px;
-  }
-
-  .saascn-bottom-bar .saascn-theme-toggle {
-    align-self: flex-start;
+    padding: 16px 14px 30px;
   }
 }

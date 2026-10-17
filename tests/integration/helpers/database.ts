@@ -32,13 +32,17 @@ export async function prepareTestDatabase() {
   }
   const databaseUrl = getTestDatabaseUrl()
 
-  const execPath = process.platform === 'win32' ? `"${process.execPath}"` : process.execPath
+  const isBun = process.execPath.includes('bun')
+  const executable = isBun ? process.execPath : 'bunx'
+  const args = isBun
+    ? ['x', 'prisma', 'db', 'push', '--schema', schemaPath, '--accept-data-loss']
+    : ['prisma', 'db', 'push', '--schema', schemaPath, '--accept-data-loss']
   const shellCmd =
     process.platform === 'win32' ? process.env.ComSpec || 'C:\\Windows\\System32\\cmd.exe' : false
 
   execFileSync(
-    execPath,
-    ['x', 'prisma', 'db', 'push', '--schema', schemaPath, '--accept-data-loss'],
+    executable,
+    args,
     {
       cwd: databasePackagePath,
       env: {

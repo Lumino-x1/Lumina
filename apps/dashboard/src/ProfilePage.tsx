@@ -15,12 +15,28 @@ import {
   Bookmark,
   MessageSquare,
   Share2,
+  Calendar,
+  Clock,
+  FileText,
+  Trash2,
+  Send,
+  X,
+  Sparkles,
+  Award,
+  ArrowLeft,
 } from 'lucide-react'
 import './ProfilePage.css'
 import './Navbar.css'
 import type { DashboardUser } from './DashboardPage'
 import { DEFAULT_WHATSAPP_AVATAR } from './components/WhatsAppDefaultAvatar'
 import { useTheme } from './lib/themeContext'
+import {
+  type ScheduledPostItem,
+  fetchScheduledPostsApi,
+  reschedulePostApi,
+  cancelScheduledPostApi,
+  publishPostImmediatelyApi,
+} from './api/scheduledPostsApi'
 
 export interface ProfilePageProps {
   user?: DashboardUser | null
@@ -41,6 +57,12 @@ const Icons = {
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="7 15 12 20 17 15" />
       <polyline points="7 9 12 4 17 9" />
+    </svg>
+  ),
+  User: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
     </svg>
   ),
   Home: (
@@ -270,6 +292,18 @@ const Icons = {
   ),
 }
 
+const DEFAULT_SCHEDULED_POSTS: ScheduledPostItem[] = []
+
+const DEFAULT_DRAFT_POSTS: Array<{
+  id: string
+  title: string
+  subtitle: string
+  content: string
+  updatedAt: string
+  readTime: string
+  status: 'DRAFT'
+}> = []
+
 export const ProfilePage: React.FC<ProfilePageProps> = ({
   user,
   onBackToDashboard,
@@ -278,7 +312,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 }) => {
   const { theme, toggleTheme } = useTheme()
   const [activeTab, setActiveTab] = useState<'posts' | 'about' | 'projects' | 'achievements' | 'communities' | 'saved'>('posts')
-  const [activeNav, setActiveNav] = useState('Home')
+  const [activeNav, setActiveNav] = useState('Profile')
   const [searchQuery, setSearchQuery] = useState('')
   const [searchFocused, setSearchFocused] = useState(false)
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
@@ -318,7 +352,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     setLikedPosts((prev) => ({ ...prev, [key]: !prev[key] }))
   }
 
-  const [savedPosts, setSavedPosts] = useState<Record<string, boolean>>({ post1: true })
+  const [savedPosts, setSavedPosts] = useState<Record<string, boolean>>({})
 
   const toggleSave = (key: string) => {
     setSavedPosts((prev) => ({ ...prev, [key]: !prev[key] }))
@@ -326,6 +360,150 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const handleOpenComposer = () => {
     window.location.hash = '#write'
+  }
+
+  // Posts Sub-filter: 'all' | 'draft' | 'scheduled'
+  const [postSubFilter, setPostSubFilter] = useState<'all' | 'draft' | 'scheduled'>('all')
+
+  // Published posts in profile
+  const [publishedPosts, setPublishedPosts] = useState<
+    Array<{
+      id: string
+      title: string
+      subtitle?: string
+      content?: string
+      publishedAt?: string
+    }>
+  >([])
+
+  // Scheduled posts state
+  const [scheduledPosts, setScheduledPosts] = useState<ScheduledPostItem[]>(DEFAULT_SCHEDULED_POSTS)
+
+  // Draft posts state
+  const [draftPosts, setDraftPosts] = useState(DEFAULT_DRAFT_POSTS)
+
+  // Reschedule Modal state
+  const [rescheduleModalPost, setRescheduleModalPost] = useState<ScheduledPostItem | null>(null)
+  const [rescheduleTime, setRescheduleTime] = useState('')
+  const [isRescheduling, setIsRescheduling] = useState(false)
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
+
+  // Load scheduled posts from backend
+  useEffect(() => {
+    let mounted = true
+    async function loadScheduled() {
+      try {
+        const posts = await fetchScheduledPostsApi()
+        if (mounted && Array.isArray(posts) && posts.length > 0) {
+          setScheduledPosts(posts)
+        }
+      } catch {
+        // Fallback to initial local items if offline
+      }
+    }
+    void loadScheduled()
+    return () => {
+      mounted = false
+    }
+  }, [])
+
+  // Auto-dismiss toast
+  useEffect(() => {
+    if (!toastMessage) return
+    const timer = setTimeout(() => setToastMessage(null), 3500)
+    return () => clearTimeout(timer)
+  }, [toastMessage])
+
+  const handleOpenReschedule = (post: ScheduledPostItem) => {
+    setRescheduleModalPost(post)
+    const dateObj = new Date(post.scheduledAt)
+    const localIso = new Date(dateObj.getTime() - dateObj.getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 16)
+    setRescheduleTime(localIso)
+  }
+
+  const handleConfirmReschedule = async () => {
+    if (!rescheduleModalPost || !rescheduleTime) return
+    setIsRescheduling(true)
+    const targetIso = new Date(rescheduleTime).toISOString()
+    try {
+      await reschedulePostApi(rescheduleModalPost.id, targetIso)
+    } catch {
+      // offline fallback
+    }
+    setScheduledPosts((prev) =>
+      prev.map((p) =>
+        p.id === rescheduleModalPost.id
+          ? { ...p, scheduledAt: targetIso, scheduleVersion: (p.scheduleVersion || 1) + 1 }
+          : p
+      )
+    )
+    setIsRescheduling(false)
+    setToastMessage(`Post successfully rescheduled for ${new Date(targetIso).toLocaleDateString()} at ${new Date(targetIso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`)
+    setRescheduleModalPost(null)
+  }
+
+  const handleCancelSchedule = async (post: ScheduledPostItem) => {
+    try {
+      await cancelScheduledPostApi(post.id)
+    } catch {
+      // offline fallback
+    }
+    setScheduledPosts((prev) => prev.filter((p) => p.id !== post.id))
+    setDraftPosts((prev) => [
+      {
+        id: post.id,
+        title: post.title,
+        subtitle: post.subtitle || '',
+        content: post.content || '',
+        updatedAt: 'Just now',
+        readTime: '3 min read',
+        status: 'DRAFT',
+      },
+      ...prev,
+    ])
+    setToastMessage(`Scheduled post reverted to draft`)
+  }
+
+  const handlePublishImmediately = async (post: ScheduledPostItem) => {
+    try {
+      await publishPostImmediatelyApi(post.id)
+    } catch {
+      // offline fallback
+    }
+    setScheduledPosts((prev) => prev.filter((p) => p.id !== post.id))
+    setPublishedPosts((prev) => [
+      {
+        id: post.id,
+        title: post.title,
+        subtitle: post.subtitle || '',
+        content: post.content || '',
+        publishedAt: 'Just now',
+      },
+      ...prev,
+    ])
+    setToastMessage(`Post "${post.title.slice(0, 30)}..." published immediately!`)
+  }
+
+  const handlePublishDraft = (draft: { id: string; title: string; subtitle?: string; content?: string }) => {
+    setDraftPosts((prev) => prev.filter((d) => d.id !== draft.id))
+    setPublishedPosts((prev) => [
+      {
+        id: draft.id,
+        title: draft.title,
+        subtitle: draft.subtitle || '',
+        content: draft.content || '',
+        publishedAt: 'Just now',
+      },
+      ...prev,
+    ])
+    setToastMessage(`Draft "${draft.title.slice(0, 30)}..." published!`)
+  }
+
+  const handleDeleteDraft = (draftId: string) => {
+    setDraftPosts((prev) => prev.filter((d) => d.id !== draftId))
+    setToastMessage('Draft deleted.')
   }
 
   const profile = {
@@ -343,15 +521,15 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     stats: {
       followers: '1,480',
       following: '342',
-      academicNotes: '86',
+      academicNotes: String(publishedPosts.length),
       repos: '14',
     },
   }
 
   return (
     <div className={`lumina-ai-profile-root ${theme === 'dark' ? 'dark' : 'light'}`}>
-      {/* 1. LEFT SIDEBAR */}
-      <aside className={`ai-sidebar ${isSidebarCollapsed ? 'is-collapsed' : ''}`}>
+      {/* 1. LEFT SIDEBAR (Blurred per user request) */}
+      <aside className={`ai-sidebar ai-blurred-section ${isSidebarCollapsed ? 'is-collapsed' : ''}`} aria-hidden="true">
         {/* Sidebar Header matching reference image */}
         <div className="ai-sidebar-top-section">
           <div className="ai-sidebar-action-row">
@@ -410,6 +588,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           <div className="ai-nav-group">
             <span className="ai-nav-category-title">MAIN</span>
             <nav className="ai-nav-list">
+              <button
+                type="button"
+                className={`ai-nav-item ${activeNav === 'Profile' ? 'is-active' : ''}`}
+                onClick={() => setActiveNav('Profile')}
+              >
+                <span className="ai-nav-icon">{Icons.User}</span>
+                <span className="ai-nav-label">Profile</span>
+              </button>
               <button
                 type="button"
                 className={`ai-nav-item ${activeNav === 'Home' ? 'is-active' : ''}`}
@@ -578,7 +764,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                       ? profile.name
                       : `${profile.name}'s`}
                   </div>
-                  <div className="ai-popover-plan">Free Plan · 5 members</div>
+                  <div className="ai-popover-plan is-unimplemented">Free Plan · 5 members</div>
                 </div>
               </div>
 
@@ -588,7 +774,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               <div className="ai-popover-menu-list">
                 <button
                   type="button"
-                  className="ai-popover-menu-item is-upgrade"
+                  className="ai-popover-menu-item is-upgrade is-unimplemented"
                   onClick={() => {
                     setSettingsMenuOpen(false)
                     alert('Upgrade to Lumina Pro')
@@ -602,6 +788,16 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   className="ai-popover-menu-item"
                   onClick={() => {
                     setSettingsMenuOpen(false)
+                  }}
+                >
+                  <Users size={16} className="ai-popover-item-icon" />
+                  <span>My Profile</span>
+                </button>
+                <button
+                  type="button"
+                  className="ai-popover-menu-item is-unimplemented"
+                  onClick={() => {
+                    setSettingsMenuOpen(false)
                     alert('Settings & Preferences')
                   }}
                 >
@@ -610,7 +806,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 </button>
                 <button
                   type="button"
-                  className="ai-popover-menu-item"
+                  className="ai-popover-menu-item is-unimplemented"
                   onClick={() => {
                     setSettingsMenuOpen(false)
                     alert('Invite members link copied to clipboard!')
@@ -621,7 +817,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 </button>
                 <button
                   type="button"
-                  className="ai-popover-menu-item"
+                  className="ai-popover-menu-item is-unimplemented"
                   onClick={() => {
                     setSettingsMenuOpen(false)
                     alert('Add another account')
@@ -640,7 +836,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   <span className="ai-popover-email">{user?.email || 'sunilbe2006@gmail.com'}</span>
                   <button
                     type="button"
-                    className="ai-popover-more-btn"
+                    className="ai-popover-more-btn is-unimplemented"
                     title="Account options"
                     onClick={() => alert('Account options')}
                   >
@@ -650,7 +846,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
                 <button
                   type="button"
-                  className={`ai-popover-workspace-item ${currentWorkspace === 'primary' ? 'is-active' : ''}`}
+                  className={`ai-popover-workspace-item is-unimplemented ${currentWorkspace === 'primary' ? 'is-active' : ''}`}
                   onClick={() => setCurrentWorkspace('primary')}
                 >
                   <div className="ai-popover-ws-left">
@@ -670,7 +866,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
                 <button
                   type="button"
-                  className={`ai-popover-workspace-item ${currentWorkspace === 'secondary' ? 'is-active' : ''}`}
+                  className={`ai-popover-workspace-item is-unimplemented ${currentWorkspace === 'secondary' ? 'is-active' : ''}`}
                   onClick={() => setCurrentWorkspace('secondary')}
                 >
                   <div className="ai-popover-ws-left">
@@ -692,7 +888,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
                 <button
                   type="button"
-                  className="ai-popover-workspace-item is-new-ws"
+                  className="ai-popover-workspace-item is-new-ws is-unimplemented"
                   onClick={() => {
                     const wsName = prompt('Enter new workspace name:')
                     if (wsName) alert(`Created workspace: ${wsName}`)
@@ -764,6 +960,18 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       <div className="ai-app-main-layout">
         {/* TOP BAR */}
         <header className="ai-top-bar">
+          <div className="ai-top-bar-left">
+            <button
+              type="button"
+              className="ai-top-back-btn"
+              onClick={onBackToDashboard}
+              title="Back to Dashboard"
+            >
+              <ArrowLeft size={15} />
+              <span>Dashboard</span>
+            </button>
+          </div>
+
           <div className="ai-top-bar-right">
             {/* Search Input (Landing Page Search Bar) */}
             <div className={`saascn-search-pill ${searchFocused ? 'is-focused' : ''}`}>
@@ -811,9 +1019,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               onClick={() => {
                 window.location.hash = '#editor'
               }}
+              title="Create new post"
+              aria-label="Create new post"
             >
-              {Icons.Plus}
-              <span>Create</span>
+              <span className="ai-create-icon">{Icons.Plus}</span>
+              <span className="ai-create-btn-label">Create</span>
             </button>
 
             {/* Top Right Mini Avatar */}
@@ -831,8 +1041,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         <div className="ai-content-columns">
           {/* CENTER PROFILE STREAM */}
           <main className="ai-center-stream profile-center-col">
-            {/* PROFILE HEADER HERO CARD */}
-            <div className="ai-profile-hero-card">
+            {/* PROFILE HEADER HERO CARD (Blurred / Hidden) */}
+            <div className="ai-profile-hero-card ai-blurred-section" aria-hidden="true">
               {/* Cover Graphic Banner */}
               <div className="ai-profile-cover-wrap">
                 <svg className="ai-profile-constellation-svg" viewBox="0 0 800 160">
@@ -1015,443 +1225,574 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               </div>
             </div>
 
-            {/* Minimal Post Composer Entry */}
-            <div
-              className="ai-minimal-composer-card"
-              onClick={handleOpenComposer}
-              role="button"
-              tabIndex={0}
-              title="Share something with your campus... (Opens visual editor)"
-            >
-              <img
-                src={profile.avatar}
-                alt={profile.name}
-                className="ai-minimal-composer-avatar"
-              />
-              <div className="ai-minimal-composer-input-area">
-                <span className="ai-minimal-composer-placeholder">
-                  Share something with your campus...
-                </span>
-              </div>
-              <button
-                type="button"
-                className="ai-minimal-post-btn"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleOpenComposer()
-                }}
-              >
-                <Plus size={14} strokeWidth={2.5} />
-                <span>Post</span>
-              </button>
-            </div>
-
-            {/* FEED ITEMS */}
-            <div className="ai-feed-stream-list">
-              {/* ITEM 1: PINNED WORK (ConsensusCore) */}
-              <article className="ai-feed-post-card ai-pinned-card">
-                <div className="ai-pinned-header">
-                  <div className="ai-pinned-badge-row">
-                    <span className="ai-pinned-tag">
-                      {Icons.Pin}
-                      <span>PINNED WORK</span>
+            {/* ACTIVE TAB: POSTS */}
+            {activeTab === 'posts' && (
+              <>
+                {/* Minimal Post Composer Entry */}
+                <div
+                  className="ai-minimal-composer-card"
+                  onClick={handleOpenComposer}
+                  role="button"
+                  tabIndex={0}
+                  title="Share something with your campus... (Opens visual editor)"
+                >
+                  <img
+                    src={profile.avatar}
+                    alt={profile.name}
+                    className="ai-minimal-composer-avatar"
+                  />
+                  <div className="ai-minimal-composer-input-area">
+                    <span className="ai-minimal-composer-placeholder">
+                      Share something with your campus...
                     </span>
-                    <span className="ai-pinned-sep">•</span>
-                    <span className="ai-pinned-sub">Systems Architecture</span>
                   </div>
-                  <button type="button" className="ai-post-more-btn" title="Options">
-                    {Icons.MoreHorizontal}
-                  </button>
-                </div>
-
-                <div className="ai-post-body">
-                  <h3 className="ai-post-title ai-pinned-title">
-                    ConsensusCore: Zero-Dependency Raft Consensus Engine
-                  </h3>
-                  <div className="ai-repo-badges-row">
-                    <span className="ai-repo-pill">
-                      {Icons.Star}
-                      <span>420</span>
-                    </span>
-                    <span className="ai-repo-pill">MIT License</span>
-                  </div>
-                  <p className="ai-post-paragraph">
-                    A production-grade, zero-alloc state machine replication engine written in Rust
-                    with deterministic state simulation and actor-model log compaction. Built to explore
-                    sub-millisecond tail latency in geographically distributed clusters.
-                  </p>
-
-                  {/* Architecture Diagram Box */}
-                  <div className="ai-diagram-card">
-                    <div className="ai-diagram-header">
-                      <span className="ai-diagram-title">
-                        Cluster RPC Topology &amp; Quorum Log Flow
-                      </span>
-                      <span className="ai-diagram-version">v0.9.4-rc2</span>
-                    </div>
-
-                    <div className="ai-diagram-flow-body">
-                      {/* Node 1 Leader */}
-                      <div className="ai-diag-node is-leader">
-                        <strong className="ai-diag-node-name">Node 01 [Leader]</strong>
-                        <span className="ai-diag-node-sub">Term 14 • Idx 1092</span>
-                      </div>
-
-                      {/* Animated Connector Arrows */}
-                      <div className="ai-diag-arrows">
-                        <svg className="ai-diag-svg-arrows" viewBox="0 0 120 70">
-                          <line x1="5" y1="35" x2="60" y2="18" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 3" />
-                          <line x1="5" y1="35" x2="60" y2="52" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 3" />
-                          <polygon points="60,18 52,14 54,20" fill="currentColor" />
-                          <polygon points="60,52 54,49 52,56" fill="currentColor" />
-                        </svg>
-                      </div>
-
-                      {/* Followers Stack */}
-                      <div className="ai-diag-followers-stack">
-                        <div className="ai-diag-node is-follower">
-                          <strong className="ai-diag-node-name">Node 02 [Follower]</strong>
-                          <span className="ai-diag-node-sub">In Sync • 0.4ms</span>
-                        </div>
-                        <div className="ai-diag-node is-follower">
-                          <strong className="ai-diag-node-name">Node 03 [Follower]</strong>
-                          <span className="ai-diag-node-sub">In Sync • 0.6ms</span>
-                        </div>
-                      </div>
-
-                      {/* Quorum Verified Box */}
-                      <div className="ai-diag-node is-quorum">
-                        <strong className="ai-diag-quorum-txt">Quorum Verified</strong>
-                        <span className="ai-diag-quorum-sub">2/3 ACKs committed</span>
-                      </div>
-                    </div>
-
-                    <div className="ai-diagram-footer">
-                      <div className="ai-diag-meta-left">
-                        <span className="ai-lang-dot-item">
-                          <span className="ai-dot-rust" />
-                          <span>Rust 98.4%</span>
-                        </span>
-                        <span className="ai-lang-dot-item">
-                          <span className="ai-dot-asm" />
-                          <span>Assembly 1.6%</span>
-                        </span>
-                      </div>
-                      <div className="ai-diag-meta-right">
-                        <button type="button" className="ai-diag-link-btn">
-                          &lt;&gt; Source Repo
-                        </button>
-                        <button type="button" className="ai-diag-link-btn">
-                          {Icons.ExternalLink}
-                          <span>Interactive Benchmarks</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-
-              {/* ITEM 2: B-Trees vs LSM Trees */}
-              <article className="ai-feed-post-card">
-                <div className="ai-post-header">
-                  <div className="ai-post-author-wrap">
-                    <img
-                      src={profile.avatar}
-                      alt={profile.name}
-                      className="ai-post-author-avatar"
-                    />
-                    <div className="ai-post-author-info">
-                      <div className="ai-author-name-row">
-                        <span className="ai-author-name">{profile.name}</span>
-                        <span className="ai-author-sep">•</span>
-                        <span className="ai-author-time">yesterday</span>
-                      </div>
-                      <div className="ai-author-sub">
-                        <span>In Stanford Systems Reading Group</span>
-                      </div>
-                    </div>
-                  </div>
-                  <button type="button" className="ai-post-more-btn" title="Bookmark post">
-                    {Icons.Bookmark}
-                  </button>
-                </div>
-
-                <div className="ai-post-body">
-                  <h4 className="ai-post-title">
-                    Deep dive on Cache-Oblivious B-Trees vs LSM Trees for modern SSD NVMe storage
-                  </h4>
-                  <p className="ai-post-paragraph">
-                    Benchmarked random 4KB writes across 50M ops on PCIe Gen5 drives. While LSM writes
-                    avoid random seek overhead, write amplification reaches 18x during multi-tier
-                    compaction runs. Here is the van Emde Boas recursive memory layout snippet we
-                    profiled:
-                  </p>
-
-                  {/* Dark Code Box */}
-                  <div className="ai-code-snippet-box">
-                    <div className="ai-code-header">
-                      <span className="ai-code-filename">veb_layout.rs</span>
-                      <span className="ai-code-lang">Rust 1.78</span>
-                    </div>
-                    <pre className="ai-code-pre">
-                      <code>
-                        <span className="code-comment">// Van Emde Boas cache-oblivious recursive partitioning</span>{'\n'}
-                        <span className="code-kw">pub fn</span> <span className="code-fn">partition_hypercube</span>&lt;<span className="code-type">T: Copy</span>&gt;(slice: &amp;<span className="code-kw">mut</span> [<span className="code-type">T</span>], height: <span className="code-type">usize</span>) &#123;{'\n'}
-                        {'    '}<span className="code-kw">if</span> height &lt;= <span className="code-type">BASE_CUTOFF</span> &#123; <span className="code-kw">return</span>; &#125;{'\n'}
-                        {'    '}<span className="code-kw">let</span> top_h = height / 2;{'\n'}
-                        {'    '}<span className="code-kw">let</span> bottom_h = height - top_h;{'\n'}
-                        {'    '}<span className="code-comment">// Recursively localize L1/L2 cache lines with zero CPU branch penalties</span>{'\n'}
-                        {'    '}<span className="code-fn">locate_subtrees</span>(slice, top_h, bottom_h);{'\n'}
-                        &#125;
-                      </code>
-                    </pre>
-                  </div>
-                </div>
-
-                <div className="ai-post-footer">
-                  <div className="ai-post-footer-actions">
-                    <button
-                      type="button"
-                      className={`ai-post-action-btn ${savedPosts.post1 ? 'is-saved' : ''}`}
-                      onClick={() => toggleSave('post1')}
-                      title="Save"
-                      aria-label="Save"
-                    >
-                      <Bookmark size={17} fill={savedPosts.post1 ? 'currentColor' : 'none'} />
-                    </button>
-                    <button
-                      type="button"
-                      className={`ai-post-action-btn ${likedPosts.post1 ? 'is-liked' : ''}`}
-                      onClick={() => toggleLike('post1')}
-                      title="Like"
-                      aria-label="Like"
-                    >
-                      <Heart size={17} fill={likedPosts.post1 ? '#ef4444' : 'none'} color={likedPosts.post1 ? '#ef4444' : 'currentColor'} />
-                    </button>
-                    <button
-                      type="button"
-                      className="ai-post-action-btn"
-                      onClick={() => alert('Comments')}
-                      title="Comment"
-                      aria-label="Comment"
-                    >
-                      <MessageSquare size={17} />
-                    </button>
-                    <button
-                      type="button"
-                      className="ai-post-action-btn"
-                      onClick={() => alert('Post link copied to clipboard!')}
-                      title="Share"
-                      aria-label="Share"
-                    >
-                      <Share2 size={17} />
-                    </button>
-                  </div>
-                </div>
-              </article>
-
-              {/* ITEM 3: Lecture Notes CS 244B */}
-              <article className="ai-feed-post-card">
-                <div className="ai-post-header">
-                  <div className="ai-post-author-wrap">
-                    <img
-                      src={profile.avatar}
-                      alt={profile.name}
-                      className="ai-post-author-avatar"
-                    />
-                    <div className="ai-post-author-info">
-                      <div className="ai-author-name-row">
-                        <span className="ai-author-name">{profile.name}</span>
-                        <span className="ai-author-sep">•</span>
-                        <span className="ai-author-time">3 days ago</span>
-                      </div>
-                      <div className="ai-author-sub">
-                        <span>Shared in Stanford CS Course Notes</span>
-                      </div>
-                    </div>
-                  </div>
-                  <span className="ai-pill-resource">Resource</span>
-                </div>
-
-                <div className="ai-post-body">
-                  <h4 className="ai-post-title">
-                    Lecture Notes: CS 244B Advanced Topics in Distributed Systems – Lecture 8 (Spanner
-                    &amp; TrueTime)
-                  </h4>
-                  <p className="ai-post-paragraph">
-                    Consolidated summary covering atomic clocks, GPS receiver skew bounds (±ε), external
-                    consistency, and how 2-Phase Commit interacts with Paxos consensus groups. Includes
-                    full derivation of wait-out-uncertainty intervals.
-                  </p>
-
-                  {/* PDF Download Card */}
-                  <div
-                    className="ai-pdf-download-card"
-                    onClick={() => alert('Downloading CS244B_Spanner_TrueTime_Lecture8.pdf')}
-                    role="button"
-                    tabIndex={0}
+                  <button
+                    type="button"
+                    className="ai-minimal-post-btn"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleOpenComposer()
+                    }}
                   >
-                    <div className="ai-pdf-left">
-                      <div className="ai-pdf-icon-badge">
-                        <span className="ai-pdf-badge-txt">CS</span>
-                      </div>
-                      <div className="ai-pdf-meta">
-                        <strong className="ai-pdf-name">
-                          CS244B_Spanner_TrueTime_Lecture8.pdf
-                        </strong>
-                        <span className="ai-pdf-details">
-                          14 Pages • 3.4 MB • LaTeX Source Included
-                        </span>
-                      </div>
+                    <Plus size={14} strokeWidth={2.5} />
+                    <span>Post</span>
+                  </button>
+                </div>
+
+                {/* POSTS SUB-TITLE & SUB-FILTERS (ALL, DRAFT, SCHEDULED) */}
+                <div className="ai-posts-subbar">
+                  <div className="ai-posts-subbar-left">
+                    <div className="ai-posts-subtitle-wrap">
+                      <h2 className="ai-posts-subtitle">Posts</h2>
                     </div>
-                    <button type="button" className="ai-pdf-download-btn">
-                      {Icons.Download}
-                      <span>Download</span>
-                    </button>
-                  </div>
-                </div>
 
-                <div className="ai-post-footer">
-                  <div className="ai-post-footer-actions">
-                    <button
-                      type="button"
-                      className={`ai-post-action-btn ${savedPosts.post2 ? 'is-saved' : ''}`}
-                      onClick={() => toggleSave('post2')}
-                      title="Save"
-                      aria-label="Save"
-                    >
-                      <Bookmark size={17} fill={savedPosts.post2 ? 'currentColor' : 'none'} />
-                    </button>
-                    <button
-                      type="button"
-                      className={`ai-post-action-btn ${likedPosts.post2 ? 'is-liked' : ''}`}
-                      onClick={() => toggleLike('post2')}
-                      title="Like"
-                      aria-label="Like"
-                    >
-                      <Heart size={17} fill={likedPosts.post2 ? '#ef4444' : 'none'} color={likedPosts.post2 ? '#ef4444' : 'currentColor'} />
-                    </button>
-                    <button
-                      type="button"
-                      className="ai-post-action-btn"
-                      onClick={() => alert('Comments')}
-                      title="Comment"
-                      aria-label="Comment"
-                    >
-                      <MessageSquare size={17} />
-                    </button>
-                    <button
-                      type="button"
-                      className="ai-post-action-btn"
-                      onClick={() => alert('Post link copied to clipboard!')}
-                      title="Share"
-                      aria-label="Share"
-                    >
-                      <Share2 size={17} />
-                    </button>
-                  </div>
-                </div>
-              </article>
-
-              {/* ITEM 4: Milestone Award */}
-              <article className="ai-feed-post-card">
-                <div className="ai-post-header">
-                  <div className="ai-post-author-wrap">
-                    <img
-                      src={profile.avatar}
-                      alt={profile.name}
-                      className="ai-post-author-avatar"
-                    />
-                    <div className="ai-post-author-info">
-                      <div className="ai-author-name-row">
-                        <span className="ai-author-name">{profile.name}</span>
-                        <span className="ai-author-sep">•</span>
-                        <span className="ai-author-time">1 week ago</span>
-                      </div>
-                      <div className="ai-author-sub">
-                        <span>Academic Grant Award</span>
-                      </div>
+                    <div className="ai-post-subfilters" role="tablist" aria-label="Posts filter">
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={postSubFilter === 'all'}
+                        className={`ai-subfilter-btn ${postSubFilter === 'all' ? 'is-active' : ''}`}
+                        onClick={() => setPostSubFilter('all')}
+                      >
+                        <span>All</span>
+                        <span className="ai-subfilter-count">{publishedPosts.length}</span>
+                      </button>
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={postSubFilter === 'draft'}
+                        className={`ai-subfilter-btn ${postSubFilter === 'draft' ? 'is-active' : ''}`}
+                        onClick={() => setPostSubFilter('draft')}
+                      >
+                        <span>Draft</span>
+                        <span className="ai-subfilter-count">{draftPosts.length}</span>
+                      </button>
+                      <button
+                        type="button"
+                        role="tab"
+                        aria-selected={postSubFilter === 'scheduled'}
+                        className={`ai-subfilter-btn ${postSubFilter === 'scheduled' ? 'is-active' : ''}`}
+                        onClick={() => setPostSubFilter('scheduled')}
+                      >
+                        <span>Scheduled</span>
+                        <span className="ai-subfilter-count">{scheduledPosts.length}</span>
+                      </button>
                     </div>
                   </div>
-                  <span className="ai-award-medal-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="6" /><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" /></svg>
-                  </span>
                 </div>
 
-                <div className="ai-post-body">
-                  <h4 className="ai-post-title">
-                    Milestone: Awarded Stanford Undergraduate Research Grant for Autonomous Multi-Agent
-                    Reasoning
-                  </h4>
-                  <p className="ai-post-paragraph">
-                    Thrilled to announce that our research proposal on verifiable peer-to-peer agreement
-                    protocols for federated LLM ensembles received full funding for the 2024-2025 cycle.
-                    Huge thanks to faculty mentors and the Stanford AI Lab team!
-                  </p>
-
-                  {/* Award Card */}
-                  <div className="ai-grant-award-card">
-                    <div className="ai-grant-left">
-                      <div className="ai-grant-icon-box">
-                        {Icons.GraduationCap}
-                      </div>
-                      <div>
-                        <strong className="ai-grant-title">Stanford VPUE Major Grant</strong>
-                        <p className="ai-grant-sub">
-                          Office of the Vice Provost for Undergraduate Education
+                {/* SUB-VIEW 1: ALL POSTS */}
+                {postSubFilter === 'all' && (
+                  <div className="ai-feed-stream-list">
+                    {publishedPosts.length === 0 ? (
+                      <div className="ai-empty-tab-state">
+                        <FileText size={36} className="ai-empty-icon" />
+                        <h3 className="ai-empty-title">No posts yet</h3>
+                        <p className="ai-empty-desc">
+                          You haven&apos;t published any posts or academic notes yet. Stories you write and publish will appear here.
                         </p>
+                        <button type="button" className="ai-empty-action-btn" onClick={handleOpenComposer}>
+                          <Plus size={15} />
+                          <span>Create Post</span>
+                        </button>
                       </div>
-                    </div>
-                    <span className="ai-grant-amount-badge">$12,000 Award</span>
+                    ) : (
+                      publishedPosts.map((post) => (
+                        <article key={post.id} className="ai-feed-post-card">
+                          <div className="ai-post-header">
+                            <div className="ai-post-author-wrap">
+                              <img
+                                src={profile.avatar}
+                                alt={profile.name}
+                                className="ai-post-author-avatar"
+                              />
+                              <div className="ai-post-author-info">
+                                <div className="ai-author-name-row">
+                                  <span className="ai-author-name">{profile.name}</span>
+                                  <span className="ai-author-sep">•</span>
+                                  <span className="ai-author-time">{post.publishedAt || 'Just now'}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="ai-post-body">
+                            <h4 className="ai-post-title">{post.title}</h4>
+                            {post.subtitle && <p className="ai-post-subtitle-text">{post.subtitle}</p>}
+                            {post.content && <p className="ai-post-paragraph">{post.content}</p>}
+                          </div>
+
+                          <div className="ai-post-footer">
+                            <div className="ai-post-footer-actions">
+                              <button
+                                type="button"
+                                className={`ai-post-action-btn ${savedPosts[post.id] ? 'is-saved' : ''}`}
+                                onClick={() => toggleSave(post.id)}
+                                title="Save"
+                                aria-label="Save"
+                              >
+                                <Bookmark size={17} fill={savedPosts[post.id] ? 'currentColor' : 'none'} />
+                              </button>
+                              <button
+                                type="button"
+                                className={`ai-post-action-btn ${likedPosts[post.id] ? 'is-liked' : ''}`}
+                                onClick={() => toggleLike(post.id)}
+                                title="Like"
+                                aria-label="Like"
+                              >
+                                <Heart size={17} fill={likedPosts[post.id] ? '#ef4444' : 'none'} color={likedPosts[post.id] ? '#ef4444' : 'currentColor'} />
+                              </button>
+                              <button
+                                type="button"
+                                className="ai-post-action-btn"
+                                onClick={() => alert('Comments')}
+                                title="Comment"
+                                aria-label="Comment"
+                              >
+                                <MessageSquare size={17} />
+                              </button>
+                              <button
+                                type="button"
+                                className="ai-post-action-btn"
+                                onClick={() => alert('Post link copied to clipboard!')}
+                                title="Share"
+                                aria-label="Share"
+                              >
+                                <Share2 size={17} />
+                              </button>
+                            </div>
+                          </div>
+                        </article>
+                      ))
+                    )}
+                  </div>
+                )}
+
+                {/* SUB-VIEW 2: DRAFT POSTS */}
+                {postSubFilter === 'draft' && (
+                  <div className="ai-feed-stream-list">
+                    {draftPosts.length === 0 ? (
+                      <div className="ai-empty-tab-state">
+                        <FileText size={36} className="ai-empty-icon" />
+                        <h3 className="ai-empty-title">No drafts yet</h3>
+                        <p className="ai-empty-desc">
+                          Any unfinished research notes or stories you save will appear here for you to refine and publish.
+                        </p>
+                        <button type="button" className="ai-empty-action-btn" onClick={handleOpenComposer}>
+                          <Plus size={15} />
+                          <span>Start New Draft</span>
+                        </button>
+                      </div>
+                    ) : (
+                      draftPosts.map((draft) => (
+                        <article key={draft.id} className="ai-feed-post-card ai-draft-card">
+                          <div className="ai-post-header">
+                            <div className="ai-post-author-wrap">
+                              <img
+                                src={profile.avatar}
+                                alt={profile.name}
+                                className="ai-post-author-avatar"
+                              />
+                              <div className="ai-post-author-info">
+                                <div className="ai-author-name-row">
+                                  <span className="ai-draft-badge">DRAFT</span>
+                                  <span className="ai-author-sep">•</span>
+                                  <span className="ai-author-time">Last edited {draft.updatedAt}</span>
+                                  <span className="ai-author-sep">•</span>
+                                  <span className="ai-author-time">{draft.readTime}</span>
+                                </div>
+                                <div className="ai-author-sub">
+                                  <span>Saved in Lumina Author Workspace</span>
+                                </div>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              className="ai-post-more-btn"
+                              title="Delete draft"
+                              onClick={() => handleDeleteDraft(draft.id)}
+                            >
+                              <Trash2 size={15} />
+                            </button>
+                          </div>
+
+                          <div className="ai-post-body">
+                            <h4 className="ai-post-title">{draft.title}</h4>
+                            <p className="ai-post-subtitle-text">{draft.subtitle}</p>
+                            <p className="ai-post-paragraph">{draft.content}</p>
+                          </div>
+
+                          <div className="ai-card-actions-row">
+                            <div className="ai-card-actions-left">
+                              <button
+                                type="button"
+                                className="ai-action-primary-btn"
+                                onClick={handleOpenComposer}
+                              >
+                                <SquarePen size={14} />
+                                <span>Continue Editing</span>
+                              </button>
+                              <button
+                                type="button"
+                                className="ai-action-secondary-btn"
+                                onClick={() => handlePublishDraft(draft)}
+                              >
+                                <Check size={14} />
+                                <span>Publish Now</span>
+                              </button>
+                            </div>
+                            <span className="ai-draft-status-indicator">Unpublished draft</span>
+                          </div>
+                        </article>
+                      ))
+                    )}
+                  </div>
+                )}
+
+                {/* SUB-VIEW 3: SCHEDULED POSTS */}
+                {postSubFilter === 'scheduled' && (
+                  <div className="ai-feed-stream-list">
+                    {scheduledPosts.length === 0 ? (
+                      <div className="ai-empty-tab-state">
+                        <Calendar size={36} className="ai-empty-icon" />
+                        <h3 className="ai-empty-title">No scheduled posts</h3>
+                        <p className="ai-empty-desc">
+                          You don't have any upcoming posts scheduled for automated campus delivery.
+                        </p>
+                        <button type="button" className="ai-empty-action-btn" onClick={handleOpenComposer}>
+                          <Plus size={15} />
+                          <span>Write &amp; Schedule</span>
+                        </button>
+                      </div>
+                    ) : (
+                      scheduledPosts.map((post) => (
+                        <article key={post.id} className="ai-feed-post-card ai-scheduled-card">
+                          <div className="ai-post-header">
+                            <div className="ai-post-author-wrap">
+                              <img
+                                src={profile.avatar}
+                                alt={profile.name}
+                                className="ai-post-author-avatar"
+                              />
+                              <div className="ai-post-author-info">
+                                <div className="ai-author-name-row">
+                                  <span className="ai-scheduled-badge">
+                                    <Clock size={12} />
+                                    <span>SCHEDULED</span>
+                                  </span>
+                                  <span className="ai-author-sep">•</span>
+                                  <span className="ai-scheduled-time-label">
+                                    {new Date(post.scheduledAt).toLocaleDateString('en-US', {
+                                      weekday: 'short',
+                                      month: 'short',
+                                      day: 'numeric',
+                                      year: 'numeric',
+                                      hour: 'numeric',
+                                      minute: '2-digit',
+                                    })}
+                                  </span>
+                                </div>
+                                <div className="ai-author-sub">
+                                  <span>Target: Stanford AI Lab • Public Campus Feed</span>
+                                </div>
+                              </div>
+                            </div>
+                            <span className="ai-schedule-ver-pill">v{post.scheduleVersion || 1}</span>
+                          </div>
+
+                          <div className="ai-post-body">
+                            <h4 className="ai-post-title">{post.title}</h4>
+                            {post.subtitle && <p className="ai-post-subtitle-text">{post.subtitle}</p>}
+                            {post.content && <p className="ai-post-paragraph">{post.content}</p>}
+                          </div>
+
+                          <div className="ai-card-actions-row">
+                            <div className="ai-card-actions-left">
+                              <button
+                                type="button"
+                                className="ai-action-primary-btn"
+                                onClick={() => handleOpenReschedule(post)}
+                              >
+                                <Clock size={14} />
+                                <span>Reschedule</span>
+                              </button>
+                              <button
+                                type="button"
+                                className="ai-action-secondary-btn"
+                                onClick={() => handlePublishImmediately(post)}
+                              >
+                                <Send size={14} />
+                                <span>Publish Immediately</span>
+                              </button>
+                              <button
+                                type="button"
+                                className="ai-action-danger-btn"
+                                onClick={() => handleCancelSchedule(post)}
+                              >
+                                <FileText size={14} />
+                                <span>Revert to Draft</span>
+                              </button>
+                            </div>
+                            <span className="ai-scheduled-queue-indicator">Queued for automated delivery</span>
+                          </div>
+                        </article>
+                      ))
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* ACTIVE TAB: ABOUT (Blurred / Hidden) */}
+            {activeTab === 'about' && (
+              <div className="ai-feed-stream-list ai-blurred-section" aria-hidden="true">
+                <div className="ai-profile-section-card">
+                  <h3 className="ai-section-card-title">About {profile.name}</h3>
+                  <p className="ai-section-card-desc">
+                    {profile.bio}
+                  </p>
+                  <p className="ai-section-card-desc">
+                    Focusing on high-performance distributed systems, state-machine replication protocols,
+                    and hardware-software co-design for AI training clusters.
+                  </p>
+                </div>
+
+                <div className="ai-profile-section-card">
+                  <h3 className="ai-section-card-title">Research Focus &amp; Interests</h3>
+                  <div className="ai-tech-pills-wrap">
+                    <span className="ai-tech-pill is-primary">Distributed Consensus</span>
+                    <span className="ai-tech-pill is-primary">Fault-Tolerant Systems</span>
+                    <span className="ai-tech-pill">Memory Hierarchy Optimization</span>
+                    <span className="ai-tech-pill">Neural Network Infrastructure</span>
+                    <span className="ai-tech-pill">PCIe Gen5 Direct Memory Access</span>
+                    <span className="ai-tech-pill">Formal Protocol Verification</span>
                   </div>
                 </div>
 
-                <div className="ai-post-footer">
-                  <div className="ai-post-footer-actions">
-                    <button
-                      type="button"
-                      className={`ai-post-action-btn ${savedPosts.post3 ? 'is-saved' : ''}`}
-                      onClick={() => toggleSave('post3')}
-                      title="Save"
-                      aria-label="Save"
-                    >
-                      <Bookmark size={17} fill={savedPosts.post3 ? 'currentColor' : 'none'} />
-                    </button>
-                    <button
-                      type="button"
-                      className={`ai-post-action-btn ${likedPosts.post3 ? 'is-liked' : ''}`}
-                      onClick={() => toggleLike('post3')}
-                      title="Like"
-                      aria-label="Like"
-                    >
-                      <Heart size={17} fill={likedPosts.post3 ? '#ef4444' : 'none'} color={likedPosts.post3 ? '#ef4444' : 'currentColor'} />
-                    </button>
-                    <button
-                      type="button"
-                      className="ai-post-action-btn"
-                      onClick={() => alert('Comments')}
-                      title="Comment"
-                      aria-label="Comment"
-                    >
-                      <MessageSquare size={17} />
-                    </button>
-                    <button
-                      type="button"
-                      className="ai-post-action-btn"
-                      onClick={() => alert('Post link copied to clipboard!')}
-                      title="Share"
-                      aria-label="Share"
-                    >
-                      <Share2 size={17} />
-                    </button>
+                <div className="ai-profile-section-card">
+                  <h3 className="ai-section-card-title">Academic Background</h3>
+                  <div className="ai-edu-header">
+                    <strong className="ai-edu-school">Stanford University</strong>
+                    <span className="ai-edu-gpa">GPA 3.96</span>
+                  </div>
+                  <div className="ai-edu-degree">B.S. &amp; M.S. in Computer Science (Systems &amp; AI Track)</div>
+                  <div className="ai-edu-sub">Expected Graduation: June 2026</div>
+                </div>
+              </div>
+            )}
+
+            {/* ACTIVE TAB: PROJECTS (Blurred / Hidden) */}
+            {activeTab === 'projects' && (
+              <div className="ai-feed-stream-list ai-blurred-section" aria-hidden="true">
+                <div className="ai-grid-cards-2col">
+                  <div className="ai-interactive-item-card">
+                    <div className="ai-pinned-badge-row">
+                      <span className="ai-pinned-tag">RUST</span>
+                      <span className="ai-pinned-sep">•</span>
+                      <span className="ai-pinned-sub">★ 420 stars</span>
+                    </div>
+                    <strong className="ai-card-title">ConsensusCore</strong>
+                    <p className="ai-section-card-desc">
+                      Zero-dependency, zero-alloc Raft consensus engine designed for ultra-low latency clusters.
+                    </p>
+                  </div>
+
+                  <div className="ai-interactive-item-card">
+                    <div className="ai-pinned-badge-row">
+                      <span className="ai-pinned-tag">C++20</span>
+                      <span className="ai-pinned-sep">•</span>
+                      <span className="ai-pinned-sub">★ 184 stars</span>
+                    </div>
+                    <strong className="ai-card-title">Neural-Prefetch-PCIe</strong>
+                    <p className="ai-section-card-desc">
+                      Graph neural network driven memory prefetcher operating directly on PCIe 5.0 root complexes.
+                    </p>
+                  </div>
+
+                  <div className="ai-interactive-item-card">
+                    <div className="ai-pinned-badge-row">
+                      <span className="ai-pinned-tag">TYPESCRIPT</span>
+                      <span className="ai-pinned-sep">•</span>
+                      <span className="ai-pinned-sub">★ 312 stars</span>
+                    </div>
+                    <strong className="ai-card-title">HackCampus Portal</strong>
+                    <p className="ai-section-card-desc">
+                      Full-stack real-time platform facilitating judging and project submissions for 1,200+ collegiate builders.
+                    </p>
+                  </div>
+
+                  <div className="ai-interactive-item-card">
+                    <div className="ai-pinned-badge-row">
+                      <span className="ai-pinned-tag">EBPF</span>
+                      <span className="ai-pinned-sep">•</span>
+                      <span className="ai-pinned-sub">★ 95 stars</span>
+                    </div>
+                    <strong className="ai-card-title">Linux-eBPF-Trace</strong>
+                    <p className="ai-section-card-desc">
+                      Kernel-level packet observability agent measuring microsecond RPC jitter in containerized workloads.
+                    </p>
                   </div>
                 </div>
-              </article>
-            </div>
+              </div>
+            )}
+
+            {/* ACTIVE TAB: ACHIEVEMENTS & GRANTS (Blurred / Hidden) */}
+            {activeTab === 'achievements' && (
+              <div className="ai-feed-stream-list ai-blurred-section" aria-hidden="true">
+                <div className="ai-grant-award-card">
+                  <div className="ai-grant-left">
+                    <div className="ai-grant-icon-box">
+                      {Icons.GraduationCap}
+                    </div>
+                    <div>
+                      <strong className="ai-grant-title">Stanford VPUE Major Grant</strong>
+                      <p className="ai-grant-sub">
+                        Full research funding for Autonomous Multi-Agent Reasoning Protocols (2024-2025)
+                      </p>
+                    </div>
+                  </div>
+                  <span className="ai-grant-amount-badge">$12,000 Award</span>
+                </div>
+
+                <div className="ai-grant-award-card">
+                  <div className="ai-grant-left">
+                    <div className="ai-grant-icon-box">
+                      <Award size={18} />
+                    </div>
+                    <div>
+                      <strong className="ai-grant-title">SysML Workshop &apos;24 Best Paper Honorable Mention</strong>
+                      <p className="ai-grant-sub">
+                        Adaptive Memory Prefetching via Graph Neural Networks on PCIe 5.0
+                      </p>
+                    </div>
+                  </div>
+                  <span className="ai-grant-amount-badge">Research Award</span>
+                </div>
+
+                <div className="ai-grant-award-card">
+                  <div className="ai-grant-left">
+                    <div className="ai-grant-icon-box">
+                      <Sparkles size={18} />
+                    </div>
+                    <div>
+                      <strong className="ai-grant-title">Dean&apos;s Honor List</strong>
+                      <p className="ai-grant-sub">
+                        Stanford School of Engineering (Academic Years 2022-2025)
+                      </p>
+                    </div>
+                  </div>
+                  <span className="ai-grant-amount-badge">Honors</span>
+                </div>
+              </div>
+            )}
+
+            {/* ACTIVE TAB: COMMUNITIES (Blurred / Hidden) */}
+            {activeTab === 'communities' && (
+              <div className="ai-feed-stream-list ai-blurred-section" aria-hidden="true">
+                <div className="ai-grid-cards-2col">
+                  <div className="ai-interactive-item-card">
+                    <strong className="ai-card-title">Stanford Systems Reading Group</strong>
+                    <span className="ai-pinned-sub">Weekly paper discussions on distributed storage and OS kernel internals</span>
+                    <span className="ai-role-pill" style={{ width: 'fit-content', marginTop: '6px' }}>Core Member</span>
+                  </div>
+
+                  <div className="ai-interactive-item-card">
+                    <strong className="ai-card-title">HackCampus Stanford</strong>
+                    <span className="ai-pinned-sub">Directing annual flagship 1,200+ builder hackathon</span>
+                    <span className="ai-role-pill" style={{ width: 'fit-content', marginTop: '6px' }}>Lead Organizer</span>
+                  </div>
+
+                  <div className="ai-interactive-item-card">
+                    <strong className="ai-card-title">Stanford AI Lab Builders</strong>
+                    <span className="ai-pinned-sub">Cross-disciplinary research group building open source foundation models</span>
+                    <span className="ai-role-pill" style={{ width: 'fit-content', marginTop: '6px' }}>Research Fellow</span>
+                  </div>
+
+                  <div className="ai-interactive-item-card">
+                    <strong className="ai-card-title">Rust Campus Guild</strong>
+                    <span className="ai-pinned-sub">Systems programming workshops, crate code reviews, and mentorship</span>
+                    <span className="ai-role-pill" style={{ width: 'fit-content', marginTop: '6px' }}>Founder</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ACTIVE TAB: SAVED */}
+            {activeTab === 'saved' && (
+              <div className="ai-feed-stream-list">
+                <div className="ai-posts-subbar">
+                  <div className="ai-posts-subtitle-wrap">
+                    <h2 className="ai-posts-subtitle">Saved Items</h2>
+                    <span className="ai-posts-subtitle-count">
+                      ({publishedPosts.filter((p) => savedPosts[p.id]).length})
+                    </span>
+                  </div>
+                </div>
+
+                {publishedPosts.filter((p) => savedPosts[p.id]).length === 0 ? (
+                  <div className="ai-empty-tab-state">
+                    <Bookmark size={36} className="ai-empty-icon" />
+                    <h3 className="ai-empty-title">No saved stories yet</h3>
+                    <p className="ai-empty-desc">
+                      Click the bookmark icon on any post or academic note to save it here for quick reference.
+                    </p>
+                  </div>
+                ) : (
+                  publishedPosts
+                    .filter((p) => savedPosts[p.id])
+                    .map((post) => (
+                      <article key={post.id} className="ai-feed-post-card">
+                        <div className="ai-post-header">
+                          <div className="ai-post-author-wrap">
+                            <img src={profile.avatar} alt={profile.name} className="ai-post-author-avatar" />
+                            <div className="ai-post-author-info">
+                              <span className="ai-author-name">{profile.name}</span>
+                              <div className="ai-author-sub"><span>{post.publishedAt || 'Saved'}</span></div>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            className="ai-post-action-btn is-saved"
+                            onClick={() => toggleSave(post.id)}
+                            title="Remove from saved"
+                          >
+                            <Bookmark size={17} fill="currentColor" />
+                          </button>
+                        </div>
+                        <div className="ai-post-body">
+                          <h4 className="ai-post-title">{post.title}</h4>
+                          {post.subtitle && <p className="ai-post-subtitle-text">{post.subtitle}</p>}
+                          {post.content && <p className="ai-post-paragraph">{post.content}</p>}
+                        </div>
+                      </article>
+                    ))
+                )}
+              </div>
+            )}
           </main>
 
-          {/* 4. RIGHT SIDEBAR WIDGETS */}
-          <aside className="ai-right-sidebar profile-right-col">
+          {/* 4. RIGHT SIDEBAR WIDGETS (Blurred / Hidden) */}
+          <aside className="ai-right-sidebar profile-right-col ai-blurred-section" aria-hidden="true">
             {/* WIDGET 1: Technical Stack */}
             <div className="ai-widget-card">
               <div className="ai-card-header-row">
@@ -1581,6 +1922,112 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           </aside>
         </div>
       </div>
+
+      {/* Reschedule Modal */}
+      {rescheduleModalPost && (
+        <div className="ai-modal-overlay" onClick={() => setRescheduleModalPost(null)}>
+          <div className="ai-modal-container" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+            <div className="ai-modal-header">
+              <div>
+                <h3 className="ai-modal-title">Reschedule Post</h3>
+                <p className="ai-modal-subtitle">Pick a new date and time for automatic publishing</p>
+              </div>
+              <button
+                type="button"
+                className="ai-modal-close-btn"
+                onClick={() => setRescheduleModalPost(null)}
+                aria-label="Close dialog"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="ai-modal-body">
+              <div className="ai-modal-post-preview">
+                <span className="ai-modal-preview-label">POST</span>
+                <strong className="ai-modal-preview-title">{rescheduleModalPost.title}</strong>
+              </div>
+
+              <div className="ai-form-group">
+                <label className="ai-form-label" htmlFor="reschedule-datetime-input">
+                  <Clock size={14} />
+                  <span>Select Date &amp; Time</span>
+                </label>
+                <input
+                  id="reschedule-datetime-input"
+                  type="datetime-local"
+                  className="ai-datetime-input"
+                  value={rescheduleTime}
+                  onChange={(e) => setRescheduleTime(e.target.value)}
+                />
+              </div>
+
+              <div className="ai-quick-presets">
+                <span className="ai-presets-label">Quick adjust:</span>
+                <button
+                  type="button"
+                  className="ai-preset-chip"
+                  onClick={() => {
+                    const d = new Date(Date.now() + 24 * 3600 * 1000)
+                    const iso = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
+                    setRescheduleTime(iso)
+                  }}
+                >
+                  Tomorrow
+                </button>
+                <button
+                  type="button"
+                  className="ai-preset-chip"
+                  onClick={() => {
+                    const d = new Date(Date.now() + 3 * 24 * 3600 * 1000)
+                    const iso = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
+                    setRescheduleTime(iso)
+                  }}
+                >
+                  In 3 Days
+                </button>
+                <button
+                  type="button"
+                  className="ai-preset-chip"
+                  onClick={() => {
+                    const d = new Date(Date.now() + 7 * 24 * 3600 * 1000)
+                    const iso = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
+                    setRescheduleTime(iso)
+                  }}
+                >
+                  Next Week
+                </button>
+              </div>
+            </div>
+
+            <div className="ai-modal-footer">
+              <button
+                type="button"
+                className="ai-modal-cancel-btn"
+                onClick={() => setRescheduleModalPost(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="ai-modal-confirm-btn"
+                disabled={!rescheduleTime || isRescheduling}
+                onClick={handleConfirmReschedule}
+              >
+                {isRescheduling ? 'Rescheduling...' : 'Save New Schedule'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Toast Notification */}
+      {toastMessage && (
+        <div className="ai-toast-notification" role="status" aria-live="polite">
+          <Check size={16} className="ai-toast-icon" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
     </div>
   )
 }

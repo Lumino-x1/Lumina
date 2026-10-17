@@ -1,4 +1,5 @@
 import React from 'react'
+import { ShieldCheck, GraduationCap, Users, Briefcase } from 'lucide-react'
 import './WhyUsSection.css'
 
 export interface WhyUsSectionProps {
@@ -46,14 +47,8 @@ export const WhyUsSection: React.FC<WhyUsSectionProps> = ({
             <div className="why-us-bento-row">
               {/* Card 1: Verified Community */}
               <div className="why-us-card card-wide-left">
-                <div className="why-us-card-image-wrap" aria-hidden="true">
-                  <img
-                    src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80"
-                    alt="Verified Community"
-                    className="why-us-card-bg-img"
-                    loading="lazy"
-                  />
-                  <div className="why-us-card-overlay" />
+                <div className="why-us-card-icon-wrap" aria-hidden="true">
+                  <ShieldCheck className="why-us-card-icon" />
                 </div>
 
                 <div className="why-us-card-content">
@@ -68,14 +63,8 @@ export const WhyUsSection: React.FC<WhyUsSectionProps> = ({
 
               {/* Card 2: Academic Collaboration */}
               <div className="why-us-card card-narrow-right">
-                <div className="why-us-card-image-wrap" aria-hidden="true">
-                  <img
-                    src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80"
-                    alt="Academic Collaboration"
-                    className="why-us-card-bg-img"
-                    loading="lazy"
-                  />
-                  <div className="why-us-card-overlay" />
+                <div className="why-us-card-icon-wrap" aria-hidden="true">
+                  <GraduationCap className="why-us-card-icon" />
                 </div>
 
                 <div className="why-us-card-content">
@@ -93,14 +82,8 @@ export const WhyUsSection: React.FC<WhyUsSectionProps> = ({
             <div className="why-us-bento-row">
               {/* Card 3: Clubs & Communities */}
               <div className="why-us-card card-narrow-left">
-                <div className="why-us-card-image-wrap" aria-hidden="true">
-                  <img
-                    src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1200&q=80"
-                    alt="Clubs & Communities"
-                    className="why-us-card-bg-img"
-                    loading="lazy"
-                  />
-                  <div className="why-us-card-overlay" />
+                <div className="why-us-card-icon-wrap" aria-hidden="true">
+                  <Users className="why-us-card-icon" />
                 </div>
 
                 <div className="why-us-card-content">
@@ -115,14 +98,8 @@ export const WhyUsSection: React.FC<WhyUsSectionProps> = ({
 
               {/* Card 4: Career Opportunities */}
               <div className="why-us-card card-wide-right">
-                <div className="why-us-card-image-wrap" aria-hidden="true">
-                  <img
-                    src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1200&q=80"
-                    alt="Career Opportunities"
-                    className="why-us-card-bg-img"
-                    loading="lazy"
-                  />
-                  <div className="why-us-card-overlay" />
+                <div className="why-us-card-icon-wrap" aria-hidden="true">
+                  <Briefcase className="why-us-card-icon" />
                 </div>
 
                 <div className="why-us-card-content">

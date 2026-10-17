@@ -4,11 +4,15 @@
 
 .lumina-split-root {
   min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
   display: flex;
   background-color: #000000;
   color: rgba(255, 255, 255, 0.9);
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Geist', var(--font-family-primary), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: var(--font-size-base, 15px);
+  font-weight: var(--font-weight-base, 400);
+  line-height: var(--font-line-height-base, 22.5px);
   overflow-x: hidden;
   position: relative;
 }
@@ -21,14 +25,17 @@
   width: 100%;
   max-width: 580px;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 28px 24px;
+  padding: 24px 20px;
   background-color: #000000;
   box-sizing: border-box;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   z-index: 10;
   margin: 0 auto;
 }
@@ -37,6 +44,9 @@
   .lumina-split-left {
     width: 50%;
     max-width: none;
+    height: 100vh;
+    min-height: 100vh;
+    overflow-y: auto;
     margin: 0;
     padding: 36px 44px;
   }
@@ -63,12 +73,18 @@
   justify-content: space-between;
 }
 
+.lumina-auth-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .lumina-auth-back-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.65);
   padding: 6px 14px;
   border-radius: 10px;
@@ -110,39 +126,22 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   width: 100%;
   text-align: center;
 }
 
-.lumina-auth-logo-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.lumina-auth-brand-logo {
-  width: 38px;
-  height: 28px;
-  fill: currentColor;
-  color: #ffffff;
-  display: block;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.lumina-auth-brand-logo:hover {
-  transform: scale(1.06);
-  opacity: 0.9;
-}
-
 .lumina-auth-title {
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  font-family: 'Geist', var(--font-family-primary), -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: clamp(20px, 3.2vw, 23px);
+  font-weight: 500 !important;
+  letter-spacing: -0.02em;
   color: #ffffff;
-  margin: 0;
+  margin: 0 auto;
   line-height: 1.25;
+  max-width: 300px;
+  text-align: center;
+  text-wrap: balance;
 }
 
 /* Multi-step progress bar */
@@ -150,7 +149,8 @@
   display: flex;
   gap: 6px;
   width: 100%;
-  margin-top: 16px;
+  max-width: 260px;
+  margin: 14px auto 0;
 }
 
 .lumina-progress-bar {
@@ -169,26 +169,108 @@
   background-color: rgba(255, 255, 255, 0.6);
 }
 
-/* Frosted Deep Dark Black Card with modern rounded corners */
+/* Frosted Deep Dark Black Card with architectural dashed lines matching landing page */
 .lumina-auth-card {
+  position: relative;
   width: 100%;
   background-color: rgba(6, 6, 6, 0.94);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-radius: 20px;
+  border-radius: 16px;
   padding: 28px 24px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px dashed rgba(255, 255, 255, 0.22);
   box-shadow: 0 16px 50px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 @media (min-width: 640px) {
   .lumina-auth-card {
     padding: 32px 28px;
-    border-radius: 24px;
+    border-radius: 16px;
   }
+}
+
+/* Corner Crosshairs (+) for Auth Card matching landing page frame */
+.lumina-auth-card .crosshair-marker {
+  position: absolute;
+  font-family: monospace, ui-monospace, sans-serif;
+  font-size: 15px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+  z-index: 10;
+  user-select: none;
+}
+
+.lumina-auth-card .crosshair-top-left {
+  top: -8px;
+  left: -6px;
+}
+
+.lumina-auth-card .crosshair-top-right {
+  top: -8px;
+  right: -6px;
+}
+
+.lumina-auth-card .crosshair-bottom-left {
+  bottom: -8px;
+  left: -6px;
+}
+
+.lumina-auth-card .crosshair-bottom-right {
+  bottom: -8px;
+  right: -6px;
+}
+
+/* Segmented Mode Tabs (Sign In / Sign Up switch) */
+.lumina-auth-mode-tabs {
+  display: flex;
+  align-items: center;
+  background-color: #0c0c0c;
+  border: 1px dashed rgba(255, 255, 255, 0.22);
+  border-radius: 9999px;
+  padding: 4px;
+  margin-bottom: 22px;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 4px;
+  position: relative;
+  z-index: 2;
+}
+
+.lumina-auth-mode-tab {
+  flex: 1;
+  height: 42px;
+  min-height: 42px;
+  border-radius: 9999px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.65);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+  outline: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lumina-auth-mode-tab:hover:not(.active) {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.lumina-auth-mode-tab.active {
+  background-color: #ffffff;
+  color: #000000;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
 /* Form Styles */
@@ -254,7 +336,7 @@
   padding: 0 14px;
   border-radius: 12px;
   background-color: #0c0c0c;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px dashed rgba(255, 255, 255, 0.22);
   color: #ffffff;
   font-size: 14px;
   box-sizing: border-box;
@@ -269,7 +351,7 @@
   padding: 10px 14px;
   border-radius: 12px;
   background-color: #0c0c0c;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px dashed rgba(255, 255, 255, 0.22);
   color: #ffffff;
   font-size: 13.5px;
   box-sizing: border-box;
@@ -287,7 +369,8 @@
 
 .lumina-auth-input:focus,
 .lumina-auth-textarea:focus {
-  border-color: rgba(255, 255, 255, 0.45);
+  border-color: rgba(255, 255, 255, 0.55);
+  border-style: dashed;
   background-color: #141414;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
 }
@@ -301,7 +384,7 @@
   padding: 14px 16px;
   border-radius: 16px;
   background: #0c0c0c;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px dashed rgba(255, 255, 255, 0.22);
   transition: all 0.2s ease;
 }
 
@@ -460,7 +543,7 @@
   padding: 10px 8px;
   border-radius: 12px;
   background: #0c0c0c;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.75);
   font-size: 13px;
   font-weight: 500;
@@ -472,13 +555,14 @@
 
 .lumina-year-pill-btn:hover {
   background: #181818;
-  border-color: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.35);
   color: #ffffff;
 }
 
 .lumina-year-pill-btn.active {
   background: #ffffff;
   border-color: #ffffff;
+  border-style: solid;
   color: #000000;
   font-weight: 600;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
@@ -499,7 +583,7 @@
   padding: 7px 14px;
   border-radius: 9999px;
   background: #0c0c0c;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.8);
   font-size: 12.5px;
   font-weight: 500;
@@ -607,7 +691,7 @@
   border-radius: 9999px;
   background-color: #0c0c0c;
   color: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px dashed rgba(255, 255, 255, 0.22);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -621,17 +705,17 @@
 .lumina-auth-secondary-btn:hover {
   background-color: #181818;
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.26);
+  border-color: rgba(255, 255, 255, 0.38);
 }
 
-/* Primary Action Button (White in Dark theme) */
+/* Primary Action Button (Terracotta Brand Color) */
 .lumina-auth-submit-btn {
   flex: 2;
   height: 46px;
   border-radius: 9999px;
-  background-color: #ffffff;
-  color: #000000;
-  border: none;
+  background-color: #C15F3C;
+  color: #ffffff;
+  border: 1px solid #C15F3C;
   font-size: 14.5px;
   font-weight: 600;
   cursor: pointer;
@@ -644,13 +728,19 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
+.lumina-auth-submit-btn:hover {
+  background-color: #A94F30;
+  border-color: #A94F30;
+}
+
 .lumina-auth-submit-btn.full-width {
   flex: none;
   width: 100%;
 }
 
 .lumina-auth-submit-btn:hover:not(:disabled) {
-  background-color: #e4e4e7;
+  background-color: #A94F30;
+  border-color: #A94F30;
 }
 
 .lumina-auth-submit-btn:active:not(:disabled) {
@@ -677,7 +767,7 @@
   border-radius: 12px;
   background-color: #0c0c0c;
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px dashed rgba(255, 255, 255, 0.22);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -691,7 +781,7 @@
 
 .lumina-auth-social-btn:hover {
   background-color: #181818;
-  border-color: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.38);
 }
 
 /* Hairline Divider */
@@ -868,5 +958,761 @@
 @media (min-width: 1280px) {
   .lumina-split-heading {
     font-size: 72px;
+  }
+}
+
+/* ==========================================================================
+   BRIGHT / LIGHT THEME OVERRIDES (MATCHING LANDING PAGE)
+   ========================================================================== */
+
+.lumina-split-root.light,
+.lumina-split-root.bright,
+[data-theme="bright"] .lumina-split-root {
+  background-color: #ffffff;
+  color: #09090b;
+}
+
+.lumina-split-root.light .lumina-split-left,
+.lumina-split-root.bright .lumina-split-left,
+[data-theme="bright"] .lumina-split-left {
+  background-color: #ffffff;
+}
+
+/* Back button */
+.lumina-split-root.light .lumina-auth-back-btn,
+.lumina-split-root.bright .lumina-auth-back-btn,
+[data-theme="bright"] .lumina-auth-back-btn {
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+  color: rgba(0, 0, 0, 0.7);
+  background-color: transparent;
+}
+
+.lumina-split-root.light .lumina-auth-back-btn:hover,
+.lumina-split-root.bright .lumina-auth-back-btn:hover,
+[data-theme="bright"] .lumina-auth-back-btn:hover {
+  color: #000000;
+  border-color: rgba(0, 0, 0, 0.38);
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Step badge */
+.lumina-split-root.light .lumina-auth-step-badge,
+.lumina-split-root.bright .lumina-auth-step-badge,
+[data-theme="bright"] .lumina-auth-step-badge {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* Title in Light theme */
+.lumina-split-root.light .lumina-auth-title,
+.lumina-split-root.bright .lumina-auth-title,
+[data-theme="bright"] .lumina-auth-title {
+  color: #09090b;
+  font-family: 'Geist', var(--font-family-primary), -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-weight: 500 !important;
+}
+
+/* Progress track & bars */
+.lumina-split-root.light .lumina-progress-bar,
+.lumina-split-root.bright .lumina-progress-bar,
+[data-theme="bright"] .lumina-progress-bar {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.lumina-split-root.light .lumina-progress-bar.active,
+.lumina-split-root.bright .lumina-progress-bar.active,
+[data-theme="bright"] .lumina-progress-bar.active {
+  background-color: #000000;
+}
+
+.lumina-split-root.light .lumina-progress-bar.completed,
+.lumina-split-root.bright .lumina-progress-bar.completed,
+[data-theme="bright"] .lumina-progress-bar.completed {
+  background-color: rgba(0, 0, 0, 0.45);
+}
+
+/* Card with dotted / dashed lines in Light theme */
+.lumina-split-root.light .lumina-auth-card,
+.lumina-split-root.bright .lumina-auth-card,
+[data-theme="bright"] .lumina-auth-card {
+  background-color: #FFFFFF;
+  border: 1px dashed #B1ADA1;
+  box-shadow: 0 16px 40px rgba(177, 173, 161, 0.12), inset 0 1px 0 #FFFFFF;
+}
+
+/* Crosshairs in Light theme */
+.lumina-split-root.light .lumina-auth-card .crosshair-marker,
+.lumina-split-root.bright .lumina-auth-card .crosshair-marker,
+[data-theme="bright"] .lumina-auth-card .crosshair-marker {
+  color: #B1ADA1;
+}
+
+/* Mode Tabs in Light theme */
+.lumina-split-root.light .lumina-auth-mode-tabs,
+.lumina-split-root.bright .lumina-auth-mode-tabs,
+[data-theme="bright"] .lumina-auth-mode-tabs {
+  background-color: #F4F3EE;
+  border: 1px dashed #B1ADA1;
+}
+
+.lumina-split-root.light .lumina-auth-mode-tab,
+.lumina-split-root.bright .lumina-auth-mode-tab,
+[data-theme="bright"] .lumina-auth-mode-tab {
+  color: #5C584E;
+}
+
+.lumina-split-root.light .lumina-auth-mode-tab:hover:not(.active),
+.lumina-split-root.bright .lumina-auth-mode-tab:hover:not(.active),
+[data-theme="bright"] .lumina-auth-mode-tab:hover:not(.active) {
+  color: #1C1A17;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.lumina-split-root.light .lumina-auth-mode-tab.active,
+.lumina-split-root.bright .lumina-auth-mode-tab.active,
+[data-theme="bright"] .lumina-auth-mode-tab.active {
+  background-color: #FFFFFF;
+  color: #1C1A17;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Labels */
+.lumina-split-root.light .lumina-auth-label,
+.lumina-split-root.bright .lumina-auth-label,
+[data-theme="bright"] .lumina-auth-label {
+  color: #09090b;
+}
+
+.lumina-split-root.light .lumina-auth-label-opt,
+.lumina-split-root.bright .lumina-auth-label-opt,
+[data-theme="bright"] .lumina-auth-label-opt {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.lumina-split-root.light .lumina-auth-label-hint,
+.lumina-split-root.bright .lumina-auth-label-hint,
+[data-theme="bright"] .lumina-auth-label-hint {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* Inputs & Textareas */
+.lumina-split-root.light .lumina-auth-input,
+.lumina-split-root.bright .lumina-auth-input,
+[data-theme="bright"] .lumina-auth-input,
+.lumina-split-root.light .lumina-auth-textarea,
+.lumina-split-root.bright .lumina-auth-textarea,
+[data-theme="bright"] .lumina-auth-textarea {
+  background-color: #FFFFFF;
+  border: 1px dashed #B1ADA1;
+  color: #1C1A17;
+}
+
+.lumina-split-root.light .lumina-auth-input::placeholder,
+.lumina-split-root.bright .lumina-auth-input::placeholder,
+[data-theme="bright"] .lumina-auth-input::placeholder,
+.lumina-split-root.light .lumina-auth-textarea::placeholder,
+.lumina-split-root.bright .lumina-auth-textarea::placeholder,
+[data-theme="bright"] .lumina-auth-textarea::placeholder {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.lumina-split-root.light .lumina-auth-input:focus,
+.lumina-split-root.bright .lumina-auth-input:focus,
+[data-theme="bright"] .lumina-auth-input:focus,
+.lumina-split-root.light .lumina-auth-textarea:focus,
+.lumina-split-root.bright .lumina-auth-textarea:focus,
+[data-theme="bright"] .lumina-auth-textarea:focus {
+  background-color: #FFFFFF;
+  border-color: #C15F3C;
+  border-style: dashed;
+  box-shadow: 0 0 0 2px rgba(193, 95, 60, 0.2);
+}
+
+.lumina-split-root.light .lumina-auth-input-prefix,
+.lumina-split-root.bright .lumina-auth-input-prefix,
+[data-theme="bright"] .lumina-auth-input-prefix {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+/* Avatar Picker */
+.lumina-split-root.light .lumina-avatar-picker-row,
+.lumina-split-root.bright .lumina-avatar-picker-row,
+[data-theme="bright"] .lumina-avatar-picker-row {
+  background: #FFFFFF;
+  border: 1px dashed #B1ADA1;
+}
+
+.lumina-split-root.light .lumina-avatar-picker-row:hover,
+.lumina-split-root.bright .lumina-avatar-picker-row:hover,
+[data-theme="bright"] .lumina-avatar-picker-row:hover {
+  background: #F4F3EE;
+  border-color: #C15F3C;
+}
+
+.lumina-split-root.light .lumina-avatar-picker-row.is-drag-over,
+.lumina-split-root.bright .lumina-avatar-picker-row.is-drag-over,
+[data-theme="bright"] .lumina-avatar-picker-row.is-drag-over {
+  border-color: #C15F3C;
+  background: rgba(193, 95, 60, 0.05);
+  box-shadow: 0 0 0 2px rgba(193, 95, 60, 0.2);
+}
+
+.lumina-split-root.light .lumina-avatar-preview,
+.lumina-split-root.bright .lumina-avatar-preview,
+[data-theme="bright"] .lumina-avatar-preview {
+  background: #F4F3EE;
+  border: 1px dashed #B1ADA1;
+}
+
+.lumina-split-root.light .lumina-avatar-preview-wrap:hover .lumina-avatar-preview,
+.lumina-split-root.bright .lumina-avatar-preview-wrap:hover .lumina-avatar-preview,
+[data-theme="bright"] .lumina-avatar-preview-wrap:hover .lumina-avatar-preview {
+  border-color: #C15F3C;
+}
+
+.lumina-split-root.light .lumina-avatar-badge,
+.lumina-split-root.bright .lumina-avatar-badge,
+[data-theme="bright"] .lumina-avatar-badge {
+  background: #C15F3C;
+  border-color: #FFFFFF;
+  color: #FFFFFF;
+}
+
+.lumina-split-root.light .lumina-avatar-upload-btn,
+.lumina-split-root.bright .lumina-avatar-upload-btn,
+[data-theme="bright"] .lumina-avatar-upload-btn {
+  background: #FFFFFF;
+  border: 1px dashed #B1ADA1;
+  color: #1C1A17;
+}
+
+.lumina-split-root.light .lumina-avatar-upload-btn:hover,
+.lumina-split-root.bright .lumina-avatar-upload-btn:hover,
+[data-theme="bright"] .lumina-avatar-upload-btn:hover {
+  background: #F4F3EE;
+  border-color: #C15F3C;
+  color: #C15F3C;
+}
+
+.lumina-split-root.light .lumina-avatar-hint,
+.lumina-split-root.bright .lumina-avatar-hint,
+[data-theme="bright"] .lumina-avatar-hint {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* Year Selection Pills */
+.lumina-split-root.light .lumina-year-pill-btn,
+.lumina-split-root.bright .lumina-year-pill-btn,
+[data-theme="bright"] .lumina-year-pill-btn {
+  background: #FFFFFF;
+  border: 1px dashed #B1ADA1;
+  color: #1C1A17;
+}
+
+.lumina-split-root.light .lumina-year-pill-btn:hover,
+.lumina-split-root.bright .lumina-year-pill-btn:hover,
+[data-theme="bright"] .lumina-year-pill-btn:hover {
+  background: #F4F3EE;
+  border-color: #C15F3C;
+  color: #C15F3C;
+}
+
+.lumina-split-root.light .lumina-year-pill-btn.active,
+.lumina-split-root.bright .lumina-year-pill-btn.active,
+[data-theme="bright"] .lumina-year-pill-btn.active {
+  background: #C15F3C;
+  border-color: #C15F3C;
+  border-style: solid;
+  color: #FFFFFF;
+}
+
+/* Interests Chip Grid */
+.lumina-split-root.light .lumina-chip-btn,
+.lumina-split-root.bright .lumina-chip-btn,
+[data-theme="bright"] .lumina-chip-btn {
+  background: #FFFFFF;
+  border: 1px dashed #B1ADA1;
+  color: #1C1A17;
+}
+
+.lumina-split-root.light .lumina-chip-btn:hover,
+.lumina-split-root.bright .lumina-chip-btn:hover,
+[data-theme="bright"] .lumina-chip-btn:hover {
+  background: #F4F3EE;
+  border-color: #C15F3C;
+  color: #C15F3C;
+}
+
+.lumina-split-root.light .lumina-chip-btn.selected,
+.lumina-split-root.bright .lumina-chip-btn.selected,
+[data-theme="bright"] .lumina-chip-btn.selected {
+  background: #C15F3C;
+  border-color: #C15F3C;
+  border-style: solid;
+  color: #FFFFFF;
+}
+
+.lumina-split-root.light .lumina-chip-indicator,
+.lumina-split-root.bright .lumina-chip-indicator,
+[data-theme="bright"] .lumina-chip-indicator {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.lumina-split-root.light .lumina-chip-indicator.valid,
+.lumina-split-root.bright .lumina-chip-indicator.valid,
+[data-theme="bright"] .lumina-chip-indicator.valid {
+  color: #16a34a;
+}
+
+/* Skills Tags & Suggestions */
+.lumina-split-root.light .lumina-skill-tag,
+.lumina-split-root.bright .lumina-skill-tag,
+[data-theme="bright"] .lumina-skill-tag {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #000000;
+}
+
+.lumina-split-root.light .lumina-skill-tag-remove,
+.lumina-split-root.bright .lumina-skill-tag-remove,
+[data-theme="bright"] .lumina-skill-tag-remove {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.lumina-split-root.light .lumina-skill-tag-remove:hover,
+.lumina-split-root.bright .lumina-skill-tag-remove:hover,
+[data-theme="bright"] .lumina-skill-tag-remove:hover {
+  color: #000000;
+}
+
+.lumina-split-root.light .lumina-skill-suggestion-btn,
+.lumina-split-root.bright .lumina-skill-suggestion-btn,
+[data-theme="bright"] .lumina-skill-suggestion-btn {
+  border-color: rgba(0, 0, 0, 0.18);
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.lumina-split-root.light .lumina-skill-suggestion-btn:hover,
+.lumina-split-root.bright .lumina-skill-suggestion-btn:hover,
+[data-theme="bright"] .lumina-skill-suggestion-btn:hover {
+  border-color: rgba(0, 0, 0, 0.4);
+  color: #000000;
+}
+
+/* Secondary Button */
+.lumina-split-root.light .lumina-auth-secondary-btn,
+.lumina-split-root.bright .lumina-auth-secondary-btn,
+[data-theme="bright"] .lumina-auth-secondary-btn {
+  background-color: #FFFFFF;
+  color: #1C1A17;
+  border: 1px dashed #B1ADA1;
+}
+
+.lumina-split-root.light .lumina-auth-secondary-btn:hover,
+.lumina-split-root.bright .lumina-auth-secondary-btn:hover,
+[data-theme="bright"] .lumina-auth-secondary-btn:hover {
+  background-color: #F4F3EE;
+  border-color: #C15F3C;
+  color: #C15F3C;
+}
+
+/* Primary Submit Button (Terracotta Brand in Light theme) */
+.lumina-split-root.light .lumina-auth-submit-btn,
+.lumina-split-root.bright .lumina-auth-submit-btn,
+[data-theme="bright"] .lumina-auth-submit-btn {
+  background-color: #C15F3C;
+  color: #FFFFFF;
+  border: 1px solid #C15F3C;
+  box-shadow: 0 1px 3px rgba(193, 95, 60, 0.25);
+}
+
+.lumina-split-root.light .lumina-auth-submit-btn:hover:not(:disabled),
+.lumina-split-root.bright .lumina-auth-submit-btn:hover:not(:disabled),
+[data-theme="bright"] .lumina-auth-submit-btn:hover:not(:disabled) {
+  background-color: #A94F30;
+  border-color: #A94F30;
+}
+
+.lumina-split-root.light .lumina-auth-submit-btn .lumina-auth-spinner,
+.lumina-split-root.bright .lumina-auth-submit-btn .lumina-auth-spinner,
+[data-theme="bright"] .lumina-auth-submit-btn .lumina-auth-spinner {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+}
+
+/* Social Buttons */
+.lumina-split-root.light .lumina-auth-social-btn,
+.lumina-split-root.bright .lumina-auth-social-btn,
+[data-theme="bright"] .lumina-auth-social-btn {
+  background-color: #FFFFFF;
+  color: #1C1A17;
+  border: 1px dashed #B1ADA1;
+}
+
+.lumina-split-root.light .lumina-auth-social-btn:hover,
+.lumina-split-root.bright .lumina-auth-social-btn:hover,
+[data-theme="bright"] .lumina-auth-social-btn:hover {
+  background-color: #F4F3EE;
+  border-color: #C15F3C;
+  color: #C15F3C;
+}
+
+/* Divider */
+.lumina-split-root.light .lumina-auth-divider-line,
+.lumina-split-root.bright .lumina-auth-divider-line,
+[data-theme="bright"] .lumina-auth-divider-line {
+  background: #B1ADA1;
+}
+
+.lumina-split-root.light .lumina-auth-divider-text,
+.lumina-split-root.bright .lumina-auth-divider-text,
+[data-theme="bright"] .lumina-auth-divider-text {
+  color: #635F55;
+}
+
+/* Footer Switch */
+.lumina-split-root.light .lumina-auth-footer,
+.lumina-split-root.bright .lumina-auth-footer,
+[data-theme="bright"] .lumina-auth-footer {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.lumina-split-root.light .lumina-auth-switch-btn,
+.lumina-split-root.bright .lumina-auth-switch-btn,
+[data-theme="bright"] .lumina-auth-switch-btn {
+  color: #000000;
+}
+
+/* Alerts in Light Theme */
+.lumina-split-root.light .lumina-auth-alert-error,
+.lumina-split-root.bright .lumina-auth-alert-error,
+[data-theme="bright"] .lumina-auth-alert-error {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.lumina-split-root.light .lumina-auth-alert-success,
+.lumina-split-root.bright .lumina-auth-alert-success,
+[data-theme="bright"] .lumina-auth-alert-success {
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #15803d;
+}
+
+/* Right Pane in Light Theme */
+.lumina-split-root.light .lumina-split-right,
+.lumina-split-root.bright .lumina-split-right,
+[data-theme="bright"] .lumina-split-right {
+  background-color: #F4F3EE;
+  border-left: 1px dashed #B1ADA1;
+}
+
+.lumina-split-root.light .lumina-split-heading,
+.lumina-split-root.bright .lumina-split-heading,
+[data-theme="bright"] .lumina-split-heading {
+  color: #000000;
+}
+
+/* ==========================================================================
+   COMPREHENSIVE RESPONSIVE STYLING FOR ALL DEVICES
+   ========================================================================== */
+
+/* Tablets & Small Laptops (769px to 1023px) */
+@media (max-width: 1023px) {
+  .lumina-split-left {
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 32px 24px 36px;
+  }
+}
+
+/* Tablets (portrait) & Large Mobile (< 768px) */
+@media (max-width: 768px) {
+  /* Prevent iOS Safari auto-zoom on input focus */
+  .lumina-auth-input,
+  .lumina-auth-textarea {
+    font-size: 16px;
+  }
+
+  .lumina-split-left {
+    padding: 24px 20px 28px;
+  }
+
+  .lumina-auth-form-wrap {
+    padding: 12px 0;
+  }
+
+  .lumina-auth-card {
+    padding: 26px 22px;
+  }
+}
+
+/* Mobile Viewports (<= 640px) - Dedicated Touch-Friendly Stack for Buttons & Inputs */
+@media (max-width: 640px) {
+  .lumina-split-left {
+    padding: 20px 16px 28px;
+    padding-top: max(20px, env(safe-area-inset-top));
+    padding-bottom: max(28px, env(safe-area-inset-bottom));
+  }
+
+  .lumina-auth-top-bar {
+    margin-bottom: 12px;
+  }
+
+  .lumina-auth-back-btn {
+    min-height: 38px;
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .lumina-auth-form-wrap {
+    padding: 8px 0;
+    max-width: 100%;
+  }
+
+  .lumina-auth-title {
+    font-size: 22px;
+    max-width: 290px;
+  }
+
+  .lumina-auth-card {
+    padding: 22px 18px;
+    border-radius: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Segmented Mode Tabs: Touch-Friendly 44px Height */
+  .lumina-auth-mode-tabs {
+    padding: 4px;
+    margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .lumina-auth-mode-tab {
+    height: 44px;
+    min-height: 44px;
+    font-size: 14.5px;
+    font-weight: 600;
+  }
+
+  /* Stack Field Grids */
+  .lumina-auth-field-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .lumina-auth-input {
+    height: 46px;
+    font-size: 16px !important;
+    border-radius: 12px;
+  }
+
+  .lumina-auth-textarea {
+    font-size: 16px !important;
+    height: 84px;
+    border-radius: 12px;
+  }
+
+  /* Mobile Button Stack: Full Width, 48px Height, Prominent Tap Targets */
+  .lumina-auth-btn-row {
+    flex-direction: column-reverse;
+    gap: 10px;
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  .lumina-auth-secondary-btn,
+  .lumina-auth-submit-btn {
+    width: 100% !important;
+    flex: none !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    border-radius: 9999px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .lumina-auth-secondary-btn {
+    font-size: 14.5px !important;
+  }
+
+  .lumina-auth-social-stack {
+    gap: 10px;
+    margin-top: 14px;
+    width: 100%;
+  }
+
+  .lumina-auth-social-btn {
+    width: 100% !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    font-size: 14.5px !important;
+    border-radius: 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  .lumina-auth-switch-btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 6px;
+    font-size: 14px;
+  }
+
+  .lumina-year-pills {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .lumina-year-pill-btn {
+    padding: 10px 8px;
+    min-height: 42px;
+    font-size: 13px;
+  }
+
+  .lumina-chips-container {
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .lumina-chip-btn {
+    padding: 8px 14px;
+    min-height: 38px;
+    font-size: 13px;
+  }
+}
+
+/* Compact Mobile Devices (<= 420px, e.g. iPhone SE / 13 Mini / Androids) */
+@media (max-width: 420px) {
+  .lumina-split-left {
+    padding: 16px 12px 24px;
+  }
+
+  .lumina-auth-card {
+    padding: 20px 14px;
+    border-radius: 14px;
+  }
+
+  .lumina-auth-title {
+    font-size: 20px;
+    max-width: 260px;
+  }
+
+  .lumina-progress-track {
+    max-width: 220px;
+  }
+
+  .lumina-auth-mode-tab {
+    height: 42px;
+    min-height: 42px;
+    font-size: 14px;
+  }
+
+  .lumina-auth-secondary-btn,
+  .lumina-auth-submit-btn {
+    height: 46px !important;
+    min-height: 46px !important;
+    font-size: 14.5px !important;
+  }
+
+  .lumina-auth-social-btn {
+    height: 44px !important;
+    min-height: 44px !important;
+    font-size: 14px !important;
+  }
+
+  .lumina-avatar-picker-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    padding: 14px 12px;
+  }
+
+  .lumina-avatar-controls {
+    align-items: center;
+  }
+
+  .lumina-avatar-actions {
+    justify-content: center;
+  }
+
+  .lumina-chips-container {
+    gap: 6px;
+  }
+
+  .lumina-chip-btn {
+    padding: 6px 11px;
+    font-size: 12px;
+  }
+}
+
+/* Extra-Small Phones (<= 360px, e.g. 320px screens) */
+@media (max-width: 360px) {
+  .lumina-split-left {
+    padding: 12px 8px 18px;
+  }
+
+  .lumina-auth-card {
+    padding: 16px 10px;
+    border-radius: 12px;
+  }
+
+  .lumina-auth-top-bar {
+    gap: 6px;
+  }
+
+  .lumina-auth-back-btn {
+    padding: 5px 8px;
+    font-size: 12px;
+    gap: 5px;
+  }
+
+  .lumina-auth-step-badge {
+    font-size: 11px;
+  }
+
+  .lumina-auth-title {
+    font-size: 19px;
+    max-width: 230px;
+  }
+
+  .lumina-auth-mode-tab {
+    height: 40px;
+    min-height: 40px;
+    font-size: 13.5px;
+  }
+
+  .lumina-auth-btn-row {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .lumina-auth-secondary-btn,
+  .lumina-auth-submit-btn {
+    width: 100% !important;
+    flex: none !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    font-size: 14px !important;
+  }
+
+  .lumina-year-pills {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .lumina-year-pill-btn {
+    min-height: 40px;
+    font-size: 12px;
   }
 }

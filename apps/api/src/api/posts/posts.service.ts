@@ -1,8 +1,15 @@
-import { badRequest, conflict, forbidden, notFound } from '../../../lib/http-error'
-import { PostsRepo } from './posts.repo'
-import { prisma, Prisma } from '@lumina/db'
+import { badRequest, conflict, forbidden, notFound } from '../../../lib/http-error';
+import { PostsRepo } from './posts.repo';
+import { prisma, Prisma } from '@lumina/db';
+import { logger } from '@lumina/observability'
 
-import type { CreatePostInput, PostMediaCreateData } from './posts.types'
+import { dispatchPublishOutbox } from '../publish/publish.outbox'
+import { removePublishPost } from '../publish/publish.queue'
+import { CommentsService } from '../comments/comments.service'
+import type { CreatePostInput, PostMediaCreateData } from './posts.types';
+
+
+
 
 export namespace PostsService {
   function parsePostJsonField(value: unknown, field: string): unknown {
@@ -190,7 +197,7 @@ export namespace PostsService {
   }
 
   export const toggleSavePost = async ({ postId, userId }: { postId: string; userId: string }) => {
-    const post = await PostsRepo.findPostById(prisma as any, postId)
+    const post = await PostsRepo.findPostById(prisma, postId)
 
     if (!post) {
       throw new Error('POST_NOT_FOUND')
@@ -199,7 +206,7 @@ export namespace PostsService {
     const existing = await PostsRepo.findSavedPost(prisma, userId, postId)
 
     if (existing) {
-      await PostsRepo.deleteSavedPost(prisma as any, userId, postId)
+      await PostsRepo.deleteSavedPost(prisma, userId, postId)
 
       return {
         saved: false,
@@ -214,74 +221,85 @@ export namespace PostsService {
   }
 
   export const getMySavedPosts = async (userId: string) => {
-    return PostsRepo.findSavedPostsByUser(prisma as any, userId)
+    return PostsRepo.findSavedPostsByUser(prisma, userId)
   }
 
-  export const createComment = async ({
-    postId,
-    userId,
-    content,
-    parentId,
-  }: {
-    postId: string
-    userId: string
-    content: string
-    parentId?: string | null
-  }) => {
-    const post = await PostsRepo.findPostWithAuthor(postId)
+  export const createComment = CommentsService.createComment
+  export const listComments = CommentsService.listComments
+  export const pinComment = CommentsService.pinComment
+  export const deleteComment = CommentsService.deleteComment
+  export const countComment = CommentsService.countComment
+  export const schedulePost = async (userId: string, postId: string, scheduleTime: string) => {
+    const post = await PostsRepo.findPostById(prisma, postId)
     if (!post) throw notFound('POST_NOT_FOUND')
-
-    if (parentId) {
-      const parentComment = await PostsRepo.findCommentById(parentId)
-      if (!parentComment) throw notFound('PARENT_COMMENT_NOT_FOUND')
-      if (parentComment.postId !== postId) throw badRequest('INVALID_PARENT_COMMENT')
+    if (post.authorId !== userId) throw forbidden('ONLY_AUTHOR_CAN_SCHEDULE')
+    if (post.status === 'PUBLISHED') throw conflict('POST_ALREADY_PUBLISHED')
+    if (post.status !== 'DRAFT' && post.status !== 'SCHEDULED') {
+      throw badRequest('POST_CANNOT_BE_SCHEDULED')
     }
 
-    const comment = await PostsRepo.createComment({ postId, userId, content, parentId })
-    if (post.authorId !== userId) {
-      await PostsRepo.createCommentNotification(post.authorId)
+    const scheduled = await PostsRepo.schedulePost(prisma, userId, postId, scheduleTime)
+    try {
+      await dispatchPublishOutbox()
+    } catch (error) {
+      logger.error('Unable to dispatch scheduled post immediately', { metadata: { postId, error: String(error) } })
     }
-    return comment
+    return scheduled
   }
 
-  export const listComments = async (postId: string, limit: number, cursor?: string) => {
-    const post = await PostsRepo.findPostWithAuthor(postId)
+  export const reschedulePost = async (userId: string, postId: string, scheduleTime: string) => {
+    const post = await PostsRepo.findPostById(prisma, postId)
     if (!post) throw notFound('POST_NOT_FOUND')
-    return PostsRepo.listComments(postId, limit, cursor)
-  }
+    if (post.authorId !== userId) throw forbidden('ONLY_AUTHOR_CAN_RESCHEDULE')
+    if (post.status === 'PUBLISHED') throw conflict('POST_ALREADY_PUBLISHED')
+    if (post.status !== 'SCHEDULED') throw badRequest('POST_NOT_SCHEDULED')
 
-  export const pinComment = async (userId: string, commentId: string, isPinned: boolean) => {
-    const comment = await PostsRepo.findCommentById(commentId)
-    if (!comment) throw notFound('COMMENT_NOT_FOUND')
-    const post = await PostsRepo.findPostWithAuthor(comment.postId)
-    if (!post) throw notFound('POST_NOT_FOUND')
-    if (post.authorId !== userId) throw forbidden('ONLY_AUTHOR_CAN_PIN')
-
-    return prisma.$transaction(
-      async (tx: Prisma.TransactionClient) => {
-        if (isPinned) {
-          const pinned = await PostsRepo.countPinnedComments(tx, comment.postId)
-          if (pinned >= 3) {
-            throw conflict('PIN_LIMIT_REACHED', 'Maximum pinned comments exceeded')
-          }
-        }
-        return PostsRepo.setCommentPinned(tx, commentId, isPinned)
-      },
-      { isolationLevel: 'Serializable' }
-    )
-  }
-
-  export const deleteComment = async (userId: string, commentId: string) => {
-    const comment = await PostsRepo.findCommentById(commentId)
-    if (!comment) throw notFound('COMMENT_NOT_FOUND')
-    const post = await PostsRepo.findPostWithAuthor(comment.postId)
-    if (!post) throw notFound('POST_NOT_FOUND')
-    if (comment.userId !== userId && post.authorId !== userId) {
-      throw forbidden('COMMENT_DELETE_FORBIDDEN')
+    const scheduled = await PostsRepo.reschedulePost(prisma, userId, postId, scheduleTime)
+    try {
+      await removePublishPost(postId, post.scheduleVersion)
+      await dispatchPublishOutbox()
+    } catch (error) {
+      logger.error('Unable to dispatch rescheduled post immediately', { metadata: { postId, error: String(error) } })
     }
-    return PostsRepo.deleteComment(commentId)
+    return scheduled
   }
-  export const countComment = async (postId: string) => {
-    return PostsRepo.countComments(postId)
+
+  export const deleteScheduledPost = async (userId: string, postId: string) => {
+    const post = await PostsRepo.findPostById(prisma, postId)
+    if (!post) throw notFound('POST_NOT_FOUND')
+    if (post.authorId !== userId) throw forbidden('ONLY_AUTHOR_CAN_DELETE_SCHEDULED_POST')
+    if (post.status !== 'SCHEDULED') throw badRequest('POST_NOT_SCHEDULED')
+
+    const draft = await PostsRepo.deleteScheduledPost(prisma, userId, postId)
+    try {
+      await removePublishPost(postId, post.scheduleVersion)
+    } catch {
+      // safe fallback
+    }
+    return draft
+  }
+
+  export const publishPostImmediately = async (userId: string, postId: string) => {
+    const post = await PostsRepo.findPostById(prisma, postId)
+    if (!post) throw notFound('POST_NOT_FOUND')
+    if (post.authorId !== userId) throw forbidden('ONLY_AUTHOR_CAN_PUBLISH')
+    if (post.status === 'PUBLISHED') throw conflict('POST_ALREADY_PUBLISHED')
+    if (post.status !== 'DRAFT' && post.status !== 'SCHEDULED') {
+      throw badRequest('POST_CANNOT_BE_SCHEDULED')
+    }
+
+    const published = await PostsRepo.publishPostImmediately(prisma, userId, postId)
+    if (post.status === 'SCHEDULED') {
+      try {
+        await removePublishPost(postId, post.scheduleVersion)
+      } catch {
+        // safe fallback
+      }
+    }
+    return published
+  }
+
+  export const getScheduledPosts = async (userId: string, limit?: number, cursor?: string) => {
+    return PostsRepo.findScheduledPostsByUserId(prisma, userId, limit, cursor)
   }
 }

@@ -103,15 +103,12 @@ export namespace UsersService {
     if (userWithProfile.profile) {
       return {
         ...userWithProfile.profile,
-        id: userWithProfile.id,
-        userId: userWithProfile.id,
         username: userWithProfile.username,
         email: userWithProfile.email,
         college: userWithProfile.college,
         department: userWithProfile.department,
         profile: userWithProfile.profile,
         user: {
-          id: userWithProfile.id,
           email: userWithProfile.email,
           username: userWithProfile.username,
           role: userWithProfile.role,
@@ -150,11 +147,21 @@ export namespace UsersService {
     // 2. Resolve or create College && Automatically identify College using the user's email domain
     let collegeId: string | undefined
 
-    const email = user.email.trim().toLowerCase()
-    const emailDomain = email.split('@')[1]
+    const candidateEmail =
+      (typeof body.collegeEmail === 'string' && body.collegeEmail.trim()) ||
+      (typeof body.college_email === 'string' && body.college_email.trim()) ||
+      (typeof body.email === 'string' && body.email.trim() && body.email.includes('@')
+        ? body.email.trim()
+        : '') ||
+      user.email.trim()
+
+    const emailDomain = candidateEmail.includes('@')
+      ? candidateEmail.split('@')[1]?.toLowerCase().trim()
+      : undefined
 
     if (emailDomain) {
       try {
+        // 1. Exact match in CollegeEmailDomain
         const collegeEmailDomain = await prisma.collegeEmailDomain.findFirst({
           where: {
             domain: { equals: emailDomain, mode: 'insensitive' },
@@ -174,7 +181,23 @@ export namespace UsersService {
           collegeId = collegeEmailDomain.college.id
         }
 
-        // Check College.domain directly if not matched in CollegeEmailDomain
+        // 2. Subdomain fallback in CollegeEmailDomain (e.g. cse.psgtech.ac.in -> psgtech.ac.in)
+        if (!collegeId) {
+          const domainParts = emailDomain.split('.')
+          for (let i = 1; i < domainParts.length - 1; i++) {
+            const parentDomain = domainParts.slice(i).join('.')
+            const parentMatch = await prisma.collegeEmailDomain.findFirst({
+              where: { domain: { equals: parentDomain, mode: 'insensitive' } },
+              include: { college: { select: { id: true, name: true, isActive: true } } },
+            })
+            if (parentMatch?.college?.isActive) {
+              collegeId = parentMatch.college.id
+              break
+            }
+          }
+        }
+
+        // 3. Check College.domain directly if not matched in CollegeEmailDomain
         if (!collegeId) {
           const directCollege = await prisma.college.findFirst({
             where: {
@@ -191,7 +214,23 @@ export namespace UsersService {
           }
         }
 
-        // Auto-provision college for institutional / college domains (e.g. psgtech.ac.in, .edu, .ac.in, etc.)
+        // 4. Subdomain fallback in College.domain
+        if (!collegeId) {
+          const domainParts = emailDomain.split('.')
+          for (let i = 1; i < domainParts.length - 1; i++) {
+            const parentDomain = domainParts.slice(i).join('.')
+            const parentDirect = await prisma.college.findFirst({
+              where: { domain: { equals: parentDomain, mode: 'insensitive' } },
+              select: { id: true, name: true, isActive: true },
+            })
+            if (parentDirect?.isActive) {
+              collegeId = parentDirect.id
+              break
+            }
+          }
+        }
+
+        // 5. Auto-provision college for institutional / college domains (e.g. psgtech.ac.in, .edu, .ac.in, etc.)
         const genericWebmail = new Set([
           'gmail.com',
           'googlemail.com',
@@ -259,6 +298,20 @@ export namespace UsersService {
       }
     }
 
+    if (!collegeId && typeof body.collegeId === 'string' && body.collegeId.trim()) {
+      try {
+        const direct = await prisma.college.findUnique({
+          where: { id: body.collegeId.trim() },
+          select: { id: true, isActive: true },
+        })
+        if (direct?.isActive) {
+          collegeId = direct.id
+        }
+      } catch (err) {
+        console.warn('Could not resolve college from body.collegeId:', err)
+      }
+    }
+
     if (!collegeId && body.college && typeof body.college === 'string' && body.college.trim()) {
       try {
         const collegeName = body.college.trim()
@@ -281,6 +334,10 @@ export namespace UsersService {
       } catch (err) {
         console.warn('Could not resolve college from body.college:', err)
       }
+    }
+
+    if (!collegeId && user.collegeId) {
+      collegeId = user.collegeId
     }
 
     let departmentId: string | undefined = undefined
@@ -446,6 +503,9 @@ export namespace UsersService {
 
     if (
       'college' in body ||
+      'collegeId' in body ||
+      'collegeEmail' in body ||
+      'college_email' in body ||
       'department' in body ||
       'username' in body ||
       'profilePicture' in body

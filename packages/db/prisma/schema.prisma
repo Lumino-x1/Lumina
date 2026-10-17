@@ -262,6 +262,8 @@ model AuthVerification {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  @@index([identifier])
+  @@index([expiresAt])
   @@map("verification")
 }
 
@@ -359,11 +361,33 @@ model Post {
   shareCount     Int         @default(0)
   saveCount      Int         @default(0)
   savedBy        SavedPost[]
+  scheduledAt     DateTime? @db.Timestamptz(3)
+  publishedAt     DateTime? @db.Timestamptz(3)
+  scheduleVersion Int       @default(0)
+  status          PostStatus @default(DRAFT)
+  publishOutboxEvents PublishOutboxEvent[]
 
+  @@index([status, scheduledAt])
+  @@index([authorId, status, scheduledAt])
   @@index([authorId])
   @@index([clubId])
   @@index([createdAt])
   @@index([visibility])
+}
+
+model PublishOutboxEvent {
+  id              String    @id @default(cuid())
+  postId          String
+  scheduleVersion Int
+  scheduledAt     DateTime  @db.Timestamptz(3)
+  processedAt     DateTime? @db.Timestamptz(3)
+  attempts        Int       @default(0)
+  lastError       String?
+  createdAt       DateTime  @default(now())
+  post            Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, scheduleVersion])
+  @@index([processedAt, createdAt])
 }
 
 model SavedPost {
@@ -1274,6 +1298,13 @@ enum MentorshipStatus {
   CANCELLED
 }
 
+enum PostStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
 model AlumniProfile {
   id                       String   @id @default(cuid())
   userId                   String   @unique
@@ -1409,8 +1440,6 @@ model Announcement {
 
   @@index([isActive])
 }
-
-
 model AnalyticsEvent {
   id             String   @id @default(cuid())
   name           String

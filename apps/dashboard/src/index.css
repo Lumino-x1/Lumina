@@ -24,7 +24,15 @@
   --font-size-xl: 52px;
   --font-size-2xl: 78px;
 
-  /* Color Palette */
+  /* Color Palette - Lumina Editorial Brand Tokens */
+  --color-terracotta: #C15F3C;
+  --color-terracotta-hover: #A94F30;
+  --color-white: #FFFFFF;
+  --color-warm-offwhite: #F4F3EE;
+  --color-warm-gray: #B1ADA1;
+  --color-dark-text: #1C1A17;
+  --color-muted-text: #635F55;
+
   --color-text-primary: #ebebeb;
   --color-text-secondary: #b3b3b3;
   --color-text-tertiary: #171717;
@@ -34,7 +42,7 @@
   --color-surface-strong: #121212;
   --color-border-default: #666666;
   --color-border-subtle: rgba(255, 255, 255, 0.12);
-  --color-focus-ring: oklab(0.640083 0.0000290871 0.000012815 / 0.5);
+  --color-focus-ring: rgba(193, 95, 60, 0.45);
 
   /* Spacing Scale */
   --space-1: 6px;
@@ -60,6 +68,28 @@
   --notion-border: var(--color-border-subtle);
 }
 
+/* Light / Bright Mode Token Overrides */
+[data-theme="light"],
+[data-theme="bright"],
+.light,
+.bright {
+  --color-text-primary: #1C1A17;
+  --color-text-secondary: #635F55;
+  --color-text-tertiary: #8E897D;
+  --color-surface-raised: #F4F3EE;
+  --color-surface-base: #FFFFFF;
+  --color-surface-muted: #F4F3EE;
+  --color-surface-strong: #FFFFFF;
+  --color-border-default: #B1ADA1;
+  --color-border-subtle: rgba(177, 173, 161, 0.45);
+  --color-focus-ring: rgba(193, 95, 60, 0.35);
+
+  --notion-bg: #FFFFFF;
+  --notion-text: #1C1A17;
+  --notion-text-muted: #635F55;
+  --notion-border: #B1ADA1;
+}
+
 /* WCAG 2.2 AA Focus Visible Requirements */
 :focus-visible {
   outline: 2px solid var(--color-focus-ring);
@@ -78,23 +108,50 @@ html, body {
   font-family: var(--font-sans);
   min-height: 100vh;
   width: 100%;
-  overflow-x: clip;
+  max-width: 100%;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+html.light,
+html.bright,
+body.light,
+body.bright,
+[data-theme="light"] body,
+[data-theme="bright"] body {
+  background-color: #FFFFFF !important;
+  color: #1C1A17 !important;
+}
+
 #root {
   width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #000000;
+  overflow-x: hidden;
 }
 
 .app-main-wrapper {
   width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   background-color: #000000;
+  position: relative;
+  overflow-x: hidden;
+}
+
+[data-theme="light"] #root,
+[data-theme="bright"] #root,
+body.light #root,
+body.bright #root,
+[data-theme="light"] .app-main-wrapper,
+[data-theme="bright"] .app-main-wrapper,
+body.light .app-main-wrapper,
+body.bright .app-main-wrapper {
+  background-color: #FFFFFF !important;
 }
 
 a {

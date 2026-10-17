@@ -65,7 +65,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           title="Share document link"
         >
           <EditorIcons.Share2 size={15} />
-          <span>Share</span>
+          <span className="topbar-share-label">Share</span>
         </button>
 
         {/* Primary Publish CTA */}

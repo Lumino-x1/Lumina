@@ -1,15 +1,17 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
-export type ThemeMode = 'dark' | 'bright'
+export type ThemeMode = 'dark' | 'light' | 'bright'
 
 interface ThemeContextType {
   theme: ThemeMode
+  isDark: boolean
   toggleTheme: () => void
   setTheme: (theme: ThemeMode) => void
 }
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: 'dark',
+  isDark: true,
   toggleTheme: () => {},
   setTheme: () => {},
 })
@@ -19,52 +21,57 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (typeof window !== 'undefined') {
       try {
         const stored = localStorage.getItem('lumina_theme')
-        if (stored === 'bright' || stored === 'light') return 'bright'
+        if (stored === 'light' || stored === 'bright') return 'light'
         if (stored === 'dark') return 'dark'
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark'
+        }
       } catch {
         // ignore storage error
       }
     }
-    return 'dark' // Dark is default existing color
+    return 'light' // Default to crisp white editorial light theme
   })
+
+  const isDark = theme === 'dark'
 
   useEffect(() => {
     const root = document.documentElement
     const body = document.body
 
-    if (theme === 'bright') {
-      root.setAttribute('data-theme', 'bright')
-      root.classList.add('bright', 'light')
-      root.classList.remove('dark')
-      body.setAttribute('data-theme', 'bright')
-      body.classList.add('bright', 'light')
-      body.classList.remove('dark')
-    } else {
+    if (isDark) {
       root.setAttribute('data-theme', 'dark')
       root.classList.add('dark')
-      root.classList.remove('bright', 'light')
+      root.classList.remove('light', 'bright')
       body.setAttribute('data-theme', 'dark')
       body.classList.add('dark')
-      body.classList.remove('bright', 'light')
+      body.classList.remove('light', 'bright')
+    } else {
+      root.setAttribute('data-theme', 'light')
+      root.classList.add('light', 'bright')
+      root.classList.remove('dark')
+      body.setAttribute('data-theme', 'light')
+      body.classList.add('light', 'bright')
+      body.classList.remove('dark')
     }
 
     try {
-      localStorage.setItem('lumina_theme', theme)
+      localStorage.setItem('lumina_theme', isDark ? 'dark' : 'light')
     } catch {
       // ignore storage error
     }
-  }, [theme])
+  }, [isDark, theme])
 
   const toggleTheme = () => {
-    setThemeState((prev) => (prev === 'dark' ? 'bright' : 'dark'))
+    setThemeState((prev) => (prev === 'dark' ? 'light' : 'dark'))
   }
 
   const setTheme = (newTheme: ThemeMode) => {
-    setThemeState(newTheme)
+    setThemeState(newTheme === 'bright' ? 'light' : newTheme)
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, isDark, toggleTheme, setTheme }}>
       {children}
     </ThemeContext.Provider>
   )

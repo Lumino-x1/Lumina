@@ -36,11 +36,33 @@ export function parseVideoUrl(rawUrl: string): ParsedVideo {
   const fullUrl = url.match(/^https?:\/\//i) ? url : `https://${url}`
 
   // 1. YouTube: handles watch?v=, youtu.be/, embed/, shorts/, live/, v/
-  const ytMatch = fullUrl.match(
-    /(?:youtube\.com\/(?:watch\?.*v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([\w-]{11})/i
-  )
-  if (ytMatch) {
-    const videoId = ytMatch[1]
+  let ytVideoId = ''
+  try {
+    const u = new URL(fullUrl)
+    if (u.hostname.includes('youtu.be')) {
+      ytVideoId = u.pathname.slice(1).split(/[?#&/]/)[0]
+    } else if (u.pathname.includes('/shorts/')) {
+      ytVideoId = u.pathname.split('/shorts/')[1]?.split(/[?#&/]/)[0] || ''
+    } else if (u.pathname.includes('/embed/')) {
+      ytVideoId = u.pathname.split('/embed/')[1]?.split(/[?#&/]/)[0] || ''
+    } else if (u.pathname.includes('/live/')) {
+      ytVideoId = u.pathname.split('/live/')[1]?.split(/[?#&/]/)[0] || ''
+    } else if (u.searchParams.get('v')) {
+      ytVideoId = u.searchParams.get('v') || ''
+    }
+  } catch {
+    // fallback to regex
+  }
+
+  if (!ytVideoId) {
+    const ytMatch = fullUrl.match(
+      /(?:youtube\.com\/(?:watch\?.*v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([\w-]{11})/i
+    )
+    if (ytMatch) ytVideoId = ytMatch[1]
+  }
+
+  if (ytVideoId) {
+    const videoId = ytVideoId
     const tMatch = fullUrl.match(/[?&]t=([0-9a-zA-Z]+)/)
     let startParam = ''
     if (tMatch) {

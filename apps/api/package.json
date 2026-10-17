@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "dev": "bun --hot --no-clear-screen server.ts",
-    "build": "bun build server.ts --target node --outdir dist"
+    "build": "bun build server.ts --target node --outdir dist",
+    "worker:publishing": "bun publishing-worker.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -32,7 +33,7 @@
     "@types/fluent-ffmpeg": "^2.1.28",
     "async": "^3.2.6",
     "better-auth": "^1.6.25",
-    "bullmq": "^6.0.9",
+    "bullmq": "^6.3.15",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "crypto": "^1.0.1",

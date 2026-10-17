@@ -101,16 +101,18 @@
   margin: 0 1px;
 }
 
-/* Large Left-Aligned Hero Headline */
+/* Large Left-Aligned Hero Headline (Matching the signature Geist typography of the featured quote) */
 .hero-split-title {
-  font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: clamp(38px, 4.4vw, 64px);
-  font-weight: 450;
-  letter-spacing: -0.03em;
+  font-family: 'Geist', var(--font-family-primary), -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: clamp(36px, 4.2vw, 58px);
+  font-weight: 450 !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.22 !important;
   color: #ffffff;
-  line-height: 1.1;
   margin: 0 0 22px 0;
   text-align: left;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Subtitle Description */
@@ -134,10 +136,10 @@
 }
 
 .hero-btn-primary {
-  background-color: #ffffff;
-  border: 1px solid #ffffff;
+  background-color: #C15F3C;
+  border: 1px solid #C15F3C;
   border-radius: 9999px !important;
-  color: #000000;
+  color: #FFFFFF;
   padding: 12px 24px;
   font-family: var(--font-family-primary, 'Geist', sans-serif);
   font-size: 14.5px;
@@ -154,8 +156,9 @@
 }
 
 .hero-btn-primary:hover {
-  background-color: #e6e6e6;
-  border-color: #e6e6e6;
+  background-color: #A94F30;
+  border-color: #A94F30;
+  color: #FFFFFF;
 }
 
 .hero-btn-secondary {
@@ -300,6 +303,9 @@
 [data-theme="light"] .hero-split-title,
 .bright .hero-split-title,
 .light .hero-split-title {
+  font-family: 'Geist', var(--font-family-primary), -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-weight: 450 !important;
+  letter-spacing: -0.025em !important;
   color: #000000;
 }
 
@@ -314,8 +320,8 @@
 [data-theme="light"] .hero-btn-primary,
 .bright .hero-btn-primary,
 .light .hero-btn-primary {
-  background-color: #000000;
-  border-color: #000000;
+  background-color: #C15F3C;
+  border-color: #C15F3C;
   color: #ffffff;
 }
 
@@ -323,8 +329,9 @@
 [data-theme="light"] .hero-btn-primary:hover,
 .bright .hero-btn-primary:hover,
 .light .hero-btn-primary:hover {
-  background-color: #222222;
-  border-color: #222222;
+  background-color: #A94F30;
+  border-color: #A94F30;
+  color: #ffffff;
 }
 
 [data-theme="bright"] .hero-btn-secondary,
@@ -391,14 +398,19 @@
   .hero-image-col {
     border-left: none;
     border-top: 1px dashed rgba(255, 255, 255, 0.12);
-    padding: 40px 24px 64px;
+    padding: 0;
+  }
+
+  .hero-grid-pulse-col {
+    min-height: 380px;
+    height: 400px;
   }
 
   [data-theme="bright"] .hero-image-col,
   [data-theme="light"] .hero-image-col,
   .bright .hero-image-col,
   .light .hero-image-col {
-    border-top-color: rgba(0, 0, 0, 0.12);
+    border-top-color: #B1ADA1;
   }
 
   .crosshair-top-divider,
@@ -409,32 +421,55 @@
 
 @media (max-width: 640px) {
   .hero-text-col {
-    padding: 48px 20px 36px;
+    padding: 40px 20px 32px;
   }
 
   .hero-split-title {
-    font-size: 32px;
+    font-size: clamp(28px, 7.5vw, 38px);
+    line-height: 1.24 !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 450 !important;
+    margin-bottom: 16px;
   }
 
   .hero-split-subtitle {
-    font-size: 15px;
-    line-height: 24px;
-    margin-bottom: 28px;
+    font-size: 14.5px;
+    line-height: 22px;
+    margin-bottom: 24px;
   }
 
   .hero-split-actions {
     flex-direction: column;
     width: 100%;
-    gap: 12px;
+    gap: 10px;
   }
 
   .hero-btn-primary,
   .hero-btn-secondary {
     width: 100%;
-    padding: 13px 20px;
+    padding: 12px 18px;
+    font-size: 14px;
+    justify-content: center;
+    box-sizing: border-box;
   }
 
-  .hero-image-col {
-    padding: 24px 16px 48px;
+  .hero-grid-pulse-col {
+    min-height: 260px;
+    height: 280px;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero-text-col {
+    padding: 32px 14px 24px;
+  }
+
+  .hero-split-title {
+    font-size: 26px;
+  }
+
+  .hero-grid-pulse-col {
+    min-height: 220px;
+    height: 240px;
   }
 }

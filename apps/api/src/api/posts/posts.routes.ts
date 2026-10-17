@@ -15,6 +15,11 @@ postsRouter.post('/', requireAuth, async (req: Request, res: Response, next: Nex
   await postController.createPost(req as AuthenticatedRequest, res, next)
 })
 
+// Static paths must precede /:id so "scheduled" is never interpreted as a post id.
+postsRouter.get('/scheduled', requireAuth, async (req: Request, res: Response) => {
+  await postController.getScheduledPosts(req as AuthenticatedRequest, res)
+})
+
 postsRouter.post('/:id/like', requireAuth, async (req: Request, res: Response) => {
   await postController.toggleLike(req as AuthenticatedRequest, res)
 })
@@ -22,25 +27,19 @@ postsRouter.post('/:id/like', requireAuth, async (req: Request, res: Response) =
 postsRouter.post('/:id/save', requireAuth, async (req: Request, res: Response) => {
   await postController.toggleSavePost(req as AuthenticatedRequest, res)
 })
+postsRouter.post("/:id/schedule", requireAuth, async (req: Request, res: Response) => {
+  await postController.schedulePost(req as AuthenticatedRequest, res)
+});
 
-postsRouter.get('/:id/comments', requireAuth, async (req: Request, res: Response) => {
-  await postController.listComments(req as AuthenticatedRequest, res)
-})
+postsRouter.patch("/:id/schedule", requireAuth, async (req: Request, res: Response) => {
+  await postController.reschedulePost(req as AuthenticatedRequest, res)
+});
 
-postsRouter.post('/:id/comments', requireAuth, async (req: Request, res: Response) => {
-  await postController.createComment(req as AuthenticatedRequest, res)
-})
-
-postsRouter.patch(
-  '/:id/comments/:commentId/pin',
-  requireAuth,
-  async (req: Request, res: Response) => {
-    await postController.pinComment(req as AuthenticatedRequest, res)
-  }
-)
-
-postsRouter.delete('/:id/comments/:commentId', requireAuth, async (req: Request, res: Response) => {
-  await postController.deleteComment(req as AuthenticatedRequest, res)
-})
+postsRouter.delete("/:id/schedule", requireAuth, async (req: Request, res: Response) => {
+  await postController.deleteScheduledPost(req as AuthenticatedRequest, res)
+});
+postsRouter.post("/:id/publish", requireAuth, async (req: Request, res: Response) => {
+  await postController.publishPostImmediately(req as AuthenticatedRequest, res)
+});
 
 export default postsRouter

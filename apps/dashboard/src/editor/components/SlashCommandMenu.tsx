@@ -283,13 +283,17 @@ export const SlashCommandMenu: React.FC<SlashCommandMenuProps> = ({
     }
   }
 
+  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 800
+  const menuWidth = Math.min(320, screenWidth - 24)
+  const safeLeft = Math.max(12, Math.min(position.left, screenWidth - menuWidth - 12))
+
   return (
     <div
       ref={menuRef}
       className="lumina-slash-menu"
       style={{
         top: position.top + 28,
-        left: position.left,
+        left: safeLeft,
       }}
       onKeyDown={handleKeyDown}
     >

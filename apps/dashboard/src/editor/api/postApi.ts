@@ -785,13 +785,14 @@ export async function createPostApi(payload: ApiPostPayload): Promise<any> {
   assertValidPostPayload(payload)
 
   const envUrl = (import.meta.env.VITE_API_URL as string) || ''
-  const baseUrl = envUrl ? envUrl.replace(/\/$/, '') : 'http://localhost:3002'
+  const baseUrl = envUrl ? envUrl.replace(/\/$/, '') : ''
 
   const origin =
     typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
+    'ngrok-skip-browser-warning': 'true',
     Origin: origin,
   }
 

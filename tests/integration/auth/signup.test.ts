@@ -1,9 +1,11 @@
 import { createTestApp } from '../helpers/app'
 import {
   buildCookieHeader,
+  clearCapturedEmails,
   getCapturedEmails,
   getCookieValue,
   getSetCookieHeader,
+  installResendFetchMock,
   signUpWithEmail,
 } from '../helpers/auth'
 import { generateRandomUser } from '../helpers/factories'
@@ -14,11 +16,13 @@ describe('Auth | sign up', () => {
   const app = createTestApp()
 
   beforeAll(() => {
+    installResendFetchMock()
+    clearCapturedEmails()
     expect(app).toBeDefined()
   })
 
   it('creates a user, session, account, and verification email for a valid signup', async () => {
-    const user = generateRandomUser({ name: 'Aarav Kumar', email: 'aarav.kumar@example.test' })
+    const user = generateRandomUser({ name: 'Aarav Kumar' })
 
     const response = await signUpWithEmail(app, user)
     const setCookie = getSetCookieHeader(response)
@@ -33,6 +37,7 @@ describe('Auth | sign up', () => {
         }),
       })
     )
+    expect(response.body.user.username).toMatch(/^aaravkumar\d{4}$/)
     expect(response.body).not.toHaveProperty('password')
     expect(setCookie.join(';')).toContain('better-auth.session_token=')
     expect(sessionToken).toBeTruthy()
@@ -44,6 +49,7 @@ describe('Auth | sign up', () => {
 
     expect(createdUser).toBeTruthy()
     expect(createdUser?.name).toBe(user.name)
+    expect(createdUser?.username).toBe(response.body.user.username)
     expect(createdUser?.emailVerified).toBe(false)
     expect(createdUser?.accounts).toHaveLength(1)
     expect(createdUser?.sessions).toHaveLength(1)
@@ -56,7 +62,7 @@ describe('Auth | sign up', () => {
   })
 
   it('rejects duplicate email signup', async () => {
-    const user = generateRandomUser({ email: 'duplicate@example.test' })
+    const user = generateRandomUser()
     await signUpWithEmail(app, user)
 
     const response = await signUpWithEmail(app, user)
@@ -93,8 +99,17 @@ describe('Auth | sign up', () => {
     expect([400, 422]).toContain(response.status)
   })
 
+  it('generates username for single name without last name', async () => {
+    const user = generateRandomUser({ name: 'Kavitha' })
+
+    const response = await signUpWithEmail(app, user)
+
+    expect(response.status).toBe(200)
+    expect(response.body.user.username).toMatch(/^kavitha\d{4}$/)
+  })
+
   it('keeps the response free of sensitive fields', async () => {
-    const user = generateRandomUser({ email: 'schema@example.test' })
+    const user = generateRandomUser()
 
     const response = await signUpWithEmail(app, user)
 

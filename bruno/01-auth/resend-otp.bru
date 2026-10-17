@@ -1,0 +1,22 @@
+meta {
+  name: Resend OTP
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/api/auth/resend-otp
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+}
+
+body:json {
+  {
+    "email": "24z275@psgtech.ac.in"
+  }
+}

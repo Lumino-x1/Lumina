@@ -1,0 +1,23 @@
+meta {
+  name: Verify OTP
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/api/auth/verify-otp
+  body: json
+  auth: inherit
+}
+
+headers {
+  Origin: {{origin}}
+  Accept: application/json
+}
+
+body:json {
+  {
+    "email": "24z275@psgtech.ac.in",
+    "otp": "123456"
+  }
+}

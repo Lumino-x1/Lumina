@@ -1,8 +1,11 @@
+import { badRequest, conflict, forbidden, notFound } from '../../../lib/http-error'
+import { CommentsRepo } from '../comments/comments.repo'
 import { prisma, Prisma } from '@lumina/db'
 
 import type { PostCreateData, PostMediaCreateData } from './posts.types'
 
 export namespace PostsRepo {
+  type DbClient = Prisma.TransactionClient | typeof prisma
   export const createPost = async (tx: Prisma.TransactionClient, data: PostCreateData) => {
     return tx.post.create({
       data: {
@@ -44,7 +47,7 @@ export namespace PostsRepo {
     })
   }
 
-  export const findPostById = async (tx: Prisma.TransactionClient, postId: string) => {
+  export const findPostById = async (tx: DbClient, postId: string) => {
     return tx.post.findUnique({
       where: {
         id: postId,
@@ -92,88 +95,9 @@ export namespace PostsRepo {
       select: { id: true, authorId: true },
     })
 
-  export const findCommentById = async (commentId: string) =>
-    prisma.comment.findUnique({ where: { id: commentId } })
-
-  export const createComment = async ({
-    postId,
-    userId,
-    content,
-    parentId,
-  }: {
-    postId: string
-    userId: string
-    content: string
-    parentId?: string | null
-  }) =>
-    prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const comment = await tx.comment.create({
-        data: { postId, userId, content, parentId },
-        include: {
-          user: { select: { id: true, username: true, name: true, image: true } },
-          replies: {
-            include: {
-              user: { select: { id: true, username: true, name: true, image: true } },
-            },
-          },
-        },
-      })
-      await tx.post.update({
-        where: { id: postId },
-        data: {
-          commentCount: {
-            increment: 1,
-          },
-        },
-      })
-
-      return comment
-    })
-
-  export const createCommentNotification = async (postAuthorId: string) =>
-    prisma.notification.create({
-      data: {
-        userId: postAuthorId,
-        title: 'New Comment',
-        body: 'You have a new comment on your post',
-        type: 'COMMENT',
-      },
-    })
-
-  export const listComments = async (postId: string, limit: number, cursor?: string) =>
-    prisma.comment.findMany({
-      where: { postId, parentId: null },
-      take: limit,
-      ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
-      orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
-      include: {
-        user: { select: { id: true, username: true, name: true, image: true } },
-        replies: {
-          take: 20,
-          orderBy: { createdAt: 'asc' },
-          include: {
-            user: { select: { id: true, username: true, name: true, image: true } },
-          },
-        },
-      },
-    })
-
-  export const countComments = async (postId: string) =>
-    prisma.comment.count({
-      where: { postId },
-    })
-
-  export const countPinnedComments = async (tx: Prisma.TransactionClient, postId: string) =>
-    tx.comment.count({ where: { postId, isPinned: true } })
-
-  export const setCommentPinned = async (
-    tx: Prisma.TransactionClient,
-    commentId: string,
-    isPinned: boolean
-  ) => tx.comment.update({ where: { id: commentId }, data: { isPinned } })
-
-  export const deleteComment = async (commentId: string) =>
-    prisma.comment.delete({ where: { id: commentId } })
+  export const findCommentById = CommentsRepo.findCommentById
+  export const createComment = CommentsRepo.createComment
+  export const createCommentNotification = CommentsRepo.createCommentNotification
 
   export const findSavedPost = async (
     tx: Prisma.TransactionClient,
@@ -278,5 +202,337 @@ export namespace PostsRepo {
     })
 
     return save !== null
+  }
+  export const findScheduledPostsByUserId = async (
+    tx: DbClient,
+    userId: string,
+    limit = 50,
+    cursor?: string
+  ) => {
+    return tx.post.findMany({
+      where: {
+        authorId: userId,
+        status: 'SCHEDULED',
+      },
+      orderBy: {
+        scheduledAt: 'asc',
+      },
+      take: limit,
+      ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
+      include: {
+        author: {
+          select: {
+            id: true,
+            username: true,
+            name: true,
+            image: true,
+          },
+        },
+        media: {
+          orderBy: {
+            order: 'asc',
+          },
+        },
+      },
+    })
+  }
+
+  export const schedulePost = async (
+    tx: Prisma.TransactionClient,
+    userId: string,
+    postId: string,
+    scheduleTime: string
+  ) => {
+    const scheduledAt = new Date(scheduleTime)
+
+    if (isNaN(scheduledAt.getTime()) || scheduledAt.getTime() <= Date.now()) {
+      throw badRequest('INVALID_SCHEDULE_TIME', 'Schedule time must be a valid future ISO timestamp')
+    }
+
+    const current = await tx.post.findUnique({
+      where: {
+        id: postId,
+      },
+    })
+
+    if (!current) {
+      throw notFound('POST_NOT_FOUND')
+    }
+
+    if (current.authorId !== userId) {
+      throw forbidden('ONLY_AUTHOR_CAN_SCHEDULE')
+    }
+
+    if (current.status === 'PUBLISHED') {
+      throw conflict('POST_ALREADY_PUBLISHED')
+    }
+
+    if (current.status !== 'DRAFT' && current.status !== 'SCHEDULED') {
+      throw badRequest('POST_CANNOT_BE_SCHEDULED')
+    }
+
+    const nextVersion = current.scheduleVersion + 1
+
+    const result = await tx.post.updateMany({
+      where: {
+        id: postId,
+        authorId: userId,
+        status: current.status,
+        scheduleVersion: current.scheduleVersion,
+      },
+      data: {
+        status: 'SCHEDULED',
+        scheduledAt,
+        scheduleVersion: nextVersion,
+      },
+    })
+
+    if (result.count !== 1) {
+      throw conflict('POST_UPDATE_CONFLICT')
+    }
+
+    await tx.publishOutboxEvent.upsert({
+      where: {
+        postId_scheduleVersion: {
+          postId,
+          scheduleVersion: nextVersion,
+        },
+      },
+      create: {
+        postId,
+        scheduleVersion: nextVersion,
+        scheduledAt,
+      },
+      update: {
+        scheduledAt,
+        processedAt: null,
+        lastError: null,
+      },
+    })
+
+    return findPostById(tx, postId)
+  }
+
+  export const reschedulePost = async (
+    tx: Prisma.TransactionClient,
+    userId: string,
+    postId: string,
+    scheduleTime: string
+  ) => {
+    const scheduledAt = new Date(scheduleTime)
+
+    if (isNaN(scheduledAt.getTime()) || scheduledAt.getTime() <= Date.now()) {
+      throw badRequest('INVALID_SCHEDULE_TIME', 'Schedule time must be a valid future ISO timestamp')
+    }
+
+    const current = await tx.post.findUnique({
+      where: {
+        id: postId,
+      },
+    })
+
+    if (!current) {
+      throw notFound('POST_NOT_FOUND')
+    }
+
+    if (current.authorId !== userId) {
+      throw forbidden('ONLY_AUTHOR_CAN_RESCHEDULE')
+    }
+
+    if (current.status === 'PUBLISHED') {
+      throw conflict('POST_ALREADY_PUBLISHED')
+    }
+
+    if (current.status !== 'SCHEDULED') {
+      throw badRequest('POST_NOT_SCHEDULED')
+    }
+
+    const nextVersion = current.scheduleVersion + 1
+
+    const result = await tx.post.updateMany({
+      where: {
+        id: postId,
+        authorId: userId,
+        status: 'SCHEDULED',
+        scheduleVersion: current.scheduleVersion,
+      },
+      data: {
+        scheduledAt,
+        scheduleVersion: nextVersion,
+      },
+    })
+
+    if (result.count !== 1) {
+      throw conflict('POST_UPDATE_CONFLICT')
+    }
+
+    await tx.publishOutboxEvent.upsert({
+      where: {
+        postId_scheduleVersion: {
+          postId,
+          scheduleVersion: nextVersion,
+        },
+      },
+      create: {
+        postId,
+        scheduleVersion: nextVersion,
+        scheduledAt,
+      },
+      update: {
+        scheduledAt,
+        processedAt: null,
+        lastError: null,
+      },
+    })
+
+    return findPostById(tx, postId)
+  }
+
+  export const deleteScheduledPost = async (
+    tx: Prisma.TransactionClient,
+    userId: string,
+    postId: string
+  ) => {
+    const current = await tx.post.findUnique({
+      where: {
+        id: postId,
+      },
+    })
+
+    if (!current) {
+      throw notFound('POST_NOT_FOUND')
+    }
+
+    if (current.authorId !== userId) {
+      throw forbidden('ONLY_AUTHOR_CAN_DELETE_SCHEDULED_POST')
+    }
+
+    if (current.status !== 'SCHEDULED') {
+      throw badRequest('POST_NOT_SCHEDULED')
+    }
+
+    const nextVersion = current.scheduleVersion + 1
+
+    const result = await tx.post.updateMany({
+      where: {
+        id: postId,
+        authorId: userId,
+        status: 'SCHEDULED',
+        scheduleVersion: current.scheduleVersion,
+      },
+      data: {
+        status: 'DRAFT',
+        scheduledAt: null,
+        scheduleVersion: nextVersion,
+      },
+    })
+
+    if (result.count !== 1) {
+      throw conflict('POST_UPDATE_CONFLICT')
+    }
+
+    await tx.publishOutboxEvent.deleteMany({
+      where: {
+        postId,
+        processedAt: null,
+      },
+    })
+
+    return findPostById(tx, postId)
+  }
+
+  export const publishPostImmediately = async (
+    tx: Prisma.TransactionClient,
+    userId: string,
+    postId: string
+  ) => {
+    const current = await tx.post.findUnique({
+      where: {
+        id: postId,
+      },
+    })
+
+    if (!current) {
+      throw notFound('POST_NOT_FOUND')
+    }
+
+    if (current.authorId !== userId) {
+      throw forbidden('ONLY_AUTHOR_CAN_PUBLISH')
+    }
+
+    if (current.status === 'PUBLISHED') {
+      throw conflict('POST_ALREADY_PUBLISHED')
+    }
+
+    if (current.status !== 'DRAFT' && current.status !== 'SCHEDULED') {
+      throw badRequest('POST_CANNOT_BE_SCHEDULED')
+    }
+
+    const nextVersion =
+      current.status === 'SCHEDULED' ? current.scheduleVersion + 1 : current.scheduleVersion
+
+    const result = await tx.post.updateMany({
+      where: {
+        id: postId,
+        authorId: userId,
+        status: current.status,
+        scheduleVersion: current.scheduleVersion,
+      },
+      data: {
+        status: 'PUBLISHED',
+        publishedAt: new Date(),
+        scheduledAt: null,
+        scheduleVersion: nextVersion,
+      },
+    })
+
+    if (result.count !== 1) {
+      throw conflict('POST_UPDATE_CONFLICT')
+    }
+
+    await tx.publishOutboxEvent.deleteMany({
+      where: {
+        postId,
+        processedAt: null,
+      },
+    })
+
+    return findPostById(tx, postId)
+  }
+
+  export const publishScheduledPost = async (
+    postId: string,
+    scheduleVersion: number
+  ) => {
+    return prisma.$transaction(async (tx) => {
+      const updated = await tx.post.updateMany({
+        where: {
+          id: postId,
+          status: 'SCHEDULED',
+          scheduleVersion,
+          scheduledAt: {
+            lte: new Date(),
+          },
+        },
+        data: {
+          status: 'PUBLISHED',
+          publishedAt: new Date(),
+          scheduledAt: null,
+        },
+      })
+
+      if (updated.count !== 1) {
+        return null
+      }
+
+      await tx.publishOutboxEvent.deleteMany({
+        where: {
+          postId,
+          scheduleVersion,
+        },
+      })
+
+      return findPostById(tx, postId)
+    })
   }
 }

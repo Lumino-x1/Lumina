@@ -11,25 +11,20 @@ export default defineConfig({
   plugins: [tailwindcss(), react()],
 
   server: {
-    host: true,
+    host: '0.0.0.0',
+    port: 5173,
 
     // Allow requests coming through ngrok
     allowedHosts: true,
 
     proxy: {
-      '/api/unsplash': {
-        target: 'https://unsplash.com/napi',
-        changeOrigin: true,
-        rewrite: (p) => p.replace(/^\/api\/unsplash/, ''),
-        headers: {
-          'User-Agent':
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          Accept: 'application/json',
-        },
-      },
-
       '/api': {
-        target: 'http://localhost:3002',
+        target: process.env.VITE_PROXY_TARGET || 'http://localhost:3002',
+        changeOrigin: true,
+        ws: true,
+      },
+      '/health': {
+        target: process.env.VITE_PROXY_TARGET || 'http://localhost:3002',
         changeOrigin: true,
       },
     },

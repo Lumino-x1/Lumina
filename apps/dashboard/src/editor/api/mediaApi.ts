@@ -89,7 +89,7 @@ function getBaseApiUrl(): string {
   if (envUrl) {
     return envUrl.replace(/\/$/, '')
   }
-  return 'http://localhost:3002'
+  return ''
 }
 
 /**
@@ -100,9 +100,7 @@ export async function getPresignedUploadUrl(
 ): Promise<UploadUrlResponse> {
   const baseUrl = getBaseApiUrl()
   const endpoints = [
-    `${baseUrl}/media/upload-url`,
     `${baseUrl}/api/media/upload-url`,
-    '/media/upload-url',
     '/api/media/upload-url',
   ]
 
@@ -113,6 +111,7 @@ export async function getPresignedUploadUrl(
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
+    'ngrok-skip-browser-warning': 'true',
     Origin: origin,
   }
 

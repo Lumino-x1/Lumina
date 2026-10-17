@@ -1,14 +1,13 @@
-import { auth } from '@lumina/auth'
-import {
-  MSG_ONLY_IMAGE_AND_VIDEO_MIME_TYPES_ALLOWED,
-  MSG_ONLY_IMAGE_MIME_TYPES_ALLOWED,
-  MSG_UNAUTHORIZED,
-} from '@lumina/constants'
-import multer from 'multer'
-import type { AuthenticatedRequest } from '@lumina/contracts'
-import type { NextFunction, Request, Response } from 'express'
-export type AuthRequest = AuthenticatedRequest
+import { auth } from '@lumina/auth';
+import { MSG_ONLY_IMAGE_AND_VIDEO_MIME_TYPES_ALLOWED, MSG_ONLY_IMAGE_MIME_TYPES_ALLOWED, MSG_UNAUTHORIZED } from '@lumina/constants';
 import { fromNodeHeaders } from "better-auth/node";
+import multer from 'multer';
+
+import type { AuthenticatedRequest } from '@lumina/contracts';
+import type { NextFunction, Request, Response } from 'express';
+
+export type AuthRequest = AuthenticatedRequest
+
 
 export async function requireAuth(
   req: Request,
@@ -26,28 +25,44 @@ export async function requireAuth(
       });
 
       if (mockUser) {
+        if (!mockUser.emailVerified) {
+          return res.status(403).json({
+            code: 'EMAIL_NOT_VERIFIED',
+            message: 'Please verify your email before accessing Lumina.',
+          })
+        }
         (req as AuthenticatedRequest).user = {
           id: mockUser.id,
           email: mockUser.email,
           role: String(mockUser.role) as never,
+          collegeId : mockUser.collegeId!
         };
 
         return next();
+      } else {
+        return res.status(401).json({
+          code: 'UNAUTHORIZED',
+          message: MSG_UNAUTHORIZED,
+        });
       }
     }
 
     const session = await auth.api.getSession({
       headers: fromNodeHeaders(req.headers),
     });
-    console.log("SESSION:", session);
-
 
     if (!session) {
       return res.status(401).json({
+        code: 'UNAUTHORIZED',
         message: MSG_UNAUTHORIZED,
-      });
+      })
     }
-
+    if (!session.user.emailVerified) {
+      return res.status(403).json({
+        code: 'EMAIL_NOT_VERIFIED',
+        message: 'Please verify your email before accessing Lumina.',
+      })
+    }
     (req as AuthenticatedRequest).user = {
       id: session.user.id,
       email: session.user.email,
@@ -55,6 +70,8 @@ export async function requireAuth(
         "role" in session.user
           ? String(session.user.role)
           : "STUDENT",
+      collegeId : session.user.collegeId!
+
     };
 
     return next();
@@ -66,6 +83,7 @@ export async function requireAuth(
     console.error("========================================");
   
     return res.status(401).json({
+      code: 'UNAUTHORIZED',
       message: MSG_UNAUTHORIZED,
     });
   }
@@ -81,6 +99,7 @@ export async function optionalAuth(req: Request, _res: Response, next: NextFunct
         id: session.user.id,
         email: session.user.email,
         role: 'role' in session.user ? String(session.user.role) : 'STUDENT',
+        collegeId: (session.user as any).collegeId || '',
       }
     }
   } catch {
@@ -173,4 +192,3 @@ export const uploadResume = multer({
   },
   fileFilter: resumeFileFilter,
 })
-

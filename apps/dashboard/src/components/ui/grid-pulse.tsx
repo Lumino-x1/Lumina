@@ -20,17 +20,15 @@ export type GridPulseProps = Omit<
   avoid?: string;
 };
 
-/** Hue at the top of the field and how far it turns by the bottom: yellow,
- *  through orange, red, magenta and blue, to green. */
-const HUE_TOP = 60;
-const HUE_SPAN = 270;
+/** Hue at the top of the field and how far it turns: warm terracotta & amber tones matching #C15F3C */
+const HUE_TOP = 22;
+const HUE_SPAN = 14;
 /**
  * Each cell takes one of these lightnesses, so a sweep reads as a field of
- * tints rather than one flat colour. On a dark ground the pale end of the
- * ladder would fade through grey, so it starts deeper there.
+ * tints rather than one flat colour. Harmonized with brand terracotta #C15F3C.
  */
-const TINTS = [88, 80, 72, 64, 56];
-const TINTS_DARK = [72, 65, 58, 51, 44];
+const TINTS = [54, 50, 46, 58, 42];
+const TINTS_DARK = [52, 56, 60, 48, 64];
 /** How faint a cell goes right behind a line of text. */
 const FAINT = 0.13;
 /** How many cells it takes to come back up to full strength. */
@@ -172,7 +170,7 @@ export function GridPulse({
       const t = rows > 1 ? Math.min(1, row / (rows - 1)) : 0;
       const hue = (((HUE_TOP - t * HUE_SPAN) % 360) + 360) % 360;
       const tint = tints[Math.floor(Math.random() * tints.length)];
-      return `hsl(${Math.round(hue)} 94% ${tint}%)`;
+      return `hsl(${Math.round(hue)} 60% ${tint}%)`;
     };
 
     // One loop draws every cell; it runs only while something is lit.
@@ -336,14 +334,14 @@ export function GridPulse({
       data-slot="grid-pulse"
       className={cn(
         "pointer-events-none absolute inset-0 overflow-hidden w-full h-full",
-        "[--grid-pulse-line:color-mix(in_oklab,currentColor_10%,transparent)]",
+        "[--grid-pulse-line:var(--theme-border-subtle,rgba(177,173,161,0.25))]",
         className,
       )}
       style={
         {
           "--grid-pulse-cell": `${cell}px`,
           backgroundImage:
-            "linear-gradient(to right, var(--grid-pulse-line,rgba(255,255,255,0.08)) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-pulse-line,rgba(255,255,255,0.08)) 1px, transparent 1px)",
+            "linear-gradient(to right, var(--grid-pulse-line,rgba(177,173,161,0.25)) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-pulse-line,rgba(177,173,161,0.25)) 1px, transparent 1px)",
           backgroundSize: "var(--grid-pulse-cell) var(--grid-pulse-cell)",
           ...style,
         } as React.CSSProperties

@@ -1,4 +1,15 @@
+import { handleAuthResponseError } from './authApi'
 import { getBaseApiUrl } from './profileApi'
+
+function getFeedHeaders(extra?: Record<string, string>): Record<string, string> {
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
+  return {
+    Accept: 'application/json',
+    'ngrok-skip-browser-warning': 'true',
+    Origin: origin,
+    ...extra,
+  }
+}
 
 export interface FeedMedia {
   id: string
@@ -69,7 +80,7 @@ export interface FeedStory {
   isLiked?: boolean
   comments: number
   totalComments?: number
-  shares: number
+  shares?: number
   saves?: number
   isSaved?: boolean
   views?: number
@@ -83,15 +94,20 @@ export interface FeedStory {
   authorUsername?: string | null
   authorRole?: string
   authorVerified?: boolean
+  authorId?: string
   media?: FeedMedia[]
 }
 
 export function mapFeedPostToStory(item: FeedPostItem): FeedStory {
   const fallbackImages: Record<string, string> = {
-    Technology: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&auto=format&fit=crop&q=80',
-    Education: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&auto=format&fit=crop&q=80',
-    Announcement: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&auto=format&fit=crop&q=80',
-    Default: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=80',
+    Technology:
+      'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&auto=format&fit=crop&q=80',
+    Education:
+      'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&auto=format&fit=crop&q=80',
+    Announcement:
+      'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&auto=format&fit=crop&q=80',
+    Default:
+      'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=80',
   }
 
   const isSeedPost = typeof item.id === 'string' && item.id.startsWith('post_seed_')
@@ -104,23 +120,30 @@ export function mapFeedPostToStory(item: FeedPostItem): FeedStory {
     const firstImgBlock = item.blocks.find(
       (b: any) =>
         (b.type === 'image' || b.type === 'unsplash') &&
-        (b.metadata?.url || b.metadata?.publicUrl || (typeof b.content === 'string' && b.content.startsWith('http')))
+        (b.metadata?.url ||
+          b.metadata?.publicUrl ||
+          (typeof b.content === 'string' && b.content.startsWith('http')))
     )
     if (firstImgBlock) {
-      image = firstImgBlock.metadata?.url || firstImgBlock.metadata?.publicUrl || firstImgBlock.content
+      image =
+        firstImgBlock.metadata?.url || firstImgBlock.metadata?.publicUrl || firstImgBlock.content
     }
   }
 
   // Only apply seed mock images to designated demo seed posts
   if (isSeedPost) {
     if (item.id === 'post_seed_leetcode_patterns') {
-      image = 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&auto=format&fit=crop&q=80'
+      image =
+        'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&auto=format&fit=crop&q=80'
     } else if (item.id === 'post_seed_internship_30') {
-      image = 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80'
+      image =
+        'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80'
     } else if (item.id === 'post_seed_stress_6') {
-      image = 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80'
+      image =
+        'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80'
     } else if (item.id === 'post_seed_oss_15') {
-      image = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&auto=format&fit=crop&q=80'
+      image =
+        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&auto=format&fit=crop&q=80'
     }
   } else if (!image || image.includes('example.com')) {
     image = fallbackImages[item.category || ''] || fallbackImages.Default
@@ -132,24 +155,29 @@ export function mapFeedPostToStory(item: FeedPostItem): FeedStory {
 
   if (isSeedPost) {
     if (item.id === 'post_seed_leetcode_patterns') {
-      authorAvatar = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'
+      authorAvatar =
+        'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'
       authorRole = 'Software Architect · Google'
       authorVerified = true
     } else if (item.id === 'post_seed_internship_30') {
-      authorAvatar = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'
+      authorAvatar =
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'
       authorRole = '3rd year CSE · PSG College of Technology'
       authorVerified = true
     } else if (item.id === 'post_seed_stress_6') {
-      authorAvatar = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80'
+      authorAvatar =
+        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80'
       authorRole = 'Final year · PSG College of Technology'
     } else if (item.id === 'post_seed_oss_15') {
-      authorAvatar = 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80'
+      authorAvatar =
+        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80'
       authorRole = 'Alumni · Product Designer'
     }
   }
 
   if (!authorAvatar || authorAvatar.includes('example.com')) {
-    authorAvatar = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'
+    authorAvatar =
+      'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80'
   }
 
   const createdDate = new Date(item.createdAt)
@@ -165,11 +193,13 @@ export function mapFeedPostToStory(item: FeedPostItem): FeedStory {
     title: item.title,
     description: item.subtitle || item.content || undefined,
     publication: item.isAnnouncement ? 'Campus Announcement' : undefined,
-    authorName: item.author?.name || (item.author?.username ? `@${item.author.username}` : 'Student'),
+    authorName: item.author?.username
+      ? `@${item.author.username.replace(/^@/, '')}`
+      : item.author?.name || 'Student',
     authorAvatar,
     authorRole,
     authorVerified,
-    authorUsername: item.author?.username || item.author?.id || undefined,
+    authorUsername: item.author?.username ? item.author.username.replace(/^@/, '') : undefined,
     date: dateFormatted,
     image,
     likes: item.likeCount ?? 0,
@@ -188,6 +218,7 @@ export function mapFeedPostToStory(item: FeedPostItem): FeedStory {
     content: item.content || undefined,
     blocks: item.blocks || undefined,
     media: item.media || undefined,
+    authorId: item.author?.id,
   }
 }
 
@@ -200,7 +231,8 @@ export const DEFAULT_FEED_ITEMS: FeedPostItem[] = [
     title: '12 LeetCode Patterns That Cover 80% of FAANG Questions',
     subtitle:
       'A structured approach to pattern recognition for technical interviews, covering two-pointer, sliding window, topological sort, and monotonic stack techniques.',
-    coverImage: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&auto=format&fit=crop&q=80',
+    coverImage:
+      'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&auto=format&fit=crop&q=80',
     content:
       'A structured approach to pattern recognition for technical interviews, covering two-pointer, sliding window, topological sort, and monotonic stack techniques.',
     category: 'JavaScript in Plain English',
@@ -220,7 +252,8 @@ export const DEFAULT_FEED_ITEMS: FeedPostItem[] = [
       id: 'user_santosh_yadav',
       username: 'santoshyadav',
       name: 'Santosh Yadav',
-      image: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80',
+      image:
+        'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80',
     },
   },
   {
@@ -228,7 +261,8 @@ export const DEFAULT_FEED_ITEMS: FeedPostItem[] = [
     title: 'Finding Your First Internship – Part 30',
     subtitle:
       'Practical ideas and lessons for students in our college community. In this part, I’ll cover how to build a strong resume, what to focus on in the first year, and common mistakes to avoid.',
-    coverImage: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80',
+    coverImage:
+      'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80',
     content:
       'Practical ideas and lessons for students in our college community. In this part, I’ll cover how to build a strong resume, what to focus on in the first year, and common mistakes to avoid.',
     category: 'Career',
@@ -248,7 +282,8 @@ export const DEFAULT_FEED_ITEMS: FeedPostItem[] = [
       id: 'user_sunil_01',
       username: 'sunilkumar',
       name: 'sunilkumar T',
-      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80',
+      image:
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80',
     },
   },
   {
@@ -256,7 +291,8 @@ export const DEFAULT_FEED_ITEMS: FeedPostItem[] = [
     title: 'Managing Stress During Exam Season – Part 6',
     subtitle:
       'Sharing what worked for me and what didn’t. Tips on time management, study routines, and maintaining mental health during exams.',
-    coverImage: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80',
+    coverImage:
+      'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80',
     content:
       'Sharing what worked for me and what didn’t. Tips on time management, study routines, and maintaining mental health during exams.',
     category: 'Wellness',
@@ -276,7 +312,8 @@ export const DEFAULT_FEED_ITEMS: FeedPostItem[] = [
       id: 'user_priya_02',
       username: 'priya_v',
       name: 'Priya V',
-      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
+      image:
+        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
     },
   },
   {
@@ -284,7 +321,8 @@ export const DEFAULT_FEED_ITEMS: FeedPostItem[] = [
     title: 'The Complete Guide to Open Source Contributions – Part 15',
     subtitle:
       'Everything you need to know to make meaningful contributions to open source as a student. Tools, workflow, and best practices.',
-    coverImage: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&auto=format&fit=crop&q=80',
+    coverImage:
+      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&auto=format&fit=crop&q=80',
     content:
       'Everything you need to know to make meaningful contributions to open source as a student. Tools, workflow, and best practices.',
     category: 'Technology',
@@ -304,7 +342,8 @@ export const DEFAULT_FEED_ITEMS: FeedPostItem[] = [
       id: 'user_stanford_author',
       username: 'stanford_author',
       name: 'Stanford Mock Blog Author',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
+      image:
+        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
     },
   },
 ]
@@ -322,14 +361,9 @@ export async function fetchFeedApi(options?: {
   const cursorParam = options?.cursor ? `&cursor=${encodeURIComponent(options.cursor)}` : ''
   const endpoint = `${baseUrl}/api/feed?limit=${limit}${cursorParam}`
 
-  const origin =
-    typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
-
-  const headers: Record<string, string> = {
+  const headers: Record<string, string> = getFeedHeaders({
     'Content-Type': 'application/json',
-    Accept: 'application/json',
-    Origin: origin,
-  }
+  })
 
   try {
     const token =
@@ -370,6 +404,8 @@ export async function fetchFeedApi(options?: {
       if (payload.success && Array.isArray(payload.data?.items)) {
         return payload.data.items
       }
+    } else {
+      handleAuthResponseError(res)
     }
   } catch (err) {
     console.error('Failed to fetch from /api/feed:', err)
@@ -397,9 +433,6 @@ export async function togglePostLikeApi(postId: string): Promise<ToggleLikeApiRe
   const baseUrl = getBaseApiUrl()
   const endpoint = `${baseUrl}/api/posts/${encodeURIComponent(postId)}/like`
 
-  const origin =
-    typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
-
   let sessionToken = ''
   try {
     sessionToken =
@@ -414,10 +447,7 @@ export async function togglePostLikeApi(postId: string): Promise<ToggleLikeApiRe
     // ignore
   }
 
-  const headers: Record<string, string> = {
-    Accept: 'application/json',
-    Origin: origin,
-  }
+  const headers: Record<string, string> = getFeedHeaders()
 
   if (sessionToken) {
     try {
@@ -486,9 +516,6 @@ export async function toggleSavePostApi(postId: string): Promise<ToggleSaveApiRe
   const baseUrl = getBaseApiUrl()
   const endpoint = `${baseUrl}/api/posts/${encodeURIComponent(postId)}/save`
 
-  const origin =
-    typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
-
   let sessionToken = ''
   try {
     sessionToken =
@@ -503,10 +530,7 @@ export async function toggleSavePostApi(postId: string): Promise<ToggleSaveApiRe
     // ignore
   }
 
-  const headers: Record<string, string> = {
-    Accept: 'application/json',
-    Origin: origin,
-  }
+  const headers: Record<string, string> = getFeedHeaders()
 
   if (sessionToken) {
     try {
@@ -560,9 +584,6 @@ export async function fetchMySavedPostIdsApi(): Promise<string[]> {
   const baseUrl = getBaseApiUrl()
   const endpoint = `${baseUrl}/api/posts/saved`
 
-  const origin =
-    typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
-
   let sessionToken = ''
   try {
     sessionToken =
@@ -577,10 +598,7 @@ export async function fetchMySavedPostIdsApi(): Promise<string[]> {
     // ignore
   }
 
-  const headers: Record<string, string> = {
-    Accept: 'application/json',
-    Origin: origin,
-  }
+  const headers: Record<string, string> = getFeedHeaders()
 
   if (sessionToken) {
     try {
@@ -648,9 +666,6 @@ export async function fetchPostLikeInfoApi(postId: string): Promise<PostLikeInfo
   const baseUrl = getBaseApiUrl()
   const endpoint = `${baseUrl}/api/posts/${encodeURIComponent(postId)}/likes/count`
 
-  const origin =
-    typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
-
   let sessionToken = ''
   try {
     sessionToken =
@@ -665,10 +680,7 @@ export async function fetchPostLikeInfoApi(postId: string): Promise<PostLikeInfo
     // ignore
   }
 
-  const headers: Record<string, string> = {
-    Accept: 'application/json',
-    Origin: origin,
-  }
+  const headers: Record<string, string> = getFeedHeaders()
 
   if (sessionToken) {
     try {
@@ -793,6 +805,10 @@ export interface PostCommentItem {
   user?: CommentUser | null
   replies?: PostCommentItem[]
   claps?: number
+  likesCount?: number
+  isLiked?: boolean
+  canPin?: boolean
+  canDelete?: boolean
   isAuthor?: boolean
   quote?: string | null
 }
@@ -809,9 +825,6 @@ export async function fetchPostCommentsApi(
   const cursorParam = options?.cursor ? `&cursor=${encodeURIComponent(options.cursor)}` : ''
   const endpoint = `${baseUrl}/api/comments/posts/${encodeURIComponent(postId)}/comments?limit=${limit}${cursorParam}`
 
-  const origin =
-    typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
-
   let sessionToken = ''
   try {
     sessionToken =
@@ -826,10 +839,7 @@ export async function fetchPostCommentsApi(
     // ignore
   }
 
-  const headers: Record<string, string> = {
-    Accept: 'application/json',
-    Origin: origin,
-  }
+  const headers: Record<string, string> = getFeedHeaders()
 
   if (sessionToken) {
     headers['Authorization'] = `Bearer ${sessionToken}`
@@ -899,7 +909,7 @@ export async function fetchPostCommentsApi(
 }
 
 /**
- * Create a new comment on a post via POST /api/posts/:postId/comments
+ * Create a new comment on a post via POST /api/comments/posts/:postId/comments
  */
 export async function createPostCommentApi(
   postId: string,
@@ -907,10 +917,7 @@ export async function createPostCommentApi(
   parentId?: string | null
 ): Promise<PostCommentItem | null> {
   const baseUrl = getBaseApiUrl()
-  const endpoint = `${baseUrl}/api/posts/${encodeURIComponent(postId)}/comments`
-
-  const origin =
-    typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173'
+  const endpoint = `${baseUrl}/api/comments/posts/${encodeURIComponent(postId)}/comments`
 
   let sessionToken = ''
   try {
@@ -926,11 +933,9 @@ export async function createPostCommentApi(
     // ignore
   }
 
-  const headers: Record<string, string> = {
+  const headers: Record<string, string> = getFeedHeaders({
     'Content-Type': 'application/json',
-    Accept: 'application/json',
-    Origin: origin,
-  }
+  })
 
   if (sessionToken) {
     headers['Authorization'] = `Bearer ${sessionToken}`
@@ -956,7 +961,7 @@ export async function createPostCommentApi(
 
     if (!res.ok && endpoint.startsWith('http')) {
       try {
-        const proxyRes = await fetch(`/api/posts/${encodeURIComponent(postId)}/comments`, {
+        const proxyRes = await fetch(`/api/comments/posts/${encodeURIComponent(postId)}/comments`, {
           method: 'POST',
           headers,
           credentials: 'include',
@@ -973,6 +978,12 @@ export async function createPostCommentApi(
       if (payload && payload.success && payload.data) {
         return payload.data as PostCommentItem
       }
+      if (payload && payload.id) {
+        return payload as PostCommentItem
+      }
+      if (payload && payload.comment) {
+        return payload.comment as PostCommentItem
+      }
     }
   } catch (err) {
     console.error(`Failed to create comment for post ${postId}:`, err)
@@ -981,5 +992,261 @@ export async function createPostCommentApi(
   return null
 }
 
+/**
+ * Toggle like/reaction on a comment via POST /api/comments/:commentId/reactions
+ */
+export async function toggleCommentLikeApi(
+  commentId: string,
+  emoji = '❤️'
+): Promise<{ action: 'added' | 'removed'; isLiked: boolean; likesCount: number } | null> {
+  const baseUrl = getBaseApiUrl()
+  const endpoint = `${baseUrl}/api/comments/${encodeURIComponent(commentId)}/reactions`
 
+  let sessionToken = ''
+  try {
+    sessionToken =
+      localStorage.getItem('better-auth.session_token') ||
+      localStorage.getItem('lumina_session_token') ||
+      ''
+    if (!sessionToken && typeof document !== 'undefined') {
+      const match = document.cookie.match(/(?:^|;\s*)better-auth\.session_token=([^;]+)/)
+      if (match && match[1]) sessionToken = decodeURIComponent(match[1])
+    }
+  } catch {
+    // ignore
+  }
 
+  const headers: Record<string, string> = getFeedHeaders({
+    'Content-Type': 'application/json',
+  })
+  if (sessionToken) {
+    headers['Authorization'] = `Bearer ${sessionToken}`
+    try {
+      headers['Cookie'] = `better-auth.session_token=${sessionToken}`
+    } catch {
+      // ignore
+    }
+  }
+
+  const payloadBody = JSON.stringify({ emoji })
+
+  try {
+    let res = await fetch(endpoint, {
+      method: 'POST',
+      headers,
+      credentials: 'include',
+      body: payloadBody,
+    })
+
+    if (!res.ok && endpoint.startsWith('http')) {
+      try {
+        const proxyRes = await fetch(`/api/comments/${encodeURIComponent(commentId)}/reactions`, {
+          method: 'POST',
+          headers,
+          credentials: 'include',
+          body: payloadBody,
+        })
+        if (proxyRes.ok) res = proxyRes
+      } catch {
+        // ignore
+      }
+    }
+
+    if (res.ok) {
+      const data = await res.json()
+      return data
+    }
+  } catch (err) {
+    console.error(`Failed to toggle like on comment ${commentId}:`, err)
+  }
+  return null
+}
+
+/**
+ * Toggle pin status on a comment via POST /api/comments/:commentId/pin
+ */
+export async function togglePinCommentApi(
+  commentId: string
+): Promise<{ isPinned: boolean } | null> {
+  const baseUrl = getBaseApiUrl()
+  const endpoint = `${baseUrl}/api/comments/${encodeURIComponent(commentId)}/pin`
+
+  let sessionToken = ''
+  try {
+    sessionToken =
+      localStorage.getItem('better-auth.session_token') ||
+      localStorage.getItem('lumina_session_token') ||
+      ''
+    if (!sessionToken && typeof document !== 'undefined') {
+      const match = document.cookie.match(/(?:^|;\s*)better-auth\.session_token=([^;]+)/)
+      if (match && match[1]) sessionToken = decodeURIComponent(match[1])
+    }
+  } catch {
+    // ignore
+  }
+
+  const headers: Record<string, string> = getFeedHeaders({
+    'Content-Type': 'application/json',
+  })
+  if (sessionToken) {
+    headers['Authorization'] = `Bearer ${sessionToken}`
+    try {
+      headers['Cookie'] = `better-auth.session_token=${sessionToken}`
+    } catch {
+      // ignore
+    }
+  }
+
+  try {
+    let res = await fetch(endpoint, {
+      method: 'POST',
+      headers,
+      credentials: 'include',
+    })
+
+    if (!res.ok && endpoint.startsWith('http')) {
+      try {
+        const proxyRes = await fetch(`/api/comments/${encodeURIComponent(commentId)}/pin`, {
+          method: 'POST',
+          headers,
+          credentials: 'include',
+        })
+        if (proxyRes.ok) res = proxyRes
+      } catch {
+        // ignore
+      }
+    }
+
+    if (res.ok) {
+      const data = await res.json()
+      return { isPinned: Boolean(data?.isPinned ?? data?.comment?.isPinned) }
+    }
+  } catch (err) {
+    console.error(`Failed to toggle pin on comment ${commentId}:`, err)
+  }
+  return null
+}
+
+/**
+ * Delete (soft-delete) a comment via DELETE /api/comments/:commentId
+ */
+export async function deleteCommentApi(commentId: string): Promise<boolean> {
+  const baseUrl = getBaseApiUrl()
+  const endpoint = `${baseUrl}/api/comments/${encodeURIComponent(commentId)}`
+
+  let sessionToken = ''
+  try {
+    sessionToken =
+      localStorage.getItem('better-auth.session_token') ||
+      localStorage.getItem('lumina_session_token') ||
+      ''
+    if (!sessionToken && typeof document !== 'undefined') {
+      const match = document.cookie.match(/(?:^|;\s*)better-auth\.session_token=([^;]+)/)
+      if (match && match[1]) sessionToken = decodeURIComponent(match[1])
+    }
+  } catch {
+    // ignore
+  }
+
+  const headers: Record<string, string> = getFeedHeaders()
+  if (sessionToken) {
+    headers['Authorization'] = `Bearer ${sessionToken}`
+    try {
+      headers['Cookie'] = `better-auth.session_token=${sessionToken}`
+    } catch {
+      // ignore
+    }
+  }
+
+  try {
+    let res = await fetch(endpoint, {
+      method: 'DELETE',
+      headers,
+      credentials: 'include',
+    })
+
+    if (!res.ok && endpoint.startsWith('http')) {
+      try {
+        const proxyRes = await fetch(`/api/comments/${encodeURIComponent(commentId)}`, {
+          method: 'DELETE',
+          headers,
+          credentials: 'include',
+        })
+        if (proxyRes.ok) res = proxyRes
+      } catch {
+        // ignore
+      }
+    }
+
+    return res.ok
+  } catch (err) {
+    console.error(`Failed to delete comment ${commentId}:`, err)
+    return false
+  }
+}
+
+/**
+ * Report a comment via POST /api/comments/:commentId/report
+ */
+export async function reportCommentApi(
+  commentId: string,
+  reason = 'Inappropriate content',
+  details?: string
+): Promise<boolean> {
+  const baseUrl = getBaseApiUrl()
+  const endpoint = `${baseUrl}/api/comments/${encodeURIComponent(commentId)}/report`
+
+  let sessionToken = ''
+  try {
+    sessionToken =
+      localStorage.getItem('better-auth.session_token') ||
+      localStorage.getItem('lumina_session_token') ||
+      ''
+    if (!sessionToken && typeof document !== 'undefined') {
+      const match = document.cookie.match(/(?:^|;\s*)better-auth\.session_token=([^;]+)/)
+      if (match && match[1]) sessionToken = decodeURIComponent(match[1])
+    }
+  } catch {
+    // ignore
+  }
+
+  const headers: Record<string, string> = getFeedHeaders({
+    'Content-Type': 'application/json',
+  })
+  if (sessionToken) {
+    headers['Authorization'] = `Bearer ${sessionToken}`
+    try {
+      headers['Cookie'] = `better-auth.session_token=${sessionToken}`
+    } catch {
+      // ignore
+    }
+  }
+
+  try {
+    let res = await fetch(endpoint, {
+      method: 'POST',
+      headers,
+      credentials: 'include',
+      body: JSON.stringify({ reason, details: details || 'Flagged by reader via comment actions' }),
+    })
+
+    if (!res.ok && endpoint.startsWith('http')) {
+      try {
+        const proxyRes = await fetch(`/api/comments/${encodeURIComponent(commentId)}/report`, {
+          method: 'POST',
+          headers,
+          credentials: 'include',
+          body: JSON.stringify({ reason, details: details || 'Flagged by reader via comment actions' }),
+        })
+        if (proxyRes.ok) res = proxyRes
+      } catch {
+        // ignore
+      }
+    }
+
+    return res.ok
+  } catch (err) {
+    console.error(`Failed to report comment ${commentId}:`, err)
+    return false
+  }
+}

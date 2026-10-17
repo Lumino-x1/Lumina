@@ -1,3 +1,5 @@
+import { handleAuthResponseError } from './authApi'
+
 export interface ProfileData {
   id?: string
   userId?: string
@@ -67,6 +69,7 @@ export interface MergedUser {
   firstName?: string
   lastName?: string
   email?: string
+  emailVerified?: boolean
   username?: string
   role?: string
   image?: string
@@ -75,6 +78,7 @@ export interface MergedUser {
   bio?: string | null
   about?: string | null
   college?: string | null
+  collegeId?: string | null
   department?: string | null
   location?: string | null
   hometown?: string | null
@@ -102,9 +106,9 @@ export interface MergedUser {
 
 export function getBaseApiUrl(): string {
   if (typeof window !== 'undefined' && (import.meta as any).env?.VITE_API_URL) {
-    return (import.meta as any).env.VITE_API_URL
+    return (import.meta as any).env.VITE_API_URL.replace(/\/$/, '')
   }
-  return 'http://localhost:3002'
+  return ''
 }
 
 /**
@@ -119,6 +123,7 @@ export async function fetchMyProfile(): Promise<ProfileData | null> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
+    'ngrok-skip-browser-warning': 'true',
     Origin: origin,
   }
 
@@ -143,6 +148,8 @@ export async function fetchMyProfile(): Promise<ProfileData | null> {
     if (res.ok) {
       const data = await res.json()
       return data as ProfileData
+    } else {
+      handleAuthResponseError(res)
     }
   } catch (err) {
     console.error('Failed to fetch profile from /api/profile/me:', err)
@@ -249,6 +256,7 @@ export function buildMergedUser(
     firstName,
     lastName,
     email: emailVal,
+    emailVerified: (authUser as any)?.emailVerified ?? (p as any)?.user?.emailVerified ?? true,
     username: usernameVal,
     role: p?.user?.role || authUser?.role || 'STUDENT',
     image: userAvatar,
@@ -257,6 +265,13 @@ export function buildMergedUser(
     bio: profile?.bio || p?.profile?.bio || null,
     about: profile?.about || p?.profile?.about || null,
     college: collegeName,
+    collegeId:
+      profile?.user?.collegeId ||
+      p?.user?.collegeId ||
+      (authUser as any)?.collegeId ||
+      profile?.college?.id ||
+      p?.college?.id ||
+      null,
     department: departmentName,
     location: profile?.location || p?.profile?.location || profile?.hometown || null,
     hometown: profile?.hometown || p?.profile?.hometown || null,

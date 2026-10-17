@@ -11,103 +11,33 @@ import { AuthPage } from './AuthPage'
 import { DashboardPage, type DashboardUser } from './DashboardPage'
 import { ProfilePage } from './ProfilePage'
 import { EditorShell } from './editor/components/EditorShell'
-import { signOutApi } from './api/authApi'
-import { fetchMyProfile, buildMergedUser } from './api/profileApi'
+import { VerifyEmailPage } from './VerifyEmailPage'
+import { AuthProvider, useAuth } from './lib/authContext'
+import { ProtectedRoute } from './components/ProtectedRoute'
 
-function App() {
-  const [currentUser, setCurrentUser] = useState<DashboardUser | null>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = localStorage.getItem('lumina_user')
-        if (stored) return JSON.parse(stored)
-      } catch {
-        // ignore storage parse error
-      }
-    }
-    return null
-  })
+import {
+  type AppView,
+  parseViewFromLocation,
+} from './lib/routeGuards'
 
-  const [view, setView] = useState<'landing' | 'login' | 'signup' | 'dashboard' | 'editor' | 'profile'>(() => {
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash
-      const path = window.location.pathname
-      if (
-        hash === '#dashboard' ||
-        hash === '#feed' ||
-        hash === '#/feed' ||
-        hash.startsWith('#post') ||
-        hash.startsWith('#story') ||
-        path === '/dashboard' ||
-        path === '/feed' ||
-        path.startsWith('/post') ||
-        path === '/api/feed'
-      ) return 'dashboard'
-      if (hash === '#editor' || hash === '#write' || path === '/editor') return 'editor'
-      if (hash === '#profile' || hash === '#/profile' || path === '/profile') return 'profile'
-      if (hash === '#login' || path === '/login') return 'login'
-      if (hash === '#signup' || path === '/signup') return 'signup'
-    }
-    return 'landing'
-  })
+function AppContent() {
+  const {
+    user: currentUser,
+    isLoading,
+    isAuthenticated,
+    isEmailVerified,
+    logout,
+    setUser,
+    refreshSession,
+  } = useAuth()
 
-  // Synchronize with backend profile on mount/login/dashboard navigation
-  useEffect(() => {
-    let isMounted = true
-    async function syncProfile() {
-      try {
-        const profile = await fetchMyProfile()
-        if (profile && isMounted) {
-          setCurrentUser((prev) => {
-            const merged = buildMergedUser(prev, profile)
-            try {
-              localStorage.setItem('lumina_user', JSON.stringify(merged))
-            } catch {
-              // ignore
-            }
-            return merged
-          })
-        }
-      } catch {
-        // ignore network error
-      }
-    }
+  const [view, setView] = useState<AppView>(parseViewFromLocation)
 
-    if (view === 'dashboard' || view === 'profile' || currentUser?.id || localStorage.getItem('lumina_session_token')) {
-      void syncProfile()
-    }
-
-    return () => {
-      isMounted = false
-    }
-  }, [view, currentUser?.id])
-
+  // Listen to hash and popstate navigation changes
   useEffect(() => {
     const handleLocationChange = () => {
-      const hash = window.location.hash
-      const path = window.location.pathname
-      if (
-        hash === '#dashboard' ||
-        hash === '#feed' ||
-        hash === '#/feed' ||
-        hash.startsWith('#post') ||
-        hash.startsWith('#story') ||
-        path === '/dashboard' ||
-        path === '/feed' ||
-        path.startsWith('/post') ||
-        path === '/api/feed'
-      ) {
-        setView('dashboard')
-      } else if (hash === '#editor' || hash === '#write' || path === '/editor') {
-        setView('editor')
-      } else if (hash === '#profile' || hash === '#/profile' || path === '/profile') {
-        setView('profile')
-      } else if (hash === '#login' || path === '/login') {
-        setView('login')
-      } else if (hash === '#signup' || path === '/signup') {
-        setView('signup')
-      } else if (hash === '' || hash === '#home' || path === '/') {
-        setView('landing')
-      }
+      const nextView = parseViewFromLocation()
+      setView(nextView)
     }
 
     window.addEventListener('hashchange', handleLocationChange)
@@ -117,6 +47,16 @@ function App() {
       window.removeEventListener('popstate', handleLocationChange)
     }
   }, [])
+
+  // If already logged in and verified, redirect away from login/signup to dashboard
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && isEmailVerified) {
+      if (view === 'login' || view === 'signup') {
+        window.location.hash = 'feed'
+        setView('dashboard')
+      }
+    }
+  }, [isLoading, isAuthenticated, isEmailVerified, view])
 
   const handleOpenAuth = (mode: 'login' | 'signup') => {
     window.location.hash = mode
@@ -148,73 +88,126 @@ function App() {
     setView('dashboard')
   }
 
-  const handleAuthSuccess = (user: DashboardUser) => {
-    setCurrentUser(user)
-    window.location.hash = 'feed'
-    setView('dashboard')
+  const handleAuthSuccess = async (user: DashboardUser) => {
+    setUser(user)
+    await refreshSession(true)
+    if (user.emailVerified === false) {
+      window.location.hash = 'verify-email'
+      setView('verify-email')
+    } else {
+      let redirectTarget: string | null = null
+      try {
+        redirectTarget = sessionStorage.getItem('lumina_redirect_after_login')
+        sessionStorage.removeItem('lumina_redirect_after_login')
+      } catch {
+        // ignore
+      }
+
+      if (redirectTarget) {
+        window.location.hash = redirectTarget.replace(/^#/, '')
+      } else {
+        window.location.hash = 'feed'
+      }
+      setView('dashboard')
+    }
   }
 
-  const handleLogout = () => {
-    void signOutApi()
-    try {
-      localStorage.removeItem('lumina_user')
-      localStorage.removeItem('lumina_session_token')
-      localStorage.removeItem('better-auth.session_token')
-    } catch {
-      // ignore
-    }
-    setCurrentUser(null)
+  const handleLogout = async () => {
+    await logout()
     window.location.hash = ''
     setView('landing')
   }
 
-  // Profile Page View
-  if (view === 'profile') {
+  // 1. Email Verification View
+  if (view === 'verify-email') {
     return (
-      <ProfilePage
-        user={currentUser}
-        onBackToDashboard={handleOpenDashboard}
-        onNavigateHome={handleBackToLanding}
-        onLogout={handleLogout}
+      <VerifyEmailPage
+        initialEmail={currentUser?.email}
+        onSuccess={async (verifiedUser) => {
+          setUser((prev) => ({ ...prev, ...verifiedUser, emailVerified: true }))
+          await refreshSession(true)
+
+          let redirectTarget: string | null = null
+          try {
+            redirectTarget = sessionStorage.getItem('lumina_redirect_after_login')
+            sessionStorage.removeItem('lumina_redirect_after_login')
+          } catch {
+            // ignore
+          }
+
+          if (redirectTarget) {
+            window.location.hash = redirectTarget.replace(/^#/, '')
+          } else {
+            window.location.hash = 'feed'
+          }
+          setView('dashboard')
+        }}
+        onBackToLogin={() => {
+          window.location.hash = 'login'
+          setView('login')
+        }}
+        onBackToRegister={() => {
+          window.location.hash = 'signup'
+          setView('signup')
+        }}
       />
     )
   }
 
-  // Visual Content Editor View
-  if (view === 'editor') {
-    return (
-      <EditorShell
-        onBackToDashboard={handleBackToDashboard}
-        user={currentUser}
-      />
-    )
-  }
-
-  // Dashboard View
-  if (view === 'dashboard') {
-    return (
-      <DashboardPage
-        user={currentUser}
-        onLogout={handleLogout}
-        onNavigateHome={handleBackToLanding}
-        onOpenWrite={handleOpenEditor}
-        onOpenProfile={handleOpenProfile}
-      />
-    )
-  }
-
-  // Auth View (Login / Signup)
+  // 2. Auth View (Login / Signup)
   if (view === 'login' || view === 'signup') {
     return (
       <AuthPage
         initialMode={view}
         onBack={handleBackToLanding}
         onSuccess={handleAuthSuccess}
+        onRequireVerification={() => {
+          window.location.hash = 'verify-email'
+          setView('verify-email')
+        }}
       />
     )
   }
 
-  // Landing Page View
+  // 3. Protected Views (Dashboard/Feed, Profile, Visual Editor)
+  // Guaranteed by ProtectedRoute: will NOT mount or render any layout/components
+  // unless the session check passes and emailVerified is true.
+  if (view === 'dashboard' || view === 'profile' || view === 'editor') {
+    return (
+      <ProtectedRoute
+        onRedirect={(target) => {
+          window.location.hash = target
+          setView(target)
+        }}
+      >
+        {view === 'dashboard' && (
+          <DashboardPage
+            user={currentUser}
+            onLogout={handleLogout}
+            onNavigateHome={handleBackToLanding}
+            onOpenWrite={handleOpenEditor}
+            onOpenProfile={handleOpenProfile}
+          />
+        )}
+        {view === 'profile' && (
+          <ProfilePage
+            user={currentUser}
+            onBackToDashboard={handleOpenDashboard}
+            onNavigateHome={handleBackToLanding}
+            onLogout={handleLogout}
+          />
+        )}
+        {view === 'editor' && (
+          <EditorShell
+            onBackToDashboard={handleBackToDashboard}
+            user={currentUser}
+          />
+        )}
+      </ProtectedRoute>
+    )
+  }
+
+  // 4. Landing Page View (Default public route)
   return (
     <ReactLenis root options={{ lerp: 0.08, duration: 1.2, smoothWheel: true }}>
       <div className="app-main-wrapper">
@@ -235,6 +228,14 @@ function App() {
         <SaasCnFooterSection onOpenAuth={handleOpenAuth} />
       </div>
     </ReactLenis>
+  )
+}
+
+export function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   )
 }
 

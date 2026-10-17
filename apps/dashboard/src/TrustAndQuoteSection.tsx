@@ -11,16 +11,7 @@ export const TrustAndQuoteSection: React.FC = () => {
         <span className="crosshair-marker crosshair-top-right" aria-hidden="true">+</span>
 
         {/* ====================================================================
-            1. 6-Column x 2-Row Grid Frame (Empty Placeholder Cells)
-            ==================================================================== */}
-        <div className="trust-logo-grid" aria-label="Partner Grid Frame">
-          {Array.from({ length: 12 }).map((_, index) => (
-            <div key={index} className="trust-grid-cell" />
-          ))}
-        </div>
-
-        {/* ====================================================================
-            2. Featured Quote Block
+            Featured Quote Block (CEO Attribution)
             ==================================================================== */}
         <div className="trust-quote-block">
           {/* Quote Mark Icon */}
@@ -51,9 +42,6 @@ export const TrustAndQuoteSection: React.FC = () => {
             <span className="trust-quote-name">
               Sunilkumar T, Founder, CEO
             </span>
-
-            {/* Role */}
-            <span className="trust-quote-role">Backend Engineer</span>
 
             {/* Lumina Badge Pill */}
             <div className="trust-quote-pill">
