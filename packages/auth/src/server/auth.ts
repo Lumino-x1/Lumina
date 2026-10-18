@@ -321,7 +321,7 @@ export const auth = betterAuth({
           process.env.BREVO_FROM ||
           process.env.SMTP_FROM ||
           process.env.RESEND_FROM ||
-          'Lumina <980817001@smtp-brevo.com>'
+          'Lumina <sunilbe2006@9963543.brevosend.com>'
         const result = await resend.emails.send({
           from: fromAddress,
           to: user.email,

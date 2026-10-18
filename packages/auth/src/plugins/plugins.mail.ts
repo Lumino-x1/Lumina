@@ -35,7 +35,7 @@ export async function sendMail(options: SendMailOptions) {
     process.env.BREVO_FROM ||
     process.env.SMTP_FROM ||
     process.env.RESEND_FROM ||
-    `Lumina <${user}>`
+    'Lumina <sunilbe2006@9963543.brevosend.com>'
 
   if (!pass) {
     console.warn('[Brevo Mail] SMTP password/key not set (BREVO_SMTP_KEY / SMTP_PASSWORD). Email dispatch skipped.')
