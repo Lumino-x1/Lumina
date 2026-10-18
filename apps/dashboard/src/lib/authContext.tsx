@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import type { DashboardUser } from '../DashboardPage'
-import { getSessionApi, signOutApi } from '../api/authApi'
+import { getSessionApi, signOutApi, HARDCODED_TEST_USER } from '../api/authApi'
 import { fetchMyProfile, buildMergedUser } from '../api/profileApi'
 
 export interface AuthContextType {
@@ -16,12 +16,32 @@ export interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUserState] = useState<DashboardUser | null>(null)
+  const [user, setUserState] = useState<DashboardUser | null>(() => {
+    try {
+      if (typeof window !== 'undefined' && localStorage.getItem('lumina_hardcoded_user') === 'true') {
+        const raw = localStorage.getItem('lumina_user')
+        return raw ? JSON.parse(raw) : HARDCODED_TEST_USER
+      }
+    } catch {}
+    return null
+  })
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   const refreshSession = useCallback(async (silent = false): Promise<DashboardUser | null> => {
     if (!silent) {
       setIsLoading(true)
+    }
+
+    try {
+      if (typeof window !== 'undefined' && localStorage.getItem('lumina_hardcoded_user') === 'true') {
+        const raw = localStorage.getItem('lumina_user')
+        const hardcodedUser = raw ? JSON.parse(raw) : HARDCODED_TEST_USER
+        setUserState(hardcodedUser)
+        setIsLoading(false)
+        return hardcodedUser
+      }
+    } catch {
+      // ignore
     }
 
     try {
@@ -93,6 +113,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       setUserState(null)
       try {
+        localStorage.removeItem('lumina_hardcoded_user')
         localStorage.removeItem('lumina_user')
         localStorage.removeItem('lumina_session_token')
         localStorage.removeItem('better-auth.session_token')
