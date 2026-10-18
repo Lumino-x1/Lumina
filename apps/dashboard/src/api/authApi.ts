@@ -56,14 +56,15 @@ export function handleAuthResponseError(res: Response): void {
 }
 
 export const HARDCODED_TEST_USER = {
-  id: 'usr_hardcoded_sunil',
+  id: 'cmve9hx0f0000z38azns4ei93',
   name: 'Sunil Kumar',
-  email: 'sunilbe2006@gmail.com',
-  username: 'sunilkumart2695',
+  email: 'student@psgtech.ac.in',
+  username: 'psg_student',
   emailVerified: true,
   image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&auto=format&fit=crop&q=80',
   college: 'PSG College of Technology',
-  collegeId: 'psg-tech',
+  collegeId: 'cmv9h829300024y8akviwpsmm',
+  department: 'Computer Science & Engineering',
 }
 
 export function isHardcodedTestCredentials(emailOrUsername: string, password: string): boolean {
@@ -75,6 +76,9 @@ export function isHardcodedTestCredentials(emailOrUsername: string, password: st
     'admin',
     'sunilkumar',
     'sunilkumart2695',
+    'student@psgtech.ac.in',
+    '24z201@psgtech.ac.in',
+    'psg_student',
     'sunilbe2006@gmail.com',
     'admin@lumina.test',
     'admin@lumina.com',
@@ -87,6 +91,7 @@ export function isHardcodedTestCredentials(emailOrUsername: string, password: st
     'admin123',
     'password',
     'password123',
+    'Password123!',
     'sunil123',
     'lumina123',
     '12345',
@@ -98,6 +103,7 @@ export function isHardcodedTestCredentials(emailOrUsername: string, password: st
     validUsers.includes(normUser) ||
     normUser.startsWith('admin') ||
     normUser.startsWith('sunil') ||
+    normUser.endsWith('@psgtech.ac.in') ||
     validPasswords.includes(normPass)
   )
 }

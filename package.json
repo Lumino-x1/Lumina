@@ -23,6 +23,8 @@
     "worker:leetcode": "bun workers/leetcode/src/index.ts",
     "worker:publishing": "bun --filter api worker:publishing",
     "db:setup": "docker compose up -d db && bun run --filter @lumina/db migrate:deploy",
+    "db:seed": "bun internal/scripts/seed-psg-user.ts",
+    "db:seed:psg": "bun internal/scripts/seed-psg-user.ts",
     "seed:blogs": "bun scripts/seed-blogs.js",
     "db:migrate:deploy": "bun run --filter @lumina/db migrate:deploy",
     "db:shell": "docker compose exec db psql -U lumina_user -d lumina_dev",
