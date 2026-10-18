@@ -1449,7 +1449,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     onClick={() => setActiveTab('posts')}
                   >
                     <span>Posts</span>
-                    <span className="ai-tab-dot-indicator" />
                   </button>
                   <button
                     type="button"
