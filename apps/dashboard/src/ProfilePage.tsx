@@ -402,6 +402,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   // Interactive likes & bookmarks
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({})
   const [savedPosts, setSavedPosts] = useState<Record<string, boolean>>({})
+  const [friendRequestsSent, setFriendRequestsSent] = useState<Record<string, boolean>>({})
+
+  const handleToggleFriendRequest = (friendId: string) => {
+    setFriendRequestsSent((prev) => ({
+      ...prev,
+      [friendId]: !prev[friendId],
+    }))
+  }
 
   const handleOpenComposer = () => {
     window.location.hash = '#write'
@@ -2304,8 +2312,73 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             )}
           </main>
 
-          {/* 4. RIGHT SIDEBAR WIDGETS (Blurred / Hidden) */}
-          <aside className="ai-right-sidebar profile-right-col ai-blurred-section" aria-hidden="true">
+          {/* 4. RIGHT SIDEBAR WIDGETS (Unblurred) */}
+          <aside className="ai-right-sidebar profile-right-col">
+            {/* WIDGET 0: Suggested Friends */}
+            <div className="ai-widget-card">
+              <div className="ai-card-header-row">
+                <h4 className="ai-card-title">Suggested Friends</h4>
+                <span className="ai-card-counter">Campus</span>
+              </div>
+              <div className="ai-friend-list">
+                <div className="ai-friend-row">
+                  <div className="ai-friend-left">
+                    <img
+                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                      alt="Sarah Chen"
+                      className="ai-friend-avatar"
+                    />
+                    <div className="ai-friend-info">
+                      <strong className="ai-friend-name">Sarah Chen</strong>
+                      <span className="ai-friend-meta">CS &apos;26 • PSG Tech</span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className={`ai-friend-btn ${friendRequestsSent['pf1'] ? 'is-joined' : ''}`}
+                    onClick={() => handleToggleFriendRequest('pf1')}
+                  >
+                    {friendRequestsSent['pf1'] ? (
+                      <>
+                        <Check size={13} />
+                        <span>Requested</span>
+                      </>
+                    ) : (
+                      'Add Friend'
+                    )}
+                  </button>
+                </div>
+
+                <div className="ai-friend-row">
+                  <div className="ai-friend-left">
+                    <img
+                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
+                      alt="Alex Rivera"
+                      className="ai-friend-avatar"
+                    />
+                    <div className="ai-friend-info">
+                      <strong className="ai-friend-name">Alex Rivera</strong>
+                      <span className="ai-friend-meta">AI &amp; Robotics • PSG Tech</span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className={`ai-friend-btn ${friendRequestsSent['pf2'] ? 'is-joined' : ''}`}
+                    onClick={() => handleToggleFriendRequest('pf2')}
+                  >
+                    {friendRequestsSent['pf2'] ? (
+                      <>
+                        <Check size={13} />
+                        <span>Requested</span>
+                      </>
+                    ) : (
+                      'Add Friend'
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+
             {/* WIDGET 1: Technical Stack */}
             <div className="ai-widget-card">
               <div className="ai-card-header-row">
@@ -2332,10 +2405,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               </div>
 
               <div className="ai-edu-header">
-                <strong className="ai-edu-school">Stanford University</strong>
+                <strong className="ai-edu-school">{user?.college || 'PSG College of Technology'}</strong>
                 <span className="ai-edu-gpa">GPA 3.96</span>
               </div>
-              <div className="ai-edu-degree">B.S. &amp; M.S. in Computer Science</div>
+              <div className="ai-edu-degree">{user?.department || 'B.E. in Computer Science & Engineering'}</div>
               <div className="ai-edu-sub">Class of 2026 • Systems &amp; AI Specialization</div>
 
               <div className="ai-coursework-block">

@@ -3026,7 +3026,6 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  filter: blur(2px);
 }
 
 .ai-community-icon-box svg {

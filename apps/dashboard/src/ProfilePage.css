@@ -2536,6 +2536,90 @@
   align-items: center;
 }
 
+/* Suggested Friends */
+.lumina-ai-profile-root .ai-friend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lumina-ai-profile-root .ai-friend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.lumina-ai-profile-root .ai-friend-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.lumina-ai-profile-root .ai-friend-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--ai-border);
+}
+
+.lumina-ai-profile-root .ai-friend-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.lumina-ai-profile-root .ai-friend-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ai-text-primary);
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lumina-ai-profile-root .ai-friend-meta {
+  font-size: 11px;
+  color: var(--ai-text-muted);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lumina-ai-profile-root .ai-friend-btn {
+  padding: 5px 14px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: #0077b5;
+  color: #ffffff;
+  border: 1px solid #0077b5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.lumina-ai-profile-root .ai-friend-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-0.5px);
+}
+
+.lumina-ai-profile-root .ai-friend-btn.is-joined {
+  background-color: transparent;
+  border: 1px solid var(--ai-border);
+  color: var(--ai-text-muted);
+}
+
 /* Technical Stack */
 .ai-tech-pills-wrap {
   display: flex;

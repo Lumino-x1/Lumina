@@ -407,6 +407,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   const [joinedCommunities, setJoinedCommunities] = useState<Record<string, boolean>>({
     c3: true, // CS 2026 Cohort is joined by default
   })
+  const [friendRequestsSent, setFriendRequestsSent] = useState<Record<string, boolean>>({})
+
+  const handleToggleFriendRequest = (friendId: string) => {
+    setFriendRequestsSent((prev) => ({
+      ...prev,
+      [friendId]: !prev[friendId],
+    }))
+  }
   const [feedPosts, setFeedPosts] = useState<FeedPostItem[]>([])
   const [loadingFeed, setLoadingFeed] = useState<boolean>(true)
 
@@ -1511,107 +1519,177 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               </div>
             </div>
 
-            {/* Suggested Communities (Blurred / Hidden per User Request) */}
-            <div className="ai-blurred-card-wrap ai-suggested-communities-wrap">
-              <div className="ai-blurred-content">
-                <div className="ai-widget-card">
-                  <div className="ai-card-header-row">
-                    <h4 className="ai-card-title">Suggested Communities</h4>
-                    <span className="ai-card-counter">Recommended</span>
-                  </div>
+            {/* Suggested Friends */}
+            <div className="ai-widget-card" style={{ marginBottom: '16px' }}>
+              <div className="ai-card-header-row">
+                <h4 className="ai-card-title">Suggested Friends</h4>
+                <span className="ai-card-counter">Campus</span>
+              </div>
 
-                  <div className="ai-community-list">
-                    {/* Community 1 */}
-                    <div className="ai-community-row">
-                      <div className="ai-community-left">
-                        <div className="ai-community-icon-box">
-                          {Icons.Bot}
-                        </div>
-                        <div className="ai-community-info">
-                          <strong className="ai-community-name">AI &amp; Robotics Guild</strong>
-                          <span className="ai-community-meta">1.4k members</span>
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        className={`ai-community-join-btn ${joinedCommunities.c1 ? 'is-joined' : ''}`}
-                        onClick={() => handleToggleJoin('c1')}
-                      >
-                        {joinedCommunities.c1 ? (
-                          <>
-                            {Icons.Check}
-                            <span>Joined</span>
-                          </>
-                        ) : (
-                          'Join'
-                        )}
-                      </button>
+              <div className="ai-community-list">
+                {/* Friend 1 */}
+                <div className="ai-community-row">
+                  <div className="ai-community-left">
+                    <div className="ai-community-icon-box" style={{ width: 32, height: 32, borderRadius: '50%', overflow: 'hidden' }}>
+                      <img
+                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                        alt="Sarah Chen"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
                     </div>
-
-                    {/* Community 2 */}
-                    <div className="ai-community-row">
-                      <div className="ai-community-left">
-                        <div className="ai-community-icon-box">
-                          {Icons.Terminal}
-                        </div>
-                        <div className="ai-community-info">
-                          <strong className="ai-community-name">Competitive Programming</strong>
-                          <span className="ai-community-meta">890 members</span>
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        className={`ai-community-join-btn ${joinedCommunities.c2 ? 'is-joined' : ''}`}
-                        onClick={() => handleToggleJoin('c2')}
-                      >
-                        {joinedCommunities.c2 ? (
-                          <>
-                            {Icons.Check}
-                            <span>Joined</span>
-                          </>
-                        ) : (
-                          'Join'
-                        )}
-                      </button>
-                    </div>
-
-                    {/* Community 3 */}
-                    <div className="ai-community-row">
-                      <div className="ai-community-left">
-                        <div className="ai-community-icon-box">
-                          {Icons.GraduationCap}
-                        </div>
-                        <div className="ai-community-info">
-                          <strong className="ai-community-name">CS 2026 Cohort</strong>
-                          <span className="ai-community-meta">420 members</span>
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        className={`ai-community-join-btn ${joinedCommunities.c3 ? 'is-joined' : ''}`}
-                        onClick={() => handleToggleJoin('c3')}
-                      >
-                        {joinedCommunities.c3 ? (
-                          <>
-                            {Icons.Check}
-                            <span>Joined</span>
-                          </>
-                        ) : (
-                          'Join'
-                        )}
-                      </button>
+                    <div className="ai-community-info">
+                      <strong className="ai-community-name">Sarah Chen</strong>
+                      <span className="ai-community-meta">CS &apos;26 • PSG Tech</span>
                     </div>
                   </div>
-
                   <button
                     type="button"
-                    className="ai-community-explore-more-btn"
-                    onClick={() => setActiveTab('communities')}
+                    className={`ai-community-join-btn ${friendRequestsSent['f1'] ? 'is-joined' : ''}`}
+                    onClick={() => handleToggleFriendRequest('f1')}
                   >
-                    <span>Explore More</span>
-                    {Icons.ArrowRight}
+                    {friendRequestsSent['f1'] ? (
+                      <>
+                        {Icons.Check}
+                        <span>Requested</span>
+                      </>
+                    ) : (
+                      'Add Friend'
+                    )}
                   </button>
                 </div>
+
+                {/* Friend 2 */}
+                <div className="ai-community-row">
+                  <div className="ai-community-left">
+                    <div className="ai-community-icon-box" style={{ width: 32, height: 32, borderRadius: '50%', overflow: 'hidden' }}>
+                      <img
+                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
+                        alt="Alex Rivera"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    </div>
+                    <div className="ai-community-info">
+                      <strong className="ai-community-name">Alex Rivera</strong>
+                      <span className="ai-community-meta">AI &amp; Robotics • PSG Tech</span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className={`ai-community-join-btn ${friendRequestsSent['f2'] ? 'is-joined' : ''}`}
+                    onClick={() => handleToggleFriendRequest('f2')}
+                  >
+                    {friendRequestsSent['f2'] ? (
+                      <>
+                        {Icons.Check}
+                        <span>Requested</span>
+                      </>
+                    ) : (
+                      'Add Friend'
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Suggested Communities (Unblurred) */}
+            <div className="ai-suggested-communities-wrap">
+              <div className="ai-widget-card">
+                <div className="ai-card-header-row">
+                  <h4 className="ai-card-title">Suggested Communities</h4>
+                  <span className="ai-card-counter">Recommended</span>
+                </div>
+
+                <div className="ai-community-list">
+                  {/* Community 1 */}
+                  <div className="ai-community-row">
+                    <div className="ai-community-left">
+                      <div className="ai-community-icon-box">
+                        {Icons.Bot}
+                      </div>
+                      <div className="ai-community-info">
+                        <strong className="ai-community-name">AI &amp; Robotics Guild</strong>
+                        <span className="ai-community-meta">1.4k members</span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      className={`ai-community-join-btn ${joinedCommunities.c1 ? 'is-joined' : ''}`}
+                      onClick={() => handleToggleJoin('c1')}
+                    >
+                      {joinedCommunities.c1 ? (
+                        <>
+                          {Icons.Check}
+                          <span>Joined</span>
+                        </>
+                      ) : (
+                        'Join'
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Community 2 */}
+                  <div className="ai-community-row">
+                    <div className="ai-community-left">
+                      <div className="ai-community-icon-box">
+                        {Icons.Terminal}
+                      </div>
+                      <div className="ai-community-info">
+                        <strong className="ai-community-name">Competitive Programming</strong>
+                        <span className="ai-community-meta">890 members</span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      className={`ai-community-join-btn ${joinedCommunities.c2 ? 'is-joined' : ''}`}
+                      onClick={() => handleToggleJoin('c2')}
+                    >
+                      {joinedCommunities.c2 ? (
+                        <>
+                          {Icons.Check}
+                          <span>Joined</span>
+                        </>
+                      ) : (
+                        'Join'
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Community 3 */}
+                  <div className="ai-community-row">
+                    <div className="ai-community-left">
+                      <div className="ai-community-icon-box">
+                        {Icons.GraduationCap}
+                      </div>
+                      <div className="ai-community-info">
+                        <strong className="ai-community-name">CS 2026 Cohort</strong>
+                        <span className="ai-community-meta">420 members</span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      className={`ai-community-join-btn ${joinedCommunities.c3 ? 'is-joined' : ''}`}
+                      onClick={() => handleToggleJoin('c3')}
+                    >
+                      {joinedCommunities.c3 ? (
+                        <>
+                          {Icons.Check}
+                          <span>Joined</span>
+                        </>
+                      ) : (
+                        'Join'
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className="ai-community-explore-more-btn"
+                  onClick={() => setActiveTab('communities')}
+                >
+                  <span>Explore More</span>
+                  {Icons.ArrowRight}
+                </button>
               </div>
             </div>
           </aside>
