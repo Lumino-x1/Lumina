@@ -1573,17 +1573,17 @@
 .ai-counter-item {
   display: inline-flex;
   align-items: baseline;
-  gap: 6px;
-  font-weight: 500;
+  gap: 5px;
+  font-weight: 400;
   letter-spacing: -0.01em;
 }
 
 .ai-counter-item strong {
-  font-family: var(--ai-font-heading);
-  font-weight: 750;
+  font-family: var(--ai-font-sans);
+  font-weight: 500;
   color: var(--ai-text-primary);
-  font-size: 15px;
-  letter-spacing: -0.02em;
+  font-size: 13.5px;
+  letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
 }
 
