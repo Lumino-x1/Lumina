@@ -320,8 +320,7 @@ export const auth = betterAuth({
         const fromAddress =
           process.env.BREVO_FROM ||
           process.env.SMTP_FROM ||
-          process.env.RESEND_FROM ||
-          'Lumina <sunilbe2006@9963543.brevosend.com>'
+          'Lumina <sunilbe2006@gmail.com>'
         const result = await resend.emails.send({
           from: fromAddress,
           to: user.email,
@@ -353,28 +352,24 @@ export const auth = betterAuth({
       async sendVerificationOTP({ email, otp, type }) {
         const masked = email.replace(/^(.)(.*)(@.*)$/, (_, a, b, c) => `${a}***${c}`)
         console.info(`[Auth] Dispatching ${type} OTP to ${masked}`)
-        try {
-          const fromAddress =
-            process.env.BREVO_FROM ||
-            process.env.SMTP_FROM ||
-            process.env.RESEND_FROM ||
-            'Lumina <980817001@smtp-brevo.com>'
-          const subject =
-            type === 'forget-password'
-              ? 'Reset your Lumina password'
-              : 'Verify your Lumina email address'
-          const result = await resend.emails.send({
-            from: fromAddress,
-            to: email,
-            subject,
-            html: renderVerificationOtpEmailHtml(otp),
-            text: renderVerificationOtpEmailText(otp),
-          })
-          if (result?.error) {
-            console.warn(`[Auth] Mail delivery notice for ${masked}: ${result.error.message}`)
-          }
-        } catch (error) {
-          console.warn(`[Auth] Mail send error for ${masked}:`, error)
+        const fromAddress =
+          process.env.BREVO_FROM ||
+          process.env.SMTP_FROM ||
+          'Lumina <sunilbe2006@gmail.com>'
+        const subject =
+          type === 'forget-password'
+            ? 'Reset your Lumina password'
+            : 'Verify your Lumina email address'
+        const result = await resend.emails.send({
+          from: fromAddress,
+          to: email,
+          subject,
+          html: renderVerificationOtpEmailHtml(otp),
+          text: renderVerificationOtpEmailText(otp),
+        })
+        if (result?.error) {
+          console.error(`[Auth] Mail delivery failure for ${masked}: ${result.error.message}`)
+          throw new Error(result.error.message)
         }
       },
     }),
