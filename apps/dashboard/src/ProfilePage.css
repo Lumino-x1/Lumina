@@ -3,13 +3,13 @@
    Matches profile.png pixel-for-pixel using Geist Sans (Regular 400 baseline).
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&family=Quicksand:wght@300..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-sans/style.css');
 @import url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/style.css');
 
 :root {
-  --ai-font-sans: anthropicSans, 'anthropicSans Fallback', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --ai-font-heading: anthropicSans, 'anthropicSans Fallback', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --ai-font-sans: 'Plus Jakarta Sans', 'Geist', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
+  --ai-font-heading: 'Plus Jakarta Sans', 'Geist', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
   --ai-font-mono: 'Geist Mono', 'Fira Code', 'JetBrains Mono', Menlo, monospace;
   --ai-profile-font-sans: var(--ai-font-sans);
   --ai-profile-font-heading: var(--ai-font-heading);
@@ -105,15 +105,16 @@
   color: var(--ai-text-primary);
   font-family: var(--ai-font-sans);
   font-size: var(--font-size-base, 15px);
-  font-weight: var(--font-weight-base, 400);
+  font-weight: var(--font-weight-base, 450);
   line-height: var(--font-line-height-base, 22.5px);
   font-optical-sizing: auto;
   font-style: normal;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.012em;
   box-sizing: border-box;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .lumina-ai-profile-root *,
@@ -1440,11 +1441,21 @@
 }
 
 .ai-profile-title {
-  font-size: 22px;
-  font-weight: 600;
+  font-family: var(--ai-font-heading);
+  font-size: 24px;
+  font-weight: 700;
   color: var(--ai-text-primary);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.028em;
+  line-height: 1.22;
+}
+
+.ai-profile-handle {
+  font-family: var(--ai-font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ai-text-secondary);
+  letter-spacing: -0.015em;
 }
 
 .ai-verified-check-icon {
@@ -1459,27 +1470,67 @@
 }
 
 .ai-role-pill {
+  font-family: var(--ai-font-heading);
   font-size: 10px;
-  font-weight: 600;
-  padding: 2px 7px;
+  font-weight: 700;
+  padding: 2.5px 8px;
   border-radius: 4px;
   background-color: var(--ai-card-sub-bg);
   border: 1px solid var(--ai-border);
   color: var(--ai-text-secondary);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.ai-profile-subhead-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+  font-size: 13.5px;
+  font-family: var(--ai-font-sans);
+}
+
+.ai-profile-subhead-college {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ai-text-primary);
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
+
+.ai-profile-subhead-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ai-text-secondary);
+  font-weight: 550;
+  letter-spacing: -0.01em;
+}
+
+.ai-profile-subhead-dept {
+  color: var(--ai-text-secondary);
+  font-weight: 450;
+  letter-spacing: -0.01em;
 }
 
 .ai-profile-subhead {
-  font-size: 13px;
+  font-size: 13.5px;
+  font-weight: 550;
   color: var(--ai-text-secondary);
   margin: 4px 0 0;
+  letter-spacing: -0.01em;
 }
 
 .ai-profile-bio-text {
-  font-size: 13px;
+  font-size: 13.5px;
+  font-weight: 450;
   line-height: 1.55;
   color: var(--ai-text-secondary);
   margin: 8px 0 12px;
+  letter-spacing: -0.01em;
 }
 
 .ai-profile-meta-row {
@@ -1487,37 +1538,53 @@
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
-  font-size: 12px;
+  font-size: 12.5px;
+  font-weight: 500;
   color: var(--ai-text-muted);
   margin-bottom: 14px;
+  letter-spacing: -0.01em;
 }
 
 .ai-meta-item {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  font-weight: 500;
 }
 
 .ai-meta-item.is-open-role {
   color: var(--ai-btn-primary-bg, #C15F3C);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .ai-profile-counters-row {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 22px;
   flex-wrap: wrap;
-  font-size: 13px;
+  font-size: 13.5px;
+  font-family: var(--ai-font-sans);
   color: var(--ai-text-secondary);
   padding-bottom: 16px;
   border-bottom: 1px solid var(--ai-border-subtle);
   margin-bottom: 14px;
 }
 
+.ai-counter-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
 .ai-counter-item strong {
-  font-weight: 600;
+  font-family: var(--ai-font-heading);
+  font-weight: 750;
   color: var(--ai-text-primary);
+  font-size: 15px;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Tabs Bar */
@@ -1527,6 +1594,7 @@
   gap: 8px;
   overflow-x: auto;
   scrollbar-width: none;
+  font-family: var(--ai-font-sans);
 }
 
 .ai-profile-tabs-bar::-webkit-scrollbar {
@@ -1542,8 +1610,9 @@
   border: none;
   background: transparent;
   color: var(--ai-text-muted);
-  font-size: 12.5px;
-  font-weight: 400;
+  font-size: 13px;
+  font-weight: 550;
+  letter-spacing: -0.01em;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s ease;
@@ -1557,7 +1626,8 @@
 .ai-profile-tab.is-active {
   background-color: var(--ai-pill-active-bg);
   color: var(--ai-pill-active-text);
-  font-weight: 500;
+  font-weight: 650;
+  letter-spacing: -0.01em;
 }
 
 .ai-tab-dot-indicator {

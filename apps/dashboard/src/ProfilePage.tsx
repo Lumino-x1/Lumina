@@ -1360,18 +1360,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
                 {/* Name, Username, Badges & Subhead (College, Email) - UNBLURRED */}
                 <div className="ai-profile-name-block">
-                  <div className="ai-profile-name-row" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  <div className="ai-profile-name-row">
                     <h1 className="ai-profile-title">{profile.name}</h1>
-                    <span
-                      className="ai-profile-handle"
-                      style={{
-                        fontSize: '15px',
-                        color: 'var(--ai-text-secondary)',
-                        fontWeight: 500,
-                      }}
-                    >
-                      @{profile.username}
-                    </span>
+                    <span className="ai-profile-handle">@{profile.username}</span>
                     <span className="ai-verified-check-icon">{Icons.CheckCircle}</span>
                     <div className="ai-profile-role-pills ai-profile-blurred">
                       <span className="ai-role-pill">FOUNDER</span>
@@ -1380,45 +1371,20 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     </div>
                   </div>
 
-                  <div
-                    className="ai-profile-subhead-row"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '14px',
-                      marginTop: '6px',
-                      flexWrap: 'wrap',
-                      fontSize: '13.5px',
-                    }}
-                  >
-                    <span
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        color: 'var(--ai-text-primary)',
-                        fontWeight: 600,
-                      }}
-                    >
-                      <Building2 size={15} style={{ opacity: 0.85 }} />
+                  <div className="ai-profile-subhead-row">
+                    <span className="ai-profile-subhead-college">
+                      <Building2 size={15} style={{ opacity: 0.9 }} />
                       <span>{profile.university}</span>
                     </span>
 
                     {profile.email && (
-                      <span
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          color: 'var(--ai-text-secondary)',
-                        }}
-                      >
-                        <Mail size={14} style={{ opacity: 0.75 }} />
+                      <span className="ai-profile-subhead-email">
+                        <Mail size={14} style={{ opacity: 0.8 }} />
                         <span>{profile.email}</span>
                       </span>
                     )}
 
-                    <span className="ai-profile-blurred" style={{ color: 'var(--ai-text-secondary)' }}>
+                    <span className="ai-profile-blurred ai-profile-subhead-dept">
                       • {profile.department}
                     </span>
                   </div>
