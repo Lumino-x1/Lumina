@@ -1507,8 +1507,9 @@
   align-items: center;
   gap: 6px;
   color: var(--ai-text-primary);
-  font-weight: 650;
-  letter-spacing: -0.015em;
+  font-family: var(--ai-font-heading);
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 .ai-profile-subhead-email {
@@ -1516,7 +1517,8 @@
   align-items: center;
   gap: 6px;
   color: var(--ai-text-secondary);
-  font-weight: 550;
+  font-family: var(--ai-font-heading);
+  font-weight: 400;
   letter-spacing: -0.01em;
 }
 
