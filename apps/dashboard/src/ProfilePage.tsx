@@ -202,9 +202,25 @@ const Icons = {
     </svg>
   ),
   CheckCircle: (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="var(--ai-card-bg)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" fill="currentColor" />
-      <polyline points="9 12 12 15 16 10" stroke="var(--ai-card-bg)" />
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-label="Verified"
+      style={{ display: 'inline-block', verticalAlign: 'middle' }}
+    >
+      <path
+        d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"
+        fill="var(--ai-linkedin-blue, #0a66c2)"
+      />
+      <path
+        d="m16 9-5.5 5.5L8 12"
+        stroke="#ffffff"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   ),
   Edit: (
@@ -1411,10 +1427,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
                 {/* Counters row: UNBLURRED (Followers, Following, Posts) */}
                 <div className="ai-profile-counters-row">
-                  <span className="ai-counter-item">
+                  <span className="ai-counter-item ai-counter-followers">
                     <strong>{profile.stats.followers}</strong> Followers
                   </span>
-                  <span className="ai-counter-item">
+                  <span className="ai-counter-item ai-counter-following">
                     <strong>{profile.stats.following}</strong> Following
                   </span>
                   <span className="ai-counter-item">

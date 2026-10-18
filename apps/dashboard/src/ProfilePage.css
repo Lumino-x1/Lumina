@@ -13,11 +13,13 @@
   --ai-font-mono: 'Geist Mono', 'Fira Code', 'JetBrains Mono', Menlo, monospace;
   --ai-profile-font-sans: var(--ai-font-sans);
   --ai-profile-font-heading: var(--ai-font-heading);
+  --ai-linkedin-blue: #0a66c2;
 }
 
 /* Base Light Theme (Brand Palette: #C15F3C, #FFFFFF, #F4F3EE, #B1ADA1) */
 .lumina-ai-profile-root,
 .lumina-ai-profile-root.light {
+  --ai-linkedin-blue: #0a66c2;
   --ai-bg: #F4F3EE;
   --ai-sidebar-bg: #F4F3EE;
   --ai-header-bg: #F4F3EE;
@@ -58,6 +60,7 @@
 /* Symmetrical Dark Theme (Harmonized with Dashboard Palette & Sidebar Text) */
 .lumina-ai-profile-root.dark,
 [data-theme='dark'] .lumina-ai-profile-root {
+  --ai-linkedin-blue: #388fe6;
   --ai-bg: #000000;
   --ai-sidebar-bg: #000000;
   --ai-header-bg: #000000;
@@ -1459,8 +1462,15 @@
 }
 
 .ai-verified-check-icon {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  color: var(--ai-linkedin-blue, #0a66c2);
+  line-height: 1;
+}
+
+.ai-verified-check-icon svg {
+  display: block;
 }
 
 .ai-profile-role-pills {
@@ -1585,6 +1595,24 @@
   font-size: 13.5px;
   letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
+}
+
+.ai-counter-item.ai-counter-followers,
+.ai-counter-item.ai-counter-following {
+  color: var(--ai-linkedin-blue, #0a66c2);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.ai-counter-item.ai-counter-followers:hover,
+.ai-counter-item.ai-counter-following:hover {
+  text-decoration: underline;
+}
+
+.ai-counter-item.ai-counter-followers strong,
+.ai-counter-item.ai-counter-following strong {
+  color: var(--ai-linkedin-blue, #0a66c2);
+  font-weight: 550;
 }
 
 /* Tabs Bar */
