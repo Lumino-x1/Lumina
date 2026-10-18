@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "bun --hot --no-clear-screen server.ts",
-    "build": "bun build server.ts --target node --outdir dist && bun build serverless.ts --target node --outfile ../../api/index.js",
+    "build": "bun build server.ts --target node --outdir dist && bun build serverless.ts --target node --outfile ../../api/index.js --minify",
     "worker:publishing": "bun publishing-worker.ts"
   },
   "devDependencies": {

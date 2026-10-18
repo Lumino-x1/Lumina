@@ -25,7 +25,6 @@ reports/
 out/
 build
 dist
-api/index.js
 generated/
 **/generated/
 

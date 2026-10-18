@@ -134,10 +134,10 @@ export function createApp() {
   app.use('/api/auth', authRouter)
   app.all('/api/auth/*path', toNodeHandler(auth))
   app.use('/api', apiRouter)
-  app.use('/posts', postsRouter)
-  app.use('/comments', commentsRouter)
+  app.use(['/posts', '/api/posts'], postsRouter)
+  app.use(['/comments', '/api/comments'], commentsRouter)
   app.use('/api/media', mediaRouter)
-  app.use('/api/feed' , feedRouter);
+  app.use('/api/feed', feedRouter)
 
   app.get(['/health', '/api/health'], (_req: Request, res: Response) => {
     res.status(200).json({
@@ -198,6 +198,10 @@ export function createApp() {
       logger.error('Failed to generate Prometheus metrics', { metadata: { error: String(error) } })
       res.status(500).send('Failed to generate metrics')
     }
+  })
+
+  app.use('/api', (_req: Request, res: Response) => {
+    res.status(404).json({ error: { code: '404', message: 'API route not found' } })
   })
 
   app.use(errorTrackingMiddleware())
