@@ -266,7 +266,7 @@ export const DEFAULT_FEED_ITEMS: FeedPostItem[] = [
     content:
       'Practical ideas and lessons for students in our college community. In this part, I’ll cover how to build a strong resume, what to focus on in the first year, and common mistakes to avoid.',
     category: 'Career',
-    topics: ['internships', 'career', 'students', 'mock-blog-seed'],
+    topics: ['internships', 'career', 'students'],
     visibility: 'COLLEGE',
     anonymous: false,
     isAnnouncement: false,
@@ -296,7 +296,7 @@ export const DEFAULT_FEED_ITEMS: FeedPostItem[] = [
     content:
       'Sharing what worked for me and what didn’t. Tips on time management, study routines, and maintaining mental health during exams.',
     category: 'Wellness',
-    topics: ['wellness', 'exams', 'mental-health', 'mock-blog-seed'],
+    topics: ['wellness', 'exams', 'mental-health'],
     visibility: 'COLLEGE',
     anonymous: false,
     isAnnouncement: false,
@@ -326,7 +326,7 @@ export const DEFAULT_FEED_ITEMS: FeedPostItem[] = [
     content:
       'Everything you need to know to make meaningful contributions to open source as a student. Tools, workflow, and best practices.',
     category: 'Technology',
-    topics: ['open-source', 'coding', 'community', 'mock-blog-seed'],
+    topics: ['open-source', 'coding', 'community'],
     visibility: 'PUBLIC',
     anonymous: false,
     isAnnouncement: false,

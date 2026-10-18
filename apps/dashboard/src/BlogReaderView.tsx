@@ -181,14 +181,6 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
       b.content.trim().length > 0
   )
 
-  // Derive topic tags
-  const tags =
-    story.topics && story.topics.length > 0
-      ? story.topics
-      : story.category
-      ? [story.category, 'Life', 'Campus', 'Insights']
-      : ['Productivity', 'Campus', 'Inspiration', 'Technology']
-
   return (
     <div className={`lumina-blog-reader-page ${theme === 'dark' ? 'dark' : 'light'}`}>
       {/* 1. Clean Top Navigation Header */}
@@ -258,14 +250,6 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
       {/* 2. Document Canvas Sheet */}
       <main className="reader-document-canvas">
         <article className="reader-document-sheet">
-          {/* Topic tags row (as in Medium / screenshot) */}
-          <div className="reader-tags-pill-row">
-            {tags.map((tag) => (
-              <span key={tag} className="reader-topic-pill">
-                {tag} <span className="reader-topic-plus">+</span>
-              </span>
-            ))}
-          </div>
 
           {/* Announcement Pill if applicable */}
           {story.isAnnouncement && (
