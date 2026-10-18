@@ -38,6 +38,9 @@ const SENSITIVE_KEYS = new Set([
   'apikey',
   'api_key',
   'resend_api_key',
+  'brevo_smtp_key',
+  'brevo_api_key',
+  'smtp_password',
   'creditcard',
   'ssn',
 ])

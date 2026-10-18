@@ -1,18 +1,24 @@
-
-
-
-import '@lumina/env';
-
-
-
-import { Resend } from 'resend';
-
-
-
-
+import '@lumina/env'
+import { sendMail } from './plugins.mail'
 
 /**
- * Resend accepts an API key at construction time. Keep startup resilient in
- * local and CI environments where email delivery is not exercised.
+ * Brevo-backed compatibility layer providing the standard send interface.
  */
-export const resend = new Resend(process.env.RESEND_API_KEY || 're_64Y346au_5FKiYa4HCBQFZUzokhexMyEF')
+export const resend = {
+  emails: {
+    async send(payload: {
+      from?: string
+      to: string | string[]
+      subject: string
+      html?: string
+      text?: string
+    }) {
+      try {
+        const result = await sendMail(payload)
+        return { data: result, error: null }
+      } catch (err: any) {
+        return { data: null, error: { message: err?.message || String(err) } }
+      }
+    },
+  },
+}

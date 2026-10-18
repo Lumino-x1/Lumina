@@ -13,6 +13,10 @@
     "@types/dotenv": "^8.2.3",
     "better-auth": "^latest",
     "dotenv": "^17.4.2",
+    "nodemailer": "^10.1.6",
     "resend": "^6.18.1"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^8.0.2"
   }
 }

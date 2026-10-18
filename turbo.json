@@ -20,6 +20,8 @@
     "STREAM_*",
     "REDIS_*",
     "MOCK_REDIS",
+    "BREVO_*",
+    "SMTP_*",
     "VERCEL",
     "VERCEL_*",
     "CRON_SECRET"

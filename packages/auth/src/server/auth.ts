@@ -317,17 +317,22 @@ export const auth = betterAuth({
       const masked = user.email.replace(/^(.)(.*)(@.*)$/, (_: string, a: string, b: string, c: string) => `${a}***${c}`)
       console.info(`[Auth] Password reset email requested for ${masked}`)
       try {
+        const fromAddress =
+          process.env.BREVO_FROM ||
+          process.env.SMTP_FROM ||
+          process.env.RESEND_FROM ||
+          'Lumina <980817001@smtp-brevo.com>'
         const result = await resend.emails.send({
-          from: process.env.RESEND_FROM || 'Lumina <onboarding@resend.dev>',
+          from: fromAddress,
           to: user.email,
           subject: 'Reset your password',
           html: `Click <a href="${url}">here</a> to reset your password.`,
         })
         if (result?.error) {
-          console.warn(`[Auth] Resend delivery notice for ${masked}: ${result.error.message}`)
+          console.warn(`[Auth] Mail delivery notice for ${masked}: ${result.error.message}`)
         }
       } catch (error) {
-        console.warn(`[Auth] Resend send error for ${masked}:`, error)
+        console.warn(`[Auth] Mail send error for ${masked}:`, error)
       }
     },
   },
@@ -349,7 +354,11 @@ export const auth = betterAuth({
         const masked = email.replace(/^(.)(.*)(@.*)$/, (_, a, b, c) => `${a}***${c}`)
         console.info(`[Auth] Dispatching ${type} OTP to ${masked}`)
         try {
-          const fromAddress = process.env.RESEND_FROM || 'Lumina <onboarding@resend.dev>'
+          const fromAddress =
+            process.env.BREVO_FROM ||
+            process.env.SMTP_FROM ||
+            process.env.RESEND_FROM ||
+            'Lumina <980817001@smtp-brevo.com>'
           const subject =
             type === 'forget-password'
               ? 'Reset your Lumina password'
@@ -362,10 +371,10 @@ export const auth = betterAuth({
             text: renderVerificationOtpEmailText(otp),
           })
           if (result?.error) {
-            console.warn(`[Auth] Resend delivery notice for ${masked}: ${result.error.message}`)
+            console.warn(`[Auth] Mail delivery notice for ${masked}: ${result.error.message}`)
           }
         } catch (error) {
-          console.warn(`[Auth] Resend send error for ${masked}:`, error)
+          console.warn(`[Auth] Mail send error for ${masked}:`, error)
         }
       },
     }),
