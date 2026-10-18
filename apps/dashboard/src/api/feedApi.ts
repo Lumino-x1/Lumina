@@ -414,6 +414,72 @@ export async function fetchFeedApi(options?: {
   return []
 }
 
+/**
+ * Fetch authenticated user's published posts from GET /api/posts/my
+ * Always sends credentials: 'include' and authorization bearer token
+ */
+export async function fetchMyPostsApi(options?: {
+  limit?: number
+  cursor?: string
+}): Promise<FeedPostItem[]> {
+  const baseUrl = getBaseApiUrl()
+  const limit = options?.limit || 50
+  const cursorParam = options?.cursor ? `&cursor=${encodeURIComponent(options.cursor)}` : ''
+  const endpoint = `${baseUrl}/api/posts/my?limit=${limit}${cursorParam}`
+
+  const headers: Record<string, string> = getFeedHeaders({
+    'Content-Type': 'application/json',
+  })
+
+  try {
+    const token =
+      localStorage.getItem('lumina_session_token') ||
+      localStorage.getItem('better-auth.session_token')
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+  } catch {
+    // ignore
+  }
+
+  try {
+    let res = await fetch(endpoint, {
+      method: 'GET',
+      headers,
+      credentials: 'include',
+    })
+
+    if (!res.ok && endpoint.startsWith('http')) {
+      // Also try relative /api/posts/my via Vite proxy
+      try {
+        const proxyRes = await fetch(`/api/posts/my?limit=${limit}${cursorParam}`, {
+          method: 'GET',
+          headers,
+          credentials: 'include',
+        })
+        if (proxyRes.ok) {
+          res = proxyRes
+        }
+      } catch {
+        // ignore proxy fallback failure
+      }
+    }
+
+    if (res.ok) {
+      const payload = (await res.json()) as FeedApiResponse
+      if (payload.success && Array.isArray(payload.data?.items)) {
+        return payload.data.items
+      }
+    } else {
+      handleAuthResponseError(res)
+    }
+  } catch (err) {
+    console.error('Failed to fetch from /api/posts/my:', err)
+  }
+
+  return []
+}
+
 export interface ToggleLikeApiResponse {
   success: boolean
   message?: string

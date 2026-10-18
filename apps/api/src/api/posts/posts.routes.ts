@@ -15,9 +15,13 @@ postsRouter.post('/', requireAuth, async (req: Request, res: Response, next: Nex
   await postController.createPost(req as AuthenticatedRequest, res, next)
 })
 
-// Static paths must precede /:id so "scheduled" is never interpreted as a post id.
+// Static paths must precede /:id so "scheduled" and "my" are never interpreted as a post id.
 postsRouter.get('/scheduled', requireAuth, async (req: Request, res: Response) => {
   await postController.getScheduledPosts(req as AuthenticatedRequest, res)
+})
+
+postsRouter.get('/my', requireAuth, async (req: Request, res: Response) => {
+  await postController.getMyPosts(req as AuthenticatedRequest, res)
 })
 
 postsRouter.post('/:id/like', requireAuth, async (req: Request, res: Response) => {

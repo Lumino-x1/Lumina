@@ -96,6 +96,7 @@ function checkOpenApi() {
     '/api/posts/{id}/like',
     '/api/posts/{id}/save',
     '/api/posts/saved',
+    '/api/posts/my',
     '/api/posts/scheduled',
     '/api/posts/{id}/schedule',
     '/api/posts/{id}/publish',

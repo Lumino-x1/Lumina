@@ -139,6 +139,17 @@ export const getScheduledPosts = async (req: AuthenticatedRequest, res: Response
   }
 }
 
+export const getMyPosts = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const limit = parseLimit(req.query.limit)
+    const cursor = typeof req.query.cursor === 'string' ? req.query.cursor : undefined
+    const result = await PostsService.getMyPosts(req.user.id, limit, cursor)
+    return res.status(200).json({ success: true, data: result })
+  } catch (error) {
+    return sendError(res, error)
+  }
+}
+
 export {
   createPostComment as createComment,
   listPostComments as listComments,

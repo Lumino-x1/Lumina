@@ -9,6 +9,8 @@ export namespace PostsRepo {
   export const createPost = async (tx: Prisma.TransactionClient, data: PostCreateData) => {
     return tx.post.create({
       data: {
+        status: 'PUBLISHED',
+        publishedAt: new Date(),
         ...data,
       },
     })
@@ -203,6 +205,62 @@ export namespace PostsRepo {
 
     return save !== null
   }
+
+  export const feedPostSelect = {
+    id: true,
+    title: true,
+    subtitle: true,
+    coverImage: true,
+    blocks: true,
+    content: true,
+    category: true,
+    topics: true,
+    visibility: true,
+    anonymous: true,
+    isAnnouncement: true,
+    location: true,
+    createdAt: true,
+    updatedAt: true,
+    likeCount: true,
+    commentCount: true,
+    viewCount: true,
+    shareCount: true,
+    saveCount: true,
+    author: {
+      select: {
+        id: true,
+        username: true,
+        name: true,
+        image: true,
+      },
+    },
+    media: {
+      orderBy: {
+        order: 'asc' as const,
+      },
+    },
+  } as const
+
+  export const findPublishedPostsByUserId = async (
+    tx: DbClient,
+    userId: string,
+    limit = 20,
+    cursor?: string
+  ) => {
+    return tx.post.findMany({
+      where: {
+        authorId: userId,
+        deletedAt: null,
+        scheduledAt: null,
+        status: { not: 'SCHEDULED' },
+      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+      take: limit + 1,
+      ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
+      select: feedPostSelect,
+    })
+  }
+
   export const findScheduledPostsByUserId = async (
     tx: DbClient,
     userId: string,

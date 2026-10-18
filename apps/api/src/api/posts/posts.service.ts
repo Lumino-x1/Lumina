@@ -302,4 +302,36 @@ export namespace PostsService {
   export const getScheduledPosts = async (userId: string, limit?: number, cursor?: string) => {
     return PostsRepo.findScheduledPostsByUserId(prisma, userId, limit, cursor)
   }
+
+  export const getMyPosts = async (userId: string, limit = 20, cursor?: string) => {
+    const posts = await PostsRepo.findPublishedPostsByUserId(prisma, userId, limit, cursor)
+    const hasMore = posts.length > limit
+    const page = hasMore ? posts.slice(0, limit) : posts
+
+    const postIds = page.map((p) => p.id)
+    const [likedList, savedList] = await Promise.all([
+      prisma.like.findMany({
+        where: { userId, postId: { in: postIds } },
+        select: { postId: true },
+      }),
+      prisma.savedPost.findMany({
+        where: { userId, postId: { in: postIds } },
+        select: { postId: true },
+      }),
+    ])
+    const likedSet = new Set(likedList.map((l) => l.postId))
+    const savedSet = new Set(savedList.map((s) => s.postId))
+
+    const items = page.map((post) => ({
+      ...post,
+      isLiked: likedSet.has(post.id),
+      isSaved: savedSet.has(post.id),
+      totalComments: post.commentCount,
+    }))
+
+    return {
+      items,
+      nextCursor: hasMore ? (items[items.length - 1]?.id ?? null) : null,
+    }
+  }
 }

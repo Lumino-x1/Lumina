@@ -1694,15 +1694,41 @@
 .lumina-ai-profile-root .ai-feed-stream-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
+  width: 100%;
 }
 
 .lumina-ai-profile-root .ai-feed-post-card {
-  background-color: var(--ai-card-bg);
-  border: 1px solid var(--ai-border);
-  border-radius: 12px;
-  padding: 16px 20px;
-  box-shadow: var(--ai-shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 24px 0 28px;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  border-radius: 0 !important;
+  box-shadow: none;
+  cursor: pointer;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.lumina-ai-profile-root .ai-feed-post-card:hover {
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+.lumina-ai-profile-root.light .ai-feed-post-card {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.lumina-ai-profile-root .ai-feed-post-card:focus-visible {
+  outline: 2px solid var(--ai-accent-blue, #3b82f6);
+  outline-offset: 4px;
 }
 
 /* PINNED WORK CARD */
@@ -2018,11 +2044,33 @@
 }
 
 .lumina-ai-profile-root .ai-post-title {
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.4;
+  font-family: var(--ai-font-heading), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.25;
   color: var(--ai-text-primary);
-  margin: 0 0 8px;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.02em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+.lumina-ai-profile-root .ai-post-subtitle {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--ai-text-secondary);
+  margin: 0 0 16px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  font-weight: 400;
 }
 
 .lumina-ai-profile-root .ai-post-paragraph {
@@ -2211,8 +2259,55 @@
 .lumina-ai-profile-root .ai-post-footer {
   display: flex;
   align-items: center;
-  padding-top: 14px;
-  border-top: 1px solid var(--ai-border-subtle);
+  justify-content: space-between;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border-top: none;
+}
+
+.lumina-ai-profile-root.light .ai-post-byline {
+  color: #635F55;
+}
+
+.lumina-ai-profile-root.light .ai-byline-author {
+  color: #1C1A17;
+}
+
+.lumina-ai-profile-root.light .ai-byline-handle {
+  color: #635F55;
+}
+
+.lumina-ai-profile-root.light .ai-byline-date {
+  color: #8E897D;
+}
+
+.lumina-ai-profile-root.light .ai-post-title {
+  color: #1C1A17;
+}
+
+.lumina-ai-profile-root.light .ai-post-subtitle {
+  color: #635F55;
+}
+
+.lumina-ai-profile-root.light .ai-post-stat-btn,
+.lumina-ai-profile-root.light .ai-post-icon-btn {
+  color: #2D2A26;
+}
+
+.lumina-ai-profile-root.light .ai-post-stat-btn:hover,
+.lumina-ai-profile-root.light .ai-post-icon-btn:hover {
+  color: #000000;
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.lumina-ai-profile-root.light .ai-post-icon-btn.is-saved {
+  color: #C15F3C !important;
+}
+
+.lumina-ai-profile-root.light .ai-post-icon-btn.is-saved:hover {
+  color: #A94F30 !important;
+  background-color: rgba(193, 95, 60, 0.12);
 }
 
 .lumina-ai-profile-root .ai-post-footer-actions {

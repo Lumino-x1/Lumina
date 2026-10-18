@@ -19,10 +19,14 @@ vi.mock('@lumina/db', () => {
     prisma: {
       post: mockPost,
       publishOutboxEvent: mockPublishOutboxEvent,
+      like: { findMany: vi.fn() },
+      savedPost: { findMany: vi.fn() },
       $transaction: vi.fn(async (cb: any) =>
         cb({
           post: mockPost,
           publishOutboxEvent: mockPublishOutboxEvent,
+          like: { findMany: vi.fn() },
+          savedPost: { findMany: vi.fn() },
         })
       ),
     },
@@ -524,6 +528,35 @@ describe('Scheduled Posts - Unit Tests', () => {
       const count = await reconcileOverduePublishedPosts(10)
       expect(count).toBe(1)
       expect(enqueuePublishPost).toHaveBeenCalledWith(postId, 2, overduePost.scheduledAt)
+    })
+  })
+
+  describe('7. GET MY POSTS', () => {
+    it('retrieves author published posts enriched with isLiked and isSaved', async () => {
+      const mockPost = {
+        id: 'post-abc',
+        authorId,
+        title: 'My Published Post',
+        subtitle: 'Post subtitle',
+        commentCount: 4,
+        likeCount: 12,
+        status: 'PUBLISHED',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        author: { id: authorId, username: 'testuser', name: 'Test User', image: null },
+        media: [],
+      }
+      vi.spyOn(PostsRepo, 'findPublishedPostsByUserId').mockResolvedValue([mockPost] as any)
+      vi.mocked(prisma.like.findMany).mockResolvedValue([{ postId: 'post-abc' }] as any)
+      vi.mocked(prisma.savedPost.findMany).mockResolvedValue([])
+
+      const res = await PostsService.getMyPosts(authorId, 10)
+      expect(res.items).toHaveLength(1)
+      expect(res.items[0].id).toBe('post-abc')
+      expect(res.items[0].isLiked).toBe(true)
+      expect(res.items[0].isSaved).toBe(false)
+      expect(res.items[0].totalComments).toBe(4)
+      expect(res.nextCursor).toBeNull()
     })
   })
 })

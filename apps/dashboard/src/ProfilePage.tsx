@@ -14,7 +14,7 @@ import {
   Heart,
   Bookmark,
   MessageSquare,
-  Share2,
+  Repeat,
   Calendar,
   Clock,
   FileText,
@@ -26,6 +26,7 @@ import {
   ArrowLeft,
 } from 'lucide-react'
 import './ProfilePage.css'
+import './DashboardPage.css'
 import './Navbar.css'
 import type { DashboardUser } from './DashboardPage'
 import { DEFAULT_WHATSAPP_AVATAR } from './components/WhatsAppDefaultAvatar'
@@ -37,6 +38,15 @@ import {
   cancelScheduledPostApi,
   publishPostImmediatelyApi,
 } from './api/scheduledPostsApi'
+import {
+  type FeedPostItem,
+  type FeedStory,
+  fetchMyPostsApi,
+  mapFeedPostToStory,
+  togglePostLikeApi,
+  toggleSavePostApi,
+} from './api/feedApi'
+import BlogReaderView from './BlogReaderView'
 
 export interface ProfilePageProps {
   user?: DashboardUser | null
@@ -304,6 +314,16 @@ const DEFAULT_DRAFT_POSTS: Array<{
   status: 'DRAFT'
 }> = []
 
+const formatPostDate = (dateStr?: string): string => {
+  if (!dateStr) return 'Sep 7'
+  try {
+    const d = new Date(dateStr)
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  } catch {
+    return 'Sep 7'
+  }
+}
+
 export const ProfilePage: React.FC<ProfilePageProps> = ({
   user,
   onBackToDashboard,
@@ -347,16 +367,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   // Interactive likes & bookmarks
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({})
-
-  const toggleLike = (key: string) => {
-    setLikedPosts((prev) => ({ ...prev, [key]: !prev[key] }))
-  }
-
   const [savedPosts, setSavedPosts] = useState<Record<string, boolean>>({})
-
-  const toggleSave = (key: string) => {
-    setSavedPosts((prev) => ({ ...prev, [key]: !prev[key] }))
-  }
 
   const handleOpenComposer = () => {
     window.location.hash = '#write'
@@ -366,15 +377,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [postSubFilter, setPostSubFilter] = useState<'all' | 'draft' | 'scheduled'>('all')
 
   // Published posts in profile
-  const [publishedPosts, setPublishedPosts] = useState<
-    Array<{
-      id: string
-      title: string
-      subtitle?: string
-      content?: string
-      publishedAt?: string
-    }>
-  >([])
+  const [publishedPosts, setPublishedPosts] = useState<FeedPostItem[]>([])
+  const [loadingPosts, setLoadingPosts] = useState<boolean>(true)
+  const [selectedStoryForRead, setSelectedStoryForRead] = useState<FeedStory | null>(null)
+  const [initialOpenCommentsForRead, setInitialOpenCommentsForRead] = useState<boolean>(false)
 
   // Scheduled posts state
   const [scheduledPosts, setScheduledPosts] = useState<ScheduledPostItem[]>(DEFAULT_SCHEDULED_POSTS)
@@ -406,6 +412,126 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       mounted = false
     }
   }, [])
+
+  // Load published posts from backend
+  useEffect(() => {
+    let mounted = true
+    async function loadMyPosts() {
+      try {
+        const posts = await fetchMyPostsApi()
+        if (mounted && Array.isArray(posts)) {
+          setPublishedPosts(posts)
+        }
+      } catch (err) {
+        console.error('Failed to load published posts:', err)
+      } finally {
+        if (mounted) setLoadingPosts(false)
+      }
+    }
+    void loadMyPosts()
+    return () => {
+      mounted = false
+    }
+  }, [])
+
+  const handleOpenPost = (post: FeedPostItem, openComments = false) => {
+    const story = mapFeedPostToStory(post)
+    setInitialOpenCommentsForRead(openComments)
+    setSelectedStoryForRead(story)
+    window.location.hash = `post/${post.id}`
+  }
+
+  const handleClosePost = () => {
+    setSelectedStoryForRead(null)
+    setInitialOpenCommentsForRead(false)
+    if (window.location.hash.startsWith('#post')) {
+      window.location.hash = 'profile'
+    }
+  }
+
+  // URL hash sync for direct post link (#post/123) and browser back/forward
+  useEffect(() => {
+    const handleHashSync = () => {
+      const hash = window.location.hash
+      if (hash.startsWith('#post/')) {
+        const postId = hash.replace('#post/', '')
+        const found = publishedPosts.find((p) => p.id === postId)
+        if (found) {
+          setSelectedStoryForRead(mapFeedPostToStory(found))
+        }
+      } else if (selectedStoryForRead && !hash.startsWith('#post')) {
+        setSelectedStoryForRead(null)
+      }
+    }
+
+    handleHashSync()
+    window.addEventListener('hashchange', handleHashSync)
+    window.addEventListener('popstate', handleHashSync)
+    return () => {
+      window.removeEventListener('hashchange', handleHashSync)
+      window.removeEventListener('popstate', handleHashSync)
+    }
+  }, [publishedPosts, selectedStoryForRead])
+
+  const handleToggleLike = async (id: string) => {
+    let nextLiked = false
+    setLikedPosts((prev) => {
+      const currentLiked =
+        prev[id] !== undefined
+          ? prev[id]
+          : Boolean(publishedPosts.find((p) => p.id === id)?.isLiked)
+      nextLiked = !currentLiked
+      return { ...prev, [id]: nextLiked }
+    })
+
+    setPublishedPosts((prevList) =>
+      prevList.map((p) => {
+        if (p.id !== id) return p
+        const currentCount = p.likeCount ?? 0
+        const isCurrentlyLiked =
+          likedPosts[id] !== undefined ? likedPosts[id] : Boolean(p.isLiked)
+        const willBeLiked = !isCurrentlyLiked
+        const diff = willBeLiked ? 1 : -1
+        return {
+          ...p,
+          isLiked: willBeLiked,
+          likeCount: Math.max(0, currentCount + diff),
+        }
+      })
+    )
+
+    try {
+      const res = await togglePostLikeApi(id)
+      if (res && res.data && typeof res.data.liked === 'boolean') {
+        const serverLiked = res.data.liked
+        setLikedPosts((prev) => ({ ...prev, [id]: serverLiked }))
+        setPublishedPosts((prevList) =>
+          prevList.map((p) => {
+            if (p.id !== id) return p
+            return {
+              ...p,
+              isLiked: serverLiked,
+            }
+          })
+        )
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  const handleToggleSave = async (id: string) => {
+    setSavedPosts((prev) => ({ ...prev, [id]: !prev[id] }))
+    try {
+      const res = await toggleSavePostApi(id)
+      const serverSaved = res?.data?.saved ?? res?.saved
+      if (typeof serverSaved === 'boolean') {
+        setSavedPosts((prev) => ({ ...prev, [id]: serverSaved }))
+      }
+    } catch {
+      // ignore
+    }
+  }
 
   // Auto-dismiss toast
   useEffect(() => {
@@ -473,31 +599,49 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       // offline fallback
     }
     setScheduledPosts((prev) => prev.filter((p) => p.id !== post.id))
-    setPublishedPosts((prev) => [
-      {
-        id: post.id,
-        title: post.title,
-        subtitle: post.subtitle || '',
-        content: post.content || '',
-        publishedAt: 'Just now',
+    const newPublishedItem: FeedPostItem = {
+      id: post.id,
+      title: post.title,
+      subtitle: post.subtitle || '',
+      content: post.content || '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      likeCount: 0,
+      commentCount: 0,
+      shareCount: 0,
+      saveCount: 0,
+      author: {
+        id: user?.id || 'me',
+        name: user?.name || 'Sunilkumar T',
+        username: user?.username || 'sunilkumar',
+        image: user?.image || DEFAULT_WHATSAPP_AVATAR,
       },
-      ...prev,
-    ])
+    }
+    setPublishedPosts((prev) => [newPublishedItem, ...prev])
     setToastMessage(`Post "${post.title.slice(0, 30)}..." published immediately!`)
   }
 
   const handlePublishDraft = (draft: { id: string; title: string; subtitle?: string; content?: string }) => {
     setDraftPosts((prev) => prev.filter((d) => d.id !== draft.id))
-    setPublishedPosts((prev) => [
-      {
-        id: draft.id,
-        title: draft.title,
-        subtitle: draft.subtitle || '',
-        content: draft.content || '',
-        publishedAt: 'Just now',
+    const newPublishedItem: FeedPostItem = {
+      id: draft.id,
+      title: draft.title,
+      subtitle: draft.subtitle || '',
+      content: draft.content || '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      likeCount: 0,
+      commentCount: 0,
+      shareCount: 0,
+      saveCount: 0,
+      author: {
+        id: user?.id || 'me',
+        name: user?.name || 'Sunilkumar T',
+        username: user?.username || 'sunilkumar',
+        image: user?.image || DEFAULT_WHATSAPP_AVATAR,
       },
-      ...prev,
-    ])
+    }
+    setPublishedPosts((prev) => [newPublishedItem, ...prev])
     setToastMessage(`Draft "${draft.title.slice(0, 30)}..." published!`)
   }
 
@@ -524,6 +668,32 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       academicNotes: String(publishedPosts.length),
       repos: '14',
     },
+  }
+
+  if (selectedStoryForRead) {
+    return (
+      <BlogReaderView
+        story={selectedStoryForRead}
+        isLiked={likedPosts[selectedStoryForRead.id] ?? !!selectedStoryForRead.isLiked}
+        isSaved={savedPosts[selectedStoryForRead.id] ?? !!selectedStoryForRead.isSaved}
+        onLike={() => handleToggleLike(selectedStoryForRead.id)}
+        onToggleSave={() => handleToggleSave(selectedStoryForRead.id)}
+        onBack={handleClosePost}
+        currentUser={user}
+        initialOpenComments={initialOpenCommentsForRead}
+        onCommentAdded={(storyId, newCount) => {
+          if (newCount !== undefined) {
+            setPublishedPosts((prev) =>
+              prev.map((p) =>
+                p.id === storyId
+                  ? { ...p, commentCount: newCount, totalComments: newCount }
+                  : p
+              )
+            )
+          }
+        }}
+      />
+    )
   }
 
   return (
@@ -1304,7 +1474,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 {/* SUB-VIEW 1: ALL POSTS */}
                 {postSubFilter === 'all' && (
                   <div className="ai-feed-stream-list">
-                    {publishedPosts.length === 0 ? (
+                    {loadingPosts ? (
+                      <div className="ai-feed-loader-container" role="status" aria-label="Loading posts">
+                        <div className="ai-feed-spinner" />
+                      </div>
+                    ) : publishedPosts.length === 0 ? (
                       <div className="ai-empty-tab-state">
                         <FileText size={36} className="ai-empty-icon" />
                         <h3 className="ai-empty-title">No posts yet</h3>
@@ -1317,73 +1491,180 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                         </button>
                       </div>
                     ) : (
-                      publishedPosts.map((post) => (
-                        <article key={post.id} className="ai-feed-post-card">
-                          <div className="ai-post-header">
-                            <div className="ai-post-author-wrap">
-                              <img
-                                src={profile.avatar}
-                                alt={profile.name}
-                                className="ai-post-author-avatar"
-                              />
-                              <div className="ai-post-author-info">
-                                <div className="ai-author-name-row">
-                                  <span className="ai-author-name">{profile.name}</span>
-                                  <span className="ai-author-sep">•</span>
-                                  <span className="ai-author-time">{post.publishedAt || 'Just now'}</span>
+                      publishedPosts.map((post) => {
+                        const baseLikes = post.likeCount ?? 0
+                        const isPostLiked = likedPosts[post.id] ?? !!post.isLiked
+                        const isPostSaved = savedPosts[post.id] ?? !!post.isSaved
+                        const likeDiff =
+                          likedPosts[post.id] !== undefined
+                            ? likedPosts[post.id]
+                              ? post.isLiked ? 0 : 1
+                              : post.isLiked ? -1 : 0
+                            : 0
+                        const displayLikes = Math.max(0, baseLikes + likeDiff)
+                        const rawUsername = post.author?.username ? post.author.username.replace(/^@/, '') : null
+                        const postAuthor = rawUsername ? `@${rawUsername}` : (post.author?.name || profile.name || 'Student')
+                        const postTitle = post.title || 'Untitled Post'
+                        const postSubtitle =
+                          post.subtitle ||
+                          (typeof post.content === 'string' && post.content.trim() !== postTitle.trim()
+                            ? post.content.trim()
+                            : null) ||
+                          (Array.isArray(post.blocks) &&
+                            post.blocks.find(
+                              (b: any) =>
+                                (b.type === 'paragraph' || b.type === 'text') &&
+                                b.content &&
+                                typeof b.content === 'string' &&
+                                b.content.trim() !== postTitle.trim()
+                            )?.content) ||
+                          null
+
+                        // Resolve best thumbnail image
+                        const imgUrl =
+                          post.coverImage ||
+                          (post.media && post.media.length > 0 && post.media[0].url) ||
+                          (Array.isArray(post.blocks) &&
+                            (post.blocks.find(
+                              (b: any) =>
+                                (b.type === 'image' || b.type === 'unsplash') &&
+                                (b.metadata?.url || b.metadata?.publicUrl || (typeof b.content === 'string' && b.content.startsWith('http')))
+                            )?.metadata?.url ||
+                              post.blocks.find(
+                                (b: any) =>
+                                  (b.type === 'image' || b.type === 'unsplash') &&
+                                  (b.metadata?.url || b.metadata?.publicUrl || (typeof b.content === 'string' && b.content.startsWith('http')))
+                              )?.metadata?.publicUrl ||
+                              post.blocks.find(
+                                (b: any) =>
+                                  (b.type === 'image' || b.type === 'unsplash') &&
+                                  (b.metadata?.url || b.metadata?.publicUrl || (typeof b.content === 'string' && b.content.startsWith('http')))
+                              )?.content)) ||
+                          null
+
+                        return (
+                          <article
+                            key={post.id}
+                            className="ai-feed-post-card"
+                            onClick={() => handleOpenPost(post)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault()
+                                handleOpenPost(post)
+                              }
+                            }}
+                          >
+                            {/* Left Content Column */}
+                            <div className="ai-post-main-content">
+                              {/* 1. Header Byline Line */}
+                              <div className="ai-post-header-line">
+                                <img
+                                  src={post.author?.image || profile.avatar || DEFAULT_WHATSAPP_AVATAR}
+                                  alt={postAuthor}
+                                  className="ai-post-author-mini-avatar"
+                                  onError={(e) => {
+                                    e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
+                                  }}
+                                />
+                                <div className="ai-post-byline">
+                                  <span className="ai-byline-author">{postAuthor}</span>
+                                  <span className="ai-byline-dot">·</span>
+                                  <span className="ai-byline-date">{formatPostDate(post.createdAt)}</span>
+                                </div>
+                              </div>
+
+                              {/* 2. Post Title & Subtitle */}
+                              <h3 className="ai-post-title">
+                                {postTitle}
+                              </h3>
+                              {postSubtitle && (
+                                <p className="ai-post-subtitle">
+                                  {postSubtitle}
+                                </p>
+                              )}
+
+                              {/* 3. Post Actions & Stats Footer */}
+                              <div className="ai-post-footer">
+                                <div className="ai-post-footer-left">
+                                  <button
+                                    type="button"
+                                    className={`ai-post-stat-btn ${isPostLiked ? 'is-liked' : ''}`}
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleToggleLike(post.id)
+                                    }}
+                                    title={isPostLiked ? 'Unlike' : 'Like'}
+                                    aria-label={isPostLiked ? 'Liked post' : 'Like post'}
+                                  >
+                                    <Heart
+                                      size={16}
+                                      fill={isPostLiked ? '#ef4444' : 'none'}
+                                      color={isPostLiked ? '#ef4444' : 'currentColor'}
+                                      className={`ai-heart-icon ${isPostLiked ? 'is-liked' : ''}`}
+                                    />
+                                    <span>{displayLikes}</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="ai-post-stat-btn"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleOpenPost(post, true)
+                                    }}
+                                    title="Responses"
+                                  >
+                                    <MessageSquare size={15} />
+                                    <span>{post.commentCount ?? 0}</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="ai-post-stat-btn"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      const postUrl = `${window.location.origin}${window.location.pathname}#post/${post.id}`
+                                      navigator.clipboard?.writeText(postUrl)
+                                      alert('Post link copied to clipboard!')
+                                    }}
+                                    title="Repost"
+                                  >
+                                    <Repeat size={15} />
+                                    <span>{post.shareCount ?? 0}</span>
+                                  </button>
+                                </div>
+
+                                <div className="ai-post-footer-right">
+                                  <button
+                                    type="button"
+                                    className={`ai-post-icon-btn ${isPostSaved ? 'is-saved' : ''}`}
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleToggleSave(post.id)
+                                    }}
+                                    title={isPostSaved ? 'Remove from bookmarks' : 'Save story'}
+                                    aria-label={isPostSaved ? 'Remove from bookmarks' : 'Save story'}
+                                  >
+                                    <Bookmark size={17} strokeWidth={2} fill={isPostSaved ? 'currentColor' : 'none'} />
+                                  </button>
                                 </div>
                               </div>
                             </div>
-                          </div>
 
-                          <div className="ai-post-body">
-                            <h4 className="ai-post-title">{post.title}</h4>
-                            {post.subtitle && <p className="ai-post-subtitle-text">{post.subtitle}</p>}
-                            {post.content && <p className="ai-post-paragraph">{post.content}</p>}
-                          </div>
-
-                          <div className="ai-post-footer">
-                            <div className="ai-post-footer-actions">
-                              <button
-                                type="button"
-                                className={`ai-post-action-btn ${savedPosts[post.id] ? 'is-saved' : ''}`}
-                                onClick={() => toggleSave(post.id)}
-                                title="Save"
-                                aria-label="Save"
-                              >
-                                <Bookmark size={17} fill={savedPosts[post.id] ? 'currentColor' : 'none'} />
-                              </button>
-                              <button
-                                type="button"
-                                className={`ai-post-action-btn ${likedPosts[post.id] ? 'is-liked' : ''}`}
-                                onClick={() => toggleLike(post.id)}
-                                title="Like"
-                                aria-label="Like"
-                              >
-                                <Heart size={17} fill={likedPosts[post.id] ? '#ef4444' : 'none'} color={likedPosts[post.id] ? '#ef4444' : 'currentColor'} />
-                              </button>
-                              <button
-                                type="button"
-                                className="ai-post-action-btn"
-                                onClick={() => alert('Comments')}
-                                title="Comment"
-                                aria-label="Comment"
-                              >
-                                <MessageSquare size={17} />
-                              </button>
-                              <button
-                                type="button"
-                                className="ai-post-action-btn"
-                                onClick={() => alert('Post link copied to clipboard!')}
-                                title="Share"
-                                aria-label="Share"
-                              >
-                                <Share2 size={17} />
-                              </button>
-                            </div>
-                          </div>
-                        </article>
-                      ))
+                            {/* 4. Right Thumbnail Preview */}
+                            {imgUrl && (
+                              <div className="ai-post-thumbnail-wrap">
+                                <img
+                                  src={imgUrl}
+                                  alt={post.title || 'Post preview'}
+                                  className="ai-post-thumbnail-img"
+                                  loading="lazy"
+                                />
+                              </div>
+                            )}
+                          </article>
+                        )
+                      })
                     )}
                   </div>
                 )}
@@ -1744,12 +2025,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   <div className="ai-posts-subtitle-wrap">
                     <h2 className="ai-posts-subtitle">Saved Items</h2>
                     <span className="ai-posts-subtitle-count">
-                      ({publishedPosts.filter((p) => savedPosts[p.id]).length})
+                      ({publishedPosts.filter((p) => savedPosts[p.id] ?? !!p.isSaved).length})
                     </span>
                   </div>
                 </div>
 
-                {publishedPosts.filter((p) => savedPosts[p.id]).length === 0 ? (
+                {publishedPosts.filter((p) => savedPosts[p.id] ?? !!p.isSaved).length === 0 ? (
                   <div className="ai-empty-tab-state">
                     <Bookmark size={36} className="ai-empty-icon" />
                     <h3 className="ai-empty-title">No saved stories yet</h3>
@@ -1759,33 +2040,169 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   </div>
                 ) : (
                   publishedPosts
-                    .filter((p) => savedPosts[p.id])
-                    .map((post) => (
-                      <article key={post.id} className="ai-feed-post-card">
-                        <div className="ai-post-header">
-                          <div className="ai-post-author-wrap">
-                            <img src={profile.avatar} alt={profile.name} className="ai-post-author-avatar" />
-                            <div className="ai-post-author-info">
-                              <span className="ai-author-name">{profile.name}</span>
-                              <div className="ai-author-sub"><span>{post.publishedAt || 'Saved'}</span></div>
+                    .filter((p) => savedPosts[p.id] ?? !!p.isSaved)
+                    .map((post) => {
+                      const baseLikes = post.likeCount ?? 0
+                      const isPostLiked = likedPosts[post.id] ?? !!post.isLiked
+                      const isPostSaved = savedPosts[post.id] ?? !!post.isSaved
+                      const likeDiff =
+                        likedPosts[post.id] !== undefined
+                          ? likedPosts[post.id]
+                            ? post.isLiked ? 0 : 1
+                            : post.isLiked ? -1 : 0
+                          : 0
+                      const displayLikes = Math.max(0, baseLikes + likeDiff)
+                      const rawUsername = post.author?.username ? post.author.username.replace(/^@/, '') : null
+                      const postAuthor = rawUsername ? `@${rawUsername}` : (post.author?.name || profile.name || 'Student')
+                      const postTitle = post.title || 'Untitled Post'
+                      const postSubtitle =
+                        post.subtitle ||
+                        (typeof post.content === 'string' && post.content.trim() !== postTitle.trim()
+                          ? post.content.trim()
+                          : null) ||
+                        (Array.isArray(post.blocks) &&
+                          post.blocks.find(
+                            (b: any) =>
+                              (b.type === 'paragraph' || b.type === 'text') &&
+                              b.content &&
+                              typeof b.content === 'string' &&
+                              b.content.trim() !== postTitle.trim()
+                          )?.content) ||
+                        null
+
+                      const imgUrl =
+                        post.coverImage ||
+                        (post.media && post.media.length > 0 && post.media[0].url) ||
+                        (Array.isArray(post.blocks) &&
+                          (post.blocks.find(
+                            (b: any) =>
+                              (b.type === 'image' || b.type === 'unsplash') &&
+                              (b.metadata?.url || b.metadata?.publicUrl || (typeof b.content === 'string' && b.content.startsWith('http')))
+                          )?.metadata?.url ||
+                            post.blocks.find(
+                              (b: any) =>
+                                (b.type === 'image' || b.type === 'unsplash') &&
+                                (b.metadata?.url || b.metadata?.publicUrl || (typeof b.content === 'string' && b.content.startsWith('http')))
+                            )?.metadata?.publicUrl ||
+                            post.blocks.find(
+                              (b: any) =>
+                                (b.type === 'image' || b.type === 'unsplash') &&
+                                (b.metadata?.url || b.metadata?.publicUrl || (typeof b.content === 'string' && b.content.startsWith('http')))
+                            )?.content)) ||
+                        null
+
+                      return (
+                        <article
+                          key={post.id}
+                          className="ai-feed-post-card"
+                          onClick={() => handleOpenPost(post)}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault()
+                              handleOpenPost(post)
+                            }
+                          }}
+                        >
+                          <div className="ai-post-main-content">
+                            <div className="ai-post-header-line">
+                              <img
+                                src={post.author?.image || profile.avatar || DEFAULT_WHATSAPP_AVATAR}
+                                alt={postAuthor}
+                                className="ai-post-author-mini-avatar"
+                                onError={(e) => {
+                                  e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
+                                }}
+                              />
+                              <div className="ai-post-byline">
+                                <span className="ai-byline-author">{postAuthor}</span>
+                                <span className="ai-byline-dot">·</span>
+                                <span className="ai-byline-date">{formatPostDate(post.createdAt)}</span>
+                              </div>
+                            </div>
+
+                            <h3 className="ai-post-title">{postTitle}</h3>
+                            {postSubtitle && <p className="ai-post-subtitle">{postSubtitle}</p>}
+
+                            <div className="ai-post-footer">
+                              <div className="ai-post-footer-left">
+                                <button
+                                  type="button"
+                                  className={`ai-post-stat-btn ${isPostLiked ? 'is-liked' : ''}`}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleToggleLike(post.id)
+                                  }}
+                                  title={isPostLiked ? 'Unlike' : 'Like'}
+                                  aria-label={isPostLiked ? 'Liked post' : 'Like post'}
+                                >
+                                  <Heart
+                                    size={16}
+                                    fill={isPostLiked ? '#ef4444' : 'none'}
+                                    color={isPostLiked ? '#ef4444' : 'currentColor'}
+                                    className={`ai-heart-icon ${isPostLiked ? 'is-liked' : ''}`}
+                                  />
+                                  <span>{displayLikes}</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  className="ai-post-stat-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleOpenPost(post, true)
+                                  }}
+                                  title="Responses"
+                                >
+                                  <MessageSquare size={15} />
+                                  <span>{post.commentCount ?? 0}</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  className="ai-post-stat-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    const postUrl = `${window.location.origin}${window.location.pathname}#post/${post.id}`
+                                    navigator.clipboard?.writeText(postUrl)
+                                    alert('Post link copied to clipboard!')
+                                  }}
+                                  title="Repost"
+                                >
+                                  <Repeat size={15} />
+                                  <span>{post.shareCount ?? 0}</span>
+                                </button>
+                              </div>
+
+                              <div className="ai-post-footer-right">
+                                <button
+                                  type="button"
+                                  className={`ai-post-icon-btn ${isPostSaved ? 'is-saved' : ''}`}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleToggleSave(post.id)
+                                  }}
+                                  title={isPostSaved ? 'Remove from bookmarks' : 'Save story'}
+                                  aria-label={isPostSaved ? 'Remove from bookmarks' : 'Save story'}
+                                >
+                                  <Bookmark size={17} strokeWidth={2} fill={isPostSaved ? 'currentColor' : 'none'} />
+                                </button>
+                              </div>
                             </div>
                           </div>
-                          <button
-                            type="button"
-                            className="ai-post-action-btn is-saved"
-                            onClick={() => toggleSave(post.id)}
-                            title="Remove from saved"
-                          >
-                            <Bookmark size={17} fill="currentColor" />
-                          </button>
-                        </div>
-                        <div className="ai-post-body">
-                          <h4 className="ai-post-title">{post.title}</h4>
-                          {post.subtitle && <p className="ai-post-subtitle-text">{post.subtitle}</p>}
-                          {post.content && <p className="ai-post-paragraph">{post.content}</p>}
-                        </div>
-                      </article>
-                    ))
+
+                          {imgUrl && (
+                            <div className="ai-post-thumbnail-wrap">
+                              <img
+                                src={imgUrl}
+                                alt={post.title || 'Post preview'}
+                                className="ai-post-thumbnail-img"
+                                loading="lazy"
+                              />
+                            </div>
+                          )}
+                        </article>
+                      )
+                    })
                 )}
               </div>
             )}
