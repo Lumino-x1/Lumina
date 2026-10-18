@@ -24,6 +24,8 @@ import {
   Sparkles,
   Award,
   ArrowLeft,
+  Building2,
+  Mail,
 } from 'lucide-react'
 import './ProfilePage.css'
 import './DashboardPage.css'
@@ -31,6 +33,7 @@ import './Navbar.css'
 import type { DashboardUser } from './DashboardPage'
 import { DEFAULT_WHATSAPP_AVATAR } from './components/WhatsAppDefaultAvatar'
 import { useTheme } from './lib/themeContext'
+import { fetchMyProfile, type ProfileData } from './api/profileApi'
 import {
   type ScheduledPostItem,
   fetchScheduledPostsApi,
@@ -339,6 +342,21 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [settingsMenuOpen, setSettingsMenuOpen] = useState(false)
   const [currentWorkspace, setCurrentWorkspace] = useState<'primary' | 'secondary'>('primary')
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  const [meProfile, setMeProfile] = useState<ProfileData | null>(null)
+
+  useEffect(() => {
+    let isMounted = true
+    fetchMyProfile()
+      .then((data) => {
+        if (isMounted && data) {
+          setMeProfile(data)
+        }
+      })
+      .catch(() => {})
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   const settingsMenuRef = useRef<HTMLDivElement>(null)
 
@@ -650,21 +668,68 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     setToastMessage('Draft deleted.')
   }
 
+  // Resolve profile attributes from /me route data, fallback to user prop or demo defaults
+  const resolvedName =
+    meProfile?.user?.name ||
+    (meProfile?.firstName ? `${meProfile.firstName} ${meProfile.lastName || ''}`.trim() : null) ||
+    (meProfile as any)?.name ||
+    user?.name ||
+    'Sunil Kumar'
+
+  const rawUsername =
+    meProfile?.username ||
+    meProfile?.user?.username ||
+    user?.username ||
+    'sunilkumart2695'
+  const resolvedUsername = rawUsername.replace(/^@/, '')
+
+  const resolvedEmail =
+    meProfile?.email ||
+    meProfile?.user?.email ||
+    user?.email ||
+    'sunilbe2006@gmail.com'
+
+  const resolvedCollege =
+    meProfile?.college?.name ||
+    (typeof meProfile?.college === 'string' ? meProfile.college : null) ||
+    (typeof user?.college === 'string' ? user.college : (user as any)?.college?.name) ||
+    'PSG College of Technology'
+
+  const resolvedImage =
+    meProfile?.profilePicture ||
+    meProfile?.user?.image ||
+    user?.image ||
+    'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&auto=format&fit=crop&q=80'
+
   const profile = {
-    name: user?.name || 'Sunilkumar T',
-    role: 'PhD Candidate',
-    avatar:
-      user?.image ||
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80',
-    university: 'Stanford University',
-    department: 'B.S. & M.S. in Computer Science (Systems & AI, \'26)',
-    bio: 'Building distributed consensus algorithms & neural infrastructure. Previously research intern @ Stanford AI Lab. Passionate about systems engineering, peer mentorship, and open-source tooling.',
-    location: 'Stanford University, CA',
+    name: resolvedName,
+    username: resolvedUsername,
+    email: resolvedEmail,
+    role: meProfile?.user?.role || 'PhD Candidate',
+    avatar: resolvedImage,
+    university: resolvedCollege,
+    department: meProfile?.department?.name || user?.department || "B.S. & M.S. in Computer Science (Systems & AI, '26)",
+    bio: meProfile?.bio || 'Building distributed consensus algorithms & neural infrastructure. Previously research intern @ Stanford AI Lab. Passionate about systems engineering, peer mentorship, and open-source tooling.',
+    location: meProfile?.location || 'Coimbatore, India',
     openTo: 'Open to Research Collaborations & Summer \'26 Eng Roles',
     joined: 'Joined Sep 2023',
     stats: {
-      followers: '1,480',
-      following: '342',
+      followers:
+        (meProfile as any)?.followersCount !== undefined
+          ? String((meProfile as any).followersCount)
+          : (meProfile as any)?._count?.followers !== undefined
+          ? String((meProfile as any)._count.followers)
+          : (user as any)?.followersCount !== undefined
+          ? String((user as any).followersCount)
+          : '1,480',
+      following:
+        (meProfile as any)?.followingCount !== undefined
+          ? String((meProfile as any).followingCount)
+          : (meProfile as any)?._count?.following !== undefined
+          ? String((meProfile as any)._count.following)
+          : (user as any)?.followingCount !== undefined
+          ? String((user as any).followingCount)
+          : '342',
       academicNotes: String(publishedPosts.length),
       repos: '14',
     },
@@ -1211,8 +1276,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         <div className="ai-content-columns">
           {/* CENTER PROFILE STREAM */}
           <main className="ai-center-stream profile-center-col">
-            {/* PROFILE HEADER HERO CARD (Blurred / Hidden) */}
-            <div className="ai-profile-hero-card ai-blurred-section" aria-hidden="true">
+            {/* PROFILE HEADER HERO CARD (Unblurred identity & follower stats from /me) */}
+            <div className="ai-profile-hero-card">
               {/* Cover Graphic Banner */}
               <div className="ai-profile-cover-wrap">
                 <svg className="ai-profile-constellation-svg" viewBox="0 0 800 160">
@@ -1239,7 +1304,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
                 <button
                   type="button"
-                  className="ai-edit-cover-btn"
+                  className="ai-edit-cover-btn ai-profile-blurred"
                   onClick={() => alert('Update campus profile cover graphic.')}
                 >
                   {Icons.Camera}
@@ -1258,7 +1323,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     />
                     <button
                       type="button"
-                      className="ai-avatar-cam-badge"
+                      className="ai-avatar-cam-badge ai-profile-blurred"
                       title="Update Profile Photo"
                       onClick={() => alert('Change profile photo')}
                     >
@@ -1266,7 +1331,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     </button>
                   </div>
 
-                  <div className="ai-profile-actions-right">
+                  <div className="ai-profile-actions-right ai-profile-blurred">
                     <button
                       type="button"
                       className="ai-profile-action-btn"
@@ -1293,27 +1358,77 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   </div>
                 </div>
 
-                {/* Name, Badges & Headline */}
+                {/* Name, Username, Badges & Subhead (College, Email) - UNBLURRED */}
                 <div className="ai-profile-name-block">
-                  <div className="ai-profile-name-row">
+                  <div className="ai-profile-name-row" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                     <h1 className="ai-profile-title">{profile.name}</h1>
+                    <span
+                      className="ai-profile-handle"
+                      style={{
+                        fontSize: '15px',
+                        color: 'var(--ai-text-secondary)',
+                        fontWeight: 500,
+                      }}
+                    >
+                      @{profile.username}
+                    </span>
                     <span className="ai-verified-check-icon">{Icons.CheckCircle}</span>
-                    <div className="ai-profile-role-pills">
+                    <div className="ai-profile-role-pills ai-profile-blurred">
                       <span className="ai-role-pill">FOUNDER</span>
                       <span className="ai-role-pill">STUDENT</span>
                       <span className="ai-role-pill">FELLOW</span>
                     </div>
                   </div>
-                  <p className="ai-profile-subhead">
-                    {profile.university} • {profile.department}
-                  </p>
+
+                  <div
+                    className="ai-profile-subhead-row"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '14px',
+                      marginTop: '6px',
+                      flexWrap: 'wrap',
+                      fontSize: '13.5px',
+                    }}
+                  >
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        color: 'var(--ai-text-primary)',
+                        fontWeight: 600,
+                      }}
+                    >
+                      <Building2 size={15} style={{ opacity: 0.85 }} />
+                      <span>{profile.university}</span>
+                    </span>
+
+                    {profile.email && (
+                      <span
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          color: 'var(--ai-text-secondary)',
+                        }}
+                      >
+                        <Mail size={14} style={{ opacity: 0.75 }} />
+                        <span>{profile.email}</span>
+                      </span>
+                    )}
+
+                    <span className="ai-profile-blurred" style={{ color: 'var(--ai-text-secondary)' }}>
+                      • {profile.department}
+                    </span>
+                  </div>
                 </div>
 
-                {/* Bio paragraph */}
-                <p className="ai-profile-bio-text">{profile.bio}</p>
+                {/* Bio paragraph: Blurred */}
+                <p className="ai-profile-bio-text ai-profile-blurred">{profile.bio}</p>
 
-                {/* Location, Availability & Joined row */}
-                <div className="ai-profile-meta-row">
+                {/* Location, Availability & Joined row: Blurred */}
+                <div className="ai-profile-meta-row ai-profile-blurred">
                   <span className="ai-meta-item">
                     {Icons.MapPin}
                     <span>{profile.location}</span>
@@ -1328,7 +1443,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   </span>
                 </div>
 
-                {/* Counters row */}
+                {/* Counters row: UNBLURRED (Followers, Following, Posts) */}
                 <div className="ai-profile-counters-row">
                   <span className="ai-counter-item">
                     <strong>{profile.stats.followers}</strong> Followers
@@ -1337,9 +1452,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     <strong>{profile.stats.following}</strong> Following
                   </span>
                   <span className="ai-counter-item">
-                    <strong>{profile.stats.academicNotes}</strong> Academic Notes &amp; Posts
+                    <strong>{profile.stats.academicNotes}</strong> Posts
                   </span>
-                  <span className="ai-counter-item">
+                  <span className="ai-counter-item ai-profile-blurred">
                     <strong>{profile.stats.repos}</strong> Open Source Repos
                   </span>
                 </div>
@@ -1356,14 +1471,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   </button>
                   <button
                     type="button"
-                    className={`ai-profile-tab ${activeTab === 'about' ? 'is-active' : ''}`}
+                    className={`ai-profile-tab ai-profile-blurred ${activeTab === 'about' ? 'is-active' : ''}`}
                     onClick={() => setActiveTab('about')}
                   >
                     <span>About</span>
                   </button>
                   <button
                     type="button"
-                    className={`ai-profile-tab ${activeTab === 'projects' ? 'is-active' : ''}`}
+                    className={`ai-profile-tab ai-profile-blurred ${activeTab === 'projects' ? 'is-active' : ''}`}
                     onClick={() => setActiveTab('projects')}
                   >
                     <span>Projects</span>
@@ -1371,14 +1486,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   </button>
                   <button
                     type="button"
-                    className={`ai-profile-tab ${activeTab === 'achievements' ? 'is-active' : ''}`}
+                    className={`ai-profile-tab ai-profile-blurred ${activeTab === 'achievements' ? 'is-active' : ''}`}
                     onClick={() => setActiveTab('achievements')}
                   >
                     <span>Achievements &amp; Grants</span>
                   </button>
                   <button
                     type="button"
-                    className={`ai-profile-tab ${activeTab === 'communities' ? 'is-active' : ''}`}
+                    className={`ai-profile-tab ai-profile-blurred ${activeTab === 'communities' ? 'is-active' : ''}`}
                     onClick={() => setActiveTab('communities')}
                   >
                     <span>Communities</span>
@@ -1386,7 +1501,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   </button>
                   <button
                     type="button"
-                    className={`ai-profile-tab ${activeTab === 'saved' ? 'is-active' : ''}`}
+                    className={`ai-profile-tab ai-profile-blurred ${activeTab === 'saved' ? 'is-active' : ''}`}
                     onClick={() => setActiveTab('saved')}
                   >
                     <span>Saved</span>

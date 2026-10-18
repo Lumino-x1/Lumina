@@ -3676,6 +3676,15 @@
   user-select: none !important;
 }
 
+.ai-profile-blurred {
+  filter: blur(5px);
+  -webkit-filter: blur(5px);
+  opacity: 0.38;
+  pointer-events: none !important;
+  user-select: none !important;
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
 .lumina-ai-profile-root .ai-sidebar.ai-blurred-section {
   position: sticky !important;
   top: 0 !important;
