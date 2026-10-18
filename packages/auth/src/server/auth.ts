@@ -62,7 +62,7 @@ export const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
-        before: async (user) => {
+        before: async (user: any) => {
           let collegeId: string | undefined
           const email = (user.email || '').trim().toLowerCase()
           const emailDomain = email.split('@')[1]
@@ -147,7 +147,7 @@ export const auth = betterAuth({
             },
           }
         },
-        after: async (user) => {
+        after: async (user: any) => {
           const stringValue = (value: unknown, fallback = '') =>
             typeof value === 'string' ? value : fallback
           const arrayValue = (value: unknown) =>
@@ -300,6 +300,7 @@ export const auth = betterAuth({
     'https://untolerative-len-rumblingly.ngrok-free.dev',
     'https://*.ngrok-free.dev',
     'https://*.ngrok.app',
+    'https://*.vercel.app',
     ...(process.env.CORS_ORIGIN
       ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim())
       : []),
@@ -312,8 +313,8 @@ export const auth = betterAuth({
     enabled: true,
     minPasswordLength: 8,
 
-    async sendResetPassword({ user, url }) {
-      const masked = user.email.replace(/^(.)(.*)(@.*)$/, (_, a, b, c) => `${a}***${c}`)
+    async sendResetPassword({ user, url }: { user: any; url: string }) {
+      const masked = user.email.replace(/^(.)(.*)(@.*)$/, (_: string, a: string, b: string, c: string) => `${a}***${c}`)
       console.info(`[Auth] Password reset email requested for ${masked}`)
       try {
         const result = await resend.emails.send({

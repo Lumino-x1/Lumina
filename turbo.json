@@ -3,22 +3,36 @@
   "globalPassThroughEnv": [
     "NODE_ENV",
     "DATABASE_URL",
+    "DATABASE_URL_DEV",
     "TEST_DATABASE_URL",
     "BETTER_AUTH_SECRET",
     "BETTER_AUTH_URL",
+    "BETTER_AUTH_TRUSTED_ORIGINS",
     "SERVER_PORT",
     "CORS_ORIGIN",
     "RESEND_API_KEY",
     "RESEND_FROM",
     "VITE_AUTH_SERVER_URL",
+    "VITE_API_URL",
+    "VITE_PROXY_TARGET",
     "AWS_*",
-    "S3_*"
+    "S3_*",
+    "STREAM_*",
+    "REDIS_*",
+    "MOCK_REDIS",
+    "VERCEL",
+    "VERCEL_*",
+    "CRON_SECRET"
   ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "dist/**"]
+      "outputs": ["dist/**"]
+    },
+    "@lumina/db#build": {
+      "inputs": ["prisma/**", "prisma.config.ts"],
+      "outputs": []
     },
     "generate": {
       "cache": false

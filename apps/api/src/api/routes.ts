@@ -18,6 +18,8 @@ import usersRouter from './users/users.routes'
 import authRouter from './auth/auth.routes'
 import commentsRouter from './comments/comments.routes'
 import { subscribe } from '@lumina/realtime'
+import { prisma } from '@lumina/db'
+import { PostsRepo } from './posts/posts.repo'
 import { Router } from 'express'
 import rateLimit from 'express-rate-limit'
 
@@ -365,5 +367,40 @@ apiRouter.get('/communities', optionalAuth, controller.listCommunities)
 apiRouter.get('/v1/communities', optionalAuth, controller.listCommunities)
 apiRouter.get('/events', optionalAuth, controller.listEvents)
 apiRouter.get('/v1/events', optionalAuth, controller.listEvents)
+
+// Cron handler for scheduled publishing (compatible with Vercel Cron)
+apiRouter.get('/cron/publish', async (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization
+  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
+  try {
+    const overduePosts = await prisma.post.findMany({
+      where: { status: 'SCHEDULED', scheduledAt: { lte: new Date() } },
+      select: { id: true, scheduleVersion: true },
+      take: 50,
+    })
+    const publishedIds: string[] = []
+    for (const post of overduePosts) {
+      const published = await PostsRepo.publishScheduledPost(post.id, post.scheduleVersion)
+      if (published) {
+        publishedIds.push(post.id)
+      }
+    }
+    return res.status(200).json({
+      status: 'ok',
+      overdueCount: overduePosts.length,
+      publishedCount: publishedIds.length,
+      publishedIds,
+      timestamp: new Date().toISOString(),
+    })
+  } catch (error) {
+    return res.status(500).json({
+      status: 'error',
+      message: 'Failed to process scheduled posts',
+      error: String(error),
+    })
+  }
+})
 
 export default apiRouter

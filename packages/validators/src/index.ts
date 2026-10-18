@@ -518,7 +518,7 @@ export const adminModerationActionSchema = z
 export const systemSettingSchema = z
   .object({
     key: z.string().trim().min(1).max(100),
-    value: z.union([z.string(), z.record(z.unknown()), z.boolean(), z.number()]),
+    value: z.union([z.string(), z.record(z.string(), z.unknown()), z.boolean(), z.number()]),
     description: z.string().trim().max(1000).optional(),
   })
   .strict()

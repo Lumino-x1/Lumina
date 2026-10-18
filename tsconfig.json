@@ -29,7 +29,8 @@
     "apps/**/*.tsx",
     "packages/**/*.ts",
     "workers/**/*.ts",
-    "tests/**/*.ts"
+    "tests/**/*.ts",
+    "api/**/*.ts"
   ],
   "exclude": ["**/dist/**", "**/coverage/**", "**/node_modules/**"]
 }

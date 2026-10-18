@@ -61,6 +61,7 @@ export function createApp() {
         return true
       }
       if (
+        hostname.endsWith('.vercel.app') ||
         hostname.endsWith('.ngrok-free.dev') ||
         hostname.endsWith('.ngrok.app') ||
         hostname === 'untolerative-len-rumblingly.ngrok-free.dev'

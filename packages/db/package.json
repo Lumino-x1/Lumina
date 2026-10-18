@@ -4,6 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "build": "prisma generate",
     "generate": "prisma generate",
     "push": "prisma db push --accept-data-loss",
     "dev": "prisma generate --watch",

@@ -3,18 +3,14 @@
   "buildCommand": "turbo run build",
   "devCommand": "turbo run dev",
   "installCommand": "bun install",
-  "framework": "nextjs",
-  "outputDirectory": ".next",
-  "regions": ["iad1"],
-  "env": {
-    "DATABASE_URL": "@lumina-database-url",
-    "DIRECT_URL": "@lumina-direct-url",
-    "REDIS_URL": "@lumina-redis-url",
-    "BETTER_AUTH_SECRET": "@lumina-auth-secret",
-    "BETTER_AUTH_URL": "@lumina-auth-url",
-    "RESEND_API_KEY": "@lumina-resend-api-key",
-    "OPENAI_API_KEY": "@lumina-openai-api-key"
-  },
+  "framework": "vite",
+  "outputDirectory": "apps/dashboard/dist",
+  "crons": [
+    {
+      "path": "/api/cron/publish",
+      "schedule": "0 0 * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -51,8 +47,24 @@
   ],
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "/api/:path*"
+      "source": "/api/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/api",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/health",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/ready",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/((?!api/|health|ready).*)",
+      "destination": "/index.html"
     }
   ]
 }

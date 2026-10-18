@@ -17,7 +17,7 @@
     "jsx": "react-jsx",
     "paths": {
       "@/*": ["./src/*"],
-      "motion/react": ["./node_modules/framer-motion"],
+      "motion/react": ["../../node_modules/framer-motion", "./node_modules/framer-motion"],
       "@designcodeio/threeui/style.css": ["./src/shaders/threeui.css"],
       "@designcodeio/threeui": ["./src/shaders/index.ts"]
     },

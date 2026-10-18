@@ -4,10 +4,10 @@ import { fileURLToPath } from 'node:url'
 import { config } from 'dotenv'
 
 const packageDir =
-  typeof import.meta.dir === 'string'
-    ? import.meta.dir
-    : typeof import.meta.dirname === 'string'
-      ? import.meta.dirname
+  typeof (import.meta as any).dir === 'string'
+    ? (import.meta as any).dir
+    : typeof (import.meta as any).dirname === 'string'
+      ? (import.meta as any).dirname
       : dirname(fileURLToPath(import.meta.url))
 
 function findMonorepoRoot(startDir: string): string {

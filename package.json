@@ -1,6 +1,7 @@
 {
   "name": "lumina",
   "private": true,
+  "type": "module",
   "packageManager": "bun@1.3.10",
   "scripts": {
     "build": "turbo run build",
@@ -56,7 +57,7 @@
     "@types/react-dom": "18.3.5"
   },
   "engines": {
-    "node": ">=18"
+    "node": "22.x"
   },
   "devEngines": {
     "packageManager": {
