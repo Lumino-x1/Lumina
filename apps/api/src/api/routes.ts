@@ -17,6 +17,7 @@ import postsRouter from './posts/posts.routes'
 import usersRouter from './users/users.routes'
 import authRouter from './auth/auth.routes'
 import commentsRouter from './comments/comments.routes'
+import friendsRouter from './friends/friends.routes'
 import { subscribe } from '@lumina/realtime'
 import { prisma } from '@lumina/db'
 import { PostsRepo } from './posts/posts.repo'
@@ -58,15 +59,7 @@ apiRouter.use('/auth', authRouter)
 apiRouter.use('/profile', usersRouter)
 
 // --- Friends: /api/friends ---
-apiRouter.post('/friends/request/:userId', requireAuth, controller.sendFriendRequest)
-apiRouter.patch('/friends/request/:requestId/accept', requireAuth, controller.acceptFriendRequest)
-apiRouter.patch('/friends/request/:requestId/reject', requireAuth, controller.rejectFriendRequest)
-apiRouter.delete('/friends/request/:requestId', requireAuth, controller.cancelFriendRequest)
-apiRouter.delete('/friends/:friendId', requireAuth, controller.unfriend)
-apiRouter.get('/friends', requireAuth, controller.getMyFriends)
-apiRouter.get('/friends/mutual/:userId', requireAuth, controller.getMutualFriends)
-apiRouter.get('/friends/requests/incoming', requireAuth, controller.getIncomingRequests)
-apiRouter.get('/friends/requests/outgoing', requireAuth, controller.getOutgoingRequests)
+apiRouter.use('/friends', friendsRouter)
 
 // --- Posts: /api/posts ---
 apiRouter.use('/posts', postsRouter)

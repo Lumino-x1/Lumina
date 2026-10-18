@@ -1,0 +1,6 @@
+export * from './friends.controller'
+export * from './friends.repo'
+export * from './friends.routes'
+export * from './friends.service'
+export * from './friends.utils'
+export { default as friendsRouter } from './friends.routes'

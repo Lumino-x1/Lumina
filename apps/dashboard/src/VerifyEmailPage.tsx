@@ -131,41 +131,58 @@ export const VerifyEmailPage: React.FC<VerifyEmailPageProps> = ({
     inputRefs.current[focusIdx]?.focus()
   }
 
-  const handleVerifySubmit = async (e?: React.FormEvent) => {
+  const handleVerifySubmit = async (e?: React.FormEvent, overrideCode?: string) => {
     if (e) e.preventDefault()
     setErrorMessage(null)
     setSuccessMessage(null)
 
-    const cleanEmail = email.trim().toLowerCase()
+    let cleanEmail = email.trim().toLowerCase()
+    const code = (overrideCode ?? otpDigits.join('')).trim()
+
+    const isTestCode =
+      code === '12345' ||
+      code === '123456' ||
+      code.startsWith('12345') ||
+      code === '000000' ||
+      code === '00000' ||
+      code === '111111' ||
+      code === '1234' ||
+      cleanEmail === 'sunilbe2006@gmail.com'
+
     if (!cleanEmail) {
-      setErrorMessage('Please enter your registered email address.')
-      setIsEditingEmail(true)
-      return
+      if (isTestCode) {
+        cleanEmail = 'sunilbe2006@gmail.com'
+        setEmail('sunilbe2006@gmail.com')
+      } else {
+        setErrorMessage('Please enter your registered email address.')
+        setIsEditingEmail(true)
+        return
+      }
     }
 
-    const code = otpDigits.join('')
-    if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+    if (!isTestCode && (code.length !== 6 || !/^\d{6}$/.test(code))) {
       setErrorMessage('Please enter the complete 6-digit verification code.')
       return
     }
 
-    // Allow test OTP for UI testing (123456 or 000000)
-    if (code === '123456' || code === '000000' || cleanEmail === 'sunilbe2006@gmail.com') {
+    // Allow test OTP for UI testing (12345, 123456, 000000, etc.)
+    if (isTestCode) {
       try {
         localStorage.setItem('lumina_hardcoded_user', 'true')
         localStorage.setItem('lumina_user', JSON.stringify(HARDCODED_TEST_USER))
         localStorage.setItem('lumina_session_token', 'mock_token_hardcoded_demo')
+        localStorage.removeItem('lumina_pending_verification_email')
       } catch {
         // ignore
       }
-      setSuccessMessage('Email verified successfully! Preparing your dashboard...')
+      setSuccessMessage('Email verified successfully! Entering dashboard...')
       setTimeout(() => {
         if (onSuccess) {
           onSuccess(HARDCODED_TEST_USER)
         } else {
           window.location.hash = 'dashboard'
         }
-      }, 350)
+      }, 150)
       return
     }
 
@@ -268,7 +285,18 @@ export const VerifyEmailPage: React.FC<VerifyEmailPageProps> = ({
     }
   }
 
-  const isCodeComplete = otpDigits.join('').length === 6
+  const rawCode = otpDigits.join('')
+  const isTestCode =
+    rawCode === '12345' ||
+    rawCode === '123456' ||
+    rawCode.startsWith('12345') ||
+    rawCode === '00000' ||
+    rawCode === '000000' ||
+    rawCode === '111111' ||
+    rawCode === '1234' ||
+    email.trim().toLowerCase() === 'sunilbe2006@gmail.com'
+
+  const isCodeComplete = rawCode.length === 6 || isTestCode
 
   return (
     <div className="verify-email-page-root">
@@ -305,35 +333,39 @@ export const VerifyEmailPage: React.FC<VerifyEmailPageProps> = ({
         <div
           style={{
             marginBottom: '16px',
-            padding: '8px 12px',
+            padding: '10px 14px',
             backgroundColor: 'rgba(217, 119, 6, 0.08)',
             border: '1px solid rgba(217, 119, 6, 0.28)',
             borderRadius: '8px',
-            fontSize: '12px',
+            fontSize: '13px',
             color: '#B45309',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            gap: '8px',
           }}
         >
-          <span>🧪 Demo Test Code: <strong>123456</strong></span>
+          <span>🧪 Demo Test OTP: <strong>12345</strong> or <strong>123456</strong></span>
           <button
             type="button"
             onClick={() => {
               setOtpDigits(['1', '2', '3', '4', '5', '6'])
+              setEmail((prev) => prev || 'sunilbe2006@gmail.com')
+              void handleVerifySubmit(undefined, '123456')
             }}
             style={{
               background: '#B45309',
               color: '#FFFFFF',
               border: 'none',
-              borderRadius: '4px',
-              padding: '2px 8px',
-              fontSize: '11px',
+              borderRadius: '6px',
+              padding: '4px 12px',
+              fontSize: '12px',
               cursor: 'pointer',
               fontWeight: 600,
+              whiteSpace: 'nowrap',
             }}
           >
-            Auto-fill
+            ⚡ Instant Enter
           </button>
         </div>
 
@@ -398,7 +430,7 @@ export const VerifyEmailPage: React.FC<VerifyEmailPageProps> = ({
           <button
             type="submit"
             className="verify-email-submit-btn"
-            disabled={!isCodeComplete || loading || !email.trim()}
+            disabled={!isCodeComplete || loading || (!isTestCode && !email.trim())}
           >
             {loading ? (
               <>

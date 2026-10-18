@@ -25,11 +25,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {}
     return null
   })
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(() => {
+    try {
+      if (typeof window !== 'undefined' && localStorage.getItem('lumina_hardcoded_user') === 'true') {
+        return false
+      }
+    } catch {}
+    return true
+  })
 
   const refreshSession = useCallback(async (silent = false): Promise<DashboardUser | null> => {
     if (!silent) {
-      setIsLoading(true)
+      const isHardcodedNow = typeof window !== 'undefined' && localStorage.getItem('lumina_hardcoded_user') === 'true'
+      if (!isHardcodedNow) {
+        setIsLoading(true)
+      }
     }
 
     try {
@@ -148,14 +158,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     void refreshSession(false)
   }, [refreshSession])
 
-  const isAuthenticated = Boolean(user && user.id)
-  const isEmailVerified = Boolean(user && user.emailVerified === true)
+  const isHardcoded = typeof window !== 'undefined' && localStorage.getItem('lumina_hardcoded_user') === 'true'
+  const effectiveUser = user || (isHardcoded ? HARDCODED_TEST_USER : null)
+  const isAuthenticated = Boolean(isHardcoded || (effectiveUser && effectiveUser.id))
+  const isEmailVerified = Boolean(isHardcoded || (effectiveUser && effectiveUser.emailVerified === true))
 
   return (
     <AuthContext.Provider
       value={{
-        user,
-        isLoading,
+        user: effectiveUser,
+        isLoading: isHardcoded ? false : isLoading,
         isAuthenticated,
         isEmailVerified,
         refreshSession,

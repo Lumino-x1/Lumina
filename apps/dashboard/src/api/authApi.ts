@@ -89,6 +89,7 @@ export function isHardcodedTestCredentials(emailOrUsername: string, password: st
     'password123',
     'sunil123',
     'lumina123',
+    '12345',
     '123456',
     '12345678',
   ]
