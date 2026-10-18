@@ -236,7 +236,7 @@ export const VerifyEmailPage: React.FC<VerifyEmailPageProps> = ({
         return
       }
 
-      setSuccessMessage(data?.message || 'A new 6-digit verification code has been sent to your email.')
+      setSuccessMessage(data?.message || 'Verification code sent.')
       setCooldownSeconds(60)
       setOtpDigits(['', '', '', '', '', ''])
       inputRefs.current[0]?.focus()

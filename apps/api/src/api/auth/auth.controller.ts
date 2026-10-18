@@ -257,7 +257,7 @@ export async function resendOtpController(req: Request, res: Response) {
 
     return res.status(200).json({
       success: true,
-      message: 'A new verification code has been sent to your email address.',
+      message: 'Verification code sent.',
     })
   } catch (err: any) {
     console.error('[Auth] Error sending replacement verification OTP:', err)
