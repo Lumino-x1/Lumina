@@ -697,15 +697,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               </button>
               <button
                 type="button"
-                className={`ai-nav-item ${activeNav === 'Feed & Discussions' ? 'is-active' : ''}`}
-                title="Feed & Discussions"
+                className={`ai-nav-item ${activeNav === 'AI Summarizer' ? 'is-active' : ''}`}
+                title="AI Summarizer"
                 onClick={() => {
-                  setActiveNav('Feed & Discussions')
+                  setActiveNav('AI Summarizer')
                   setIsMobileSidebarOpen(false)
                 }}
               >
-                <span className="ai-nav-icon">{Icons.MessageSquare}</span>
-                <span className="ai-nav-label">Feed & Discussions</span>
+                <span className="ai-nav-icon">{Icons.Sparkles}</span>
+                <span className="ai-nav-label">AI Summarizer</span>
               </button>
               <button
                 type="button"
