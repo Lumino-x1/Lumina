@@ -1352,7 +1352,7 @@
   position: relative;
   width: 110px;
   height: 110px;
-  border-radius: 16px;
+  border-radius: 50%;
   border: 4px solid var(--ai-card-bg);
   background-color: var(--ai-card-bg);
   box-shadow: var(--ai-shadow-md);
@@ -1362,20 +1362,21 @@
 .ai-profile-avatar-main {
   width: 100%;
   height: 100%;
-  border-radius: 12px;
+  border-radius: 50%;
   object-fit: cover;
+  display: block;
 }
 
 .ai-avatar-cam-badge {
   position: absolute;
-  bottom: 6px;
-  right: 6px;
+  bottom: 2px;
+  right: 2px;
   width: 26px;
   height: 26px;
   border-radius: 50%;
   background-color: rgba(9, 9, 11, 0.85);
   color: #ffffff;
-  border: none;
+  border: 2px solid var(--ai-card-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2872,7 +2873,7 @@
   .lumina-ai-profile-root .ai-profile-avatar-box {
     width: 72px;
     height: 72px;
-    border-radius: 12px;
+    border-radius: 50%;
     border-width: 3px;
   }
 
