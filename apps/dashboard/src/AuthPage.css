@@ -330,6 +330,53 @@
   padding-left: 30px;
 }
 
+.lumina-auth-password-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.lumina-auth-password-wrap .lumina-auth-input {
+  padding-right: 42px;
+}
+
+.lumina-auth-password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 4px;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.15s ease, opacity 0.15s ease;
+  border-radius: 6px;
+  z-index: 2;
+  line-height: 1;
+}
+
+.lumina-auth-password-toggle:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.lumina-auth-password-toggle:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 2px;
+}
+
+.lumina-auth-eye-icon {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2;
+  pointer-events: none;
+}
+
 .lumina-auth-input {
   width: 100%;
   height: 44px;
@@ -1132,6 +1179,24 @@
 .lumina-split-root.bright .lumina-auth-input-prefix,
 [data-theme="bright"] .lumina-auth-input-prefix {
   color: rgba(0, 0, 0, 0.45);
+}
+
+.lumina-split-root.light .lumina-auth-password-toggle,
+.lumina-split-root.bright .lumina-auth-password-toggle,
+[data-theme="bright"] .lumina-auth-password-toggle {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.lumina-split-root.light .lumina-auth-password-toggle:hover,
+.lumina-split-root.bright .lumina-auth-password-toggle:hover,
+[data-theme="bright"] .lumina-auth-password-toggle:hover {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.lumina-split-root.light .lumina-auth-password-toggle:focus-visible,
+.lumina-split-root.bright .lumina-auth-password-toggle:focus-visible,
+[data-theme="bright"] .lumina-auth-password-toggle:focus-visible {
+  outline-color: rgba(0, 0, 0, 0.4);
 }
 
 /* Avatar Picker */

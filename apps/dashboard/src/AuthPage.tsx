@@ -13,6 +13,8 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  Eye,
+  EyeOff,
   Globe,
   MapPin,
   X,
@@ -118,12 +120,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   // Login credentials
   const [loginEmail, setLoginEmail] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
+  const [showLoginPassword, setShowLoginPassword] = useState(false)
 
   // Step 1: About you
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [signupEmail, setSignupEmail] = useState('')
   const [signupPassword, setSignupPassword] = useState('')
+  const [showSignupPassword, setShowSignupPassword] = useState(false)
 
   // Step 2: Academics
   const [department, setDepartment] = useState('')
@@ -520,17 +524,32 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   <label className="lumina-auth-label" htmlFor="login-password">
                     Password
                   </label>
-                  <input
-                    id="login-password"
-                    type="password"
-                    className="lumina-auth-input"
-                    placeholder="Password"
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                    disabled={loading}
-                    required
-                    autoComplete="current-password"
-                  />
+                  <div className="lumina-auth-password-wrap">
+                    <input
+                      id="login-password"
+                      type={showLoginPassword ? 'text' : 'password'}
+                      className="lumina-auth-input"
+                      placeholder="Password"
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      disabled={loading}
+                      required
+                      autoComplete="current-password"
+                    />
+                    <button
+                      type="button"
+                      className="lumina-auth-password-toggle"
+                      onClick={() => setShowLoginPassword((prev) => !prev)}
+                      aria-label={showLoginPassword ? 'Hide password' : 'Show password'}
+                      tabIndex={-1}
+                    >
+                      {showLoginPassword ? (
+                        <EyeOff className="lumina-auth-eye-icon" />
+                      ) : (
+                        <Eye className="lumina-auth-eye-icon" />
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="lumina-auth-btn-row">
@@ -656,17 +675,32 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                       <label className="lumina-auth-label" htmlFor="signup-password">
                         Password *
                       </label>
-                      <input
-                        id="signup-password"
-                        type="password"
-                        className="lumina-auth-input"
-                        placeholder="At least 8 characters"
-                        value={signupPassword}
-                        onChange={(e) => setSignupPassword(e.target.value)}
-                        minLength={8}
-                        required
-                        autoComplete="new-password"
-                      />
+                      <div className="lumina-auth-password-wrap">
+                        <input
+                          id="signup-password"
+                          type={showSignupPassword ? 'text' : 'password'}
+                          className="lumina-auth-input"
+                          placeholder="At least 8 characters"
+                          value={signupPassword}
+                          onChange={(e) => setSignupPassword(e.target.value)}
+                          minLength={8}
+                          required
+                          autoComplete="new-password"
+                        />
+                        <button
+                          type="button"
+                          className="lumina-auth-password-toggle"
+                          onClick={() => setShowSignupPassword((prev) => !prev)}
+                          aria-label={showSignupPassword ? 'Hide password' : 'Show password'}
+                          tabIndex={-1}
+                        >
+                          {showSignupPassword ? (
+                            <EyeOff className="lumina-auth-eye-icon" />
+                          ) : (
+                            <Eye className="lumina-auth-eye-icon" />
+                          )}
+                        </button>
+                      </div>
                     </div>
 
                     <div className="lumina-auth-btn-row">
