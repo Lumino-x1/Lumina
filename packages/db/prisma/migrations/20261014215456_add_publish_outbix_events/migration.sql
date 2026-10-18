@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE "PublishOutboxEvent" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMP(3);
+ALTER TABLE IF EXISTS "PublishOutboxEvent" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMP(3);
