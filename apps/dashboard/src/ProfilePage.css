@@ -1289,7 +1289,7 @@
    ========================================================================== */
 .ai-profile-hero-card.ai-linkedin-hero-card {
   background: var(--ai-bg, #ffffff) !important;
-  border: none !important;
+  border: 1px solid var(--ai-border) !important;
   border-radius: 10px !important;
   box-shadow: none !important;
   margin-bottom: 12px;
@@ -1302,7 +1302,7 @@
 .lumina-ai-profile-root.dark .ai-profile-hero-card.ai-linkedin-hero-card,
 [data-theme='dark'] .lumina-ai-profile-root .ai-profile-hero-card.ai-linkedin-hero-card {
   background: var(--ai-bg, #000000) !important;
-  border: none !important;
+  border: 1px solid var(--ai-border) !important;
   box-shadow: none !important;
 }
 
@@ -1316,14 +1316,15 @@
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
   border: none !important;
-  border-bottom: none !important;
+  border-bottom: 1px solid var(--ai-border) !important;
+  box-sizing: border-box;
 }
 
 .lumina-ai-profile-root.dark .ai-linkedin-banner,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-banner {
   background-color: var(--ai-bg, #000000) !important;
   border: none !important;
-  border-bottom: none !important;
+  border-bottom: 1px solid var(--ai-border) !important;
 }
 
 .ai-banner-edit-pencil-btn {
@@ -1867,7 +1868,7 @@
    ========================================================================== */
 .ai-profile-hero-card {
   background-color: var(--ai-bg);
-  border: none !important;
+  border: 1px solid var(--ai-border) !important;
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 16px;
