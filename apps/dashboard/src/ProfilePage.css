@@ -1602,19 +1602,20 @@
 
 .ai-counter-item.ai-counter-followers,
 .ai-counter-item.ai-counter-following {
-  color: var(--ai-linkedin-blue, #0a66c2);
+  color: var(--ai-text-secondary, #8E897D);
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.15s ease, color 0.15s ease;
 }
 
 .ai-counter-item.ai-counter-followers:hover,
 .ai-counter-item.ai-counter-following:hover {
   text-decoration: underline;
+  opacity: 0.85;
 }
 
 .ai-counter-item.ai-counter-followers strong,
 .ai-counter-item.ai-counter-following strong {
-  color: var(--ai-linkedin-blue, #0a66c2);
+  color: var(--ai-text-primary, #B1ADA1);
   font-weight: 550;
 }
 
