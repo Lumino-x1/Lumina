@@ -1439,8 +1439,8 @@
   height: 32px;
   border-radius: 50%;
   background-color: #ffffff;
-  border: 2px solid #0a66c2;
-  color: #0a66c2;
+  border: 2px solid #C15F3C;
+  color: #C15F3C;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1453,7 +1453,7 @@
 
 .ai-avatar-add-story-btn:hover {
   transform: scale(1.08);
-  background-color: #f0f7ff;
+  background-color: rgba(193, 95, 60, 0.08);
 }
 
 .ai-linkedin-card-edit-btn {
@@ -1516,8 +1516,8 @@
   gap: 6px;
   padding: 3px 12px;
   border-radius: 9999px;
-  border: 1.5px dashed #0a66c2;
-  color: #0a66c2;
+  border: 1.5px dashed #C15F3C;
+  color: #C15F3C;
   background: transparent;
   font-size: 13.5px;
   font-weight: 600;
@@ -1527,7 +1527,7 @@
 }
 
 .ai-linkedin-verify-badge:hover {
-  background-color: rgba(10, 102, 194, 0.08);
+  background-color: rgba(193, 95, 60, 0.08);
 }
 
 .ai-linkedin-headline {
@@ -1573,20 +1573,29 @@
 }
 
 .ai-linkedin-connections-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   margin-top: 6px;
+  font-size: 14px;
 }
 
 .ai-linkedin-connections-link {
   font-size: 14px;
   font-weight: 600;
-  color: #0a66c2;
+  color: #C15F3C !important;
   text-decoration: none;
   cursor: pointer;
 }
 
 .ai-linkedin-connections-link:hover {
   text-decoration: underline;
-  color: #004182;
+  color: #A94F30 !important;
+}
+
+.ai-followers-count {
+  font-weight: 700;
+  color: #C15F3C !important;
 }
 
 /* Right Column (Orgs & School) */
@@ -1628,7 +1637,7 @@
 }
 
 .ai-linkedin-org-name:hover {
-  color: #0a66c2;
+  color: #C15F3C;
   text-decoration: underline;
 }
 
@@ -1656,24 +1665,24 @@
 }
 
 .ai-linkedin-btn-primary {
-  background-color: #0a66c2;
-  color: #ffffff;
-  border: none;
+  background-color: #C15F3C !important;
+  color: #ffffff !important;
+  border: none !important;
 }
 
 .ai-linkedin-btn-primary:hover {
-  background-color: #004182;
+  background-color: #A94F30 !important;
 }
 
 .ai-linkedin-btn-secondary {
-  background-color: transparent;
-  color: #0a66c2;
-  border: 1px solid #0a66c2;
+  background-color: transparent !important;
+  color: #C15F3C !important;
+  border: 1px solid #C15F3C !important;
 }
 
 .ai-linkedin-btn-secondary:hover {
-  background-color: rgba(10, 102, 194, 0.08);
-  box-shadow: inset 0 0 0 1px #0a66c2;
+  background-color: rgba(193, 95, 60, 0.08) !important;
+  box-shadow: inset 0 0 0 1px #C15F3C !important;
 }
 
 .ai-linkedin-btn-more {
@@ -1696,14 +1705,15 @@
   color: #191919;
 }
 
-/* Tabs Card below hero */
+/* Tabs Card below hero - borderless */
 .ai-profile-tabs-card {
-  background: var(--ai-card-bg);
-  border: 1px solid var(--ai-border);
-  border-radius: 10px;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
   margin-bottom: 16px;
-  padding: 0 16px;
-  overflow: hidden;
+  padding: 0 !important;
+  overflow: visible !important;
 }
 
 /* ==========================================================================

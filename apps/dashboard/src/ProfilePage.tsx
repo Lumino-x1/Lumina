@@ -1438,17 +1438,26 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     </a>
                   </div>
 
-                  {/* Connections */}
+                  {/* Followers & Following */}
                   <div className="ai-linkedin-connections-row">
                     <a
-                      href="#connections"
+                      href="#followers"
                       className="ai-linkedin-connections-link"
                       onClick={(e) => {
                         e.preventDefault()
-                        alert(`${profile.stats.followers || '137'} Connections on Lumina Campus Network`)
                       }}
                     >
-                      {profile.connections}
+                      <span className="ai-followers-count">{profile.stats.followers}</span> followers
+                    </a>
+                    <span className="ai-linkedin-dot">·</span>
+                    <a
+                      href="#following"
+                      className="ai-linkedin-connections-link"
+                      onClick={(e) => {
+                        e.preventDefault()
+                      }}
+                    >
+                      <span className="ai-followers-count">{profile.stats.following}</span> following
                     </a>
                   </div>
                 </div>
