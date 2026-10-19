@@ -59,30 +59,24 @@ button.lumina-skiper-toggle-btn,
 }
 
 /* ==========================================================================
-   Bright Mode Support (Brand Palette: #C15F3C, #FFFFFF, #F4F3EE, #B1ADA1)
+   Light Mode Support (Lumina Black + White + Blue Palette)
    ========================================================================== */
-[data-theme="bright"] .lumina-skiper-toggle-btn,
 [data-theme="light"] .lumina-skiper-toggle-btn,
-.bright .lumina-skiper-toggle-btn,
 .light .lumina-skiper-toggle-btn {
   background-color: #FFFFFF !important;
-  border-color: #B1ADA1 !important;
-  color: #1C1A17 !important;
-  box-shadow: 0 1px 3px rgba(177, 173, 161, 0.15) !important;
+  border-color: #E5E7EB !important;
+  color: #111111 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
 }
 
-[data-theme="bright"] .lumina-skiper-toggle-btn:hover,
 [data-theme="light"] .lumina-skiper-toggle-btn:hover,
-.bright .lumina-skiper-toggle-btn:hover,
 .light .lumina-skiper-toggle-btn:hover {
-  background-color: #F4F3EE !important;
-  border-color: #C15F3C !important;
-  color: #C15F3C !important;
+  background-color: #F7F8FA !important;
+  border-color: #2563EB !important;
+  color: #2563EB !important;
 }
 
-[data-theme="bright"] .lumina-skiper-toggle-btn:focus-visible,
 [data-theme="light"] .lumina-skiper-toggle-btn:focus-visible,
-.bright .lumina-skiper-toggle-btn:focus-visible,
 .light .lumina-skiper-toggle-btn:focus-visible {
-  outline-color: #C15F3C !important;
+  outline-color: #2563EB !important;
 }

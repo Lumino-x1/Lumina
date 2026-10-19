@@ -12,86 +12,87 @@
   --ai-font-mono: 'Geist Mono', 'Fira Code', 'JetBrains Mono', Menlo, monospace;
 }
 
-/* Base Light Theme (Brand Palette: #C15F3C, #FFFFFF, #F4F3EE, #B1ADA1) */
+/* Base Light Theme (Black + White + Blue System) */
 .lumina-ai-dashboard-root,
-.lumina-ai-dashboard-root.light {
-  --ai-bg: #F4F3EE;
-  --ai-sidebar-bg: #F4F3EE;
-  --ai-header-bg: #F4F3EE;
-  --ai-linkedin-blue: #0a66c2;
-  --ai-card-bg: #FFFFFF;
-  --ai-card-sub-bg: #F4F3EE;
-  --ai-card-hover: #EDECE6;
-  --ai-border: #B1ADA1;
-  --ai-border-subtle: rgba(177, 173, 161, 0.4);
-  --ai-border-focus: #C15F3C;
+.lumina-ai-dashboard-root.light,
+[data-theme='light'] .lumina-ai-dashboard-root {
+  --ai-bg: var(--surface-secondary, #F7F8FA);
+  --ai-sidebar-bg: var(--sidebar-background, #FFFFFF);
+  --ai-header-bg: var(--sidebar-background, #FFFFFF);
+  --ai-linkedin-blue: var(--primary, #2563EB);
+  --ai-card-bg: var(--card, #FFFFFF);
+  --ai-card-sub-bg: var(--surface-secondary, #F7F8FA);
+  --ai-card-hover: var(--surface-tertiary, #F0F2F5);
+  --ai-border: var(--border, #E5E7EB);
+  --ai-border-subtle: rgba(0, 0, 0, 0.06);
+  --ai-border-focus: var(--ring, #2563EB);
 
-  --ai-text-primary: #1C1A17;
-  --ai-text-secondary: #635F55;
-  --ai-text-muted: #8E897D;
-  --ai-text-subtle: #ABA69B;
+  --ai-text-primary: var(--foreground, #111111);
+  --ai-text-secondary: var(--muted-foreground, #6B7280);
+  --ai-text-muted: #9CA3AF;
+  --ai-text-subtle: #D1D5DB;
 
-  --ai-pill-active-bg: #C15F3C;
+  --ai-pill-active-bg: var(--primary, #2563EB);
   --ai-pill-active-text: #FFFFFF;
-  --ai-pill-inactive-bg: #EDECE6;
-  --ai-pill-inactive-text: #635F55;
+  --ai-pill-inactive-bg: var(--secondary, #F3F4F6);
+  --ai-pill-inactive-text: var(--muted-foreground, #6B7280);
 
-  --ai-accent-blue: #C15F3C;
-  --ai-accent-blue-bg: rgba(193, 95, 60, 0.1);
-  --ai-accent-blue-text: #C15F3C;
+  --ai-accent-blue: var(--primary, #2563EB);
+  --ai-accent-blue-bg: rgba(37, 99, 235, 0.08);
+  --ai-accent-blue-text: var(--primary, #2563EB);
 
-  --ai-accent-coral: rgba(193, 95, 60, 0.15);
-  --ai-accent-coral-text: #C15F3C;
+  --ai-accent-coral: rgba(37, 99, 235, 0.1);
+  --ai-accent-coral-text: var(--primary, #2563EB);
 
-  --ai-btn-primary-bg: #C15F3C;
+  --ai-btn-primary-bg: var(--primary, #2563EB);
   --ai-btn-primary-text: #FFFFFF;
-  --ai-btn-primary-hover: #A94F30;
+  --ai-btn-primary-hover: var(--primary-hover, #1D4ED8);
 
-  --ai-code-bg: #1C1A17;
-  --ai-code-border: #B1ADA1;
-  --ai-shadow-sm: 0 1px 2px rgba(28, 26, 23, 0.05);
-  --ai-shadow-md: 0 4px 8px -2px rgba(28, 26, 23, 0.08), 0 2px 4px -2px rgba(28, 26, 23, 0.04);
+  --ai-code-bg: var(--secondary, #F3F4F6);
+  --ai-code-border: var(--border, #E5E7EB);
+  --ai-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --ai-shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
 }
 
-/* Symmetrical Dark Theme (Harmonized with Terracotta Palette & Sidebar Text) */
+/* Symmetrical Dark Theme (Black + White + Blue System) */
 .lumina-ai-dashboard-root.dark,
 [data-theme='dark'] .lumina-ai-dashboard-root {
-  --ai-bg: #000000;
-  --ai-sidebar-bg: #000000;
-  --ai-header-bg: #000000;
-  --ai-linkedin-blue: #388fe6;
-  --ai-card-bg: #000000;
-  --ai-card-sub-bg: #0a0a0a;
-  --ai-card-hover: #141414;
-  --ai-border: rgba(177, 173, 161, 0.22);
-  --ai-border-subtle: rgba(177, 173, 161, 0.12);
-  --ai-border-focus: #C15F3C;
+  --ai-bg: var(--background, #09090B);
+  --ai-sidebar-bg: var(--sidebar-background, #09090B);
+  --ai-header-bg: var(--sidebar-background, #09090B);
+  --ai-linkedin-blue: var(--primary, #60A5FA);
+  --ai-card-bg: var(--card, #111113);
+  --ai-card-sub-bg: var(--surface-secondary, #18181B);
+  --ai-card-hover: var(--secondary, #202024);
+  --ai-border: var(--border, #27272A);
+  --ai-border-subtle: rgba(255, 255, 255, 0.08);
+  --ai-border-focus: var(--ring, #60A5FA);
 
-  --ai-text-primary: #B1ADA1;
-  --ai-text-secondary: #B1ADA1;
-  --ai-text-muted: #B1ADA1;
-  --ai-text-subtle: #B1ADA1;
+  --ai-text-primary: var(--foreground, #FAFAFA);
+  --ai-text-secondary: var(--muted-foreground, #A1A1AA);
+  --ai-text-muted: #71717A;
+  --ai-text-subtle: #52525B;
 
-  --ai-pill-active-bg: #C15F3C;
-  --ai-pill-active-text: #ffffff;
-  --ai-pill-inactive-bg: rgba(255, 255, 255, 0.06);
-  --ai-pill-inactive-text: #B1ADA1;
+  --ai-pill-active-bg: #2563EB;
+  --ai-pill-active-text: #FFFFFF;
+  --ai-pill-inactive-bg: var(--muted, #18181B);
+  --ai-pill-inactive-text: var(--muted-foreground, #A1A1AA);
 
-  --ai-accent-blue: #C15F3C;
-  --ai-accent-blue-bg: rgba(193, 95, 60, 0.18);
-  --ai-accent-blue-text: #ffffff;
+  --ai-accent-blue: var(--primary, #60A5FA);
+  --ai-accent-blue-bg: rgba(96, 165, 250, 0.12);
+  --ai-accent-blue-text: var(--primary, #60A5FA);
 
-  --ai-accent-coral: rgba(193, 95, 60, 0.2);
-  --ai-accent-coral-text: #E07D5A;
+  --ai-accent-coral: rgba(96, 165, 250, 0.15);
+  --ai-accent-coral-text: #93C5FD;
 
-  --ai-btn-primary-bg: #C15F3C;
-  --ai-btn-primary-text: #ffffff;
-  --ai-btn-primary-hover: #D4704B;
+  --ai-btn-primary-bg: #2563EB;
+  --ai-btn-primary-text: #FFFFFF;
+  --ai-btn-primary-hover: #1D4ED8;
 
-  --ai-code-bg: #000000;
-  --ai-code-border: rgba(177, 173, 161, 0.22);
-  --ai-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.8);
-  --ai-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.8);
+  --ai-code-bg: var(--card, #111113);
+  --ai-code-border: var(--border, #27272A);
+  --ai-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.6);
+  --ai-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.7);
 }
 
 /* Master Root Container */
@@ -463,7 +464,7 @@
 
 .lumina-ai-dashboard-root.light .ai-sidebar-search-box:focus-within,
 .lumina-ai-profile-root.light .ai-sidebar-search-box:focus-within {
-  border-color: var(--ai-border-focus, #C15F3C);
+  border-color: var(--ai-border-focus, #2563EB);
   background-color: #FFFFFF;
 }
 
@@ -944,7 +945,7 @@
 
 .ai-popover-menu-item .text-blue,
 .ai-popover-ws-left.text-blue {
-  color: var(--ai-btn-primary-bg, #C15F3C) !important;
+  color: var(--ai-btn-primary-bg, #2563EB) !important;
 }
 
 /* Workspaces section */
@@ -1156,7 +1157,7 @@
 
 .lumina-ai-dashboard-root.light .ai-popover-check-icon,
 .lumina-ai-profile-root.light .ai-popover-check-icon {
-  color: #C15F3C;
+  color: #2563EB;
 }
 
 /* ==========================================================================
@@ -1605,15 +1606,15 @@
 
 .lumina-ai-dashboard-root.light .ai-intel-pill:hover {
   background: #F4F3EE;
-  border-color: #C15F3C !important;
-  color: #C15F3C !important;
+  border-color: #2563EB !important;
+  color: #2563EB !important;
 }
 
 .lumina-ai-dashboard-root.light .ai-filter-pill.ai-intel-pill.is-active {
-  background: #C15F3C !important;
+  background: #2563EB !important;
   color: #FFFFFF !important;
-  border-color: #C15F3C !important;
-  box-shadow: 0 2px 8px rgba(193, 95, 60, 0.25);
+  border-color: #2563EB !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
 }
 
 /* ==========================================================================
@@ -1731,27 +1732,27 @@
 }
 
 .lumina-ai-dashboard-root.light .ai-intel-moving-border-inner .ai-tab-icon {
-  color: #C15F3C !important;
+  color: #2563EB !important;
   filter: none !important;
 }
 
 .lumina-ai-dashboard-root.light .ai-intel-moving-border-inner .ai-tab-icon svg path {
-  fill: rgba(193, 95, 60, 0.2) !important;
-  stroke: #C15F3C !important;
+  fill: rgba(37, 99, 235, 0.2) !important;
+  stroke: #2563EB !important;
 }
 
 .lumina-ai-dashboard-root.light .ai-intel-moving-border-btn:hover .ai-intel-moving-border-inner {
   background: #F4F3EE !important;
-  border-color: #C15F3C !important;
-  color: #C15F3C !important;
+  border-color: #2563EB !important;
+  color: #2563EB !important;
 }
 
 .lumina-ai-dashboard-root.light .ai-intel-moving-border-btn.is-active .ai-intel-moving-border-inner {
-  background: #C15F3C !important;
-  border-color: #C15F3C !important;
+  background: #2563EB !important;
+  border-color: #2563EB !important;
   color: #FFFFFF !important;
   font-weight: 700 !important;
-  box-shadow: 0 1px 4px rgba(193, 95, 60, 0.25) !important;
+  box-shadow: 0 1px 4px rgba(37, 99, 235, 0.25) !important;
 }
 
 .lumina-ai-dashboard-root.light .ai-intel-moving-border-btn.is-active .ai-tab-icon {
@@ -1868,10 +1869,10 @@
 }
 
 .lumina-ai-dashboard-root.light .ai-active-pill {
-  background: #C15F3C !important;
-  border: 1px solid #C15F3C !important;
+  background: #2563EB !important;
+  border: 1px solid #2563EB !important;
   color: #FFFFFF !important;
-  box-shadow: 0 1px 4px rgba(193, 95, 60, 0.25) !important;
+  box-shadow: 0 1px 4px rgba(37, 99, 235, 0.25) !important;
 }
 
 .ai-suite-sub {
@@ -1905,17 +1906,17 @@
 }
 
 .lumina-ai-dashboard-root.light .ai-suite-explore-link {
-  background: #C15F3C !important;
-  border: 1px solid #C15F3C !important;
+  background: #2563EB !important;
+  border: 1px solid #2563EB !important;
   color: #FFFFFF !important;
   font-weight: 600 !important;
-  box-shadow: 0 2px 8px rgba(193, 95, 60, 0.25) !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25) !important;
 }
 
 .lumina-ai-dashboard-root.light .ai-suite-explore-link:hover {
-  background: #A94F30 !important;
-  border-color: #A94F30 !important;
-  box-shadow: 0 4px 12px rgba(193, 95, 60, 0.35) !important;
+  background: #1D4ED8 !important;
+  border-color: #1D4ED8 !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35) !important;
   color: #FFFFFF !important;
 }
 
@@ -2100,7 +2101,7 @@
   align-items: center;
   gap: 4px;
   padding: 7px 16px;
-  background-color: #C15F3C;
+  background-color: #2563EB;
   color: #ffffff;
   font-size: 13px;
   font-weight: 600;
@@ -2116,7 +2117,7 @@
 .ai-minimal-post-btn:focus,
 .ai-minimal-post-btn:focus-visible,
 .ai-minimal-post-btn:active {
-  background-color: #C15F3C !important;
+  background-color: #2563EB !important;
   transform: none !important;
   box-shadow: none !important;
   outline: none !important;
@@ -2415,7 +2416,7 @@
 
 .ai-post-icon-btn:active,
 .ai-post-icon-btn.is-saved {
-  color: #C15F3C !important;
+  color: #2563EB !important;
 }
 
 .lumina-ai-dashboard-root.light .ai-post-stat-btn,
@@ -2430,12 +2431,12 @@
 }
 
 .lumina-ai-dashboard-root.light .ai-post-icon-btn.is-saved {
-  color: #C15F3C !important;
+  color: #2563EB !important;
 }
 
 .lumina-ai-dashboard-root.light .ai-post-icon-btn.is-saved:hover {
-  color: #A94F30 !important;
-  background-color: rgba(193, 95, 60, 0.12);
+  color: #1D4ED8 !important;
+  background-color: rgba(37, 99, 235, 0.12);
 }
 
 /* 4. Right Thumbnail Preview */
@@ -2489,7 +2490,7 @@
 
 .lumina-ai-dashboard-root.light .ai-feed-spinner {
   border-color: #F4F3EE;
-  border-top-color: #C15F3C;
+  border-top-color: #2563EB;
 }
 
 /* Feed Skeleton Loaders */
@@ -2677,16 +2678,16 @@
   font-family: var(--ai-font-sans);
   font-size: 13px;
   font-weight: 600;
-  background-color: #C15F3C;
+  background-color: #2563EB;
   color: #ffffff;
-  border: 1px solid #C15F3C;
+  border: 1px solid #2563EB;
   cursor: pointer;
   transition: all 0.18s ease;
 }
 
 .ai-empty-create-btn:hover {
-  background-color: #A94F30;
-  border-color: #A94F30;
+  background-color: #1D4ED8;
+  border-color: #1D4ED8;
   transform: translateY(-1px);
 }
 
@@ -3085,7 +3086,7 @@
   cursor: pointer;
   background: transparent !important;
   background-color: transparent !important;
-  color: #C15F3C !important;
+  color: #2563EB !important;
   border: none !important;
   box-shadow: none !important;
   display: inline-flex;
@@ -3135,7 +3136,7 @@
 
 .ai-friend-spinner {
   animation: ai-spin 0.8s linear infinite;
-  color: var(--ai-border-focus, #C15F3C);
+  color: var(--ai-border-focus, #2563EB);
 }
 
 .ai-friend-loading-text {
@@ -3192,7 +3193,7 @@
   background: transparent !important;
   background-color: transparent !important;
   border: none !important;
-  color: #C15F3C !important;
+  color: #2563EB !important;
 }
 
 .lumina-ai-dashboard-root.light .ai-community-join-btn:hover {
@@ -3277,8 +3278,8 @@
 .lumina-ai-dashboard-root.light .ai-community-explore-more-btn:hover,
 [data-theme="bright"] .ai-community-explore-more-btn:hover {
   background: #F4F3EE !important;
-  border-color: #C15F3C !important;
-  color: #C15F3C !important;
+  border-color: #2563EB !important;
+  color: #2563EB !important;
 }
 
 /* Suggested Friends - Explore More Link */
@@ -3841,16 +3842,16 @@
   padding: 1px 5px;
   border-radius: 4px;
   margin-left: auto;
-  background-color: rgba(193, 95, 60, 0.15);
-  color: #C15F3C;
-  border: 1px solid rgba(193, 95, 60, 0.3);
+  background-color: rgba(37, 99, 235, 0.15);
+  color: #2563EB;
+  border: 1px solid rgba(37, 99, 235, 0.3);
   line-height: 1.2;
 }
 
 .lumina-ai-dashboard-root.light .ai-soon-badge {
-  background-color: rgba(193, 95, 60, 0.12);
-  color: #C15F3C;
-  border-color: rgba(193, 95, 60, 0.25);
+  background-color: rgba(37, 99, 235, 0.12);
+  color: #2563EB;
+  border-color: rgba(37, 99, 235, 0.25);
 }
 
 .ai-blurred-card-wrap {

@@ -20,12 +20,12 @@ export type GridPulseProps = Omit<
   avoid?: string;
 };
 
-/** Hue at the top of the field and how far it turns: warm terracotta & amber tones matching #C15F3C */
-const HUE_TOP = 22;
+/** Hue at the top of the field and how far it turns: clean lumina blue matching #2563EB */
+const HUE_TOP = 220;
 const HUE_SPAN = 14;
 /**
  * Each cell takes one of these lightnesses, so a sweep reads as a field of
- * tints rather than one flat colour. Harmonized with brand terracotta #C15F3C.
+ * tints rather than one flat colour. Harmonized with lumina blue #2563EB.
  */
 const TINTS = [54, 50, 46, 58, 42];
 const TINTS_DARK = [52, 56, 60, 48, 64];

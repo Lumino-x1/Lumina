@@ -252,7 +252,7 @@
 [data-theme="light"] .faq-row-btn:hover,
 .bright .faq-row-btn:hover,
 .light .faq-row-btn:hover {
-  color: #C15F3C !important;
+  color: #2563EB !important;
 }
 
 [data-theme="bright"] .faq-row-question,
@@ -289,7 +289,7 @@
 .bright .faq-row-item.is-open .faq-row-chevron svg,
 .light .faq-row-btn:hover .faq-row-chevron svg,
 .light .faq-row-item.is-open .faq-row-chevron svg {
-  color: #C15F3C;
+  color: #2563EB;
 }
 
 [data-theme="bright"] .faq-row-answer-text,

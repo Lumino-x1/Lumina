@@ -122,14 +122,14 @@
 }
 
 .btn-cta-blue {
-  background-color: #C15F3C;
+  background-color: #2563EB;
   color: #ffffff;
   font-family: var(--font-sans);
   font-size: 14.5px;
   font-weight: 600;
   padding: 12px 28px;
   border-radius: 9999px !important;
-  border: 1px solid #C15F3C;
+  border: 1px solid #2563EB;
   cursor: pointer;
   box-shadow: none;
   display: inline-flex;
@@ -140,21 +140,21 @@
 }
 
 .btn-cta-blue:hover {
-  background-color: #A94F30;
-  border-color: #A94F30;
+  background-color: #1D4ED8;
+  border-color: #1D4ED8;
   opacity: 0.95;
 }
 
 .btn-cta-white,
 .btn-cta-primary {
-  background-color: #C15F3C;
+  background-color: #2563EB;
   color: #FFFFFF;
   font-family: var(--font-sans);
   font-size: 14.5px;
   font-weight: 600;
   padding: 12px 28px;
   border-radius: 9999px !important;
-  border: 1px solid #C15F3C;
+  border: 1px solid #2563EB;
   cursor: pointer;
   box-shadow: none;
   display: inline-flex;
@@ -166,8 +166,8 @@
 
 .btn-cta-white:hover,
 .btn-cta-primary:hover {
-  background-color: #A94F30;
-  border-color: #A94F30;
+  background-color: #1D4ED8;
+  border-color: #1D4ED8;
   color: #FFFFFF;
 }
 
@@ -344,7 +344,7 @@
 }
 
 .newsletter-submit-btn {
-  background-color: #C15F3C;
+  background-color: #2563EB;
   color: #ffffff;
   font-family: var(--font-sans);
   font-size: 13.5px;
@@ -358,7 +358,7 @@
 }
 
 .newsletter-submit-btn:hover {
-  background-color: #A94F30;
+  background-color: #1D4ED8;
 }
 
 .newsletter-disclaimer {

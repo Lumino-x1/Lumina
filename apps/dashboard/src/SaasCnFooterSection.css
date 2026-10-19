@@ -72,9 +72,9 @@
 
 /* Clean Sharp Rectangular Buttons */
 .saascn-btn-primary {
-  background-color: #C15F3C;
+  background-color: #2563EB;
   color: #ffffff;
-  border: 1px solid #C15F3C;
+  border: 1px solid #2563EB;
   border-radius: 9999px !important;
   padding: 11px 24px;
   font-family: var(--font-family-primary, 'Geist', sans-serif);
@@ -92,8 +92,8 @@
 }
 
 .saascn-btn-primary:hover {
-  background-color: #A94F30;
-  border-color: #A94F30;
+  background-color: #1D4ED8;
+  border-color: #1D4ED8;
 }
 
 .saascn-btn-secondary {
@@ -348,8 +348,8 @@
 [data-theme="light"] .saascn-theme-toggle,
 .bright .saascn-theme-toggle,
 .light .saascn-theme-toggle {
-  background-color: #F4F3EE !important;
-  border: 1px solid #B1ADA1 !important;
+  background-color: #F7F8FA !important;
+  border: 1px solid #E5E7EB !important;
   box-shadow: 0 1px 2px rgba(177, 173, 161, 0.25) !important;
 }
 
@@ -358,7 +358,7 @@
 .bright .saascn-theme-toggle:hover,
 .light .saascn-theme-toggle:hover {
   background-color: #FFFFFF !important;
-  border-color: #C15F3C !important;
+  border-color: #2563EB !important;
 }
 
 [data-theme="bright"] .saascn-theme-active-indicator,
@@ -373,7 +373,7 @@
 [data-theme="light"] .saascn-theme-active-indicator.is-active,
 .bright .saascn-theme-active-indicator.is-active,
 .light .saascn-theme-active-indicator.is-active {
-  background-color: #C15F3C !important;
+  background-color: #2563EB !important;
   color: #FFFFFF !important;
   box-shadow: 0 1px 4px rgba(193, 95, 60, 0.35) !important;
 }
@@ -398,9 +398,9 @@
 [data-theme="light"] .saascn-user-btn,
 .bright .saascn-user-btn,
 .light .saascn-user-btn {
-  background-color: #F4F3EE !important;
-  border: 1px solid #B1ADA1 !important;
-  color: #1C1A17 !important;
+  background-color: #F7F8FA !important;
+  border: 1px solid #E5E7EB !important;
+  color: #111111 !important;
 }
 
 [data-theme="bright"] .saascn-user-btn:hover,
@@ -408,8 +408,8 @@
 .bright .saascn-user-btn:hover,
 .light .saascn-user-btn:hover {
   background-color: #FFFFFF !important;
-  border-color: #C15F3C !important;
-  color: #C15F3C !important;
+  border-color: #2563EB !important;
+  color: #2563EB !important;
 }
 
 [data-theme="bright"] .saascn-social-link,
@@ -423,7 +423,7 @@
 [data-theme="light"] .saascn-social-link:hover,
 .bright .saascn-social-link:hover,
 .light .saascn-social-link:hover {
-  color: #C15F3C !important;
+  color: #2563EB !important;
 }
 
 /* ==========================================================================

@@ -21,6 +21,7 @@ import {
 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTheme } from './lib/themeContext'
+import { ThemeToggle } from './components/ThemeToggle'
 import './AuthPage.css'
 
 class ShaderErrorBoundary extends React.Component<
@@ -412,11 +413,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             <span>Back to website</span>
           </button>
 
-          {mode === 'signup' && (
-            <span className="lumina-auth-step-badge">
-              Step {signupStep} of 4
-            </span>
-          )}
+          <div className="lumina-auth-top-actions">
+            {mode === 'signup' && (
+              <span className="lumina-auth-step-badge">
+                Step {signupStep} of 4
+              </span>
+            )}
+            <ThemeToggle />
+          </div>
         </div>
 
         {/* Centered Form Wrapper */}
@@ -1088,10 +1092,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             frame={2854.5}
             colors={
               !isDark
-                ? ['#FFFFFF', '#C15F3C', '#C15F3C', '#F4F3EE']
-                : ['#FFFFFF', '#C15F3C', '#C15F3C', '#FFFFFF']
+                ? ['#FFFFFF', '#2563EB', '#60A5FA', '#EFF6FF']
+                : ['#FFFFFF', '#2563EB', '#60A5FA', '#09090B']
             }
-            colorBack={!isDark ? '#F4F3EE' : '#000000'}
+            colorBack={!isDark ? '#F7F8FA' : '#000000'}
             className="absolute inset-0 w-full h-full"
           />
         </ShaderErrorBoundary>

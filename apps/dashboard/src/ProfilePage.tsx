@@ -3214,7 +3214,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           >
             <div className="ai-friends-modal-header">
               <div className="ai-friends-modal-title-row">
-                <Send size={16} color="#C15F3C" />
+                <Send size={16} color="var(--ai-btn-primary-bg, #2563EB)" />
                 <h3 className="ai-friends-modal-title">
                   Message {directMessageFriend.name}
                 </h3>

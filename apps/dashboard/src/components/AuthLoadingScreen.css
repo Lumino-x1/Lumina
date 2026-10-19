@@ -24,18 +24,14 @@
   }
 }
 
-/* Light / Bright Mode */
-[data-theme="bright"] .lumina-auth-loading-root,
+/* Light Mode */
 [data-theme="light"] .lumina-auth-loading-root,
-.bright .lumina-auth-loading-root,
 .light .lumina-auth-loading-root {
   background-color: #FFFFFF;
 }
 
-[data-theme="bright"] .lumina-auth-loading-spinner,
 [data-theme="light"] .lumina-auth-loading-spinner,
-.bright .lumina-auth-loading-spinner,
 .light .lumina-auth-loading-spinner {
-  border: 3px solid #F4F3EE;
-  border-top-color: #C15F3C;
+  border: 3px solid #E5E7EB;
+  border-top-color: #2563EB;
 }

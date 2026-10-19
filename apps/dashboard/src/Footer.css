@@ -65,7 +65,7 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background-color: #C15F3C;
+  background-color: #2563EB;
   color: #ffffff;
   font-size: 16.5px;
   font-weight: 500;
@@ -80,7 +80,7 @@
 }
 
 .footer-cta-pill:hover {
-  background-color: #A94F30;
+  background-color: #1D4ED8;
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 10px 32px rgba(193, 95, 60, 0.4);
 }

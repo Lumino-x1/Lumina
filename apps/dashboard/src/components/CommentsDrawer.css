@@ -29,69 +29,69 @@
 /* Dark Mode (Default / Pure Charcoal & Black) */
 .lumina-comments-section.dark,
 [data-theme="dark"] .lumina-comments-section {
-  --comm-text-primary: #f3f4f6;
-  --comm-text-secondary: #9ca3af;
-  --comm-text-muted: #8e8e93;
-  --comm-border: rgba(255, 255, 255, 0.08);
-  --comm-border-subtle: rgba(255, 255, 255, 0.05);
+  --comm-text-primary: #FAFAFA;
+  --comm-text-secondary: #A1A1AA;
+  --comm-text-muted: #71717A;
+  --comm-border: #27272A;
+  --comm-border-subtle: rgba(255, 255, 255, 0.08);
 
-  --comm-input-bg: #1c1c1e;
-  --comm-input-border: rgba(255, 255, 255, 0.08);
-  --comm-input-focus: rgba(255, 255, 255, 0.22);
+  --comm-input-bg: #18181B;
+  --comm-input-border: #3F3F46;
+  --comm-input-focus: #60A5FA;
 
-  --comm-quote-card-bg: rgba(255, 255, 255, 0.02);
-  --comm-quote-card-border: rgba(255, 255, 255, 0.1);
-  --comm-quote-highlight-bg: rgba(34, 197, 94, 0.35);
-  --comm-quote-highlight-text: #ffffff;
+  --comm-quote-card-bg: rgba(255, 255, 255, 0.03);
+  --comm-quote-card-border: #27272A;
+  --comm-quote-highlight-bg: rgba(96, 165, 250, 0.2);
+  --comm-quote-highlight-text: #FAFAFA;
 
-  --comm-btn-hover: rgba(255, 255, 255, 0.08);
-  --comm-options-bg: #18181b;
-  --comm-options-border: rgba(255, 255, 255, 0.14);
+  --comm-btn-hover: #202024;
+  --comm-options-bg: #18181B;
+  --comm-options-border: #3F3F46;
   --comm-options-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
-  --comm-options-text: #e5e7eb;
-  --comm-options-hover: rgba(255, 255, 255, 0.09);
+  --comm-options-text: #FAFAFA;
+  --comm-options-hover: #27272A;
 
-  --comm-pill-btn-border: rgba(255, 255, 255, 0.24);
-  --comm-pill-btn-hover: rgba(255, 255, 255, 0.08);
+  --comm-pill-btn-border: #3F3F46;
+  --comm-pill-btn-hover: #202024;
 
-  --comm-accent: #c15f3c;
-  --comm-accent-hover: #a94f30;
+  --comm-accent: #2563EB;
+  --comm-accent-hover: #1D4ED8;
 }
 
-/* Light / Bright Mode (Lumina Editorial Palette) */
+/* Light / Bright Mode (Black + White + Blue System) */
 .lumina-comments-section.light,
 [data-theme="light"] .lumina-comments-section,
 [data-theme="bright"] .lumina-comments-section,
 .lumina-blog-reader-page.light .lumina-comments-section,
 body.light .lumina-comments-section,
 body.bright .lumina-comments-section {
-  --comm-text-primary: #1C1A17;
-  --comm-text-secondary: #635F55;
-  --comm-text-muted: #8E897D;
-  --comm-border: #B1ADA1;
-  --comm-border-subtle: rgba(177, 173, 161, 0.45);
+  --comm-text-primary: #111111;
+  --comm-text-secondary: #6B7280;
+  --comm-text-muted: #9CA3AF;
+  --comm-border: #E5E7EB;
+  --comm-border-subtle: rgba(0, 0, 0, 0.06);
 
   --comm-input-bg: #FFFFFF;
-  --comm-input-border: #B1ADA1;
-  --comm-input-focus: #C15F3C;
+  --comm-input-border: #D1D5DB;
+  --comm-input-focus: #2563EB;
 
-  --comm-quote-card-bg: #F4F3EE;
-  --comm-quote-card-border: #B1ADA1;
-  --comm-quote-highlight-bg: rgba(193, 95, 60, 0.2);
-  --comm-quote-highlight-text: #C15F3C;
+  --comm-quote-card-bg: #F7F8FA;
+  --comm-quote-card-border: #E5E7EB;
+  --comm-quote-highlight-bg: rgba(37, 99, 235, 0.12);
+  --comm-quote-highlight-text: #2563EB;
 
-  --comm-btn-hover: #F4F3EE;
+  --comm-btn-hover: #F3F4F6;
   --comm-options-bg: #FFFFFF;
-  --comm-options-border: #B1ADA1;
-  --comm-options-shadow: 0 10px 25px rgba(177, 173, 161, 0.2);
-  --comm-options-text: #1C1A17;
-  --comm-options-hover: #F4F3EE;
+  --comm-options-border: #E5E7EB;
+  --comm-options-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  --comm-options-text: #111111;
+  --comm-options-hover: #F3F4F6;
 
-  --comm-pill-btn-border: #B1ADA1;
-  --comm-pill-btn-hover: #F4F3EE;
+  --comm-pill-btn-border: #D1D5DB;
+  --comm-pill-btn-hover: #F3F4F6;
 
-  --comm-accent: #C15F3C;
-  --comm-accent-hover: #A94F30;
+  --comm-accent: #2563EB;
+  --comm-accent-hover: #1D4ED8;
 }
 
 /* ==========================================================================
@@ -634,12 +634,12 @@ body.bright .lumina-comments-section {
 }
 
 .comment-like-btn.is-liked {
-  color: var(--comm-accent, #C15F3C) !important;
+  color: var(--comm-accent, #2563EB) !important;
 }
 
 .comment-like-btn.is-liked svg {
-  color: var(--comm-accent, #C15F3C) !important;
-  fill: var(--comm-accent, #C15F3C) !important;
+  color: var(--comm-accent, #2563EB) !important;
+  fill: var(--comm-accent, #2563EB) !important;
 }
 
 .comment-clap-btn.is-clapped {

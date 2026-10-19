@@ -16,86 +16,88 @@
   --ai-linkedin-blue: #0a66c2;
 }
 
-/* Base Light Theme (Brand Palette: #C15F3C, #FFFFFF, #F4F3EE, #B1ADA1) */
+/* Base Light Theme (Brand Palette: #2563EB, #FFFFFF, #F4F3EE, #B1ADA1) */
+/* Base Light Theme (Black + White + Blue System) */
 .lumina-ai-profile-root,
-.lumina-ai-profile-root.light {
-  --ai-linkedin-blue: #0a66c2;
-  --ai-bg: #F4F3EE;
-  --ai-sidebar-bg: #F4F3EE;
-  --ai-header-bg: #F4F3EE;
-  --ai-card-bg: #FFFFFF;
-  --ai-card-sub-bg: #F4F3EE;
-  --ai-card-hover: #EDECE6;
-  --ai-border: #B1ADA1;
-  --ai-border-subtle: rgba(177, 173, 161, 0.4);
-  --ai-border-focus: #C15F3C;
+.lumina-ai-profile-root.light,
+[data-theme='light'] .lumina-ai-profile-root {
+  --ai-linkedin-blue: var(--primary, #2563EB);
+  --ai-bg: var(--surface-secondary, #F7F8FA);
+  --ai-sidebar-bg: var(--sidebar-background, #FFFFFF);
+  --ai-header-bg: var(--sidebar-background, #FFFFFF);
+  --ai-card-bg: var(--card, #FFFFFF);
+  --ai-card-sub-bg: var(--surface-secondary, #F7F8FA);
+  --ai-card-hover: var(--surface-tertiary, #F0F2F5);
+  --ai-border: var(--border, #E5E7EB);
+  --ai-border-subtle: rgba(0, 0, 0, 0.06);
+  --ai-border-focus: var(--ring, #2563EB);
 
-  --ai-text-primary: #1C1A17;
-  --ai-text-secondary: #635F55;
-  --ai-text-muted: #8E897D;
-  --ai-text-subtle: #ABA69B;
+  --ai-text-primary: var(--foreground, #111111);
+  --ai-text-secondary: var(--muted-foreground, #6B7280);
+  --ai-text-muted: #9CA3AF;
+  --ai-text-subtle: #D1D5DB;
 
-  --ai-pill-active-bg: #C15F3C;
+  --ai-pill-active-bg: var(--primary, #2563EB);
   --ai-pill-active-text: #FFFFFF;
-  --ai-pill-inactive-bg: #EDECE6;
-  --ai-pill-inactive-text: #635F55;
+  --ai-pill-inactive-bg: var(--secondary, #F3F4F6);
+  --ai-pill-inactive-text: var(--muted-foreground, #6B7280);
 
-  --ai-accent-blue: #C15F3C;
-  --ai-accent-blue-bg: rgba(193, 95, 60, 0.1);
-  --ai-accent-blue-text: #C15F3C;
+  --ai-accent-blue: var(--primary, #2563EB);
+  --ai-accent-blue-bg: rgba(37, 99, 235, 0.08);
+  --ai-accent-blue-text: var(--primary, #2563EB);
 
-  --ai-accent-coral: rgba(193, 95, 60, 0.15);
-  --ai-accent-coral-text: #C15F3C;
+  --ai-accent-coral: rgba(37, 99, 235, 0.1);
+  --ai-accent-coral-text: var(--primary, #2563EB);
 
-  --ai-btn-primary-bg: #C15F3C;
+  --ai-btn-primary-bg: var(--primary, #2563EB);
   --ai-btn-primary-text: #FFFFFF;
-  --ai-btn-primary-hover: #A94F30;
+  --ai-btn-primary-hover: var(--primary-hover, #1D4ED8);
 
-  --ai-code-bg: #1C1A17;
-  --ai-code-border: #B1ADA1;
-  --ai-shadow-sm: 0 1px 2px rgba(28, 26, 23, 0.05);
-  --ai-shadow-md: 0 4px 8px -2px rgba(28, 26, 23, 0.08), 0 2px 4px -2px rgba(28, 26, 23, 0.04);
+  --ai-code-bg: var(--secondary, #F3F4F6);
+  --ai-code-border: var(--border, #E5E7EB);
+  --ai-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --ai-shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
 }
 
-/* Symmetrical Dark Theme (Harmonized with Dashboard Palette & Sidebar Text) */
+/* Symmetrical Dark Theme (Black + White + Blue System) */
 .lumina-ai-profile-root.dark,
 [data-theme='dark'] .lumina-ai-profile-root {
-  --ai-linkedin-blue: #388fe6;
-  --ai-bg: #000000;
-  --ai-sidebar-bg: #000000;
-  --ai-header-bg: #000000;
-  --ai-card-bg: #000000;
-  --ai-card-sub-bg: #0a0a0a;
-  --ai-card-hover: #141414;
-  --ai-border: rgba(177, 173, 161, 0.22);
-  --ai-border-subtle: rgba(177, 173, 161, 0.12);
-  --ai-border-focus: #C15F3C;
+  --ai-linkedin-blue: var(--primary, #60A5FA);
+  --ai-bg: var(--background, #09090B);
+  --ai-sidebar-bg: var(--sidebar-background, #09090B);
+  --ai-header-bg: var(--sidebar-background, #09090B);
+  --ai-card-bg: var(--card, #111113);
+  --ai-card-sub-bg: var(--surface-secondary, #18181B);
+  --ai-card-hover: var(--secondary, #202024);
+  --ai-border: var(--border, #27272A);
+  --ai-border-subtle: rgba(255, 255, 255, 0.08);
+  --ai-border-focus: var(--ring, #60A5FA);
 
-  --ai-text-primary: #B1ADA1;
-  --ai-text-secondary: #B1ADA1;
-  --ai-text-muted: #B1ADA1;
-  --ai-text-subtle: #B1ADA1;
+  --ai-text-primary: var(--foreground, #FAFAFA);
+  --ai-text-secondary: var(--muted-foreground, #A1A1AA);
+  --ai-text-muted: #71717A;
+  --ai-text-subtle: #52525B;
 
-  --ai-pill-active-bg: #C15F3C;
-  --ai-pill-active-text: #ffffff;
-  --ai-pill-inactive-bg: rgba(255, 255, 255, 0.06);
-  --ai-pill-inactive-text: #B1ADA1;
+  --ai-pill-active-bg: #2563EB;
+  --ai-pill-active-text: #FFFFFF;
+  --ai-pill-inactive-bg: var(--muted, #18181B);
+  --ai-pill-inactive-text: var(--muted-foreground, #A1A1AA);
 
-  --ai-accent-blue: #C15F3C;
-  --ai-accent-blue-bg: rgba(193, 95, 60, 0.18);
-  --ai-accent-blue-text: #ffffff;
+  --ai-accent-blue: var(--primary, #60A5FA);
+  --ai-accent-blue-bg: rgba(96, 165, 250, 0.12);
+  --ai-accent-blue-text: var(--primary, #60A5FA);
 
-  --ai-accent-coral: rgba(193, 95, 60, 0.2);
-  --ai-accent-coral-text: #E07D5A;
+  --ai-accent-coral: rgba(96, 165, 250, 0.15);
+  --ai-accent-coral-text: #93C5FD;
 
-  --ai-btn-primary-bg: #C15F3C;
-  --ai-btn-primary-text: #ffffff;
-  --ai-btn-primary-hover: #D4704B;
+  --ai-btn-primary-bg: #2563EB;
+  --ai-btn-primary-text: #FFFFFF;
+  --ai-btn-primary-hover: #1D4ED8;
 
-  --ai-code-bg: #000000;
-  --ai-code-border: rgba(177, 173, 161, 0.22);
-  --ai-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.8);
-  --ai-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.8);
+  --ai-code-bg: var(--card, #111113);
+  --ai-code-border: var(--border, #27272A);
+  --ai-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.6);
+  --ai-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.7);
 }
 
 /* Master Root Container */
@@ -468,7 +470,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--ai-btn-primary-bg, #C15F3C);
+  background-color: var(--ai-btn-primary-bg, #2563EB);
   flex-shrink: 0;
 }
 
@@ -784,7 +786,7 @@
 
 .lumina-ai-profile-root .ai-popover-menu-item .text-blue,
 .lumina-ai-profile-root .ai-popover-ws-left.text-blue {
-  color: var(--ai-btn-primary-bg, #C15F3C) !important;
+  color: var(--ai-btn-primary-bg, #2563EB) !important;
 }
 
 .lumina-ai-profile-root .ai-popover-workspaces-section {
@@ -1169,7 +1171,7 @@
   gap: 6px;
   height: 35px;
   padding: 0 16px;
-  background-color: var(--ai-btn-primary-bg, #C15F3C);
+  background-color: var(--ai-btn-primary-bg, #2563EB);
   color: var(--ai-btn-primary-text, #ffffff);
   border: none;
   border-radius: 9999px;
@@ -1182,7 +1184,7 @@
 }
 
 .lumina-ai-profile-root .ai-create-action-btn:hover {
-  background-color: var(--ai-btn-primary-hover, #A94F30);
+  background-color: var(--ai-btn-primary-hover, #1D4ED8);
 }
 
 .lumina-ai-profile-root .ai-create-action-btn .ai-create-icon {
@@ -1348,12 +1350,12 @@
   align-items: center;
   justify-content: center;
   background: var(--ai-card-hover, rgba(177, 173, 161, 0.15));
-  color: #C15F3C;
+  color: #2563EB;
 }
 
 .ai-profile-avatar-spinner {
   animation: aiProfileSpin 1s linear infinite;
-  color: #C15F3C;
+  color: #2563EB;
 }
 
 @keyframes aiProfileSpin {
@@ -1537,8 +1539,8 @@
   height: 32px;
   border-radius: 50%;
   background-color: #ffffff;
-  border: 2px solid #C15F3C;
-  color: #C15F3C;
+  border: 2px solid #2563EB;
+  color: #2563EB;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1552,14 +1554,14 @@
 .lumina-ai-profile-root.dark .ai-avatar-add-story-btn,
 [data-theme='dark'] .lumina-ai-profile-root .ai-avatar-add-story-btn {
   background-color: #000000;
-  border-color: #C15F3C;
-  color: #C15F3C;
+  border-color: #2563EB;
+  color: #2563EB;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
 }
 
 .ai-avatar-add-story-btn:hover {
   transform: scale(1.08);
-  background-color: rgba(193, 95, 60, 0.08);
+  background-color: rgba(37, 99, 235, 0.08);
 }
 
 .ai-linkedin-card-edit-btn {
@@ -1906,7 +1908,7 @@
 }
 
 .ai-linkedin-org-name:hover {
-  color: #C15F3C !important;
+  color: #2563EB !important;
   text-decoration: underline;
 }
 
@@ -1934,24 +1936,24 @@
 }
 
 .ai-linkedin-btn-primary {
-  background-color: #C15F3C !important;
+  background-color: #2563EB !important;
   color: #ffffff !important;
   border: none !important;
 }
 
 .ai-linkedin-btn-primary:hover {
-  background-color: #A94F30 !important;
+  background-color: #1D4ED8 !important;
 }
 
 .ai-linkedin-btn-secondary {
   background-color: transparent !important;
-  color: #C15F3C !important;
-  border: 1px solid #C15F3C !important;
+  color: #2563EB !important;
+  border: 1px solid #2563EB !important;
 }
 
 .ai-linkedin-btn-secondary:hover {
-  background-color: rgba(193, 95, 60, 0.08) !important;
-  box-shadow: inset 0 0 0 1px #C15F3C !important;
+  background-color: rgba(37, 99, 235, 0.08) !important;
+  box-shadow: inset 0 0 0 1px #2563EB !important;
 }
 
 .ai-linkedin-btn-more {
@@ -2269,7 +2271,7 @@
 }
 
 .ai-meta-item.is-open-role {
-  color: var(--ai-btn-primary-bg, #C15F3C);
+  color: var(--ai-btn-primary-bg, #2563EB);
   font-weight: 600;
 }
 
@@ -2490,7 +2492,7 @@
   align-items: center;
   gap: 4px;
   padding: 7px 16px;
-  background-color: var(--ai-btn-primary-bg, #C15F3C);
+  background-color: var(--ai-btn-primary-bg, #2563EB);
   color: var(--ai-btn-primary-text, #ffffff);
   font-size: 13px;
   font-weight: 600;
@@ -2506,7 +2508,7 @@
 .lumina-ai-profile-root .ai-minimal-post-btn:focus,
 .lumina-ai-profile-root .ai-minimal-post-btn:focus-visible,
 .lumina-ai-profile-root .ai-minimal-post-btn:active {
-  background-color: var(--ai-btn-primary-bg, #C15F3C) !important;
+  background-color: var(--ai-btn-primary-bg, #2563EB) !important;
   transform: none !important;
   box-shadow: none !important;
   outline: none !important;
@@ -2587,7 +2589,7 @@
 
 /* PINNED WORK CARD */
 .ai-pinned-card {
-  border-left: 3px solid var(--ai-btn-primary-bg, #C15F3C);
+  border-left: 3px solid var(--ai-btn-primary-bg, #2563EB);
 }
 
 .ai-pinned-header {
@@ -2610,7 +2612,7 @@
   gap: 4px;
   font-weight: 600;
   letter-spacing: 0.05em;
-  color: var(--ai-btn-primary-bg, #C15F3C);
+  color: var(--ai-btn-primary-bg, #2563EB);
 }
 
 .ai-pinned-sep {
@@ -2693,7 +2695,7 @@
 }
 
 .ai-diag-node.is-leader {
-  border-left: 3px solid var(--ai-btn-primary-bg, #C15F3C);
+  border-left: 3px solid var(--ai-btn-primary-bg, #2563EB);
 }
 
 .ai-diag-node.is-follower {
@@ -2791,7 +2793,7 @@
   background: none;
   border: none;
   padding: 0;
-  color: var(--ai-btn-primary-bg, #C15F3C);
+  color: var(--ai-btn-primary-bg, #2563EB);
   font-size: 11.5px;
   font-weight: 500;
   cursor: pointer;
@@ -3019,7 +3021,7 @@
   width: 34px;
   height: 34px;
   border-radius: 6px;
-  background-color: var(--ai-btn-primary-bg, #C15F3C);
+  background-color: var(--ai-btn-primary-bg, #2563EB);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -3103,7 +3105,7 @@
 .ai-grant-amount-badge {
   font-size: 12px;
   font-weight: 600;
-  background-color: var(--ai-btn-primary-bg, #C15F3C);
+  background-color: var(--ai-btn-primary-bg, #2563EB);
   color: #ffffff;
   padding: 6px 12px;
   border-radius: 6px;
@@ -3156,12 +3158,12 @@
 }
 
 .lumina-ai-profile-root.light .ai-post-icon-btn.is-saved {
-  color: #C15F3C !important;
+  color: #2563EB !important;
 }
 
 .lumina-ai-profile-root.light .ai-post-icon-btn.is-saved:hover {
-  color: #A94F30 !important;
-  background-color: rgba(193, 95, 60, 0.12);
+  color: #1D4ED8 !important;
+  background-color: rgba(37, 99, 235, 0.12);
 }
 
 .lumina-ai-profile-root .ai-post-footer-actions {
@@ -3202,12 +3204,12 @@
 }
 
 .lumina-ai-profile-root .ai-post-action-btn.is-saved {
-  color: var(--ai-btn-primary-bg, #C15F3C);
+  color: var(--ai-btn-primary-bg, #2563EB);
 }
 
 .lumina-ai-profile-root .ai-post-action-btn.is-saved:hover {
-  color: var(--ai-btn-primary-hover, #A94F30);
-  background-color: rgba(193, 95, 60, 0.12);
+  color: var(--ai-btn-primary-hover, #1D4ED8);
+  background-color: rgba(37, 99, 235, 0.12);
 }
 
 .lumina-ai-profile-root .ai-post-footer-left {
@@ -3352,7 +3354,7 @@
   cursor: pointer;
   background: transparent !important;
   background-color: transparent !important;
-  color: #C15F3C !important;
+  color: #2563EB !important;
   border: none !important;
   box-shadow: none !important;
   display: inline-flex;
@@ -3435,7 +3437,7 @@
 .lumina-ai-profile-root .ai-friend-spinner,
 .lumina-ai-dashboard-root .ai-friend-spinner {
   animation: ai-spin 0.8s linear infinite;
-  color: var(--ai-border-focus, #C15F3C);
+  color: var(--ai-border-focus, #2563EB);
 }
 
 .lumina-ai-profile-root .ai-friend-loading-text,
@@ -3659,7 +3661,7 @@
 .ai-paper-arxiv {
   font-family: var(--ai-font-mono, monospace);
   font-weight: 600;
-  color: var(--ai-btn-primary-bg, #C15F3C);
+  color: var(--ai-btn-primary-bg, #2563EB);
 }
 
 .ai-paper-cites {
@@ -4690,7 +4692,7 @@
 }
 
 .ai-scheduled-card {
-  border-left-color: var(--ai-btn-primary-bg, #C15F3C);
+  border-left-color: var(--ai-btn-primary-bg, #2563EB);
 }
 
 .ai-draft-badge {
@@ -4718,15 +4720,15 @@
   gap: 5px;
   padding: 2px 8px;
   border-radius: 4px;
-  background-color: rgba(193, 95, 60, 0.12);
-  color: var(--ai-btn-primary-bg, #C15F3C);
+  background-color: rgba(37, 99, 235, 0.12);
+  color: var(--ai-btn-primary-bg, #2563EB);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
 
 .lumina-ai-profile-root.dark .ai-scheduled-badge {
-  background-color: rgba(193, 95, 60, 0.2);
+  background-color: rgba(37, 99, 235, 0.2);
   color: #E07D5A;
 }
 
@@ -5970,7 +5972,7 @@
 /* Claude Orange Action Button: Remove Friend / Message */
 .ai-friends-remove-btn,
 .ai-friends-message-btn {
-  background-color: #C15F3C !important;
+  background-color: #2563EB !important;
   color: #FFFFFF !important;
   font-weight: 600 !important;
   border: none !important;
@@ -5994,7 +5996,7 @@
 
 .ai-friends-remove-btn:hover,
 .ai-friends-message-btn:hover {
-  background-color: #C15F3C !important;
+  background-color: #2563EB !important;
   color: #FFFFFF !important;
   box-shadow: none !important;
   transform: none !important;
@@ -6002,7 +6004,7 @@
 
 .ai-friends-remove-btn:active,
 .ai-friends-message-btn:active {
-  background-color: #C15F3C !important;
+  background-color: #2563EB !important;
   transform: none !important;
   box-shadow: none !important;
 }
@@ -6183,7 +6185,7 @@
 }
 
 .ai-dm-textarea:focus {
-  border-color: #C15F3C;
+  border-color: #2563EB;
 }
 
 .ai-dm-footer {
@@ -6211,7 +6213,7 @@
 }
 
 .ai-dm-send-btn {
-  background-color: #C15F3C;
+  background-color: #2563EB;
   color: #FFFFFF !important;
   border: none;
   padding: 8px 18px;
@@ -6226,7 +6228,7 @@
 }
 
 .ai-dm-send-btn:hover:not(:disabled) {
-  background-color: #C15F3C;
+  background-color: #2563EB;
   box-shadow: none;
   transform: none;
 }

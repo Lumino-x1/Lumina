@@ -9,7 +9,9 @@
   --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-:root {
+:root,
+[data-theme="light"],
+.light {
   /* SaasCN Design System Foundations */
   --font-family-primary: 'Geist', 'Geist Fallback', system-ui, sans-serif;
   --font-size-base: 17.5px;
@@ -24,25 +26,83 @@
   --font-size-xl: 52px;
   --font-size-2xl: 78px;
 
-  /* Color Palette - Lumina Editorial Brand Tokens */
-  --color-terracotta: #C15F3C;
-  --color-terracotta-hover: #A94F30;
-  --color-white: #FFFFFF;
-  --color-warm-offwhite: #F4F3EE;
-  --color-warm-gray: #B1ADA1;
-  --color-dark-text: #1C1A17;
-  --color-muted-text: #635F55;
+  /* Centralized Semantic Design Tokens (Black + White + Blue) */
+  --background: #FFFFFF;
+  --foreground: #111111;
 
-  --color-text-primary: #ebebeb;
-  --color-text-secondary: #b3b3b3;
-  --color-text-tertiary: #171717;
-  --color-surface-raised: #fafafa;
-  --color-surface-base: #000000;
-  --color-surface-muted: oklab(0.510275 0.000023216 0.0000101924 / 0.06);
-  --color-surface-strong: #121212;
-  --color-border-default: #666666;
-  --color-border-subtle: rgba(255, 255, 255, 0.12);
-  --color-focus-ring: rgba(193, 95, 60, 0.45);
+  --surface: #FFFFFF;
+  --surface-secondary: #F7F8FA;
+  --surface-tertiary: #F0F2F5;
+
+  --card: #FFFFFF;
+  --card-foreground: #111111;
+
+  --primary: #2563EB;
+  --primary-hover: #1D4ED8;
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #F3F4F6;
+  --secondary-foreground: #111827;
+
+  --muted: #F3F4F6;
+  --muted-foreground: #6B7280;
+
+  --border: #E5E7EB;
+  --border-strong: #D1D5DB;
+
+  --input: #FFFFFF;
+  --input-border: #D1D5DB;
+  --input-focus: #2563EB;
+
+  --link: #2563EB;
+  --link-hover: #1D4ED8;
+
+  --ring: #2563EB;
+
+  --popover: #FFFFFF;
+  --popover-foreground: #111111;
+
+  --sidebar-background: #FFFFFF;
+  --sidebar-foreground: #111111;
+  --sidebar-border: #E5E7EB;
+  --sidebar-active: #EFF6FF;
+  --sidebar-active-foreground: #1D4ED8;
+
+  --overlay: rgba(0, 0, 0, 0.45);
+
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --success: #10B981;
+  --success-foreground: #FFFFFF;
+  --warning: #F59E0B;
+  --warning-foreground: #FFFFFF;
+  --info: #2563EB;
+  --info-foreground: #FFFFFF;
+  --badge: #EFF6FF;
+  --badge-foreground: #1D4ED8;
+  --skeleton: #E5E7EB;
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: #D1D5DB;
+
+  /* Legacy aliases for backward compatibility */
+  --color-terracotta: var(--primary);
+  --color-terracotta-hover: var(--primary-hover);
+  --color-white: #FFFFFF;
+  --color-warm-offwhite: var(--surface-secondary);
+  --color-warm-gray: var(--border);
+  --color-dark-text: var(--foreground);
+  --color-muted-text: var(--muted-foreground);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: #8E897D;
+  --color-surface-raised: var(--surface-secondary);
+  --color-surface-base: var(--background);
+  --color-surface-muted: var(--surface-secondary);
+  --color-surface-strong: var(--surface);
+  --color-border-default: var(--border);
+  --color-border-subtle: rgba(0, 0, 0, 0.08);
+  --color-focus-ring: rgba(37, 99, 235, 0.35);
 
   /* Spacing Scale */
   --space-1: 6px;
@@ -62,32 +122,100 @@
   --motion-duration-normal: 300ms;
 
   --font-sans: var(--font-family-primary);
-  --notion-bg: var(--color-surface-base);
-  --notion-text: var(--color-text-primary);
-  --notion-text-muted: var(--color-text-secondary);
-  --notion-border: var(--color-border-subtle);
+  --notion-bg: var(--background);
+  --notion-text: var(--foreground);
+  --notion-text-muted: var(--muted-foreground);
+  --notion-border: var(--border);
+
+  color-scheme: light;
 }
 
-/* Light / Bright Mode Token Overrides */
-[data-theme="light"],
-[data-theme="bright"],
-.light,
-.bright {
-  --color-text-primary: #1C1A17;
-  --color-text-secondary: #635F55;
-  --color-text-tertiary: #8E897D;
-  --color-surface-raised: #F4F3EE;
-  --color-surface-base: #FFFFFF;
-  --color-surface-muted: #F4F3EE;
-  --color-surface-strong: #FFFFFF;
-  --color-border-default: #B1ADA1;
-  --color-border-subtle: rgba(177, 173, 161, 0.45);
-  --color-focus-ring: rgba(193, 95, 60, 0.35);
+[data-theme="dark"],
+.dark {
+  /* Centralized Semantic Design Tokens (Dark Theme) */
+  --background: #09090B;
+  --foreground: #FAFAFA;
 
-  --notion-bg: #FFFFFF;
-  --notion-text: #1C1A17;
-  --notion-text-muted: #635F55;
-  --notion-border: #B1ADA1;
+  --surface: #111113;
+  --surface-secondary: #18181B;
+  --surface-tertiary: #222225;
+
+  --card: #111113;
+  --card-foreground: #FAFAFA;
+
+  --primary: #60A5FA;
+  --primary-hover: #93C5FD;
+  --primary-foreground: #0B1220;
+
+  --secondary: #202024;
+  --secondary-foreground: #F4F4F5;
+
+  --muted: #18181B;
+  --muted-foreground: #A1A1AA;
+
+  --border: #27272A;
+  --border-strong: #3F3F46;
+
+  --input: #111113;
+  --input-border: #3F3F46;
+  --input-focus: #60A5FA;
+
+  --link: #60A5FA;
+  --link-hover: #93C5FD;
+
+  --ring: #60A5FA;
+
+  --popover: #18181B;
+  --popover-foreground: #FAFAFA;
+
+  --sidebar-background: #09090B;
+  --sidebar-foreground: #FAFAFA;
+  --sidebar-border: #27272A;
+  --sidebar-active: #172554;
+  --sidebar-active-foreground: #93C5FD;
+
+  --overlay: rgba(0, 0, 0, 0.70);
+
+  --destructive: #F87171;
+  --destructive-foreground: #450A0A;
+  --success: #34D399;
+  --success-foreground: #022C22;
+  --warning: #FBBF24;
+  --warning-foreground: #451A03;
+  --info: #60A5FA;
+  --info-foreground: #0B1220;
+  --badge: rgba(96, 165, 250, 0.15);
+  --badge-foreground: #93C5FD;
+  --skeleton: #27272A;
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: #3F3F46;
+
+  /* Legacy aliases for backward compatibility */
+  --color-terracotta: var(--primary);
+  --color-terracotta-hover: var(--primary-hover);
+  --color-white: #FFFFFF;
+  --color-warm-offwhite: var(--surface-secondary);
+  --color-warm-gray: var(--border);
+  --color-dark-text: var(--foreground);
+  --color-muted-text: var(--muted-foreground);
+
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted-foreground);
+  --color-text-tertiary: #71717A;
+  --color-surface-raised: var(--surface-secondary);
+  --color-surface-base: var(--background);
+  --color-surface-muted: var(--surface-secondary);
+  --color-surface-strong: var(--surface);
+  --color-border-default: var(--border);
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+  --color-focus-ring: rgba(96, 165, 250, 0.35);
+
+  --notion-bg: var(--surface);
+  --notion-text: var(--foreground);
+  --notion-text-muted: var(--muted-foreground);
+  --notion-border: var(--border);
+
+  color-scheme: dark;
 }
 
 /* WCAG 2.2 AA Focus Visible Requirements */

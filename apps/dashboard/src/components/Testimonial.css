@@ -118,7 +118,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #C15F3C;
+  background-color: #2563EB;
   transform-origin: top;
   border-radius: 9999px;
 }
@@ -161,7 +161,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50% !important;
-  background-color: #C15F3C;
+  background-color: #2563EB;
   flex-shrink: 0;
 }
 
@@ -220,7 +220,7 @@
 .difference-meta-line {
   width: 32px;
   height: 1px;
-  background-color: #C15F3C;
+  background-color: #2563EB;
   transform-origin: left;
 }
 
@@ -259,7 +259,7 @@
 
 .difference-slide-dot.is-active {
   width: 38px;
-  background-color: #C15F3C;
+  background-color: #2563EB;
 }
 
 .difference-slide-dot:hover:not(.is-active) {
@@ -298,8 +298,8 @@ button.testimonial-nav-btn,
 
 .testimonial-nav-btn:hover,
 .difference-nav-btn:hover {
-  border-color: #C15F3C;
-  background-color: #C15F3C;
+  border-color: #2563EB;
+  background-color: #2563EB;
   color: #FFFFFF;
   transform: scale(1.04);
 }
@@ -348,7 +348,7 @@ button.testimonial-nav-btn,
 }
 
 /* ==========================================================================
-   BRIGHT / LIGHT MODE SUPPORT (Lumina 4-Color Palette: #C15F3C, #FFFFFF, #F4F3EE, #B1ADA1)
+   BRIGHT / LIGHT MODE SUPPORT (Lumina 4-Color Palette: #2563EB, #FFFFFF, #F4F3EE, #B1ADA1)
    ========================================================================== */
 [data-theme="bright"] .testimonial-root,
 [data-theme="light"] .testimonial-root,
@@ -414,7 +414,7 @@ button.testimonial-nav-btn,
 [data-theme="light"] .difference-progress-fill,
 .bright .difference-progress-fill,
 .light .difference-progress-fill {
-  background-color: #C15F3C !important;
+  background-color: #2563EB !important;
 }
 
 [data-theme="bright"] .difference-category-badge,
@@ -430,7 +430,7 @@ button.testimonial-nav-btn,
 [data-theme="light"] .difference-category-dot,
 .bright .difference-category-dot,
 .light .difference-category-dot {
-  background-color: #C15F3C !important;
+  background-color: #2563EB !important;
 }
 
 [data-theme="bright"] .difference-headline-text,
@@ -451,7 +451,7 @@ button.testimonial-nav-btn,
 [data-theme="light"] .difference-meta-line,
 .bright .difference-meta-line,
 .light .difference-meta-line {
-  background-color: #C15F3C !important;
+  background-color: #2563EB !important;
 }
 
 [data-theme="bright"] .difference-meta-text,
@@ -472,7 +472,7 @@ button.testimonial-nav-btn,
 [data-theme="light"] .difference-slide-dot.is-active,
 .bright .difference-slide-dot.is-active,
 .light .difference-slide-dot.is-active {
-  background-color: #C15F3C !important;
+  background-color: #2563EB !important;
 }
 
 [data-theme="bright"] .difference-slide-dot:hover:not(.is-active),
@@ -507,8 +507,8 @@ button.testimonial-nav-btn,
 .bright .difference-nav-btn:hover,
 .light .testimonial-nav-btn:hover,
 .light .difference-nav-btn:hover {
-  border-color: #C15F3C !important;
-  background-color: #C15F3C !important;
+  border-color: #2563EB !important;
+  background-color: #2563EB !important;
   color: #FFFFFF !important;
 }
 

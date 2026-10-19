@@ -136,8 +136,8 @@
 }
 
 .hero-btn-primary {
-  background-color: #C15F3C;
-  border: 1px solid #C15F3C;
+  background-color: #2563EB;
+  border: 1px solid #2563EB;
   border-radius: 9999px !important;
   color: #FFFFFF;
   padding: 12px 24px;
@@ -156,8 +156,8 @@
 }
 
 .hero-btn-primary:hover {
-  background-color: #A94F30;
-  border-color: #A94F30;
+  background-color: #1D4ED8;
+  border-color: #1D4ED8;
   color: #FFFFFF;
 }
 
@@ -320,8 +320,8 @@
 [data-theme="light"] .hero-btn-primary,
 .bright .hero-btn-primary,
 .light .hero-btn-primary {
-  background-color: #C15F3C;
-  border-color: #C15F3C;
+  background-color: #2563EB;
+  border-color: #2563EB;
   color: #ffffff;
 }
 
@@ -329,8 +329,8 @@
 [data-theme="light"] .hero-btn-primary:hover,
 .bright .hero-btn-primary:hover,
 .light .hero-btn-primary:hover {
-  background-color: #A94F30;
-  border-color: #A94F30;
+  background-color: #1D4ED8;
+  border-color: #1D4ED8;
   color: #ffffff;
 }
 
@@ -410,7 +410,7 @@
   [data-theme="light"] .hero-image-col,
   .bright .hero-image-col,
   .light .hero-image-col {
-    border-top-color: #B1ADA1;
+    border-top-color: #E5E7EB;
   }
 
   .crosshair-top-divider,

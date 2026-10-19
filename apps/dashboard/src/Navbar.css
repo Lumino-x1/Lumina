@@ -292,9 +292,9 @@
 .saascn-mobile-dash-btn {
   width: 100%;
   padding: 12px 20px;
-  background-color: #C15F3C;
+  background-color: #2563EB;
   color: #ffffff;
-  border: 1px solid #C15F3C;
+  border: 1px solid #2563EB;
   border-radius: 9999px !important;
   font-family: var(--font-family-primary, 'Geist', sans-serif);
   font-size: 14.5px;
@@ -307,8 +307,8 @@
 }
 
 .saascn-mobile-dash-btn:hover {
-  background-color: #A94F30;
-  border-color: #A94F30;
+  background-color: #1D4ED8;
+  border-color: #1D4ED8;
 }
 
 .saascn-mobile-dash-btn-secondary {
@@ -338,8 +338,8 @@
 .bright .saascn-mobile-menu-btn:hover,
 .light .saascn-mobile-menu-btn:hover {
   background-color: #F4F3EE;
-  border-color: #C15F3C;
-  color: #C15F3C;
+  border-color: #2563EB;
+  color: #2563EB;
 }
 
 [data-theme="bright"] .saascn-mobile-menu-dropdown,
@@ -392,7 +392,7 @@
 .bright .saascn-mobile-nav-item:hover,
 .light .saascn-mobile-nav-item:hover {
   background-color: #F4F3EE;
-  color: #C15F3C;
+  color: #2563EB;
 }
 
 [data-theme="bright"] .saascn-mobile-dash-btn-secondary,
@@ -409,8 +409,8 @@
 .bright .saascn-mobile-dash-btn-secondary:hover,
 .light .saascn-mobile-dash-btn-secondary:hover {
   background-color: #F4F3EE;
-  border-color: #C15F3C;
-  color: #C15F3C;
+  border-color: #2563EB;
+  color: #2563EB;
 }
 
 /* Responsive Media Queries */
