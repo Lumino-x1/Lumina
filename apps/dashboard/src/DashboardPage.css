@@ -3110,6 +3110,73 @@
   opacity: 0.8;
 }
 
+/* Suggested Friends Loading & Empty States */
+.ai-friend-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 12px;
+  gap: 10px;
+  min-height: 100px;
+  text-align: center;
+}
+
+.ai-friend-spinner {
+  animation: ai-spin 0.8s linear infinite;
+  color: var(--ai-border-focus, #C15F3C);
+}
+
+.ai-friend-loading-text {
+  font-size: 12px;
+  color: var(--ai-text-secondary, #635F55);
+}
+
+.lumina-ai-dashboard-root.dark .ai-friend-loading-text,
+[data-theme='dark'] .lumina-ai-dashboard-root .ai-friend-loading-text {
+  color: #B1ADA1;
+}
+
+.ai-friend-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px 12px;
+  gap: 6px;
+}
+
+.ai-friend-empty-icon {
+  color: var(--ai-text-muted, #948f83);
+  margin-bottom: 2px;
+}
+
+.ai-friend-empty-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ai-text-primary, #1C1A17);
+}
+
+.lumina-ai-dashboard-root.dark .ai-friend-empty-title,
+[data-theme='dark'] .lumina-ai-dashboard-root .ai-friend-empty-title {
+  color: #B1ADA1;
+}
+
+.ai-friend-empty-sub {
+  margin: 0;
+  font-size: 11px;
+  color: var(--ai-text-secondary, #635F55);
+  line-height: 1.35;
+}
+
+.lumina-ai-dashboard-root.dark .ai-friend-empty-sub,
+[data-theme='dark'] .lumina-ai-dashboard-root .ai-friend-empty-sub {
+  color: rgba(177, 173, 161, 0.7);
+}
+
+
 .lumina-ai-dashboard-root.light .ai-community-join-btn {
   background: transparent !important;
   background-color: transparent !important;

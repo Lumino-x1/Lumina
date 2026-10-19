@@ -121,23 +121,23 @@ export async function fetchRecommendedStudentsApi(
         credentials: 'include',
       })
       if (!fallbackRes.ok) {
-        throw new Error(`Failed to fetch recommendations: ${res.statusText}`)
+        return []
       }
       const data: RecommendationResponse = await fallbackRes.json()
-      if (Array.isArray(data.students) && data.students.length > 0) {
+      if (Array.isArray(data.students)) {
         return data.students
       }
-      return DEFAULT_FALLBACK_STUDENTS.slice(0, limit)
+      return []
     }
 
     const data: RecommendationResponse = await res.json()
-    if (Array.isArray(data.students) && data.students.length > 0) {
+    if (Array.isArray(data.students)) {
       return data.students
     }
-    return DEFAULT_FALLBACK_STUDENTS.slice(0, limit)
+    return []
   } catch (err) {
-    console.warn('[recommendationApi] Error fetching recommendations, using fallback:', err)
-    return DEFAULT_FALLBACK_STUDENTS.slice(0, limit)
+    console.warn('[recommendationApi] Error fetching recommendations:', err)
+    return []
   }
 }
 

@@ -17,6 +17,7 @@ import {
   Heart,
   Menu,
   X,
+  Loader2,
 } from 'lucide-react'
 import './DashboardPage.css'
 import './Navbar.css'
@@ -36,7 +37,6 @@ import { useTheme } from './lib/themeContext'
 import {
   fetchRecommendedStudentsApi,
   type RecommendedStudent,
-  DEFAULT_FALLBACK_STUDENTS,
 } from './api/recommendationApi'
 import {
   sendFriendRequestApi,
@@ -415,7 +415,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({})
   const [savedPosts, setSavedPosts] = useState<Record<string, boolean>>({})
   const [friendRequestsSent, setFriendRequestsSent] = useState<Record<string, string | boolean>>({})
-  const [recommendedStudents, setRecommendedStudents] = useState<RecommendedStudent[]>(DEFAULT_FALLBACK_STUDENTS)
+  const [recommendedStudents, setRecommendedStudents] = useState<RecommendedStudent[]>([])
+  const [isRecommendationsLoading, setIsRecommendationsLoading] = useState<boolean>(true)
 
   // Fetch initial outgoing pending friend requests
   useEffect(() => {
@@ -439,20 +440,33 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   useEffect(() => {
     let isMounted = true
     const collegeId = user?.collegeId || 'cmv9h829300024y8akviwpsmm'
-    fetchRecommendedStudentsApi(collegeId, 5).then((data) => {
-      if (isMounted && data && data.length > 0) {
-        setRecommendedStudents(data)
-        const fromRecs: Record<string, string> = {}
-        data.forEach((student) => {
-          if (student.friendshipStatus === 'PENDING' && student.id) {
-            fromRecs[student.id] = student.requestId || student.id
+    setIsRecommendationsLoading(true)
+    fetchRecommendedStudentsApi(collegeId, 5)
+      .then((data) => {
+        if (!isMounted) return
+        setRecommendedStudents(data || [])
+        if (data && data.length > 0) {
+          const fromRecs: Record<string, string> = {}
+          data.forEach((student) => {
+            if (student.friendshipStatus === 'PENDING' && student.id) {
+              fromRecs[student.id] = student.requestId || student.id
+            }
+          })
+          if (Object.keys(fromRecs).length > 0) {
+            setFriendRequestsSent((prev) => ({ ...prev, ...fromRecs }))
           }
-        })
-        if (Object.keys(fromRecs).length > 0) {
-          setFriendRequestsSent((prev) => ({ ...prev, ...fromRecs }))
         }
-      }
-    })
+      })
+      .catch((err) => {
+        if (!isMounted) return
+        console.error('Failed to load recommended students:', err)
+        setRecommendedStudents([])
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsRecommendationsLoading(false)
+        }
+      })
     return () => {
       isMounted = false
     }
@@ -1619,53 +1633,68 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             <div className="ai-widget-card" style={{ marginBottom: '16px' }}>
               <div className="ai-card-header-row">
                 <h4 className="ai-card-title">Suggested Friends</h4>
-                <a
-                  href="#see-all"
-                  className="ai-see-all-link"
-                  onClick={(e) => {
-                    e.preventDefault()
-                  }}
-                >
-                  See all
-                </a>
+                {recommendedStudents.length > 0 && !isRecommendationsLoading && (
+                  <a
+                    href="#see-all"
+                    className="ai-see-all-link"
+                    onClick={(e) => {
+                      e.preventDefault()
+                    }}
+                  >
+                    See all
+                  </a>
+                )}
               </div>
 
-              <div className="ai-community-list">
-                {recommendedStudents.slice(0, 5).map((student) => {
-                  const isPending = !!friendRequestsSent[student.id]
-                  return (
-                    <div className="ai-community-row" key={student.id}>
-                      <div className="ai-community-left">
-                        <div
-                          className="ai-community-icon-box"
-                          style={{ width: 32, height: 32, borderRadius: '50%', overflow: 'hidden' }}
+              {isRecommendationsLoading ? (
+                <div className="ai-friend-loading-container" aria-label="Loading suggested friends">
+                  <Loader2 size={22} className="ai-friend-spinner" />
+                  <span className="ai-friend-loading-text">Loading suggestions...</span>
+                </div>
+              ) : recommendedStudents.length === 0 ? (
+                <div className="ai-friend-empty-state">
+                  <Users size={24} className="ai-friend-empty-icon" />
+                  <p className="ai-friend-empty-title">No friends to suggest</p>
+                  <span className="ai-friend-empty-sub">Check back later for new classmates</span>
+                </div>
+              ) : (
+                <div className="ai-community-list">
+                  {recommendedStudents.slice(0, 5).map((student) => {
+                    const isPending = !!friendRequestsSent[student.id]
+                    return (
+                      <div className="ai-community-row" key={student.id}>
+                        <div className="ai-community-left">
+                          <div
+                            className="ai-community-icon-box"
+                            style={{ width: 32, height: 32, borderRadius: '50%', overflow: 'hidden' }}
+                          >
+                            <img
+                              src={student.avatar || DEFAULT_WHATSAPP_AVATAR}
+                              alt={student.name}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              onError={(e) => {
+                                e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
+                              }}
+                            />
+                          </div>
+                          <div className="ai-community-info">
+                            <strong className="ai-community-name">{student.name}</strong>
+                            <span className="ai-community-meta">{student.department}</span>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          className={`ai-community-join-btn ${isPending ? 'is-pending is-joined' : ''}`}
+                          onClick={() => handleToggleFriendRequest(student.id)}
+                          title={isPending ? 'Click to cancel request' : 'Click to send friend request'}
                         >
-                          <img
-                            src={student.avatar || DEFAULT_WHATSAPP_AVATAR}
-                            alt={student.name}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            onError={(e) => {
-                              e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
-                            }}
-                          />
-                        </div>
-                        <div className="ai-community-info">
-                          <strong className="ai-community-name">{student.name}</strong>
-                          <span className="ai-community-meta">{student.department}</span>
-                        </div>
+                          {isPending ? 'Pending' : 'Follow'}
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        className={`ai-community-join-btn ${isPending ? 'is-pending is-joined' : ''}`}
-                        onClick={() => handleToggleFriendRequest(student.id)}
-                        title={isPending ? 'Click to cancel request' : 'Click to send friend request'}
-                      >
-                        {isPending ? 'Pending' : 'Follow'}
-                      </button>
-                    </div>
-                  )
-                })}
-              </div>
+                    )
+                  })}
+                </div>
+              )}
             </div>
           </aside>
         </div>

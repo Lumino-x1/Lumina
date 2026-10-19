@@ -26,6 +26,7 @@ import {
   ArrowLeft,
   Pencil,
   BadgeCheck,
+  Loader2,
 } from 'lucide-react'
 import './ProfilePage.css'
 import './DashboardPage.css'
@@ -36,7 +37,6 @@ import { useTheme } from './lib/themeContext'
 import {
   fetchRecommendedStudentsApi,
   type RecommendedStudent,
-  DEFAULT_FALLBACK_STUDENTS,
 } from './api/recommendationApi'
 import {
   sendFriendRequestApi,
@@ -422,7 +422,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({})
   const [savedPosts, setSavedPosts] = useState<Record<string, boolean>>({})
   const [friendRequestsSent, setFriendRequestsSent] = useState<Record<string, string | boolean>>({})
-  const [recommendedStudents, setRecommendedStudents] = useState<RecommendedStudent[]>(DEFAULT_FALLBACK_STUDENTS)
+  const [recommendedStudents, setRecommendedStudents] = useState<RecommendedStudent[]>([])
+  const [isRecommendationsLoading, setIsRecommendationsLoading] = useState<boolean>(true)
 
   // Fetch initial outgoing pending friend requests
   useEffect(() => {
@@ -450,20 +451,35 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       meProfile?.college?.id ||
       user?.collegeId ||
       'cmv9h829300024y8akviwpsmm'
-    fetchRecommendedStudentsApi(collegeId, 5).then((data) => {
-      if (isMounted && data && data.length > 0) {
-        setRecommendedStudents(data)
-        const fromRecs: Record<string, string> = {}
-        data.forEach((student) => {
-          if (student.friendshipStatus === 'PENDING' && student.id) {
-            fromRecs[student.id] = student.requestId || student.id
+
+    setIsRecommendationsLoading(true)
+    fetchRecommendedStudentsApi(collegeId, 5)
+      .then((data) => {
+        if (!isMounted) return
+        setRecommendedStudents(data || [])
+        if (data && data.length > 0) {
+          const fromRecs: Record<string, string> = {}
+          data.forEach((student) => {
+            if (student.friendshipStatus === 'PENDING' && student.id) {
+              fromRecs[student.id] = student.requestId || student.id
+            }
+          })
+          if (Object.keys(fromRecs).length > 0) {
+            setFriendRequestsSent((prev) => ({ ...prev, ...fromRecs }))
           }
-        })
-        if (Object.keys(fromRecs).length > 0) {
-          setFriendRequestsSent((prev) => ({ ...prev, ...fromRecs }))
         }
-      }
-    })
+      })
+      .catch((err) => {
+        if (!isMounted) return
+        console.error('Failed to load recommended students:', err)
+        setRecommendedStudents([])
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsRecommendationsLoading(false)
+        }
+      })
+
     return () => {
       isMounted = false
     }
@@ -2508,47 +2524,63 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             <div className="ai-widget-card">
               <div className="ai-card-header-row">
                 <h4 className="ai-card-title">Suggested Friends</h4>
-                <a
-                  href="#see-all"
-                  className="ai-see-all-link"
-                  onClick={(e) => {
-                    e.preventDefault()
-                  }}
-                >
-                  See all
-                </a>
+                {recommendedStudents.length > 0 && !isRecommendationsLoading && (
+                  <a
+                    href="#see-all"
+                    className="ai-see-all-link"
+                    onClick={(e) => {
+                      e.preventDefault()
+                    }}
+                  >
+                    See all
+                  </a>
+                )}
               </div>
-              <div className="ai-friend-list">
-                {recommendedStudents.slice(0, 5).map((student) => {
-                  const isPending = !!friendRequestsSent[student.id]
-                  return (
-                    <div className="ai-friend-row" key={student.id}>
-                      <div className="ai-friend-left">
-                        <img
-                          src={student.avatar || DEFAULT_WHATSAPP_AVATAR}
-                          alt={student.name}
-                          className="ai-friend-avatar"
-                          onError={(e) => {
-                            e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
-                          }}
-                        />
-                        <div className="ai-friend-info">
-                          <strong className="ai-friend-name">{student.name}</strong>
-                          <span className="ai-friend-meta">{student.department}</span>
+
+              {isRecommendationsLoading ? (
+                <div className="ai-friend-loading-container" aria-label="Loading suggested friends">
+                  <Loader2 size={22} className="ai-friend-spinner" />
+                  <span className="ai-friend-loading-text">Loading suggestions...</span>
+                </div>
+              ) : recommendedStudents.length === 0 ? (
+                <div className="ai-friend-empty-state">
+                  <Users size={24} className="ai-friend-empty-icon" />
+                  <p className="ai-friend-empty-title">No friends to suggest</p>
+                  <span className="ai-friend-empty-sub">Check back later for new classmates</span>
+                </div>
+              ) : (
+                <div className="ai-friend-list">
+                  {recommendedStudents.slice(0, 5).map((student) => {
+                    const isPending = !!friendRequestsSent[student.id]
+                    return (
+                      <div className="ai-friend-row" key={student.id}>
+                        <div className="ai-friend-left">
+                          <img
+                            src={student.avatar || DEFAULT_WHATSAPP_AVATAR}
+                            alt={student.name}
+                            className="ai-friend-avatar"
+                            onError={(e) => {
+                              e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
+                            }}
+                          />
+                          <div className="ai-friend-info">
+                            <strong className="ai-friend-name">{student.name}</strong>
+                            <span className="ai-friend-meta">{student.department}</span>
+                          </div>
                         </div>
+                        <button
+                          type="button"
+                          className={`ai-friend-btn ${isPending ? 'is-pending is-joined' : ''}`}
+                          onClick={() => handleToggleFriendRequest(student.id)}
+                          title={isPending ? 'Click to cancel request' : 'Click to send friend request'}
+                        >
+                          {isPending ? 'Pending' : 'Follow'}
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        className={`ai-friend-btn ${isPending ? 'is-pending is-joined' : ''}`}
-                        onClick={() => handleToggleFriendRequest(student.id)}
-                        title={isPending ? 'Click to cancel request' : 'Click to send friend request'}
-                      >
-                        {isPending ? 'Pending' : 'Follow'}
-                      </button>
-                    </div>
-                  )
-                })}
-              </div>
+                    )
+                  })}
+                </div>
+              )}
             </div>
 
             {/* OTHER RIGHT SIDEBAR SECTIONS (Blurred per user request) */}
