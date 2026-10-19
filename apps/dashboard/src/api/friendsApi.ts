@@ -376,3 +376,47 @@ export async function fetchNotificationsApi(): Promise<ApiResponse<any[]>> {
     }
   }
 }
+
+/**
+ * Fetch accepted friends for the current user
+ * Calls GET /api/friends
+ */
+export async function fetchMyFriendsApi(): Promise<ApiResponse<any[]>> {
+  try {
+    const baseUrl = getBaseApiUrl()
+    const endpoint = `${baseUrl}/api/friends`
+    const headers = getAuthHeaders()
+
+    const res = await fetch(endpoint, {
+      method: 'GET',
+      headers,
+      credentials: 'include',
+    })
+
+    if (res.ok) {
+      const data = await res.json()
+      return { success: true, data: Array.isArray(data) ? data : [] }
+    }
+
+    if (res.status === 404) {
+      const fallbackEndpoint = `${baseUrl}/friends`
+      const fallbackRes = await fetch(fallbackEndpoint, {
+        method: 'GET',
+        headers,
+        credentials: 'include',
+      })
+      if (fallbackRes.ok) {
+        const data = await fallbackRes.json()
+        return { success: true, data: Array.isArray(data) ? data : [] }
+      }
+    }
+
+    return { success: false, data: [] }
+  } catch (err: any) {
+    return {
+      success: false,
+      error: err?.message || 'Network error while fetching friends',
+      data: [],
+    }
+  }
+}

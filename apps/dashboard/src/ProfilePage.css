@@ -1417,7 +1417,7 @@
 
 .ai-profile-skeleton-stats {
   height: 13px;
-  width: 170px;
+  width: 95px;
   border-radius: 4px;
   background: var(--ai-card-hover, rgba(177, 173, 161, 0.16));
 }

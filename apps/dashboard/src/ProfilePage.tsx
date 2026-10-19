@@ -42,6 +42,7 @@ import {
   sendFriendRequestApi,
   cancelFriendRequestApi,
   fetchOutgoingRequestsApi,
+  fetchMyFriendsApi,
 } from './api/friendsApi'
 import { NotificationDropdown } from './components/NotificationDropdown'
 import { fetchMyProfile, type ProfileData } from './api/profileApi'
@@ -380,6 +381,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const [meProfile, setMeProfile] = useState<ProfileData | null>(null)
   const [loadingProfile, setLoadingProfile] = useState<boolean>(true)
+  const [friendsCount, setFriendsCount] = useState<number | null>(null)
 
   useEffect(() => {
     let isMounted = true
@@ -397,6 +399,15 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           setLoadingProfile(false)
         }
       })
+
+    fetchMyFriendsApi()
+      .then((res) => {
+        if (isMounted && res.success && Array.isArray(res.data)) {
+          setFriendsCount(res.data.length)
+        }
+      })
+      .catch(() => {})
+
     return () => {
       isMounted = false
     }
@@ -946,22 +957,16 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     openTo: 'Open to Research Collaborations & Summer \'26 Eng Roles',
     joined: 'Joined Sep 2023',
     stats: {
-      followers:
-        (meProfile as any)?.followersCount !== undefined
-          ? String((meProfile as any).followersCount)
-          : (meProfile as any)?._count?.followers !== undefined
-          ? String((meProfile as any)._count.followers)
-          : (user as any)?.followersCount !== undefined
-          ? String((user as any).followersCount)
-          : '1,480',
-      following:
-        (meProfile as any)?.followingCount !== undefined
-          ? String((meProfile as any).followingCount)
-          : (meProfile as any)?._count?.following !== undefined
-          ? String((meProfile as any)._count.following)
-          : (user as any)?.followingCount !== undefined
-          ? String((user as any).followingCount)
-          : '342',
+      friends:
+        friendsCount !== null && friendsCount > 0
+          ? `${friendsCount.toLocaleString()}`
+          : (meProfile as any)?.friendsCount !== undefined
+          ? String((meProfile as any).friendsCount)
+          : (meProfile as any)?._count?.friends !== undefined
+          ? String((meProfile as any)._count.friends)
+          : (user as any)?.friendsCount !== undefined
+          ? String((user as any).friendsCount)
+          : '500+',
       academicNotes: String(publishedPosts.length),
       repos: '14',
     },
@@ -1652,28 +1657,20 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                       </a>
                     </div>
 
-                    {/* Followers & Following */}
+                    {/* Friends */}
                     <div className="ai-linkedin-connections-row" style={isDark ? { color: '#B1ADA1' } : undefined}>
                       <a
-                        href="#followers"
+                        href="#friends"
                         className="ai-linkedin-connections-link"
                         style={isDark ? { color: '#B1ADA1' } : undefined}
                         onClick={(e) => {
                           e.preventDefault()
                         }}
                       >
-                        <span className="ai-followers-count" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.stats.followers}</span> followers
-                      </a>
-                      <span className="ai-linkedin-dot" style={isDark ? { color: '#B1ADA1' } : undefined}>·</span>
-                      <a
-                        href="#following"
-                        className="ai-linkedin-connections-link"
-                        style={isDark ? { color: '#B1ADA1' } : undefined}
-                        onClick={(e) => {
-                          e.preventDefault()
-                        }}
-                      >
-                        <span className="ai-followers-count" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.stats.following}</span> following
+                        <span className="ai-followers-count" style={isDark ? { color: '#B1ADA1' } : undefined}>
+                          {profile.stats.friends}
+                        </span>{' '}
+                        friends
                       </a>
                     </div>
                   </div>
