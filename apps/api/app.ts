@@ -4,6 +4,7 @@ import commentsRouter from './src/api/comments/comments.routes.ts';
 import feedRouter from './src/api/feed/feed.routes.ts';
 import mediaRouter from './src/api/media/media.router.ts';
 import postsRouter from './src/api/posts/posts.routes.ts';
+import recommendationRouter from './src/api/recommendation/recommendation.routes.ts';
 import apiRouter from './src/api/routes.ts';
 import { auth } from '@lumina/auth';
 import { MSG_OK } from '@lumina/constants';
@@ -136,6 +137,7 @@ export function createApp() {
   app.use('/api', apiRouter)
   app.use(['/posts', '/api/posts'], postsRouter)
   app.use(['/comments', '/api/comments'], commentsRouter)
+  app.use(['/recommendation', '/api/recommendation'], recommendationRouter)
   app.use('/api/media', mediaRouter)
   app.use('/api/feed', feedRouter)
 

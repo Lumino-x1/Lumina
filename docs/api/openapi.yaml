@@ -599,8 +599,52 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+  /api/recommendation/{collegeId}:
+    get:
+      summary: Get recommended students based on college ID or slug
+      parameters:
+        - name: collegeId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier or slug of the college
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 5
+          description: Maximum number of students to recommend
+      responses:
+        "200":
+          description: Recommended students returned successfully
+        "400":
+          description: Invalid request or missing parameters
+      tags:
+        - Recommendation
+      operationId: getRecommendedStudentsByCollegeId
+  /recommendation/{collegeId}:
+    get:
+      summary: Get recommended students based on college ID or slug (root alias)
+      parameters:
+        - name: collegeId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 5
+      responses:
+        "200":
+          description: Recommended students returned successfully
+      tags:
+        - Recommendation
+      operationId: getRecommendedStudentsRootAlias
   /api/friends:
     get:
       summary: List accepted friends

@@ -23,6 +23,10 @@ export default defineConfig({
         changeOrigin: true,
         ws: true,
       },
+      '/recommendation': {
+        target: process.env.VITE_PROXY_TARGET || 'http://localhost:3002',
+        changeOrigin: true,
+      },
       '/health': {
         target: process.env.VITE_PROXY_TARGET || 'http://localhost:3002',
         changeOrigin: true,

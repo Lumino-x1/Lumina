@@ -33,6 +33,11 @@ import {
 import BlogReaderView from './BlogReaderView'
 import { DEFAULT_WHATSAPP_AVATAR } from './components/WhatsAppDefaultAvatar'
 import { useTheme } from './lib/themeContext'
+import {
+  fetchRecommendedStudentsApi,
+  type RecommendedStudent,
+  DEFAULT_FALLBACK_STUDENTS,
+} from './api/recommendationApi'
 
 export type DashboardUser = MergedUser
 
@@ -405,6 +410,20 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({})
   const [savedPosts, setSavedPosts] = useState<Record<string, boolean>>({})
   const [friendRequestsSent, setFriendRequestsSent] = useState<Record<string, boolean>>({})
+  const [recommendedStudents, setRecommendedStudents] = useState<RecommendedStudent[]>(DEFAULT_FALLBACK_STUDENTS)
+
+  useEffect(() => {
+    let isMounted = true
+    const collegeId = user?.collegeId || 'cmv9h829300024y8akviwpsmm'
+    fetchRecommendedStudentsApi(collegeId, 5).then((data) => {
+      if (isMounted && data && data.length > 0) {
+        setRecommendedStudents(data)
+      }
+    })
+    return () => {
+      isMounted = false
+    }
+  }, [user?.collegeId])
 
   const handleToggleFriendRequest = (friendId: string) => {
     setFriendRequestsSent((prev) => ({
@@ -1528,53 +1547,39 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               </div>
 
               <div className="ai-community-list">
-                {/* Friend 1 */}
-                <div className="ai-community-row">
-                  <div className="ai-community-left">
-                    <div className="ai-community-icon-box" style={{ width: 32, height: 32, borderRadius: '50%', overflow: 'hidden' }}>
-                      <img
-                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
-                        alt="Sarah Chen"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
+                {recommendedStudents.slice(0, 5).map((student) => {
+                  const isFollowing = !!friendRequestsSent[student.id]
+                  return (
+                    <div className="ai-community-row" key={student.id}>
+                      <div className="ai-community-left">
+                        <div
+                          className="ai-community-icon-box"
+                          style={{ width: 32, height: 32, borderRadius: '50%', overflow: 'hidden' }}
+                        >
+                          <img
+                            src={student.avatar || DEFAULT_WHATSAPP_AVATAR}
+                            alt={student.name}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            onError={(e) => {
+                              e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
+                            }}
+                          />
+                        </div>
+                        <div className="ai-community-info">
+                          <strong className="ai-community-name">{student.name}</strong>
+                          <span className="ai-community-meta">{student.department}</span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        className={`ai-community-join-btn ${isFollowing ? 'is-joined' : ''}`}
+                        onClick={() => handleToggleFriendRequest(student.id)}
+                      >
+                        {isFollowing ? 'Following' : 'Follow'}
+                      </button>
                     </div>
-                    <div className="ai-community-info">
-                      <strong className="ai-community-name">Sarah Chen</strong>
-                      <span className="ai-community-meta">CS &apos;26 • PSG Tech</span>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className={`ai-community-join-btn ${friendRequestsSent['f1'] ? 'is-joined' : ''}`}
-                    onClick={() => handleToggleFriendRequest('f1')}
-                  >
-                    {friendRequestsSent['f1'] ? 'Following' : 'Follow'}
-                  </button>
-                </div>
-
-                {/* Friend 2 */}
-                <div className="ai-community-row">
-                  <div className="ai-community-left">
-                    <div className="ai-community-icon-box" style={{ width: 32, height: 32, borderRadius: '50%', overflow: 'hidden' }}>
-                      <img
-                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
-                        alt="Alex Rivera"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
-                    </div>
-                    <div className="ai-community-info">
-                      <strong className="ai-community-name">Alex Rivera</strong>
-                      <span className="ai-community-meta">AI &amp; Robotics • PSG Tech</span>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className={`ai-community-join-btn ${friendRequestsSent['f2'] ? 'is-joined' : ''}`}
-                    onClick={() => handleToggleFriendRequest('f2')}
-                  >
-                    {friendRequestsSent['f2'] ? 'Following' : 'Follow'}
-                  </button>
-                </div>
+                  )
+                })}
               </div>
             </div>
           </aside>

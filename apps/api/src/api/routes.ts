@@ -18,6 +18,7 @@ import usersRouter from './users/users.routes'
 import authRouter from './auth/auth.routes'
 import commentsRouter from './comments/comments.routes'
 import friendsRouter from './friends/friends.routes'
+import { recommendationRouter } from './recommendation'
 import { subscribe } from '@lumina/realtime'
 import { prisma } from '@lumina/db'
 import { PostsRepo } from './posts/posts.repo'
@@ -60,6 +61,9 @@ apiRouter.use('/profile', usersRouter)
 
 // --- Friends: /api/friends ---
 apiRouter.use('/friends', friendsRouter)
+
+// --- Recommendation: /api/recommendation ---
+apiRouter.use('/recommendation', recommendationRouter)
 
 // --- Posts: /api/posts ---
 apiRouter.use('/posts', postsRouter)
