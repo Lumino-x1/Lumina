@@ -8,8 +8,8 @@
 @import url('https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/style.css');
 
 :root {
-  --ai-font-sans: 'Plus Jakarta Sans', 'Geist', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
-  --ai-font-heading: 'Plus Jakarta Sans', 'Geist', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+  --ai-font-sans: 'Geist', var(--font-family-primary), -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
+  --ai-font-heading: 'Geist', var(--font-family-primary), -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
   --ai-font-mono: 'Geist Mono', 'Fira Code', 'JetBrains Mono', Menlo, monospace;
   --ai-profile-font-sans: var(--ai-font-sans);
   --ai-profile-font-heading: var(--ai-font-heading);
@@ -1617,13 +1617,15 @@
 }
 
 .ai-linkedin-name {
-  font-family: var(--ai-font-heading), var(--ai-font-sans), sans-serif;
+  font-family: 'Geist', var(--font-family-primary), -apple-system, BlinkMacSystemFont, sans-serif !important;
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 450 !important;
   color: var(--ai-text-primary, #B1ADA1) !important;
   margin: 0;
-  letter-spacing: -0.015em;
-  line-height: 1.25;
+  letter-spacing: -0.025em !important;
+  line-height: 1.22 !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .dark .ai-linkedin-name,
@@ -1720,6 +1722,9 @@
   color: var(--ai-text-primary, #B1ADA1) !important;
   margin: 6px 0 0;
   line-height: 1.4;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .dark .ai-linkedin-headline,
@@ -2143,11 +2148,13 @@
 .ai-profile-title {
   font-family: var(--ai-font-heading);
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 450 !important;
   color: var(--ai-text-primary);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em !important;
   line-height: 1.22;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .ai-profile-handle {
@@ -5589,5 +5596,558 @@
 [data-theme='dark'] .lumina-ai-profile-root svg:not(.ai-top-create-btn svg):not(.ai-linkedin-org-icon svg):not(.ai-profile-avatar-main svg):not(.ai-linkedin-silhouette svg):not(.ai-award-medal-icon svg):not(.ai-linkedin-blue-tick svg) {
   stroke: #B1ADA1 !important;
 }
+
+/* ==========================================================================
+   FRIENDS MODAL & FRIENDS VIEW (Instagram-style list)
+   ========================================================================== */
+
+/* Profile Header Trigger Button */
+.ai-linkedin-connections-link.ai-friends-profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  padding: 4px 8px;
+  margin-left: -8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.ai-friends-count-icon {
+  color: #EA580C !important;
+  flex-shrink: 0;
+}
+
+.ai-linkedin-connections-link.ai-friends-profile-btn:hover {
+  background-color: rgba(234, 88, 12, 0.12) !important;
+  color: #EA580C !important;
+}
+
+.ai-linkedin-connections-link.ai-friends-profile-btn:hover .ai-followers-count {
+  color: #EA580C !important;
+}
+
+/* Modal Overlay */
+.ai-friends-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  animation: friendsModalFadeIn 0.2s ease-out;
+}
+
+@keyframes friendsModalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Modal Container - Dark by default / matching screenshot */
+.ai-friends-modal-container {
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.75);
+  overflow: hidden;
+  animation: friendsModalScaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lumina-ai-profile-root.light .ai-friends-modal-container {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+@keyframes friendsModalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Modal Header */
+.ai-friends-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lumina-ai-profile-root.light .ai-friends-modal-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.ai-friends-modal-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ai-friends-modal-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+}
+
+.lumina-ai-profile-root.light .ai-friends-modal-title {
+  color: #111827;
+}
+
+.ai-friends-count-pill {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background-color: rgba(234, 88, 12, 0.18);
+  color: #EA580C;
+}
+
+.ai-friends-modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #9CA3AF;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.ai-friends-modal-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+.lumina-ai-profile-root.light .ai-friends-modal-close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  color: #111827;
+}
+
+/* Search Bar */
+.ai-friends-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  margin: 12px 16px 8px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lumina-ai-profile-root.light .ai-friends-search-bar {
+  background-color: #F4F3EE;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ai-friends-search-icon {
+  color: #9CA3AF;
+  flex-shrink: 0;
+}
+
+.ai-friends-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #FFFFFF;
+  font-size: 13.5px;
+  font-family: inherit;
+}
+
+.lumina-ai-profile-root.light .ai-friends-search-input {
+  color: #111827;
+}
+
+.ai-friends-search-input::placeholder {
+  color: #6B7280;
+}
+
+.ai-friends-search-clear {
+  background: transparent;
+  border: none;
+  color: #9CA3AF;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Friend List Body */
+.ai-friends-list-body {
+  padding: 6px 8px 14px;
+  max-height: 480px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ai-friends-list-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ai-friends-list-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 3px;
+}
+
+.lumina-ai-profile-root.light .ai-friends-list-body::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.16);
+}
+
+/* Friend Row Item */
+.ai-friends-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 8px;
+  transition: background-color 0.15s ease;
+  gap: 12px;
+}
+
+.ai-friends-row:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.lumina-ai-profile-root.light .ai-friends-row:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.ai-friends-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex: 1;
+}
+
+.ai-friends-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background-color: #1f2937;
+}
+
+.ai-friends-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
+  text-align: left;
+}
+
+.ai-friends-username {
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.lumina-ai-profile-root.light .ai-friends-username {
+  color: #111827;
+}
+
+.ai-friends-name {
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #9CA3AF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.lumina-ai-profile-root.light .ai-friends-name {
+  color: #6B7280;
+}
+
+/* Orange Action Button: Message */
+.ai-friends-message-btn {
+  background-color: #EA580C !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 8px 18px !important;
+  font-size: 13.5px !important;
+  font-family: inherit !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  transition: all 0.15s ease !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  text-decoration: none !important;
+  line-height: 1.2 !important;
+}
+
+.ai-friends-message-btn:hover {
+  background-color: #C2410C !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.4) !important;
+  transform: translateY(-1px);
+}
+
+.ai-friends-message-btn:active {
+  transform: scale(0.97) translateY(0);
+}
+
+/* Empty State */
+.ai-friends-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #9CA3AF;
+  gap: 6px;
+}
+
+.ai-friends-empty-icon {
+  margin-bottom: 8px;
+  opacity: 0.6;
+}
+
+.ai-friends-empty-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #E5E7EB;
+  margin: 0;
+}
+
+.lumina-ai-profile-root.light .ai-friends-empty-title {
+  color: #1F2937;
+}
+
+.ai-friends-empty-sub {
+  font-size: 13px;
+  color: #9CA3AF;
+}
+
+/* Friends Tab View (In Center Stream) */
+.ai-profile-friends-tab-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ai-friends-tab-card {
+  background-color: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.lumina-ai-profile-root.light .ai-friends-tab-card {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.ai-friends-tab-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.lumina-ai-profile-root.light .ai-friends-tab-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.ai-friends-tab-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 2px 0;
+}
+
+.lumina-ai-profile-root.light .ai-friends-tab-title {
+  color: #111827;
+}
+
+.ai-friends-tab-subtitle {
+  font-size: 13px;
+  color: #9CA3AF;
+  margin: 0;
+}
+
+.lumina-ai-profile-root.light .ai-friends-tab-subtitle {
+  color: #6B7280;
+}
+
+.tab-search {
+  margin: 0 !important;
+  min-width: 240px;
+}
+
+/* Direct Message Dialog */
+.ai-dm-container {
+  max-width: 440px;
+}
+
+.ai-dm-body {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ai-dm-user-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background-color: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lumina-ai-profile-root.light .ai-dm-user-badge {
+  background-color: #F4F3EE;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.ai-dm-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ai-dm-username {
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFFFFF;
+  display: block;
+}
+
+.lumina-ai-profile-root.light .ai-dm-username {
+  color: #111827;
+}
+
+.ai-dm-name {
+  font-size: 12.5px;
+  color: #9CA3AF;
+  display: block;
+}
+
+.lumina-ai-profile-root.light .ai-dm-name {
+  color: #6B7280;
+}
+
+.ai-dm-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 13.5px;
+  resize: vertical;
+  outline: none;
+}
+
+.lumina-ai-profile-root.light .ai-dm-textarea {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #111827;
+}
+
+.ai-dm-textarea:focus {
+  border-color: #EA580C;
+}
+
+.ai-dm-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.ai-dm-cancel-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #D1D5DB;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.lumina-ai-profile-root.light .ai-dm-cancel-btn {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #374151;
+}
+
+.ai-dm-send-btn {
+  background-color: #EA580C;
+  color: #FFFFFF !important;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.ai-dm-send-btn:hover:not(:disabled) {
+  background-color: #C2410C;
+}
+
+.ai-dm-send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 
 
