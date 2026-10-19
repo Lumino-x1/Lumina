@@ -83,7 +83,7 @@
   border: none;
   font-size: 11.5px;
   font-weight: 500;
-  color: var(--ai-text-muted, #8E897D);
+  color: var(--ai-text-muted, #9CA3AF);
   cursor: pointer;
   padding: 2px 6px;
   border-radius: 4px;
@@ -109,7 +109,7 @@
   border: none;
   font-size: 12px;
   font-weight: 600;
-  color: var(--ai-text-muted, #8E897D);
+  color: var(--ai-text-muted, #9CA3AF);
   padding: 5px 12px;
   border-radius: 7px;
   cursor: pointer;
@@ -169,13 +169,13 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--ai-text-muted, #8E897D);
+  color: var(--ai-text-muted, #9CA3AF);
 }
 
 .ai-notif-section-count {
   font-size: 11px;
   font-weight: 600;
-  color: var(--ai-text-muted, #8E897D);
+  color: var(--ai-text-muted, #9CA3AF);
   background-color: rgba(255, 255, 255, 0.06);
   padding: 2px 8px;
   border-radius: 9999px;
@@ -296,7 +296,7 @@
 
 .ai-notif-time {
   font-size: 11px;
-  color: var(--ai-text-muted, #8E897D);
+  color: var(--ai-text-muted, #9CA3AF);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -378,7 +378,7 @@
 }
 
 .ai-notif-resolved-status.is-rejected {
-  color: var(--ai-text-muted, #8E897D);
+  color: var(--ai-text-muted, #9CA3AF);
   font-style: italic;
 }
 
@@ -399,7 +399,7 @@
   justify-content: center;
   gap: 10px;
   padding: 36px 16px;
-  color: var(--ai-text-muted, #8E897D);
+  color: var(--ai-text-muted, #9CA3AF);
   font-size: 12px;
 }
 
@@ -436,7 +436,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--ai-text-muted, #8E897D);
+  color: var(--ai-text-muted, #9CA3AF);
   margin-bottom: 10px;
 }
 
@@ -449,7 +449,7 @@
 
 .ai-notif-empty-desc {
   font-size: 12px;
-  color: var(--ai-text-muted, #8E897D);
+  color: var(--ai-text-muted, #9CA3AF);
   margin: 0;
   max-width: 220px;
   line-height: 1.4;
@@ -466,7 +466,7 @@
 .ai-notif-footer-link {
   font-size: 11.5px;
   font-weight: 600;
-  color: var(--ai-text-muted, #8E897D);
+  color: var(--ai-text-muted, #9CA3AF);
   text-decoration: none;
   transition: color 0.15s ease;
 }
@@ -600,13 +600,13 @@
 .lumina-ai-dashboard-root.light .ai-notif-section-count,
 .lumina-ai-profile-root.light .ai-notif-section-count {
   background-color: #EDEBE6;
-  color: #635F55;
+  color: #6B7280;
 }
 
 .lumina-ai-dashboard-root.light .ai-notif-empty-icon,
 .lumina-ai-profile-root.light .ai-notif-empty-icon {
   background-color: #F3F1EC;
-  color: #8E897D;
+  color: #9CA3AF;
 }
 
 .lumina-ai-dashboard-root.light .ai-notif-empty-title,

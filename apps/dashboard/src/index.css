@@ -95,7 +95,7 @@
 
   --color-text-primary: var(--foreground);
   --color-text-secondary: var(--muted-foreground);
-  --color-text-tertiary: #8E897D;
+  --color-text-tertiary: #9CA3AF;
   --color-surface-raised: var(--surface-secondary);
   --color-surface-base: var(--background);
   --color-surface-muted: var(--surface-secondary);
@@ -249,7 +249,7 @@ body.bright,
 [data-theme="light"] body,
 [data-theme="bright"] body {
   background-color: #FFFFFF !important;
-  color: #1C1A17 !important;
+  color: #111111 !important;
 }
 
 #root {

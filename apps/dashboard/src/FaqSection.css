@@ -194,58 +194,58 @@
 [data-theme="light"] .faq-section,
 .bright .faq-section,
 .light .faq-section {
-  background-color: #F4F3EE;
-  color: #1C1A17;
+  background-color: #FFFFFF;
+  color: #111111;
 }
 
 [data-theme="bright"] .faq-framed-container,
 [data-theme="light"] .faq-framed-container,
 .bright .faq-framed-container,
 .light .faq-framed-container {
-  border-color: #B1ADA1;
-  background-color: #F4F3EE;
+  border-color: #E5E7EB;
+  background-color: #FFFFFF;
 }
 
 [data-theme="bright"] .faq-left-col,
 [data-theme="light"] .faq-left-col,
 .bright .faq-left-col,
 .light .faq-left-col {
-  border-right-color: #B1ADA1;
+  border-right-color: #E5E7EB;
 }
 
 [data-theme="bright"] .faq-kicker,
 [data-theme="light"] .faq-kicker,
 .bright .faq-kicker,
 .light .faq-kicker {
-  color: #8E897D;
+  color: #9CA3AF;
 }
 
 [data-theme="bright"] .faq-serif-title,
 [data-theme="light"] .faq-serif-title,
 .bright .faq-serif-title,
 .light .faq-serif-title {
-  color: #1C1A17;
+  color: #111111;
 }
 
 [data-theme="bright"] .faq-description,
 [data-theme="light"] .faq-description,
 .bright .faq-description,
 .light .faq-description {
-  color: #635F55;
+  color: #6B7280;
 }
 
 [data-theme="bright"] .faq-row-item,
 [data-theme="light"] .faq-row-item,
 .bright .faq-row-item,
 .light .faq-row-item {
-  border-bottom-color: #B1ADA1;
+  border-bottom-color: #E5E7EB;
 }
 
 [data-theme="bright"] .faq-row-btn,
 [data-theme="light"] .faq-row-btn,
 .bright .faq-row-btn,
 .light .faq-row-btn {
-  color: #1C1A17 !important;
+  color: #111111 !important;
 }
 
 [data-theme="bright"] .faq-row-btn:hover,
@@ -259,7 +259,7 @@
 [data-theme="light"] .faq-row-question,
 .bright .faq-row-question,
 .light .faq-row-question {
-  color: #1C1A17;
+  color: #111111;
 }
 
 [data-theme="bright"] .faq-row-chevron,
@@ -270,7 +270,7 @@
 [data-theme="light"] .faq-row-chevron svg,
 .bright .faq-row-chevron svg,
 .light .faq-row-chevron svg {
-  color: #8E897D;
+  color: #9CA3AF;
 }
 
 [data-theme="bright"] .faq-row-btn:hover .faq-row-chevron,
@@ -296,7 +296,7 @@
 [data-theme="light"] .faq-row-answer-text,
 .bright .faq-row-answer-text,
 .light .faq-row-answer-text {
-  color: #635F55;
+  color: #6B7280;
 }
 
 @media (max-width: 900px) {

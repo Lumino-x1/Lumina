@@ -329,15 +329,15 @@
 .bright .saascn-mobile-menu-btn,
 .light .saascn-mobile-menu-btn {
   background-color: #FFFFFF;
-  border-color: #B1ADA1;
-  color: #1C1A17;
+  border-color: #E5E7EB;
+  color: #111111;
 }
 
 [data-theme="bright"] .saascn-mobile-menu-btn:hover,
 [data-theme="light"] .saascn-mobile-menu-btn:hover,
 .bright .saascn-mobile-menu-btn:hover,
 .light .saascn-mobile-menu-btn:hover {
-  background-color: #F4F3EE;
+  background-color: #FFFFFF;
   border-color: #2563EB;
   color: #2563EB;
 }
@@ -347,7 +347,7 @@
 .bright .saascn-mobile-menu-dropdown,
 .light .saascn-mobile-menu-dropdown {
   background-color: rgba(255, 255, 255, 0.98);
-  border-bottom-color: #B1ADA1;
+  border-bottom-color: #E5E7EB;
   box-shadow: 0 16px 36px rgba(177, 173, 161, 0.2);
 }
 
@@ -355,43 +355,43 @@
 [data-theme="light"] .saascn-mobile-search-wrap,
 .bright .saascn-mobile-search-wrap,
 .light .saascn-mobile-search-wrap {
-  background-color: #F4F3EE;
-  border-color: #B1ADA1;
+  background-color: #FFFFFF;
+  border-color: #E5E7EB;
 }
 
 [data-theme="bright"] .saascn-mobile-search-icon,
 [data-theme="light"] .saascn-mobile-search-icon,
 .bright .saascn-mobile-search-icon,
 .light .saascn-mobile-search-icon {
-  color: #635F55;
+  color: #6B7280;
 }
 
 [data-theme="bright"] .saascn-mobile-search-input,
 [data-theme="light"] .saascn-mobile-search-input,
 .bright .saascn-mobile-search-input,
 .light .saascn-mobile-search-input {
-  color: #1C1A17;
+  color: #111111;
 }
 
 [data-theme="bright"] .saascn-mobile-search-input::placeholder,
 [data-theme="light"] .saascn-mobile-search-input::placeholder,
 .bright .saascn-mobile-search-input::placeholder,
 .light .saascn-mobile-search-input::placeholder {
-  color: #8E897D;
+  color: #9CA3AF;
 }
 
 [data-theme="bright"] .saascn-mobile-nav-item,
 [data-theme="light"] .saascn-mobile-nav-item,
 .bright .saascn-mobile-nav-item,
 .light .saascn-mobile-nav-item {
-  color: #1C1A17;
+  color: #111111;
 }
 
 [data-theme="bright"] .saascn-mobile-nav-item:hover,
 [data-theme="light"] .saascn-mobile-nav-item:hover,
 .bright .saascn-mobile-nav-item:hover,
 .light .saascn-mobile-nav-item:hover {
-  background-color: #F4F3EE;
+  background-color: #FFFFFF;
   color: #2563EB;
 }
 
@@ -400,15 +400,15 @@
 .bright .saascn-mobile-dash-btn-secondary,
 .light .saascn-mobile-dash-btn-secondary {
   background-color: #FFFFFF;
-  color: #1C1A17;
-  border: 1px dashed #B1ADA1;
+  color: #111111;
+  border: 1px dashed #E5E7EB;
 }
 
 [data-theme="bright"] .saascn-mobile-dash-btn-secondary:hover,
 [data-theme="light"] .saascn-mobile-dash-btn-secondary:hover,
 .bright .saascn-mobile-dash-btn-secondary:hover,
 .light .saascn-mobile-dash-btn-secondary:hover {
-  background-color: #F4F3EE;
+  background-color: #FFFFFF;
   border-color: #2563EB;
   color: #2563EB;
 }

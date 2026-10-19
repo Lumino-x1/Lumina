@@ -412,7 +412,7 @@
   outline: none;
   font-size: 13.5px;
   font-family: inherit;
-  color: var(--ai-text-primary, #B1ADA1);
+  color: var(--ai-text-primary, #E5E7EB);
   padding: 0;
   min-width: 0;
 }
@@ -430,7 +430,7 @@
   background-color: rgba(177, 173, 161, 0.08);
   border: 1px solid rgba(177, 173, 161, 0.16);
   border-radius: 5px;
-  color: #B1ADA1;
+  color: #E5E7EB;
   font-size: 11px;
   font-weight: 500;
   line-height: 1.2;
@@ -442,24 +442,24 @@
 /* Light mode adjustments for sidebar header */
 .lumina-ai-dashboard-root.light .ai-sidebar-icon-btn,
 .lumina-ai-profile-root.light .ai-sidebar-icon-btn {
-  color: var(--ai-text-secondary, #635F55);
+  color: var(--ai-text-secondary, #6B7280);
 }
 
 .lumina-ai-dashboard-root.light .ai-sidebar-icon-btn:hover,
 .lumina-ai-profile-root.light .ai-sidebar-icon-btn:hover {
-  color: var(--ai-text-primary, #1C1A17);
-  background-color: var(--ai-card-hover, #EDECE6);
+  color: var(--ai-text-primary, #111111);
+  background-color: var(--ai-card-hover, #F7F8FA);
 }
 
 .lumina-ai-dashboard-root.light .ai-inbox-badge,
 .lumina-ai-profile-root.light .ai-inbox-badge {
-  border-color: #F4F3EE;
+  border-color: #FFFFFF;
 }
 
 .lumina-ai-dashboard-root.light .ai-sidebar-search-box,
 .lumina-ai-profile-root.light .ai-sidebar-search-box {
   background-color: #FFFFFF;
-  border-color: var(--ai-border, #B1ADA1);
+  border-color: var(--ai-border, #E5E7EB);
 }
 
 .lumina-ai-dashboard-root.light .ai-sidebar-search-box:focus-within,
@@ -470,19 +470,19 @@
 
 .lumina-ai-dashboard-root.light .ai-sidebar-search-input,
 .lumina-ai-profile-root.light .ai-sidebar-search-input {
-  color: var(--ai-text-primary, #1C1A17);
+  color: var(--ai-text-primary, #111111);
 }
 
 .lumina-ai-dashboard-root.light .ai-sidebar-search-input::placeholder,
 .lumina-ai-profile-root.light .ai-sidebar-search-input::placeholder {
-  color: var(--ai-text-muted, #8E897D);
+  color: var(--ai-text-muted, #9CA3AF);
 }
 
 .lumina-ai-dashboard-root.light .ai-sidebar-kbd-badge,
 .lumina-ai-profile-root.light .ai-sidebar-kbd-badge {
-  background-color: var(--ai-card-sub-bg, #F4F3EE);
-  border-color: var(--ai-border, #B1ADA1);
-  color: var(--ai-text-secondary, #635F55);
+  background-color: var(--ai-card-sub-bg, #FFFFFF);
+  border-color: var(--ai-border, #E5E7EB);
+  color: var(--ai-text-secondary, #6B7280);
 }
 
 /* Workspace Switcher */
@@ -665,8 +665,8 @@
 
 .ai-nav-item.is-active,
 .ai-nav-item:active {
-  background-color: #EDECE6 !important;
-  color: var(--ai-text-primary, #1C1A17) !important;
+  background-color: #F7F8FA !important;
+  color: var(--ai-text-primary, #111111) !important;
   font-weight: 600 !important;
   border: none !important;
   box-shadow: none !important;
@@ -674,7 +674,7 @@
 
 .ai-nav-item.is-active:hover {
   background-color: #E5E3DC !important;
-  color: var(--ai-text-primary, #1C1A17) !important;
+  color: var(--ai-text-primary, #111111) !important;
 }
 
 .ai-nav-icon {
@@ -691,7 +691,7 @@
 
 .ai-nav-item.is-active .ai-nav-icon,
 .ai-nav-item:active .ai-nav-icon {
-  color: var(--ai-text-primary, #1C1A17) !important;
+  color: var(--ai-text-primary, #111111) !important;
 }
 
 .lumina-ai-dashboard-root.dark .ai-nav-item.is-active,
@@ -1091,37 +1091,37 @@
 .lumina-ai-dashboard-root.light .ai-settings-popover,
 .lumina-ai-profile-root.light .ai-settings-popover {
   background-color: #FFFFFF;
-  border-color: #B1ADA1;
+  border-color: #E5E7EB;
   box-shadow: 0 16px 36px rgba(177, 173, 161, 0.25);
 }
 
 .lumina-ai-dashboard-root.light .ai-popover-avatar-sq,
 .lumina-ai-profile-root.light .ai-popover-avatar-sq {
-  background-color: #F4F3EE;
-  color: #1C1A17;
-  border: 1px solid #B1ADA1;
+  background-color: #FFFFFF;
+  color: #111111;
+  border: 1px solid #E5E7EB;
 }
 
 .lumina-ai-dashboard-root.light .ai-popover-name,
 .lumina-ai-profile-root.light .ai-popover-name {
-  color: #1C1A17;
+  color: #111111;
 }
 
 .lumina-ai-dashboard-root.light .ai-popover-plan,
 .lumina-ai-profile-root.light .ai-popover-plan {
-  color: #635F55;
+  color: #6B7280;
 }
 
 .lumina-ai-dashboard-root.light .ai-popover-divider,
 .lumina-ai-profile-root.light .ai-popover-divider {
-  background-color: #B1ADA1;
+  background-color: #E5E7EB;
 }
 
 .lumina-ai-dashboard-root.light .ai-popover-menu-item,
 .lumina-ai-profile-root.light .ai-popover-menu-item,
 .lumina-ai-dashboard-root.light .ai-popover-logout-btn,
 .lumina-ai-profile-root.light .ai-popover-logout-btn {
-  color: #1C1A17;
+  color: #111111;
 }
 
 .lumina-ai-dashboard-root.light .ai-popover-menu-item:hover,
@@ -1130,19 +1130,19 @@
 .lumina-ai-profile-root.light .ai-popover-workspace-item:hover,
 .lumina-ai-dashboard-root.light .ai-popover-logout-btn:hover,
 .lumina-ai-profile-root.light .ai-popover-logout-btn:hover {
-  background-color: #F4F3EE;
+  background-color: #FFFFFF;
 }
 
 .lumina-ai-dashboard-root.light .ai-popover-email,
 .lumina-ai-profile-root.light .ai-popover-email {
-  color: #8E897D;
+  color: #9CA3AF;
 }
 
 .lumina-ai-dashboard-root.light .ai-popover-avatar-sm,
 .lumina-ai-profile-root.light .ai-popover-avatar-sm {
-  background-color: #F4F3EE;
-  color: #1C1A17;
-  border: 1px solid #B1ADA1;
+  background-color: #FFFFFF;
+  color: #111111;
+  border: 1px solid #E5E7EB;
 }
 
 .lumina-ai-dashboard-root.light .ai-popover-avatar-dot,
@@ -1152,7 +1152,7 @@
 
 .lumina-ai-dashboard-root.light .ai-popover-ws-name,
 .lumina-ai-profile-root.light .ai-popover-ws-name {
-  color: #1C1A17;
+  color: #111111;
 }
 
 .lumina-ai-dashboard-root.light .ai-popover-check-icon,
@@ -1518,9 +1518,9 @@
 
 /* Light theme badge when pill is inactive */
 .lumina-ai-dashboard-root.light .ai-count-badge {
-  background-color: var(--ai-card-sub-bg, #F4F3EE);
-  border: 1px solid var(--ai-border, #B1ADA1);
-  color: var(--ai-text-secondary, #635F55);
+  background-color: var(--ai-card-sub-bg, #FFFFFF);
+  border: 1px solid var(--ai-border, #E5E7EB);
+  color: var(--ai-text-secondary, #6B7280);
 }
 
 /* Active Pill: Badge dynamically adapts to the pill text and background */
@@ -1599,13 +1599,13 @@
 /* Light mode for Academic Intelligence fallback pill */
 .lumina-ai-dashboard-root.light .ai-intel-pill {
   background: #FFFFFF;
-  border: 1px solid #B1ADA1 !important;
-  color: #1C1A17 !important;
+  border: 1px solid #E5E7EB !important;
+  color: #111111 !important;
   box-shadow: 0 1px 3px rgba(177, 173, 161, 0.15);
 }
 
 .lumina-ai-dashboard-root.light .ai-intel-pill:hover {
-  background: #F4F3EE;
+  background: #FFFFFF;
   border-color: #2563EB !important;
   color: #2563EB !important;
 }
@@ -1726,8 +1726,8 @@
 
 .lumina-ai-dashboard-root.light .ai-intel-moving-border-inner {
   background: #FFFFFF !important;
-  border-color: #B1ADA1 !important;
-  color: #1C1A17 !important;
+  border-color: #E5E7EB !important;
+  color: #111111 !important;
   font-weight: 600 !important;
 }
 
@@ -1742,7 +1742,7 @@
 }
 
 .lumina-ai-dashboard-root.light .ai-intel-moving-border-btn:hover .ai-intel-moving-border-inner {
-  background: #F4F3EE !important;
+  background: #FFFFFF !important;
   border-color: #2563EB !important;
   color: #2563EB !important;
 }
@@ -2125,15 +2125,15 @@
 
 .lumina-ai-dashboard-root.light .ai-minimal-composer-card {
   background-color: #FFFFFF;
-  border-color: var(--ai-border, #B1ADA1);
+  border-color: var(--ai-border, #E5E7EB);
 }
 
 .lumina-ai-dashboard-root.light .ai-minimal-composer-card:hover,
 .lumina-ai-dashboard-root.light .ai-minimal-composer-card:focus,
 .lumina-ai-dashboard-root.light .ai-minimal-composer-card:focus-visible,
 .lumina-ai-dashboard-root.light .ai-minimal-composer-card:active {
-  border-color: var(--ai-border, #B1ADA1) !important;
-  background-color: var(--ai-card-hover, #EDECE6);
+  border-color: var(--ai-border, #E5E7EB) !important;
+  background-color: var(--ai-card-hover, #F7F8FA);
   outline: none !important;
   box-shadow: none !important;
 }
@@ -2146,11 +2146,11 @@
 }
 
 .lumina-ai-dashboard-root.light .ai-minimal-composer-placeholder {
-  color: var(--ai-text-muted, #8E897D);
+  color: var(--ai-text-muted, #9CA3AF);
 }
 
 .lumina-ai-dashboard-root.light .ai-minimal-composer-card:hover .ai-minimal-composer-placeholder {
-  color: var(--ai-text-secondary, #635F55);
+  color: var(--ai-text-secondary, #6B7280);
 }
 
 /* ==========================================================================
@@ -2271,19 +2271,19 @@
 }
 
 .lumina-ai-dashboard-root.light .ai-post-byline {
-  color: #635F55;
+  color: #6B7280;
 }
 
 .lumina-ai-dashboard-root.light .ai-byline-author {
-  color: #1C1A17;
+  color: #111111;
 }
 
 .lumina-ai-dashboard-root.light .ai-byline-handle {
-  color: #635F55;
+  color: #6B7280;
 }
 
 .lumina-ai-dashboard-root.light .ai-byline-date {
-  color: #8E897D;
+  color: #9CA3AF;
 }
 
 /* 2. Title & Subtitle */
@@ -2304,7 +2304,7 @@
 }
 
 .lumina-ai-dashboard-root.light .ai-post-title {
-  color: #1C1A17;
+  color: #111111;
 }
 
 .ai-post-subtitle {
@@ -2322,7 +2322,7 @@
 }
 
 .lumina-ai-dashboard-root.light .ai-post-subtitle {
-  color: #635F55;
+  color: #6B7280;
 }
 
 /* 3. Footer Actions and Stats */
@@ -2489,7 +2489,7 @@
 }
 
 .lumina-ai-dashboard-root.light .ai-feed-spinner {
-  border-color: #F4F3EE;
+  border-color: #FFFFFF;
   border-top-color: #2563EB;
 }
 
@@ -3111,7 +3111,7 @@
   background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  color: var(--ai-text-muted, #8E897D) !important;
+  color: var(--ai-text-muted, #9CA3AF) !important;
 }
 
 .ai-community-join-btn.is-joined:hover,
@@ -3141,12 +3141,12 @@
 
 .ai-friend-loading-text {
   font-size: 12px;
-  color: var(--ai-text-secondary, #635F55);
+  color: var(--ai-text-secondary, #6B7280);
 }
 
 .lumina-ai-dashboard-root.dark .ai-friend-loading-text,
 [data-theme='dark'] .lumina-ai-dashboard-root .ai-friend-loading-text {
-  color: #B1ADA1;
+  color: #E5E7EB;
 }
 
 .ai-friend-empty-state {
@@ -3168,18 +3168,18 @@
   margin: 0;
   font-size: 13px;
   font-weight: 600;
-  color: var(--ai-text-primary, #1C1A17);
+  color: var(--ai-text-primary, #111111);
 }
 
 .lumina-ai-dashboard-root.dark .ai-friend-empty-title,
 [data-theme='dark'] .lumina-ai-dashboard-root .ai-friend-empty-title {
-  color: #B1ADA1;
+  color: #E5E7EB;
 }
 
 .ai-friend-empty-sub {
   margin: 0;
   font-size: 11px;
-  color: var(--ai-text-secondary, #635F55);
+  color: var(--ai-text-secondary, #6B7280);
   line-height: 1.35;
 }
 
@@ -3208,7 +3208,7 @@
   background: transparent !important;
   background-color: transparent !important;
   border: none !important;
-  color: var(--ai-text-muted, #8E897D) !important;
+  color: var(--ai-text-muted, #9CA3AF) !important;
 }
 
 .lumina-ai-dashboard-root.light .ai-community-join-btn.is-joined:hover,
@@ -3238,7 +3238,7 @@
 }
 
 .lumina-ai-dashboard-root.light .ai-see-all-link {
-  color: var(--ai-text-primary, #1C1A17);
+  color: var(--ai-text-primary, #111111);
 }
 
 /* Explore More Button */
@@ -3268,16 +3268,16 @@
 
 .lumina-ai-dashboard-root.light .ai-community-explore-more-btn,
 [data-theme="bright"] .ai-community-explore-more-btn {
-  background: #EDECE6 !important;
-  border: 1px solid #B1ADA1 !important;
-  color: #1C1A17 !important;
+  background: #F7F8FA !important;
+  border: 1px solid #E5E7EB !important;
+  color: #111111 !important;
   font-weight: 500 !important;
   font-family: var(--ai-font-sans) !important;
 }
 
 .lumina-ai-dashboard-root.light .ai-community-explore-more-btn:hover,
 [data-theme="bright"] .ai-community-explore-more-btn:hover {
-  background: #F4F3EE !important;
+  background: #FFFFFF !important;
   border-color: #2563EB !important;
   color: #2563EB !important;
 }
@@ -3898,8 +3898,8 @@
 
 .lumina-ai-dashboard-root.light .ai-coming-soon-pill {
   background: rgba(255, 255, 255, 0.92);
-  border-color: #B1ADA1;
-  color: #1C1A17;
+  border-color: #E5E7EB;
+  color: #111111;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 

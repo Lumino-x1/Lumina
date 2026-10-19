@@ -1672,7 +1672,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   title="Edit background banner"
                   onClick={() => alert('Change profile banner')}
                 >
-                  <Pencil size={15} color={isDark ? '#B1ADA1' : '#1C1A17'} strokeWidth={2.4} />
+                  <Pencil size={15} color="currentColor" strokeWidth={2.4} />
                 </button>
               </div>
 
@@ -1712,10 +1712,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     type="button"
                     className="ai-linkedin-card-edit-btn"
                     title="Edit intro"
-                    style={isDark ? { color: '#B1ADA1' } : undefined}
                     onClick={() => alert('Edit intro')}
                   >
-                    <Pencil size={20} color={isDark ? '#B1ADA1' : 'currentColor'} strokeWidth={2} />
+                    <Pencil size={20} color="currentColor" strokeWidth={2} />
                   </button>
                 )}
               </div>
@@ -1750,7 +1749,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   <div className="ai-linkedin-left-col">
                     {/* Name + Blue Tick Verified Badge */}
                     <div className="ai-linkedin-name-row">
-                      <h1 className="ai-linkedin-name" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.name}</h1>
+                      <h1 className="ai-linkedin-name">{profile.name}</h1>
                       <span
                         className="ai-linkedin-blue-tick"
                         title="Verified Student Profile"
@@ -1758,7 +1757,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                       >
                         <BadgeCheck
                           size={21}
-                          fill={isDark ? '#388fe6' : '#0a66c2'}
+                          fill={isDark ? '#60A5FA' : '#2563EB'}
                           color="#ffffff"
                           strokeWidth={2.2}
                         />
@@ -1766,18 +1765,17 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     </div>
 
                     {/* Headline */}
-                    <p className="ai-linkedin-headline" style={isDark ? { color: '#B1ADA1' } : undefined}>
+                    <p className="ai-linkedin-headline">
                       {profile.headline}
                     </p>
 
                     {/* Location & Contact info */}
-                    <div className="ai-linkedin-location-row" style={isDark ? { color: '#B1ADA1' } : undefined}>
-                      <span className="ai-linkedin-location" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.location}</span>
-                      <span className="ai-linkedin-dot" style={isDark ? { color: '#B1ADA1' } : undefined}>·</span>
+                    <div className="ai-linkedin-location-row">
+                      <span className="ai-linkedin-location">{profile.location}</span>
+                      <span className="ai-linkedin-dot">·</span>
                       <a
                         href="#contact-info"
                         className="ai-linkedin-contact-link"
-                        style={isDark ? { color: '#B1ADA1' } : undefined}
                         onClick={(e) => {
                           e.preventDefault()
                           alert(`Contact Info:\nName: ${profile.name}\nEmail: ${profile.email}\nUniversity: ${profile.university}\nLocation: ${profile.location}`)
@@ -1788,11 +1786,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     </div>
 
                     {/* Friends */}
-                    <div className="ai-linkedin-connections-row" style={isDark ? { color: '#B1ADA1' } : undefined}>
+                    <div className="ai-linkedin-connections-row">
                       <button
                         type="button"
                         className="ai-linkedin-connections-link ai-friends-profile-btn"
-                        style={isDark ? { color: '#B1ADA1' } : undefined}
                         onClick={(e) => {
                           e.preventDefault()
                           setActiveTab('friends')
@@ -1803,7 +1800,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                         }}
                         title="Click to view friends"
                       >
-                        <span className="ai-followers-count" style={isDark ? { color: '#B1ADA1' } : undefined}>
+                        <span className="ai-followers-count">
                           {friendsCount !== null ? friendsCount : friendsList.length}
                         </span>{' '}
                         {friendsCount === 1 || friendsList.length === 1 ? 'friend' : 'friends'}
@@ -1823,7 +1820,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                           <rect x="17" y="17" width="10" height="10" rx="1.5" fill="#546E7A" />
                         </svg>
                       </div>
-                      <span className="ai-linkedin-org-name" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.department}</span>
+                      <span className="ai-linkedin-org-name">{profile.department}</span>
                     </div>
 
                     <div className="ai-linkedin-org-item">
@@ -1836,7 +1833,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                           <path d="M9 22 Q16 25 23 22" stroke="#283593" strokeWidth="1.5" fill="none" />
                         </svg>
                       </div>
-                      <span className="ai-linkedin-org-name" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.university}</span>
+                      <span className="ai-linkedin-org-name">{profile.university}</span>
                     </div>
                   </div>
                 </div>
@@ -2723,7 +2720,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     <div>
                       <h3 className="ai-friends-tab-title">Friends</h3>
                       <p className="ai-friends-tab-subtitle">
-                        Connected classmates and peer collaborators ({friendsCount !== null ? friendsCount : friendsList.length})
+                        Connected classmates and peer collaborators
                       </p>
                     </div>
                     <div className="ai-friends-search-bar tab-search">

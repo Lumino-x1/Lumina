@@ -10,7 +10,7 @@
   --ai-font-mono: 'Geist Mono', 'Fira Code', 'JetBrains Mono', Menlo, monospace;
 }
 
-/* Base Light Theme (Claude Dashboard Palette: #2563EB, #FFFFFF, #F4F3EE, #B1ADA1) */
+/* Base Light Theme (Claude Dashboard Palette: #2563EB, #FFFFFF, #FFFFFF, #E5E7EB) */
 /* Base Light Theme (Black + White + Blue System) */
 .lumina-blog-reader-page,
 .lumina-blog-reader-page.light,
@@ -249,7 +249,7 @@
 [data-theme='light'] .reader-icon-btn,
 [data-theme='bright'] .reader-icon-btn {
   color: #2D2A26;
-  border-color: #B1ADA1;
+  border-color: #E5E7EB;
 }
 
 .lumina-blog-reader-page.light .reader-icon-btn.is-saved,
@@ -1016,7 +1016,7 @@
 .lumina-blog-reader-page.light .reader-medium-author-card,
 [data-theme="light"] .reader-medium-author-card,
 [data-theme="bright"] .reader-medium-author-card {
-  background-color: var(--ai-bg, #F4F3EE) !important;
+  background-color: var(--ai-bg, #FFFFFF) !important;
   border: none !important;
   box-shadow: none !important;
 }

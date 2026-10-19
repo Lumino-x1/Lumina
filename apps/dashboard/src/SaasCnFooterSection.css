@@ -366,7 +366,7 @@
 .bright .saascn-theme-active-indicator,
 .light .saascn-theme-active-indicator {
   background: transparent !important;
-  color: #8E897D !important;
+  color: #9CA3AF !important;
 }
 
 [data-theme="bright"] .saascn-theme-active-indicator.is-active,
@@ -390,7 +390,7 @@
 [data-theme="light"] .saascn-theme-active-indicator .saascn-icon-inactive,
 .bright .saascn-theme-active-indicator .saascn-icon-inactive,
 .light .saascn-theme-active-indicator .saascn-icon-inactive {
-  color: #8E897D !important;
+  color: #9CA3AF !important;
   opacity: 0.6 !important;
 }
 
@@ -416,7 +416,7 @@
 [data-theme="light"] .saascn-social-link,
 .bright .saascn-social-link,
 .light .saascn-social-link {
-  color: #635F55 !important;
+  color: #6B7280 !important;
 }
 
 [data-theme="bright"] .saascn-social-link:hover,

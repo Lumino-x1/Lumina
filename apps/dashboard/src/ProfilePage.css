@@ -16,7 +16,7 @@
   --ai-linkedin-blue: #0a66c2;
 }
 
-/* Base Light Theme (Brand Palette: #2563EB, #FFFFFF, #F4F3EE, #B1ADA1) */
+/* Base Light Theme (Brand Palette: #2563EB, #FFFFFF, #FFFFFF, #E5E7EB) */
 /* Base Light Theme (Black + White + Blue System) */
 .lumina-ai-profile-root,
 .lumina-ai-profile-root.light,
@@ -581,8 +581,8 @@
 
 .lumina-ai-profile-root .ai-nav-item.is-active,
 .lumina-ai-profile-root .ai-nav-item:active {
-  background-color: #EDECE6 !important;
-  color: var(--ai-text-primary, #1C1A17) !important;
+  background-color: #F7F8FA !important;
+  color: var(--ai-text-primary, #111111) !important;
   font-weight: 600 !important;
   border: none !important;
   box-shadow: none !important;
@@ -590,12 +590,12 @@
 
 .lumina-ai-profile-root .ai-nav-item.is-active:hover {
   background-color: #E5E3DC !important;
-  color: var(--ai-text-primary, #1C1A17) !important;
+  color: var(--ai-text-primary, #111111) !important;
 }
 
 .lumina-ai-profile-root .ai-nav-item.is-active .ai-nav-icon,
 .lumina-ai-profile-root .ai-nav-item:active .ai-nav-icon {
-  color: var(--ai-text-primary, #1C1A17) !important;
+  color: var(--ai-text-primary, #111111) !important;
 }
 
 .lumina-ai-profile-root.dark .ai-nav-item.is-active,
@@ -603,7 +603,7 @@
 [data-theme='dark'] .lumina-ai-profile-root .ai-nav-item.is-active,
 [data-theme='dark'] .lumina-ai-profile-root .ai-nav-item:active {
   background-color: rgba(255, 255, 255, 0.1) !important;
-  color: #B1ADA1 !important;
+  color: #E5E7EB !important;
   border: none !important;
   box-shadow: none !important;
 }
@@ -611,14 +611,14 @@
 .lumina-ai-profile-root.dark .ai-nav-item.is-active:hover,
 [data-theme='dark'] .lumina-ai-profile-root .ai-nav-item.is-active:hover {
   background-color: rgba(255, 255, 255, 0.14) !important;
-  color: #B1ADA1 !important;
+  color: #E5E7EB !important;
 }
 
 .lumina-ai-profile-root.dark .ai-nav-item.is-active .ai-nav-icon,
 .lumina-ai-profile-root.dark .ai-nav-item:active .ai-nav-icon,
 [data-theme='dark'] .lumina-ai-profile-root .ai-nav-item.is-active .ai-nav-icon,
 [data-theme='dark'] .lumina-ai-profile-root .ai-nav-item:active .ai-nav-icon {
-  color: #B1ADA1 !important;
+  color: #E5E7EB !important;
 }
 
 .lumina-ai-profile-root .ai-nav-icon {
@@ -1324,7 +1324,7 @@
   position: relative;
   width: 100%;
   height: 180px;
-  background-color: var(--ai-bg, #F4F3EE) !important;
+  background-color: var(--ai-bg, #FFFFFF) !important;
   overflow: hidden;
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
@@ -1473,7 +1473,7 @@
 
 .lumina-ai-profile-root.dark .ai-banner-edit-pencil-btn svg,
 [data-theme='dark'] .lumina-ai-profile-root .ai-banner-edit-pencil-btn svg {
-  stroke: #B1ADA1;
+  stroke: #E5E7EB;
 }
 
 .ai-banner-edit-pencil-btn:hover {
@@ -1581,7 +1581,7 @@
 
 .lumina-ai-profile-root.dark .ai-linkedin-card-edit-btn,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-card-edit-btn {
-  color: #B1ADA1;
+  color: #E5E7EB;
 }
 
 .ai-linkedin-card-edit-btn svg {
@@ -1622,7 +1622,7 @@
   font-family: 'Geist', var(--font-family-primary), -apple-system, BlinkMacSystemFont, sans-serif !important;
   font-size: 24px;
   font-weight: 450 !important;
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
   margin: 0;
   letter-spacing: -0.025em !important;
   line-height: 1.22 !important;
@@ -1633,11 +1633,11 @@
 .dark .ai-linkedin-name,
 .lumina-ai-profile-root.dark .ai-linkedin-name,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-name {
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
 }
 
 .lumina-ai-profile-root.light .ai-linkedin-name {
-  color: #1C1A17 !important;
+  color: #111111 !important;
 }
 
 /* Blue Tick Verified Badge */
@@ -1694,20 +1694,20 @@
 .lumina-ai-profile-root.dark .ai-linkedin-verify-badge,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-verify-badge {
   border-color: rgba(177, 173, 161, 0.4) !important;
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
 }
 
 .dark .ai-linkedin-verify-badge svg,
 .lumina-ai-profile-root.dark .ai-linkedin-verify-badge svg,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-verify-badge svg {
-  stroke: var(--ai-text-primary, #B1ADA1) !important;
+  stroke: var(--ai-text-primary, #E5E7EB) !important;
 }
 
 .dark .ai-linkedin-verify-badge:hover,
 .lumina-ai-profile-root.dark .ai-linkedin-verify-badge:hover,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-verify-badge:hover {
   background-color: rgba(177, 173, 161, 0.12) !important;
-  border-color: var(--ai-text-primary, #B1ADA1) !important;
+  border-color: var(--ai-text-primary, #E5E7EB) !important;
   color: #ffffff !important;
 }
 
@@ -1721,7 +1721,7 @@
   font-family: var(--ai-font-sans), sans-serif;
   font-size: 15px;
   font-weight: 400;
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
   margin: 6px 0 0;
   line-height: 1.4;
   letter-spacing: -0.01em;
@@ -1732,11 +1732,11 @@
 .dark .ai-linkedin-headline,
 .lumina-ai-profile-root.dark .ai-linkedin-headline,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-headline {
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
 }
 
 .lumina-ai-profile-root.light .ai-linkedin-headline {
-  color: #635F55 !important;
+  color: #6B7280 !important;
 }
 
 .ai-linkedin-location-row {
@@ -1745,7 +1745,7 @@
   gap: 4px;
   margin-top: 6px;
   font-size: 14px;
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
   font-family: var(--ai-font-sans), sans-serif;
 }
 
@@ -1755,30 +1755,30 @@
 .dark .ai-linkedin-location,
 .lumina-ai-profile-root.dark .ai-linkedin-location,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-location {
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
 }
 
 .lumina-ai-profile-root.light .ai-linkedin-location-row {
-  color: #8E897D !important;
+  color: #9CA3AF !important;
 }
 
 .ai-linkedin-dot {
   margin: 0 2px;
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
 }
 
 .dark .ai-linkedin-dot,
 .lumina-ai-profile-root.dark .ai-linkedin-dot,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-dot {
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
 }
 
 .lumina-ai-profile-root.light .ai-linkedin-dot {
-  color: #8E897D !important;
+  color: #9CA3AF !important;
 }
 
 .ai-linkedin-contact-link {
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
   font-weight: 500;
   text-decoration: underline;
   cursor: pointer;
@@ -1791,7 +1791,7 @@
 .dark .ai-linkedin-contact-link,
 .lumina-ai-profile-root.dark .ai-linkedin-contact-link,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-contact-link {
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
 }
 
 .dark .ai-linkedin-contact-link:hover,
@@ -1810,7 +1810,7 @@
   gap: 4px;
   margin-top: 6px;
   font-size: 14px;
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
   font-family: var(--ai-font-sans), sans-serif;
   font-weight: 400;
 }
@@ -1818,18 +1818,18 @@
 .dark .ai-linkedin-connections-row,
 .lumina-ai-profile-root.dark .ai-linkedin-connections-row,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-row {
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
 }
 
 .lumina-ai-profile-root.light .ai-linkedin-connections-row {
-  color: #8E897D !important;
+  color: #9CA3AF !important;
 }
 
 .ai-linkedin-connections-link {
   font-size: 14px;
   font-weight: 400;
   font-family: var(--ai-font-sans), sans-serif;
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
   text-decoration: none;
   cursor: pointer;
 }
@@ -1840,11 +1840,11 @@
 .dark .ai-followers-count,
 .lumina-ai-profile-root.dark .ai-followers-count,
 [data-theme='dark'] .lumina-ai-profile-root .ai-followers-count {
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
 }
 
 .lumina-ai-profile-root.light .ai-linkedin-connections-link {
-  color: #8E897D !important;
+  color: #9CA3AF !important;
 }
 
 .ai-linkedin-connections-link:hover {
@@ -1893,18 +1893,18 @@
   font-family: var(--ai-font-sans), sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
   line-height: 1.25;
 }
 
 .dark .ai-linkedin-org-name,
 .lumina-ai-profile-root.dark .ai-linkedin-org-name,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-org-name {
-  color: var(--ai-text-primary, #B1ADA1) !important;
+  color: var(--ai-text-primary, #E5E7EB) !important;
 }
 
 .lumina-ai-profile-root.light .ai-linkedin-org-name {
-  color: #1C1A17 !important;
+  color: #111111 !important;
 }
 
 .ai-linkedin-org-name:hover {
@@ -2307,7 +2307,7 @@
 
 .ai-counter-item.ai-counter-followers,
 .ai-counter-item.ai-counter-following {
-  color: var(--ai-text-secondary, #8E897D);
+  color: var(--ai-text-secondary, #9CA3AF);
   cursor: pointer;
   transition: opacity 0.15s ease, color 0.15s ease;
 }
@@ -2320,7 +2320,7 @@
 
 .ai-counter-item.ai-counter-followers strong,
 .ai-counter-item.ai-counter-following strong {
-  color: var(--ai-text-primary, #B1ADA1);
+  color: var(--ai-text-primary, #E5E7EB);
   font-weight: 550;
 }
 
@@ -2361,54 +2361,58 @@
 }
 
 .ai-profile-tab.is-active {
-  background-color: #EDECE6;
-  color: #1C1A17;
-  border: 1px solid #B1ADA1;
+  background-color: #18181B;
+  color: #FAFAFA;
+  border: 1px solid #27272A;
   font-weight: 650;
   letter-spacing: -0.01em;
 }
 
 .lumina-ai-profile-root.light .ai-profile-tab.is-active,
-.lumina-ai-profile-root:not(.dark) .ai-profile-tab.is-active {
-  background-color: #EDECE6 !important;
-  color: #1C1A17 !important;
-  border: 1px solid #B1ADA1 !important;
+.lumina-ai-profile-root:not(.dark) .ai-profile-tab.is-active,
+[data-theme='light'] .ai-profile-tab.is-active {
+  background-color: #FFFFFF !important;
+  color: #111111 !important;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
 }
 
 .lumina-ai-profile-root.light .ai-profile-tab.is-active svg,
-.lumina-ai-profile-root:not(.dark) .ai-profile-tab.is-active svg {
-  stroke: #1C1A17 !important;
-  color: #1C1A17 !important;
+.lumina-ai-profile-root:not(.dark) .ai-profile-tab.is-active svg,
+[data-theme='light'] .ai-profile-tab.is-active svg {
+  stroke: #2563EB !important;
+  color: #2563EB !important;
 }
 
 .lumina-ai-profile-root.light .ai-profile-tab.is-active .ai-tab-badge-num,
-.lumina-ai-profile-root:not(.dark) .ai-profile-tab.is-active .ai-tab-badge-num {
-  background-color: #F4F3EE !important;
-  border-color: #B1ADA1 !important;
-  color: #1C1A17 !important;
+.lumina-ai-profile-root:not(.dark) .ai-profile-tab.is-active .ai-tab-badge-num,
+[data-theme='light'] .ai-profile-tab.is-active .ai-tab-badge-num {
+  background-color: #EFF6FF !important;
+  border-color: #DBEAFE !important;
+  color: #1D4ED8 !important;
 }
 
 .dark .lumina-ai-profile-root .ai-profile-tab.is-active,
 .lumina-ai-profile-root.dark .ai-profile-tab.is-active,
 [data-theme='dark'] .lumina-ai-profile-root .ai-profile-tab.is-active {
-  background-color: #2E2B26 !important;
-  color: #EDECE6 !important;
-  border: 1px solid rgba(177, 173, 161, 0.4) !important;
+  background-color: #18181B !important;
+  color: #FAFAFA !important;
+  border: 1px solid #27272A !important;
 }
 
 .dark .lumina-ai-profile-root .ai-profile-tab.is-active svg,
 .lumina-ai-profile-root.dark .ai-profile-tab.is-active svg,
 [data-theme='dark'] .lumina-ai-profile-root .ai-profile-tab.is-active svg {
-  stroke: #EDECE6 !important;
-  color: #EDECE6 !important;
+  stroke: #60A5FA !important;
+  color: #60A5FA !important;
 }
 
 .dark .lumina-ai-profile-root .ai-profile-tab.is-active .ai-tab-badge-num,
 .lumina-ai-profile-root.dark .ai-profile-tab.is-active .ai-tab-badge-num,
 [data-theme='dark'] .lumina-ai-profile-root .ai-profile-tab.is-active .ai-tab-badge-num {
-  background-color: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(177, 173, 161, 0.3) !important;
-  color: #EDECE6 !important;
+  background-color: #172554 !important;
+  border-color: #1E3A8A !important;
+  color: #93C5FD !important;
 }
 
 .ai-tab-dot-indicator {
@@ -2429,9 +2433,9 @@
 }
 
 .ai-profile-tab.is-active .ai-tab-badge-num {
-  background-color: #F4F3EE;
-  border-color: #B1ADA1;
-  color: #1C1A17;
+  background-color: #FFFFFF;
+  border-color: #E5E7EB;
+  color: #111111;
 }
 
 /* ==========================================================================
@@ -3123,27 +3127,27 @@
 }
 
 .lumina-ai-profile-root.light .ai-post-byline {
-  color: #635F55;
+  color: #6B7280;
 }
 
 .lumina-ai-profile-root.light .ai-byline-author {
-  color: #1C1A17;
+  color: #111111;
 }
 
 .lumina-ai-profile-root.light .ai-byline-handle {
-  color: #635F55;
+  color: #6B7280;
 }
 
 .lumina-ai-profile-root.light .ai-byline-date {
-  color: #8E897D;
+  color: #9CA3AF;
 }
 
 .lumina-ai-profile-root.light .ai-post-title {
-  color: #1C1A17;
+  color: #111111;
 }
 
 .lumina-ai-profile-root.light .ai-post-subtitle {
-  color: #635F55;
+  color: #6B7280;
 }
 
 .lumina-ai-profile-root.light .ai-post-stat-btn,
@@ -3409,7 +3413,7 @@
 }
 
 .lumina-ai-profile-root.light .ai-see-all-link {
-  color: var(--ai-text-primary, #1C1A17);
+  color: var(--ai-text-primary, #111111);
 }
 
 /* Suggested Friends Loading & Empty States */
@@ -3443,14 +3447,14 @@
 .lumina-ai-profile-root .ai-friend-loading-text,
 .lumina-ai-dashboard-root .ai-friend-loading-text {
   font-size: 12px;
-  color: var(--ai-text-secondary, #635F55);
+  color: var(--ai-text-secondary, #6B7280);
 }
 
 .lumina-ai-profile-root.dark .ai-friend-loading-text,
 [data-theme='dark'] .lumina-ai-profile-root .ai-friend-loading-text,
 .lumina-ai-dashboard-root.dark .ai-friend-loading-text,
 [data-theme='dark'] .lumina-ai-dashboard-root .ai-friend-loading-text {
-  color: #B1ADA1;
+  color: #E5E7EB;
 }
 
 .lumina-ai-profile-root .ai-friend-empty-state,
@@ -3475,21 +3479,21 @@
   margin: 0;
   font-size: 13px;
   font-weight: 600;
-  color: var(--ai-text-primary, #1C1A17);
+  color: var(--ai-text-primary, #111111);
 }
 
 .lumina-ai-profile-root.dark .ai-friend-empty-title,
 [data-theme='dark'] .lumina-ai-profile-root .ai-friend-empty-title,
 .lumina-ai-dashboard-root.dark .ai-friend-empty-title,
 [data-theme='dark'] .lumina-ai-dashboard-root .ai-friend-empty-title {
-  color: #B1ADA1;
+  color: #E5E7EB;
 }
 
 .lumina-ai-profile-root .ai-friend-empty-sub,
 .lumina-ai-dashboard-root .ai-friend-empty-sub {
   margin: 0;
   font-size: 11px;
-  color: var(--ai-text-secondary, #635F55);
+  color: var(--ai-text-secondary, #6B7280);
   line-height: 1.35;
 }
 
@@ -4677,7 +4681,7 @@
 
 .lumina-ai-profile-root.dark .ai-subfilter-btn.is-active .ai-subfilter-count {
   background-color: rgba(255, 255, 255, 0.25);
-  color: #B1ADA1 !important;
+  color: #E5E7EB !important;
 }
 
 /* Post sub-cards (Draft & Scheduled) */
@@ -5232,18 +5236,18 @@
 }
 
 /* ==========================================================================
-   GLOBAL PROFILE DARK MODE TEXT COLOR (#B1ADA1)
+   GLOBAL PROFILE DARK MODE TEXT COLOR (#E5E7EB)
    Applies the light cream theme color across all text elements in dark mode
    ========================================================================== */
 .dark .lumina-ai-profile-root,
 .lumina-ai-profile-root.dark,
 [data-theme='dark'] .lumina-ai-profile-root {
-  --ai-text-primary: #B1ADA1 !important;
-  --ai-text-secondary: #B1ADA1 !important;
-  --ai-text-muted: #B1ADA1 !important;
-  --ai-text-subtle: #B1ADA1 !important;
-  --ai-pill-inactive-text: #B1ADA1 !important;
-  color: #B1ADA1 !important;
+  --ai-text-primary: #FAFAFA !important;
+  --ai-text-secondary: #A1A1AA !important;
+  --ai-text-muted: #71717A !important;
+  --ai-text-subtle: #52525B !important;
+  --ai-pill-inactive-text: #A1A1AA !important;
+  color: #FAFAFA !important;
 }
 
 /* Typography elements in dark mode */
@@ -5304,7 +5308,7 @@
 [data-theme='dark'] .lumina-ai-profile-root button:not(.ai-top-create-btn):not(.ai-linkedin-btn-primary):not(.ai-action-primary-btn),
 [data-theme='dark'] .lumina-ai-profile-root input,
 [data-theme='dark'] .lumina-ai-profile-root textarea {
-  color: #B1ADA1 !important;
+  color: #E5E7EB !important;
 }
 
 /* Placeholders in dark mode */
@@ -5633,14 +5637,14 @@
 [data-theme='dark'] .lumina-ai-profile-root .ai-form-label,
 [data-theme='dark'] .lumina-ai-profile-root .ai-datetime-input,
 [data-theme='dark'] .lumina-ai-profile-root .ai-modal-cancel-btn {
-  color: #B1ADA1 !important;
+  color: #E5E7EB !important;
 }
 
 /* Lucide and UI icons default to light cream stroke */
 .dark .lumina-ai-profile-root svg:not(.ai-top-create-btn svg):not(.ai-linkedin-org-icon svg):not(.ai-profile-avatar-main svg):not(.ai-linkedin-silhouette svg):not(.ai-award-medal-icon svg):not(.ai-linkedin-blue-tick svg),
 .lumina-ai-profile-root.dark svg:not(.ai-top-create-btn svg):not(.ai-linkedin-org-icon svg):not(.ai-profile-avatar-main svg):not(.ai-linkedin-silhouette svg):not(.ai-award-medal-icon svg):not(.ai-linkedin-blue-tick svg),
 [data-theme='dark'] .lumina-ai-profile-root svg:not(.ai-top-create-btn svg):not(.ai-linkedin-org-icon svg):not(.ai-profile-avatar-main svg):not(.ai-linkedin-silhouette svg):not(.ai-award-medal-icon svg):not(.ai-linkedin-blue-tick svg) {
-  stroke: #B1ADA1 !important;
+  stroke: #E5E7EB !important;
 }
 
 /* ==========================================================================
@@ -5662,17 +5666,17 @@
   font-size: 14px;
   text-decoration: none;
   transition: opacity 0.15s ease;
-  color: var(--ai-text-secondary, #635F55) !important;
+  color: var(--ai-text-secondary, #6B7280) !important;
 }
 
 .lumina-ai-profile-root.light .ai-linkedin-connections-link.ai-friends-profile-btn {
-  color: #635F55 !important;
+  color: #6B7280 !important;
 }
 
 .dark .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn,
 .lumina-ai-profile-root.dark .ai-linkedin-connections-link.ai-friends-profile-btn,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn {
-  color: #B1ADA1 !important;
+  color: #E5E7EB !important;
 }
 
 .ai-linkedin-connections-link.ai-friends-profile-btn:hover {
@@ -5681,7 +5685,7 @@
 }
 
 .lumina-ai-profile-root.light .ai-linkedin-connections-link.ai-friends-profile-btn:hover {
-  color: #1C1A17 !important;
+  color: #111111 !important;
 }
 
 .dark .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn:hover,
@@ -5691,7 +5695,7 @@
 }
 
 .ai-linkedin-connections-link.ai-friends-profile-btn:active {
-  background-color: #EDECE6 !important;
+  background-color: #F7F8FA !important;
 }
 
 .dark .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn:active,
@@ -5734,9 +5738,11 @@
   animation: friendsModalScaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.lumina-ai-profile-root.light .ai-friends-modal-container {
-  background-color: #F4F3EE !important;
-  border: 1px solid #B1ADA1 !important;
+.lumina-ai-profile-root.light .ai-friends-modal-container,
+.lumina-ai-profile-root:not(.dark) .ai-friends-modal-container,
+[data-theme='light'] .ai-friends-modal-container {
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12) !important;
 }
 
@@ -5760,8 +5766,10 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.lumina-ai-profile-root.light .ai-friends-modal-header {
-  border-bottom: 1px solid rgba(177, 173, 161, 0.35) !important;
+.lumina-ai-profile-root.light .ai-friends-modal-header,
+.lumina-ai-profile-root:not(.dark) .ai-friends-modal-header,
+[data-theme='light'] .ai-friends-modal-header {
+  border-bottom: 1px solid #E5E7EB !important;
 }
 
 .ai-friends-modal-title-row {
@@ -5788,13 +5796,15 @@
   padding: 2px 8px;
   border-radius: 12px;
   background-color: rgba(255, 255, 255, 0.1);
-  color: #B1ADA1;
+  color: #E5E7EB;
 }
 
-.lumina-ai-profile-root.light .ai-friends-count-pill {
-  background-color: #EDECE6 !important;
-  color: #635F55 !important;
-  border: 1px solid rgba(177, 173, 161, 0.5) !important;
+.lumina-ai-profile-root.light .ai-friends-count-pill,
+.lumina-ai-profile-root:not(.dark) .ai-friends-count-pill,
+[data-theme='light'] .ai-friends-count-pill {
+  background-color: #F3F4F6 !important;
+  color: #4B5563 !important;
+  border: 1px solid #E5E7EB !important;
 }
 
 .ai-friends-modal-close-btn {
@@ -5828,18 +5838,33 @@
   padding: 8px 14px;
   margin: 12px 16px 8px;
   border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #18181B;
+  border: 1px solid #27272A;
 }
 
-.lumina-ai-profile-root.light .ai-friends-search-bar {
-  background-color: #EDECE6 !important;
-  border: 1px solid rgba(177, 173, 161, 0.6) !important;
+.lumina-ai-profile-root.light .ai-friends-search-bar,
+.lumina-ai-profile-root:not(.dark) .ai-friends-search-bar,
+[data-theme='light'] .ai-friends-search-bar {
+  background-color: #F7F8FA !important;
+  border: 1px solid #E5E7EB !important;
+}
+
+.lumina-ai-profile-root.light .ai-friends-search-bar:focus-within,
+.lumina-ai-profile-root:not(.dark) .ai-friends-search-bar:focus-within,
+[data-theme='light'] .ai-friends-search-bar:focus-within {
+  border-color: #2563EB !important;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) !important;
 }
 
 .ai-friends-search-icon {
   color: #9CA3AF;
   flex-shrink: 0;
+}
+
+.lumina-ai-profile-root.light .ai-friends-search-icon,
+.lumina-ai-profile-root:not(.dark) .ai-friends-search-icon,
+[data-theme='light'] .ai-friends-search-icon {
+  color: #6B7280 !important;
 }
 
 .ai-friends-search-input {
@@ -5852,8 +5877,10 @@
   font-family: inherit;
 }
 
-.lumina-ai-profile-root.light .ai-friends-search-input {
-  color: #111827;
+.lumina-ai-profile-root.light .ai-friends-search-input,
+.lumina-ai-profile-root:not(.dark) .ai-friends-search-input,
+[data-theme='light'] .ai-friends-search-input {
+  color: #111111 !important;
 }
 
 .ai-friends-search-input::placeholder {
@@ -6056,17 +6083,19 @@
 }
 
 .ai-friends-tab-card {
-  background-color: #000000;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: #111113;
+  border: 1px solid #27272A;
   border-radius: 14px;
   padding: 18px 20px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
-.lumina-ai-profile-root.light .ai-friends-tab-card {
-  background-color: #F4F3EE !important;
-  border: 1px solid #B1ADA1 !important;
-  box-shadow: none !important;
+.lumina-ai-profile-root.light .ai-friends-tab-card,
+.lumina-ai-profile-root:not(.dark) .ai-friends-tab-card,
+[data-theme='light'] .ai-friends-tab-card {
+  background-color: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
 }
 
 .ai-friends-tab-header {
@@ -6074,13 +6103,15 @@
   align-items: center;
   justify-content: space-between;
   padding-bottom: 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid #27272A;
   flex-wrap: wrap;
   gap: 12px;
 }
 
-.lumina-ai-profile-root.light .ai-friends-tab-header {
-  border-bottom: 1px solid rgba(177, 173, 161, 0.35) !important;
+.lumina-ai-profile-root.light .ai-friends-tab-header,
+.lumina-ai-profile-root:not(.dark) .ai-friends-tab-header,
+[data-theme='light'] .ai-friends-tab-header {
+  border-bottom: 1px solid #E5E7EB !important;
 }
 
 .ai-friends-tab-title {
@@ -6090,8 +6121,10 @@
   margin: 0 0 2px 0;
 }
 
-.lumina-ai-profile-root.light .ai-friends-tab-title {
-  color: #111827;
+.lumina-ai-profile-root.light .ai-friends-tab-title,
+.lumina-ai-profile-root:not(.dark) .ai-friends-tab-title,
+[data-theme='light'] .ai-friends-tab-title {
+  color: #111111 !important;
 }
 
 .ai-friends-tab-subtitle {
@@ -6100,8 +6133,10 @@
   margin: 0;
 }
 
-.lumina-ai-profile-root.light .ai-friends-tab-subtitle {
-  color: #6B7280;
+.lumina-ai-profile-root.light .ai-friends-tab-subtitle,
+.lumina-ai-profile-root:not(.dark) .ai-friends-tab-subtitle,
+[data-theme='light'] .ai-friends-tab-subtitle {
+  color: #6B7280 !important;
 }
 
 .tab-search {
@@ -6132,7 +6167,7 @@
 }
 
 .lumina-ai-profile-root.light .ai-dm-user-badge {
-  background-color: #F4F3EE;
+  background-color: #FFFFFF;
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
@@ -6179,7 +6214,7 @@
 }
 
 .lumina-ai-profile-root.light .ai-dm-textarea {
-  background-color: #EDECE6 !important;
+  background-color: #F7F8FA !important;
   border: 1px solid rgba(177, 173, 161, 0.6) !important;
   color: #111827;
 }
