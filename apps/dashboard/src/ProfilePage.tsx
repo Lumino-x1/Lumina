@@ -1404,16 +1404,16 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               <div className="ai-linkedin-info-grid">
                 {/* Left Column */}
                 <div className="ai-linkedin-left-col">
-                  {/* Name + Verify in 2 minutes */}
+                  {/* Name + Verify badge */}
                   <div className="ai-linkedin-name-row">
                     <h1 className="ai-linkedin-name">{profile.name}</h1>
                     <button
                       type="button"
                       className="ai-linkedin-verify-badge"
-                      onClick={() => alert('Verify your profile with student ID or government credentials in 2 minutes.')}
+                      onClick={() => alert('Verify your profile with student ID or government credentials.')}
                     >
                       <ShieldCheck size={16} strokeWidth={2.2} />
-                      <span>Verify in 2 minutes</span>
+                      <span>Verify</span>
                     </button>
                   </div>
 
