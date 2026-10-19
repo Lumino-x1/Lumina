@@ -120,11 +120,15 @@ export namespace RecommendationRepo {
           { senderId: { in: targetUserIds }, receiverId: currentUserId },
         ],
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
       select: {
         id: true,
         senderId: true,
         receiverId: true,
         status: true,
+        createdAt: true,
       },
     })
   }

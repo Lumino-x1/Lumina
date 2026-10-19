@@ -9,7 +9,14 @@ export interface RecommendedStudent {
   departmentCode?: string | null
   college: string
   year?: string | null
-  friendshipStatus?: 'NONE' | 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED'
+  friendshipStatus?: 'NONE' | 'PENDING' | 'RECEIVED' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED' | 'SELF'
+  requestStatus?: 'NONE' | 'PENDING' | 'RECEIVED' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED' | 'SELF'
+  requestDirection?: 'OUTGOING' | 'INCOMING' | null
+  statusMessage?: string
+  isFriend?: boolean
+  hasPendingRequest?: boolean
+  canSendRequest?: boolean
+  canCancelRequest?: boolean
   requestId?: string | null
 }
 
@@ -133,3 +140,55 @@ export async function fetchRecommendedStudentsApi(
     return DEFAULT_FALLBACK_STUDENTS.slice(0, limit)
   }
 }
+
+export interface PersonRequestStatusResponse {
+  success: boolean
+  currentUserId: string | null
+  targetUserId: string
+  status: string
+  requestStatus: string
+  direction: 'OUTGOING' | 'INCOMING' | null
+  statusMessage: string
+  isFriend: boolean
+  hasPendingRequest: boolean
+  canSendRequest: boolean
+  canCancelRequest: boolean
+  canAcceptRequest: boolean
+  canRejectRequest: boolean
+  requestId: string | null
+}
+
+export async function fetchPersonRequestStatusApi(
+  targetUserId: string
+): Promise<PersonRequestStatusResponse | null> {
+  try {
+    const baseUrl = getBaseApiUrl()
+    const endpoint = `${baseUrl}/api/recommendation/status/${encodeURIComponent(targetUserId)}`
+    const headers = getAuthHeaders()
+
+    const res = await fetch(endpoint, {
+      method: 'GET',
+      headers,
+      credentials: 'include',
+    })
+
+    if (!res.ok) {
+      const fallbackEndpoint = `${baseUrl}/recommendation/status/${encodeURIComponent(targetUserId)}`
+      const fallbackRes = await fetch(fallbackEndpoint, {
+        method: 'GET',
+        headers,
+        credentials: 'include',
+      })
+      if (!fallbackRes.ok) {
+        return null
+      }
+      return (await fallbackRes.json()) as PersonRequestStatusResponse
+    }
+
+    return (await res.json()) as PersonRequestStatusResponse
+  } catch (err) {
+    console.warn('[recommendationApi] Error fetching person request status:', err)
+    return null
+  }
+}
+

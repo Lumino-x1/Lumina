@@ -623,7 +623,39 @@ paths:
           description: Invalid request or missing parameters
       tags:
         - Recommendation
-      operationId: getRecommendedStudentsByCollegeId
+  /api/recommendation/status/{targetUserId}:
+    get:
+      summary: Get friend request status for a specific person relative to current viewer
+      parameters:
+        - name: targetUserId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique identifier of the target user
+      responses:
+        "200":
+          description: Request status returned successfully
+        "400":
+          description: Missing or invalid parameters
+      tags:
+        - Recommendation
+      operationId: getPersonRequestStatus
+  /recommendation/status/{targetUserId}:
+    get:
+      summary: Get friend request status for a specific person relative to current viewer (root alias)
+      parameters:
+        - name: targetUserId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Request status returned successfully
+      tags:
+        - Recommendation
+      operationId: getPersonRequestStatusRootAlias
   /recommendation/{collegeId}:
     get:
       summary: Get recommended students based on college ID or slug (root alias)

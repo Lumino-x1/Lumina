@@ -1,5 +1,28 @@
 import { RecommendationRepo } from './recommendation.repo'
 
+export type PersonRequestStatusType =
+  | 'NONE'
+  | 'PENDING'
+  | 'RECEIVED'
+  | 'ACCEPTED'
+  | 'REJECTED'
+  | 'CANCELLED'
+  | 'SELF'
+
+export interface PersonRequestStatus {
+  status: PersonRequestStatusType
+  requestStatus: PersonRequestStatusType
+  direction: 'OUTGOING' | 'INCOMING' | null
+  statusMessage: string
+  isFriend: boolean
+  hasPendingRequest: boolean
+  canSendRequest: boolean
+  canCancelRequest: boolean
+  canAcceptRequest: boolean
+  canRejectRequest: boolean
+  requestId: string | null
+}
+
 export interface RecommendedStudent {
   id: string
   name: string
@@ -9,11 +32,194 @@ export interface RecommendedStudent {
   departmentCode: string | null
   college: string
   year: string | null
-  friendshipStatus?: 'NONE' | 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED'
+  friendshipStatus?: PersonRequestStatusType
+  requestStatus?: PersonRequestStatusType
+  requestDirection?: 'OUTGOING' | 'INCOMING' | null
+  statusMessage?: string
+  isFriend?: boolean
+  hasPendingRequest?: boolean
+  canSendRequest?: boolean
+  canCancelRequest?: boolean
   requestId?: string | null
 }
 
+/**
+ * Pure evaluation logic determining the friend request status of a person relative to the current viewer.
+ */
+export function computePersonRequestStatus(
+  currentUserId: string | undefined,
+  targetUserId: string,
+  request?: { id: string; senderId: string; receiverId: string; status: string } | null
+): PersonRequestStatus {
+  if (!currentUserId) {
+    return {
+      status: 'NONE',
+      requestStatus: 'NONE',
+      direction: null,
+      statusMessage: 'Not authenticated or no active user context',
+      isFriend: false,
+      hasPendingRequest: false,
+      canSendRequest: true,
+      canCancelRequest: false,
+      canAcceptRequest: false,
+      canRejectRequest: false,
+      requestId: null,
+    }
+  }
+
+  if (currentUserId === targetUserId) {
+    return {
+      status: 'SELF',
+      requestStatus: 'SELF',
+      direction: null,
+      statusMessage: 'Cannot send a friend request to yourself',
+      isFriend: false,
+      hasPendingRequest: false,
+      canSendRequest: false,
+      canCancelRequest: false,
+      canAcceptRequest: false,
+      canRejectRequest: false,
+      requestId: null,
+    }
+  }
+
+  if (!request) {
+    return {
+      status: 'NONE',
+      requestStatus: 'NONE',
+      direction: null,
+      statusMessage: 'No friend request between users',
+      isFriend: false,
+      hasPendingRequest: false,
+      canSendRequest: true,
+      canCancelRequest: false,
+      canAcceptRequest: false,
+      canRejectRequest: false,
+      requestId: null,
+    }
+  }
+
+  const isSender = request.senderId === currentUserId
+
+  if (request.status === 'ACCEPTED') {
+    return {
+      status: 'ACCEPTED',
+      requestStatus: 'ACCEPTED',
+      direction: isSender ? 'OUTGOING' : 'INCOMING',
+      statusMessage: 'Already friends',
+      isFriend: true,
+      hasPendingRequest: false,
+      canSendRequest: false,
+      canCancelRequest: false,
+      canAcceptRequest: false,
+      canRejectRequest: false,
+      requestId: request.id,
+    }
+  }
+
+  if (request.status === 'PENDING') {
+    if (isSender) {
+      return {
+        status: 'PENDING',
+        requestStatus: 'PENDING',
+        direction: 'OUTGOING',
+        statusMessage: 'Friend request sent (pending approval)',
+        isFriend: false,
+        hasPendingRequest: true,
+        canSendRequest: false,
+        canCancelRequest: true,
+        canAcceptRequest: false,
+        canRejectRequest: false,
+        requestId: request.id,
+      }
+    } else {
+      return {
+        status: 'RECEIVED',
+        requestStatus: 'RECEIVED',
+        direction: 'INCOMING',
+        statusMessage: 'Received friend request from this person',
+        isFriend: false,
+        hasPendingRequest: true,
+        canSendRequest: false,
+        canCancelRequest: false,
+        canAcceptRequest: true,
+        canRejectRequest: true,
+        requestId: request.id,
+      }
+    }
+  }
+
+  if (request.status === 'REJECTED') {
+    return {
+      status: 'REJECTED',
+      requestStatus: 'REJECTED',
+      direction: isSender ? 'OUTGOING' : 'INCOMING',
+      statusMessage: isSender
+        ? 'Your friend request was rejected'
+        : "You rejected this person's friend request",
+      isFriend: false,
+      hasPendingRequest: false,
+      canSendRequest: true,
+      canCancelRequest: false,
+      canAcceptRequest: false,
+      canRejectRequest: false,
+      requestId: request.id,
+    }
+  }
+
+  if (request.status === 'CANCELLED') {
+    return {
+      status: 'CANCELLED',
+      requestStatus: 'CANCELLED',
+      direction: isSender ? 'OUTGOING' : 'INCOMING',
+      statusMessage: isSender
+        ? 'You cancelled this friend request'
+        : 'This person cancelled their friend request',
+      isFriend: false,
+      hasPendingRequest: false,
+      canSendRequest: true,
+      canCancelRequest: false,
+      canAcceptRequest: false,
+      canRejectRequest: false,
+      requestId: request.id,
+    }
+  }
+
+  return {
+    status: 'NONE',
+    requestStatus: 'NONE',
+    direction: null,
+    statusMessage: 'No active friend request',
+    isFriend: false,
+    hasPendingRequest: false,
+    canSendRequest: true,
+    canCancelRequest: false,
+    canAcceptRequest: false,
+    canRejectRequest: false,
+    requestId: request.id || null,
+  }
+}
+
 export namespace RecommendationService {
+  /**
+   * Evaluates the friend request status between current user and target person.
+   */
+  export async function getPersonRequestStatus(
+    currentUserId: string | undefined,
+    targetUserId: string
+  ): Promise<PersonRequestStatus> {
+    if (!currentUserId || !targetUserId) {
+      return computePersonRequestStatus(currentUserId, targetUserId, null)
+    }
+
+    const requests = await RecommendationRepo.findFriendRequestsBetween(
+      currentUserId,
+      [targetUserId]
+    )
+    const request = requests[0] || null
+    return computePersonRequestStatus(currentUserId, targetUserId, request)
+  }
+
   export async function getRecommendations(
     collegeId: string,
     currentUserId?: string,
@@ -49,7 +255,7 @@ export namespace RecommendationService {
     }
 
     const studentUserIds = users.slice(0, limit).map((u) => u.id)
-    const statusMap = new Map<string, { status: string; id: string }>()
+    const requestMap = new Map<string, { id: string; senderId: string; receiverId: string; status: string }>()
 
     if (currentUserId && studentUserIds.length > 0) {
       const requests = await RecommendationRepo.findFriendRequestsBetween(
@@ -58,9 +264,9 @@ export namespace RecommendationService {
       )
       for (const req of requests) {
         if (req.senderId === currentUserId) {
-          statusMap.set(req.receiverId, { status: req.status, id: req.id })
-        } else if (req.receiverId === currentUserId && req.status === 'ACCEPTED') {
-          statusMap.set(req.senderId, { status: req.status, id: req.id })
+          requestMap.set(req.receiverId, req)
+        } else if (req.receiverId === currentUserId) {
+          requestMap.set(req.senderId, req)
         }
       }
     }
@@ -80,9 +286,8 @@ export namespace RecommendationService {
         college?.name ||
         'PSG College of Technology'
 
-      const reqInfo = statusMap.get(u.id)
-      const friendshipStatus = (reqInfo?.status as any) || 'NONE'
-      const requestId = reqInfo?.id || null
+      const req = requestMap.get(u.id) || null
+      const statusInfo = computePersonRequestStatus(currentUserId, u.id, req)
 
       return {
         id: u.id,
@@ -93,8 +298,15 @@ export namespace RecommendationService {
         departmentCode: u.department?.code || null,
         college: collegeName,
         year: u.profile?.year ? `Year ${u.profile.year}` : (u.profile?.batch ? `Batch ${u.profile.batch}` : null),
-        friendshipStatus,
-        requestId,
+        friendshipStatus: statusInfo.status,
+        requestStatus: statusInfo.status,
+        requestDirection: statusInfo.direction,
+        statusMessage: statusInfo.statusMessage,
+        isFriend: statusInfo.isFriend,
+        hasPendingRequest: statusInfo.hasPendingRequest,
+        canSendRequest: statusInfo.canSendRequest,
+        canCancelRequest: statusInfo.canCancelRequest,
+        requestId: statusInfo.requestId,
       }
     })
 
