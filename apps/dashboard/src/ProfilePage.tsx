@@ -453,6 +453,15 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     fetchRecommendedStudentsApi(collegeId, 5).then((data) => {
       if (isMounted && data && data.length > 0) {
         setRecommendedStudents(data)
+        const fromRecs: Record<string, string> = {}
+        data.forEach((student) => {
+          if (student.friendshipStatus === 'PENDING' && student.id) {
+            fromRecs[student.id] = student.requestId || student.id
+          }
+        })
+        if (Object.keys(fromRecs).length > 0) {
+          setFriendRequestsSent((prev) => ({ ...prev, ...fromRecs }))
+        }
       }
     })
     return () => {

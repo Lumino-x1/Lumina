@@ -107,4 +107,25 @@ export namespace RecommendationRepo {
       },
     })
   }
+
+  export async function findFriendRequestsBetween(
+    currentUserId: string,
+    targetUserIds: string[]
+  ) {
+    if (!currentUserId || targetUserIds.length === 0) return []
+    return prisma.friendRequest.findMany({
+      where: {
+        OR: [
+          { senderId: currentUserId, receiverId: { in: targetUserIds } },
+          { senderId: { in: targetUserIds }, receiverId: currentUserId },
+        ],
+      },
+      select: {
+        id: true,
+        senderId: true,
+        receiverId: true,
+        status: true,
+      },
+    })
+  }
 }

@@ -9,6 +9,8 @@ export interface RecommendedStudent {
   departmentCode?: string | null
   college: string
   year?: string | null
+  friendshipStatus?: 'NONE' | 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED'
+  requestId?: string | null
 }
 
 export interface RecommendationResponse {
@@ -70,6 +72,24 @@ export const DEFAULT_FALLBACK_STUDENTS: RecommendedStudent[] = [
   },
 ]
 
+function getAuthHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    Accept: 'application/json',
+    'ngrok-skip-browser-warning': 'true',
+  }
+  try {
+    const token =
+      localStorage.getItem('lumina_session_token') ||
+      localStorage.getItem('better-auth.session_token')
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+  } catch {
+    // ignore
+  }
+  return headers
+}
+
 export async function fetchRecommendedStudentsApi(
   collegeId: string = 'cmv9h829300024y8akviwpsmm',
   limit: number = 5
@@ -77,13 +97,11 @@ export async function fetchRecommendedStudentsApi(
   try {
     const baseUrl = getBaseApiUrl()
     const endpoint = `${baseUrl}/api/recommendation/${encodeURIComponent(collegeId)}?limit=${limit}`
+    const headers = getAuthHeaders()
 
     const res = await fetch(endpoint, {
       method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'ngrok-skip-browser-warning': 'true',
-      },
+      headers,
       credentials: 'include',
     })
 
@@ -92,10 +110,7 @@ export async function fetchRecommendedStudentsApi(
       const fallbackEndpoint = `${baseUrl}/recommendation/${encodeURIComponent(collegeId)}?limit=${limit}`
       const fallbackRes = await fetch(fallbackEndpoint, {
         method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'ngrok-skip-browser-warning': 'true',
-        },
+        headers,
         credentials: 'include',
       })
       if (!fallbackRes.ok) {

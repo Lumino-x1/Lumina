@@ -9,6 +9,8 @@ export interface RecommendedStudent {
   departmentCode: string | null
   college: string
   year: string | null
+  friendshipStatus?: 'NONE' | 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED'
+  requestId?: string | null
 }
 
 export namespace RecommendationService {
@@ -46,6 +48,23 @@ export namespace RecommendationService {
       }
     }
 
+    const studentUserIds = users.slice(0, limit).map((u) => u.id)
+    const statusMap = new Map<string, { status: string; id: string }>()
+
+    if (currentUserId && studentUserIds.length > 0) {
+      const requests = await RecommendationRepo.findFriendRequestsBetween(
+        currentUserId,
+        studentUserIds
+      )
+      for (const req of requests) {
+        if (req.senderId === currentUserId) {
+          statusMap.set(req.receiverId, { status: req.status, id: req.id })
+        } else if (req.receiverId === currentUserId && req.status === 'ACCEPTED') {
+          statusMap.set(req.senderId, { status: req.status, id: req.id })
+        }
+      }
+    }
+
     const students: RecommendedStudent[] = users.slice(0, limit).map((u) => {
       const firstName = u.profile?.firstName?.trim()
       const lastName = u.profile?.lastName?.trim()
@@ -61,6 +80,10 @@ export namespace RecommendationService {
         college?.name ||
         'PSG College of Technology'
 
+      const reqInfo = statusMap.get(u.id)
+      const friendshipStatus = (reqInfo?.status as any) || 'NONE'
+      const requestId = reqInfo?.id || null
+
       return {
         id: u.id,
         name: fullName,
@@ -70,6 +93,8 @@ export namespace RecommendationService {
         departmentCode: u.department?.code || null,
         college: collegeName,
         year: u.profile?.year ? `Year ${u.profile.year}` : (u.profile?.batch ? `Batch ${u.profile.batch}` : null),
+        friendshipStatus,
+        requestId,
       }
     })
 

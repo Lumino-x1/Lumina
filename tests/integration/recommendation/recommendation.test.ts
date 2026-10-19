@@ -87,4 +87,52 @@ describe('Recommendation | GET /recommendation/:collegeId & /api/recommendation/
     expect(res2.body.success).toBe(true)
     expect(res2.body.students).toHaveLength(5)
   })
+
+  it('includes friendshipStatus and requestId when requester has a pending request', async () => {
+    const college = await createCollege({
+      name: 'PSG College of Technology',
+      slug: 'psg-tech-status',
+      domain: 'psgtech2.edu',
+    })
+
+    const sender = await createTestUser({
+      name: 'Active Viewer',
+      email: 'viewer@psgtech2.edu',
+      collegeId: college.id,
+      role: 'STUDENT',
+    })
+
+    const targetStudent = await createTestUser({
+      name: 'Recommended Friend',
+      email: 'target@psgtech2.edu',
+      collegeId: college.id,
+      role: 'STUDENT',
+    })
+    await createProfile(targetStudent.id, {
+      firstName: 'Recommended',
+      lastName: 'Friend',
+    })
+
+    // Create a pending friend request from sender to targetStudent
+    const friendReq = await prisma.friendRequest.create({
+      data: {
+        senderId: sender.id,
+        receiverId: targetStudent.id,
+        status: 'PENDING',
+      },
+    })
+
+    const request = (await import('supertest')).default
+    const res = await request(app)
+      .get(`/api/recommendation/${college.id}`)
+      .set('Origin', 'http://localhost:3000')
+      .set('x-test-user-id', sender.id)
+
+    expect(res.status).toBe(200)
+    expect(res.body.success).toBe(true)
+    const matching = res.body.students.find((s: any) => s.id === targetStudent.id)
+    expect(matching).toBeDefined()
+    expect(matching.friendshipStatus).toBe('PENDING')
+    expect(matching.requestId).toBe(friendReq.id)
+  })
 })
