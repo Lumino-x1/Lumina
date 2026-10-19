@@ -24,8 +24,8 @@ import {
   Sparkles,
   Award,
   ArrowLeft,
-  Building2,
-  Mail,
+  Pencil,
+  ShieldCheck,
 } from 'lucide-react'
 import './ProfilePage.css'
 import './DashboardPage.css'
@@ -57,6 +57,14 @@ export interface ProfilePageProps {
   onNavigateHome?: () => void
   onLogout?: () => void
 }
+
+const LinkedInSilhouette: React.FC = () => (
+  <svg viewBox="0 0 140 140" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="140" height="140" fill="#D9E2EC" />
+    <circle cx="70" cy="50" r="26" fill="#627D98" />
+    <path d="M18 136 C22 96 46 86 70 86 C94 86 118 96 122 136 Z" fill="#627D98" />
+  </svg>
+)
 
 const Icons = {
   LuminaLogo: (
@@ -698,7 +706,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     (meProfile?.firstName ? `${meProfile.firstName} ${meProfile.lastName || ''}`.trim() : null) ||
     (meProfile as any)?.name ||
     user?.name ||
-    'Sunil Kumar'
+    'SunilKumar T'
 
   const rawUsername =
     meProfile?.username ||
@@ -723,7 +731,27 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     meProfile?.profilePicture ||
     meProfile?.user?.image ||
     user?.image ||
-    'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&auto=format&fit=crop&q=80'
+    ''
+
+  const hasCustomAvatar = Boolean(
+    (meProfile?.profilePicture && !meProfile.profilePicture.includes('unsplash.com')) ||
+    (meProfile?.user?.image && !meProfile.user.image.includes('unsplash.com')) ||
+    (user?.image && !user.image.includes('unsplash.com'))
+  )
+
+  const resolvedHeadline =
+    (meProfile as any)?.headline ||
+    (user as any)?.headline ||
+    'CSE Undergraduate @ PSG College of Technology | Backend & Systems Engineering'
+
+  const resolvedLocation =
+    meProfile?.location ||
+    'Coimbatore, Tamil Nadu, India'
+
+  const resolvedConnections =
+    (meProfile as any)?.connectionsCount !== undefined
+      ? `${(meProfile as any).connectionsCount} connections`
+      : '137 connections'
 
   const profile = {
     name: resolvedName,
@@ -731,10 +759,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     email: resolvedEmail,
     role: meProfile?.user?.role || 'PhD Candidate',
     avatar: resolvedImage,
+    hasCustomAvatar,
     university: resolvedCollege,
     department: meProfile?.department?.name || user?.department || "B.S. & M.S. in Computer Science (Systems & AI, '26)",
+    headline: resolvedHeadline,
     bio: meProfile?.bio || 'Building distributed consensus algorithms & neural infrastructure. Previously research intern @ Stanford AI Lab. Passionate about systems engineering, peer mentorship, and open-source tooling.',
-    location: meProfile?.location || 'Coimbatore, India',
+    location: resolvedLocation,
+    connections: resolvedConnections,
     openTo: 'Open to Research Collaborations & Summer \'26 Eng Roles',
     joined: 'Joined Sep 2023',
     stats: {
@@ -1300,202 +1331,239 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         <div className="ai-content-columns">
           {/* CENTER PROFILE STREAM */}
           <main className="ai-center-stream profile-center-col">
-            {/* PROFILE HEADER HERO CARD (Unblurred identity & follower stats from /me) */}
-            <div className="ai-profile-hero-card">
+            {/* PROFILE HEADER HERO CARD (LinkedIn style top intro card) */}
+            <div className="ai-profile-hero-card ai-linkedin-hero-card">
               {/* Cover Graphic Banner */}
-              <div className="ai-profile-cover-wrap">
-                <svg className="ai-profile-constellation-svg" viewBox="0 0 800 160">
-                  <defs>
-                    <pattern id="dotPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                      <circle cx="2" cy="2" r="1" fill="currentColor" opacity="0.15" />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#dotPattern)" />
-                  {/* Constellation line drawing */}
-                  <polyline
-                    points="60,90 140,50 240,110 360,40 480,95 600,60 720,100"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.2"
-                    strokeDasharray="4 4"
-                    opacity="0.3"
-                  />
-                  <circle cx="140" cy="50" r="3" fill="currentColor" opacity="0.4" />
-                  <circle cx="360" cy="40" r="3.5" fill="currentColor" opacity="0.4" />
-                  <circle cx="480" cy="95" r="3" fill="currentColor" opacity="0.4" />
-                  <circle cx="600" cy="60" r="3.5" fill="currentColor" opacity="0.4" />
+              <div className="ai-linkedin-banner">
+                {/* Left Gold & Dark Chevrons Graphic */}
+                <svg className="ai-banner-gold-chevrons" viewBox="0 0 240 200" fill="none" preserveAspectRatio="none">
+                  <polygon points="0,0 80,0 15,200 0,200" fill="#1C1A17" />
+                  <polygon points="75,0 105,0 40,200 10,200" fill="#C5A059" />
+                  <polygon points="100,0 135,0 70,200 35,200" fill="#1C1A17" />
+                  <polygon points="130,0 148,0 83,200 65,200" fill="#D4AF37" />
+                  <polygon points="0,0 90,0 0,90" fill="#1C1A17" opacity="0.4" />
+                  <polygon points="0,0 60,0 0,60" fill="#D4AF37" opacity="0.9" />
+                  <polygon points="0,0 35,0 0,35" fill="#1C1A17" />
+                  <polygon points="0,150 45,200 0,200" fill="#1C1A17" />
+                  <polygon points="0,175 25,200 0,200" fill="#C5A059" />
                 </svg>
 
+                {/* Center Typography */}
+                <div className="ai-banner-center-title-box">
+                  <div className="ai-banner-title">SUNILKUMAR</div>
+                  <div className="ai-banner-subtitle">BACKEND DEVELOPER</div>
+                </div>
+
+                {/* Top Right Edit Banner Button */}
                 <button
                   type="button"
-                  className="ai-edit-cover-btn ai-profile-blurred"
-                  onClick={() => alert('Update campus profile cover graphic.')}
+                  className="ai-banner-edit-pencil-btn"
+                  title="Edit background banner"
+                  onClick={() => alert('Change profile banner')}
                 >
-                  {Icons.Camera}
-                  <span>Edit Cover</span>
+                  <Pencil size={15} color="#1C1A17" strokeWidth={2.4} />
                 </button>
               </div>
 
-              {/* Avatar + Main Details */}
-              <div className="ai-profile-details-section">
-                <div className="ai-profile-avatar-row">
-                  <div className="ai-profile-avatar-box">
-                    <img
-                      src={profile.avatar}
-                      alt={profile.name}
-                      className="ai-profile-avatar-main"
-                    />
-                    <button
-                      type="button"
-                      className="ai-avatar-cam-badge ai-profile-blurred"
-                      title="Update Profile Photo"
-                      onClick={() => alert('Change profile photo')}
-                    >
-                      {Icons.Camera}
-                    </button>
-                  </div>
-
-                  <div className="ai-profile-actions-right ai-profile-blurred">
-                    <button
-                      type="button"
-                      className="ai-profile-action-btn"
-                      onClick={() => alert('Edit Profile Settings')}
-                    >
-                      {Icons.Edit}
-                      <span>Edit Profile</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="ai-profile-action-btn"
-                      onClick={() => alert('Profile URL copied to clipboard!')}
-                    >
-                      {Icons.Share}
-                      <span>Share</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="ai-profile-more-icon-btn"
-                      title="More options"
-                    >
-                      {Icons.MoreHorizontal}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Name, Username, Badges & Subhead (College, Email) - UNBLURRED */}
-                <div className="ai-profile-name-block">
-                  <div className="ai-profile-name-row">
-                    <h1 className="ai-profile-title">{profile.name}</h1>
-                    <span className="ai-profile-handle">@{profile.username}</span>
-                    <span className="ai-verified-check-icon">{Icons.CheckCircle}</span>
-                    <div className="ai-profile-role-pills ai-profile-blurred">
-                      <span className="ai-role-pill">FOUNDER</span>
-                      <span className="ai-role-pill">STUDENT</span>
-                      <span className="ai-role-pill">FELLOW</span>
-                    </div>
-                  </div>
-
-                  <div className="ai-profile-subhead-row">
-                    <span className="ai-profile-subhead-college">
-                      <Building2 size={15} style={{ opacity: 0.9 }} />
-                      <span>{profile.university}</span>
-                    </span>
-
-                    {profile.email && (
-                      <span className="ai-profile-subhead-email">
-                        <Mail size={14} style={{ opacity: 0.8 }} />
-                        <span>{profile.email}</span>
-                      </span>
+              {/* Avatar Row */}
+              <div className="ai-linkedin-avatar-row">
+                <div className="ai-linkedin-avatar-wrapper">
+                  <div className="ai-linkedin-avatar-circle">
+                    {profile.hasCustomAvatar ? (
+                      <img
+                        src={profile.avatar}
+                        alt={profile.name}
+                        className="ai-profile-avatar-main"
+                      />
+                    ) : (
+                      <LinkedInSilhouette />
                     )}
+                  </div>
+                  <button
+                    type="button"
+                    className="ai-avatar-add-story-btn"
+                    title="Add profile photo or frame"
+                    onClick={() => alert('Add profile photo or frame')}
+                  >
+                    <Plus size={20} strokeWidth={2.8} />
+                  </button>
+                </div>
 
-                    <span className="ai-profile-blurred ai-profile-subhead-dept">
-                      • {profile.department}
-                    </span>
+                {/* Card Top Right Edit Button */}
+                <button
+                  type="button"
+                  className="ai-linkedin-card-edit-btn"
+                  title="Edit intro"
+                  onClick={() => alert('Edit intro')}
+                >
+                  <Pencil size={20} color="#5e5e5e" strokeWidth={2} />
+                </button>
+              </div>
+
+              {/* Main Info Grid (Two Columns) */}
+              <div className="ai-linkedin-info-grid">
+                {/* Left Column */}
+                <div className="ai-linkedin-left-col">
+                  {/* Name + Verify in 2 minutes */}
+                  <div className="ai-linkedin-name-row">
+                    <h1 className="ai-linkedin-name">{profile.name}</h1>
+                    <button
+                      type="button"
+                      className="ai-linkedin-verify-badge"
+                      onClick={() => alert('Verify your profile with student ID or government credentials in 2 minutes.')}
+                    >
+                      <ShieldCheck size={16} strokeWidth={2.2} />
+                      <span>Verify in 2 minutes</span>
+                    </button>
+                  </div>
+
+                  {/* Headline */}
+                  <p className="ai-linkedin-headline">
+                    {profile.headline}
+                  </p>
+
+                  {/* Location & Contact info */}
+                  <div className="ai-linkedin-location-row">
+                    <span className="ai-linkedin-location">{profile.location}</span>
+                    <span className="ai-linkedin-dot">·</span>
+                    <a
+                      href="#contact-info"
+                      className="ai-linkedin-contact-link"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        alert(`Contact Info:\nName: ${profile.name}\nEmail: ${profile.email}\nUniversity: ${profile.university}\nLocation: ${profile.location}`)
+                      }}
+                    >
+                      Contact info
+                    </a>
+                  </div>
+
+                  {/* Connections */}
+                  <div className="ai-linkedin-connections-row">
+                    <a
+                      href="#connections"
+                      className="ai-linkedin-connections-link"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        alert(`${profile.stats.followers || '137'} Connections on Lumina Campus Network`)
+                      }}
+                    >
+                      {profile.connections}
+                    </a>
                   </div>
                 </div>
 
-                {/* Bio paragraph: Blurred */}
-                <p className="ai-profile-bio-text ai-profile-blurred">{profile.bio}</p>
+                {/* Right Column (Organizations & Education) */}
+                <div className="ai-linkedin-right-col">
+                  <div className="ai-linkedin-org-item">
+                    <div className="ai-linkedin-org-icon ai-org-icon-squares">
+                      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <rect width="32" height="32" rx="4" fill="#E8EEF3" />
+                        <rect x="5" y="5" width="10" height="10" rx="1.5" fill="#78909C" />
+                        <rect x="17" y="5" width="10" height="10" rx="1.5" fill="#90A4AE" />
+                        <rect x="5" y="17" width="10" height="10" rx="1.5" fill="#B0BEC5" />
+                        <rect x="17" y="17" width="10" height="10" rx="1.5" fill="#546E7A" />
+                      </svg>
+                    </div>
+                    <span className="ai-linkedin-org-name">+ 1 more</span>
+                  </div>
 
-                {/* Location, Availability & Joined row: Blurred */}
-                <div className="ai-profile-meta-row ai-profile-blurred">
-                  <span className="ai-meta-item">
-                    {Icons.MapPin}
-                    <span>{profile.location}</span>
-                  </span>
-                  <span className="ai-meta-item is-open-role">
-                    {Icons.Zap}
-                    <span>{profile.openTo}</span>
-                  </span>
-                  <span className="ai-meta-item">
-                    {Icons.Calendar}
-                    <span>{profile.joined}</span>
-                  </span>
+                  <div className="ai-linkedin-org-item">
+                    <div className="ai-linkedin-org-icon ai-org-icon-psg">
+                      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M16 2 L27 6 V16 C27 23 16 29 16 29 C16 29 5 23 5 16 V6 Z" fill="#ffffff" stroke="#283593" strokeWidth="1.5" />
+                        <path d="M16 4.5 L24.5 7.5 V15.5 C24.5 21 16 26 16 26 C16 26 7.5 21 7.5 15.5 V7.5 Z" fill="#E8EAF6" opacity="0.4" />
+                        <path d="M16 7 L17.5 9 H14.5 Z M15 9.5 H17 V13 H15 Z M14 13.5 H18 V18 H14 Z M13 18.5 H19 V21 H13 Z" fill="#283593" />
+                        <circle cx="16" cy="18" r="4.5" stroke="#283593" strokeWidth="1" strokeDasharray="1.5 1" fill="none" />
+                        <path d="M9 22 Q16 25 23 22" stroke="#283593" strokeWidth="1.5" fill="none" />
+                      </svg>
+                    </div>
+                    <span className="ai-linkedin-org-name">{profile.university}</span>
+                  </div>
                 </div>
+              </div>
 
-                {/* Counters row: UNBLURRED (Followers, Following, Posts) */}
-                <div className="ai-profile-counters-row">
-                  <span className="ai-counter-item ai-counter-followers">
-                    <strong>{profile.stats.followers}</strong> Followers
-                  </span>
-                  <span className="ai-counter-item ai-counter-following">
-                    <strong>{profile.stats.following}</strong> Following
-                  </span>
-                  <span className="ai-counter-item">
-                    <strong>{profile.stats.academicNotes}</strong> Posts
-                  </span>
-                  <span className="ai-counter-item ai-profile-blurred">
-                    <strong>{profile.stats.repos}</strong> Open Source Repos
-                  </span>
-                </div>
+              {/* Action Buttons Row */}
+              <div className="ai-linkedin-actions-row">
+                <button
+                  type="button"
+                  className="ai-linkedin-btn ai-linkedin-btn-primary"
+                  onClick={() => alert('Open to work / collaborations')}
+                >
+                  Open to
+                </button>
+                <button
+                  type="button"
+                  className="ai-linkedin-btn ai-linkedin-btn-secondary"
+                  onClick={() => alert('Add profile section: Experience, Education, Projects, Skills')}
+                >
+                  Add section
+                </button>
+                <button
+                  type="button"
+                  className="ai-linkedin-btn ai-linkedin-btn-secondary"
+                  onClick={() => alert('Enhance profile with verified credentials')}
+                >
+                  Enhance profile
+                </button>
+                <button
+                  type="button"
+                  className="ai-linkedin-btn-more"
+                  title="More actions"
+                  onClick={() => alert('More options')}
+                >
+                  <MoreHorizontal size={18} />
+                </button>
+              </div>
+            </div>
 
-                {/* Navigation Tabs */}
-                <div className="ai-profile-tabs-bar">
-                  <button
-                    type="button"
-                    className={`ai-profile-tab ${activeTab === 'posts' ? 'is-active' : ''}`}
-                    onClick={() => setActiveTab('posts')}
-                  >
-                    <span>Posts</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={`ai-profile-tab ai-profile-blurred ${activeTab === 'about' ? 'is-active' : ''}`}
-                    onClick={() => setActiveTab('about')}
-                  >
-                    <span>About</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={`ai-profile-tab ai-profile-blurred ${activeTab === 'projects' ? 'is-active' : ''}`}
-                    onClick={() => setActiveTab('projects')}
-                  >
-                    <span>Projects</span>
-                    <span className="ai-tab-badge-num">6</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={`ai-profile-tab ai-profile-blurred ${activeTab === 'achievements' ? 'is-active' : ''}`}
-                    onClick={() => setActiveTab('achievements')}
-                  >
-                    <span>Achievements &amp; Grants</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={`ai-profile-tab ai-profile-blurred ${activeTab === 'communities' ? 'is-active' : ''}`}
-                    onClick={() => setActiveTab('communities')}
-                  >
-                    <span>Communities</span>
-                    <span className="ai-tab-badge-num">8</span>
-                  </button>
-                  <button
-                    type="button"
-                    className={`ai-profile-tab ai-profile-blurred ${activeTab === 'saved' ? 'is-active' : ''}`}
-                    onClick={() => setActiveTab('saved')}
-                  >
-                    <span>Saved</span>
-                  </button>
-                </div>
+            {/* Navigation Tabs Card */}
+            <div className="ai-profile-tabs-card">
+              <div className="ai-profile-tabs-bar">
+                <button
+                  type="button"
+                  className={`ai-profile-tab ${activeTab === 'posts' ? 'is-active' : ''}`}
+                  onClick={() => setActiveTab('posts')}
+                >
+                  <span>Posts</span>
+                </button>
+                <button
+                  type="button"
+                  className={`ai-profile-tab ai-profile-blurred ${activeTab === 'about' ? 'is-active' : ''}`}
+                  onClick={() => setActiveTab('about')}
+                >
+                  <span>About</span>
+                </button>
+                <button
+                  type="button"
+                  className={`ai-profile-tab ai-profile-blurred ${activeTab === 'projects' ? 'is-active' : ''}`}
+                  onClick={() => setActiveTab('projects')}
+                >
+                  <span>Projects</span>
+                  <span className="ai-tab-badge-num">6</span>
+                </button>
+                <button
+                  type="button"
+                  className={`ai-profile-tab ai-profile-blurred ${activeTab === 'achievements' ? 'is-active' : ''}`}
+                  onClick={() => setActiveTab('achievements')}
+                >
+                  <span>Achievements &amp; Grants</span>
+                </button>
+                <button
+                  type="button"
+                  className={`ai-profile-tab ai-profile-blurred ${activeTab === 'communities' ? 'is-active' : ''}`}
+                  onClick={() => setActiveTab('communities')}
+                >
+                  <span>Communities</span>
+                  <span className="ai-tab-badge-num">8</span>
+                </button>
+                <button
+                  type="button"
+                  className={`ai-profile-tab ai-profile-blurred ${activeTab === 'saved' ? 'is-active' : ''}`}
+                  onClick={() => setActiveTab('saved')}
+                >
+                  <span>Saved</span>
+                </button>
               </div>
             </div>
 
