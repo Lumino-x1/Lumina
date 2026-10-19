@@ -38,6 +38,7 @@ import {
   type RecommendedStudent,
   DEFAULT_FALLBACK_STUDENTS,
 } from './api/recommendationApi'
+import { sendFriendRequestApi } from './api/friendsApi'
 import { fetchMyProfile, type ProfileData } from './api/profileApi'
 import {
   type ScheduledPostItem,
@@ -436,11 +437,31 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     }
   }, [meProfile?.user?.collegeId, meProfile?.college?.id, user?.collegeId])
 
-  const handleToggleFriendRequest = (friendId: string) => {
+  const handleToggleFriendRequest = async (friendId: string) => {
+    const isCurrentlyFollowing = !!friendRequestsSent[friendId]
+
+    // Optimistic toggle
     setFriendRequestsSent((prev) => ({
       ...prev,
-      [friendId]: !prev[friendId],
+      [friendId]: !isCurrentlyFollowing,
     }))
+
+    if (!isCurrentlyFollowing) {
+      // Send friend request to backend: POST /api/friends/request/:userId
+      const res = await sendFriendRequestApi(friendId)
+      if (!res.success) {
+        if (
+          res.error?.includes('EXISTS') ||
+          res.error?.includes('already exists')
+        ) {
+          // If request already exists in backend, keep as following
+          setFriendRequestsSent((prev) => ({ ...prev, [friendId]: true }))
+        } else {
+          console.warn(`Friend request to ${friendId} failed:`, res.error)
+          setFriendRequestsSent((prev) => ({ ...prev, [friendId]: false }))
+        }
+      }
+    }
   }
 
   const handleOpenComposer = () => {
@@ -2466,131 +2487,134 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               </div>
             </div>
 
-            {/* WIDGET 1: Technical Stack */}
-            <div className="ai-widget-card">
-              <div className="ai-card-header-row">
-                <h4 className="ai-card-title">Technical Stack</h4>
-                <span className="ai-card-counter">SYS_CORE</span>
-              </div>
-              <div className="ai-tech-pills-wrap">
-                <span className="ai-tech-pill is-primary">Rust</span>
-                <span className="ai-tech-pill">C++20</span>
-                <span className="ai-tech-pill">Distributed Systems</span>
-                <span className="ai-tech-pill">PyTorch</span>
-                <span className="ai-tech-pill">Go</span>
-                <span className="ai-tech-pill">Linux eBPF</span>
-                <span className="ai-tech-pill">Kubernetes</span>
-                <span className="ai-tech-pill">x86-64 SIMD</span>
-              </div>
-            </div>
-
-            {/* WIDGET 2: Education */}
-            <div className="ai-widget-card">
-              <div className="ai-card-header-row">
-                <h4 className="ai-card-title">Education</h4>
-                <span className="ai-header-icon">{Icons.GraduationCap}</span>
-              </div>
-
-              <div className="ai-edu-header">
-                <strong className="ai-edu-school">{user?.college || 'PSG College of Technology'}</strong>
-                <span className="ai-edu-gpa">GPA 3.96</span>
-              </div>
-              <div className="ai-edu-degree">{user?.department || 'B.E. in Computer Science & Engineering'}</div>
-              <div className="ai-edu-sub">Class of 2026 • Systems &amp; AI Specialization</div>
-
-              <div className="ai-coursework-block">
-                <span className="ai-coursework-title">SELECTED COURSEWORK</span>
-                <div className="ai-course-row">
-                  <span className="ai-course-name">CS 244B: Distributed Systems</span>
-                  <span className="ai-course-grade">A+</span>
+            {/* OTHER RIGHT SIDEBAR SECTIONS (Blurred per user request) */}
+            <div className="ai-right-sidebar-blurred-group ai-blurred-section" aria-hidden="true">
+              {/* WIDGET 1: Technical Stack */}
+              <div className="ai-widget-card">
+                <div className="ai-card-header-row">
+                  <h4 className="ai-card-title">Technical Stack</h4>
+                  <span className="ai-card-counter">SYS_CORE</span>
                 </div>
-                <div className="ai-course-row">
-                  <span className="ai-course-name">CS 143: Compilers Construction</span>
-                  <span className="ai-course-grade">A</span>
-                </div>
-                <div className="ai-course-row">
-                  <span className="ai-course-name">CS 212: Operating Systems Practicum</span>
-                  <span className="ai-course-grade">A+</span>
-                </div>
-                <div className="ai-course-row">
-                  <span className="ai-course-name">CS 229: Machine Learning</span>
-                  <span className="ai-course-grade">A</span>
+                <div className="ai-tech-pills-wrap">
+                  <span className="ai-tech-pill is-primary">Rust</span>
+                  <span className="ai-tech-pill">C++20</span>
+                  <span className="ai-tech-pill">Distributed Systems</span>
+                  <span className="ai-tech-pill">PyTorch</span>
+                  <span className="ai-tech-pill">Go</span>
+                  <span className="ai-tech-pill">Linux eBPF</span>
+                  <span className="ai-tech-pill">Kubernetes</span>
+                  <span className="ai-tech-pill">x86-64 SIMD</span>
                 </div>
               </div>
-            </div>
 
-            {/* WIDGET 3: Campus Leadership */}
-            <div className="ai-widget-card">
-              <div className="ai-card-header-row">
-                <h4 className="ai-card-title">Campus Leadership</h4>
-              </div>
+              {/* WIDGET 2: Education */}
+              <div className="ai-widget-card">
+                <div className="ai-card-header-row">
+                  <h4 className="ai-card-title">Education</h4>
+                  <span className="ai-header-icon">{Icons.GraduationCap}</span>
+                </div>
 
-              <div className="ai-leadership-list">
-                <div className="ai-leadership-item">
-                  <div className="ai-lead-icon-box">
-                    &lt;&gt;
+                <div className="ai-edu-header">
+                  <strong className="ai-edu-school">{user?.college || 'PSG College of Technology'}</strong>
+                  <span className="ai-edu-gpa">GPA 3.96</span>
+                </div>
+                <div className="ai-edu-degree">{user?.department || 'B.E. in Computer Science & Engineering'}</div>
+                <div className="ai-edu-sub">Class of 2026 • Systems &amp; AI Specialization</div>
+
+                <div className="ai-coursework-block">
+                  <span className="ai-coursework-title">SELECTED COURSEWORK</span>
+                  <div className="ai-course-row">
+                    <span className="ai-course-name">CS 244B: Distributed Systems</span>
+                    <span className="ai-course-grade">A+</span>
                   </div>
-                  <div>
-                    <strong className="ai-lead-role">Lead Organizer</strong>
-                    <div className="ai-lead-org">HackCampus Stanford</div>
-                    <span className="ai-lead-sub">Directing 1,200+ builder hackathon</span>
+                  <div className="ai-course-row">
+                    <span className="ai-course-name">CS 143: Compilers Construction</span>
+                    <span className="ai-course-grade">A</span>
                   </div>
-                </div>
-
-                <div className="ai-leadership-item">
-                  <div className="ai-lead-icon-box">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
+                  <div className="ai-course-row">
+                    <span className="ai-course-name">CS 212: Operating Systems Practicum</span>
+                    <span className="ai-course-grade">A+</span>
                   </div>
-                  <div>
-                    <strong className="ai-lead-role">Teaching Assistant</strong>
-                    <div className="ai-lead-org">CS 110: Principles of Computer Systems</div>
-                    <span className="ai-lead-sub">Mentoring 140 undergrad engineers</span>
+                  <div className="ai-course-row">
+                    <span className="ai-course-name">CS 229: Machine Learning</span>
+                    <span className="ai-course-grade">A</span>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* WIDGET 4: Pre-prints & Papers */}
-            <div className="ai-widget-card">
-              <div className="ai-card-header-row">
-                <h4 className="ai-card-title">Pre-prints &amp; Papers</h4>
-                <span className="ai-card-counter">arXiv</span>
-              </div>
-
-              <div className="ai-papers-list">
-                <div className="ai-paper-item">
-                  <div className="ai-paper-top">
-                    <span className="ai-paper-arxiv">arXiv:2403.08912</span>
-                    <span className="ai-paper-cites">18 Citations</span>
-                  </div>
-                  <strong className="ai-paper-title">
-                    Decentralized Log Compaction in Low-Bandwidth Satellite Constellations
-                  </strong>
-                  <span className="ai-paper-authors">
-                    S. T., Prof. D. Mazières • Stanford AI Lab
-                  </span>
+              {/* WIDGET 3: Campus Leadership */}
+              <div className="ai-widget-card">
+                <div className="ai-card-header-row">
+                  <h4 className="ai-card-title">Campus Leadership</h4>
                 </div>
 
-                <div className="ai-paper-item">
-                  <div className="ai-paper-top">
-                    <span className="ai-paper-arxiv">arXiv:2311.14022</span>
-                    <span className="ai-paper-cites">32 Citations</span>
+                <div className="ai-leadership-list">
+                  <div className="ai-leadership-item">
+                    <div className="ai-lead-icon-box">
+                      &lt;&gt;
+                    </div>
+                    <div>
+                      <strong className="ai-lead-role">Lead Organizer</strong>
+                      <div className="ai-lead-org">HackCampus Stanford</div>
+                      <span className="ai-lead-sub">Directing 1,200+ builder hackathon</span>
+                    </div>
                   </div>
-                  <strong className="ai-paper-title">
-                    Adaptive Memory Prefetching via Graph Neural Networks on PCIe 5.0
-                  </strong>
-                  <span className="ai-paper-authors">
-                    S. T., K. Zhang • SysML Workshop &apos;24
-                  </span>
+
+                  <div className="ai-leadership-item">
+                    <div className="ai-lead-icon-box">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
+                    </div>
+                    <div>
+                      <strong className="ai-lead-role">Teaching Assistant</strong>
+                      <div className="ai-lead-org">CS 110: Principles of Computer Systems</div>
+                      <span className="ai-lead-sub">Mentoring 140 undergrad engineers</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* BOTTOM STATUS */}
-            <div className="ai-node-status-bar">
-              <span className="ai-node-status-dot" />
-              <span className="ai-node-status-txt">Lumina OS Node #782-SFO</span>
-              <span className="ai-node-uptime-txt">99.98% uptime</span>
+              {/* WIDGET 4: Pre-prints & Papers */}
+              <div className="ai-widget-card">
+                <div className="ai-card-header-row">
+                  <h4 className="ai-card-title">Pre-prints &amp; Papers</h4>
+                  <span className="ai-card-counter">arXiv</span>
+                </div>
+
+                <div className="ai-papers-list">
+                  <div className="ai-paper-item">
+                    <div className="ai-paper-top">
+                      <span className="ai-paper-arxiv">arXiv:2403.08912</span>
+                      <span className="ai-paper-cites">18 Citations</span>
+                    </div>
+                    <strong className="ai-paper-title">
+                      Decentralized Log Compaction in Low-Bandwidth Satellite Constellations
+                    </strong>
+                    <span className="ai-paper-authors">
+                      S. T., Prof. D. Mazières • Stanford AI Lab
+                    </span>
+                  </div>
+
+                  <div className="ai-paper-item">
+                    <div className="ai-paper-top">
+                      <span className="ai-paper-arxiv">arXiv:2311.14022</span>
+                      <span className="ai-paper-cites">32 Citations</span>
+                    </div>
+                    <strong className="ai-paper-title">
+                      Adaptive Memory Prefetching via Graph Neural Networks on PCIe 5.0
+                    </strong>
+                    <span className="ai-paper-authors">
+                      S. T., K. Zhang • SysML Workshop &apos;24
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* BOTTOM STATUS */}
+              <div className="ai-node-status-bar">
+                <span className="ai-node-status-dot" />
+                <span className="ai-node-status-txt">Lumina OS Node #782-SFO</span>
+                <span className="ai-node-uptime-txt">99.98% uptime</span>
+              </div>
             </div>
           </aside>
         </div>

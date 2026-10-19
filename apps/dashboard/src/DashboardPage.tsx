@@ -38,6 +38,7 @@ import {
   type RecommendedStudent,
   DEFAULT_FALLBACK_STUDENTS,
 } from './api/recommendationApi'
+import { sendFriendRequestApi } from './api/friendsApi'
 
 export type DashboardUser = MergedUser
 
@@ -425,11 +426,31 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     }
   }, [user?.collegeId])
 
-  const handleToggleFriendRequest = (friendId: string) => {
+  const handleToggleFriendRequest = async (friendId: string) => {
+    const isCurrentlyFollowing = !!friendRequestsSent[friendId]
+
+    // Optimistic toggle
     setFriendRequestsSent((prev) => ({
       ...prev,
-      [friendId]: !prev[friendId],
+      [friendId]: !isCurrentlyFollowing,
     }))
+
+    if (!isCurrentlyFollowing) {
+      // Send friend request to backend: POST /api/friends/request/:userId
+      const res = await sendFriendRequestApi(friendId)
+      if (!res.success) {
+        if (
+          res.error?.includes('EXISTS') ||
+          res.error?.includes('already exists')
+        ) {
+          // Keep as following if already exists
+          setFriendRequestsSent((prev) => ({ ...prev, [friendId]: true }))
+        } else {
+          console.warn(`Friend request to ${friendId} failed:`, res.error)
+          setFriendRequestsSent((prev) => ({ ...prev, [friendId]: false }))
+        }
+      }
+    }
   }
   const [feedPosts, setFeedPosts] = useState<FeedPostItem[]>([])
   const [loadingFeed, setLoadingFeed] = useState<boolean>(true)

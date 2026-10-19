@@ -2,6 +2,7 @@ import { redis } from './config/config.redis.ts';
 import authRouter from './src/api/auth/auth.routes.ts';
 import commentsRouter from './src/api/comments/comments.routes.ts';
 import feedRouter from './src/api/feed/feed.routes.ts';
+import friendsRouter from './src/api/friends/friends.routes.ts';
 import mediaRouter from './src/api/media/media.router.ts';
 import postsRouter from './src/api/posts/posts.routes.ts';
 import recommendationRouter from './src/api/recommendation/recommendation.routes.ts';
@@ -138,6 +139,7 @@ export function createApp() {
   app.use(['/posts', '/api/posts'], postsRouter)
   app.use(['/comments', '/api/comments'], commentsRouter)
   app.use(['/recommendation', '/api/recommendation'], recommendationRouter)
+  app.use(['/friends', '/api/friends'], friendsRouter)
   app.use('/api/media', mediaRouter)
   app.use('/api/feed', feedRouter)
 

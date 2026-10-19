@@ -4942,6 +4942,22 @@
   user-select: none !important;
 }
 
+.lumina-ai-profile-root .ai-right-sidebar-blurred-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.lumina-ai-profile-root .ai-right-sidebar-blurred-group.ai-blurred-section {
+  filter: blur(5px);
+  -webkit-filter: blur(5px);
+  opacity: 0.35;
+  pointer-events: none !important;
+  user-select: none !important;
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
 .lumina-ai-profile-root .ai-popover-menu-item.is-unimplemented,
 .lumina-ai-profile-root .ai-popover-workspace-item.is-unimplemented,
 .lumina-ai-profile-root .ai-popover-more-btn.is-unimplemented,
