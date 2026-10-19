@@ -33,6 +33,11 @@ import './Navbar.css'
 import type { DashboardUser } from './DashboardPage'
 import { DEFAULT_WHATSAPP_AVATAR } from './components/WhatsAppDefaultAvatar'
 import { useTheme } from './lib/themeContext'
+import {
+  fetchRecommendedStudentsApi,
+  type RecommendedStudent,
+  DEFAULT_FALLBACK_STUDENTS,
+} from './api/recommendationApi'
 import { fetchMyProfile, type ProfileData } from './api/profileApi'
 import {
   type ScheduledPostItem,
@@ -412,6 +417,24 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({})
   const [savedPosts, setSavedPosts] = useState<Record<string, boolean>>({})
   const [friendRequestsSent, setFriendRequestsSent] = useState<Record<string, boolean>>({})
+  const [recommendedStudents, setRecommendedStudents] = useState<RecommendedStudent[]>(DEFAULT_FALLBACK_STUDENTS)
+
+  useEffect(() => {
+    let isMounted = true
+    const collegeId =
+      meProfile?.user?.collegeId ||
+      meProfile?.college?.id ||
+      user?.collegeId ||
+      'cmv9h829300024y8akviwpsmm'
+    fetchRecommendedStudentsApi(collegeId, 5).then((data) => {
+      if (isMounted && data && data.length > 0) {
+        setRecommendedStudents(data)
+      }
+    })
+    return () => {
+      isMounted = false
+    }
+  }, [meProfile?.user?.collegeId, meProfile?.college?.id, user?.collegeId])
 
   const handleToggleFriendRequest = (friendId: string) => {
     setFriendRequestsSent((prev) => ({
@@ -2392,8 +2415,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             )}
           </main>
 
-          {/* 4. RIGHT SIDEBAR WIDGETS (Blurred) */}
-          <aside className="ai-right-sidebar profile-right-col ai-blurred-section" aria-hidden="true">
+          {/* 4. RIGHT SIDEBAR WIDGETS */}
+          <aside className="ai-right-sidebar profile-right-col" aria-hidden="false">
             {/* WIDGET 0: Suggested Friends */}
             <div className="ai-widget-card">
               <div className="ai-card-header-row">
@@ -2409,47 +2432,34 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 </a>
               </div>
               <div className="ai-friend-list">
-                <div className="ai-friend-row">
-                  <div className="ai-friend-left">
-                    <img
-                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
-                      alt="Sarah Chen"
-                      className="ai-friend-avatar"
-                    />
-                    <div className="ai-friend-info">
-                      <strong className="ai-friend-name">Sarah Chen</strong>
-                      <span className="ai-friend-meta">CS &apos;26 • PSG Tech</span>
+                {recommendedStudents.slice(0, 5).map((student) => {
+                  const isFollowing = !!friendRequestsSent[student.id]
+                  return (
+                    <div className="ai-friend-row" key={student.id}>
+                      <div className="ai-friend-left">
+                        <img
+                          src={student.avatar || DEFAULT_WHATSAPP_AVATAR}
+                          alt={student.name}
+                          className="ai-friend-avatar"
+                          onError={(e) => {
+                            e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
+                          }}
+                        />
+                        <div className="ai-friend-info">
+                          <strong className="ai-friend-name">{student.name}</strong>
+                          <span className="ai-friend-meta">{student.department}</span>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        className={`ai-friend-btn ${isFollowing ? 'is-joined' : ''}`}
+                        onClick={() => handleToggleFriendRequest(student.id)}
+                      >
+                        {isFollowing ? 'Following' : 'Follow'}
+                      </button>
                     </div>
-                  </div>
-                  <button
-                    type="button"
-                    className={`ai-friend-btn ${friendRequestsSent['pf1'] ? 'is-joined' : ''}`}
-                    onClick={() => handleToggleFriendRequest('pf1')}
-                  >
-                    {friendRequestsSent['pf1'] ? 'Following' : 'Follow'}
-                  </button>
-                </div>
-
-                <div className="ai-friend-row">
-                  <div className="ai-friend-left">
-                    <img
-                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
-                      alt="Alex Rivera"
-                      className="ai-friend-avatar"
-                    />
-                    <div className="ai-friend-info">
-                      <strong className="ai-friend-name">Alex Rivera</strong>
-                      <span className="ai-friend-meta">AI &amp; Robotics • PSG Tech</span>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className={`ai-friend-btn ${friendRequestsSent['pf2'] ? 'is-joined' : ''}`}
-                    onClick={() => handleToggleFriendRequest('pf2')}
-                  >
-                    {friendRequestsSent['pf2'] ? 'Following' : 'Follow'}
-                  </button>
-                </div>
+                  )
+                })}
               </div>
             </div>
 
