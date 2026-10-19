@@ -1492,38 +1492,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 </div>
               </div>
 
-              {/* Action Buttons Row */}
-              <div className="ai-linkedin-actions-row">
-                <button
-                  type="button"
-                  className="ai-linkedin-btn ai-linkedin-btn-primary"
-                  onClick={() => alert('Open to work / collaborations')}
-                >
-                  Open to
-                </button>
-                <button
-                  type="button"
-                  className="ai-linkedin-btn ai-linkedin-btn-secondary"
-                  onClick={() => alert('Add profile section: Experience, Education, Projects, Skills')}
-                >
-                  Add section
-                </button>
-                <button
-                  type="button"
-                  className="ai-linkedin-btn ai-linkedin-btn-secondary"
-                  onClick={() => alert('Enhance profile with verified credentials')}
-                >
-                  Enhance profile
-                </button>
-                <button
-                  type="button"
-                  className="ai-linkedin-btn-more"
-                  title="More actions"
-                  onClick={() => alert('More options')}
-                >
-                  <MoreHorizontal size={18} />
-                </button>
-              </div>
             </div>
 
             {/* Navigation Tabs Card */}
