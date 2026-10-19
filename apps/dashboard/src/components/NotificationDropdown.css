@@ -58,12 +58,19 @@
 }
 
 .ai-notif-count-badge {
-  font-size: 10.5px;
-  font-weight: 600;
-  padding: 1px 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  padding: 0 8px;
   border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
   background-color: #C15F3C;
   color: #ffffff;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .ai-notif-mark-read-btn {
@@ -86,7 +93,7 @@
 /* Tabs */
 .ai-notif-tabs {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   padding: 6px 12px;
   background-color: rgba(0, 0, 0, 0.15);
   border-bottom: 1px solid var(--ai-card-border, rgba(255, 255, 255, 0.06));
@@ -98,12 +105,12 @@
   font-size: 12px;
   font-weight: 600;
   color: var(--ai-text-muted, #8E897D);
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 5px 12px;
+  border-radius: 7px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
   transition: all 0.15s ease;
 }
 
@@ -117,12 +124,20 @@
 }
 
 .ai-notif-tab-badge {
-  font-size: 10px;
-  font-weight: 700;
-  padding: 1px 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
   border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
   background-color: #C15F3C;
   color: #ffffff;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 /* Body / List */
@@ -154,7 +169,14 @@
 
 .ai-notif-section-count {
   font-size: 11px;
+  font-weight: 600;
   color: var(--ai-text-muted, #8E897D);
+  background-color: rgba(255, 255, 255, 0.06);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.2;
 }
 
 .ai-notif-list {
@@ -483,6 +505,12 @@
   background-color: #FEE2E2;
   border-color: #FCA5A5;
   color: #DC2626;
+}
+
+.lumina-ai-dashboard-root.light .ai-notif-section-count,
+.lumina-ai-profile-root.light .ai-notif-section-count {
+  background-color: #EDEBE6;
+  color: #635F55;
 }
 
 .lumina-ai-dashboard-root.light .ai-notif-footer,
