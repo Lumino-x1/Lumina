@@ -70,87 +70,6 @@ export interface FriendUserItem {
   avatar: string
 }
 
-const SAMPLE_FRIENDS: FriendUserItem[] = [
-  {
-    id: 'f-1',
-    username: 'justinvandykenetw...',
-    name: 'Justin VanDyke',
-    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80',
-  },
-  {
-    id: 'f-2',
-    username: 'charan_dev0607',
-    name: 'Charan Dev Subramanian',
-    avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80',
-  },
-  {
-    id: 'f-3',
-    username: 'amarvhere',
-    name: 'Arv',
-    avatar: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=120&q=80',
-  },
-  {
-    id: 'f-4',
-    username: '_.avi16._',
-    name: 'Avanthika',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
-  },
-  {
-    id: 'f-5',
-    username: 'santa._claus._11',
-    name: 'SANTHOSH🖤',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
-  },
-  {
-    id: 'f-6',
-    username: '_artsofjayanthan_',
-    name: 'Jayanthan',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80',
-  },
-  {
-    id: 'f-7',
-    username: 'n._.aarnav',
-    name: 'Aarnav',
-    avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=120&q=80',
-  },
-  {
-    id: 'f-8',
-    username: 'butterfly1236354',
-    name: '💜......',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80',
-  },
-  {
-    id: 'f-9',
-    username: 'thinkthinkthink._',
-    name: 'thinkthinkthink._',
-    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=120&q=80',
-  },
-  {
-    id: 'f-10',
-    username: '__agash__17__',
-    name: 'Agashraj',
-    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&q=80',
-  },
-  {
-    id: 'f-11',
-    username: '_prajithh.__',
-    name: 'Prajith',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=120&q=80',
-  },
-  {
-    id: 'f-12',
-    username: 'shelvaaathithyan.vk',
-    name: 'Shelva',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&q=80',
-  },
-  {
-    id: 'f-13',
-    username: '_itz_swetha_offic...',
-    name: 'swetha💙',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80',
-  },
-]
-
 export interface ProfilePageProps {
   user?: DashboardUser | null
   onBackToDashboard?: () => void
@@ -471,7 +390,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [loadingProfile, setLoadingProfile] = useState<boolean>(true)
   const [friendsCount, setFriendsCount] = useState<number | null>(null)
   const [showFriendsModal, setShowFriendsModal] = useState<boolean>(false)
-  const [friendsList, setFriendsList] = useState<FriendUserItem[]>(SAMPLE_FRIENDS)
+  const [friendsList, setFriendsList] = useState<FriendUserItem[]>([])
+  const [isFriendsLoading, setIsFriendsLoading] = useState<boolean>(true)
   const [friendsSearchQuery, setFriendsSearchQuery] = useState<string>('')
   const [directMessageFriend, setDirectMessageFriend] = useState<FriendUserItem | null>(null)
   const [directMessageText, setDirectMessageText] = useState<string>('')
@@ -493,48 +413,47 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         }
       })
 
+    setIsFriendsLoading(true)
     fetchMyFriendsApi()
       .then((res) => {
         if (isMounted && res.success && Array.isArray(res.data)) {
-          if (res.data.length > 0) {
-            setFriendsCount(res.data.length)
-            const myId = user?.id || meProfile?.id
-            const myEmail = user?.email || (meProfile as any)?.email
-            const realFriends: FriendUserItem[] = res.data.map((item: any) => {
-              const isSenderMe =
-                (myId && item.sender?.id === myId) ||
-                (myEmail && item.sender?.email === myEmail)
-              const other = isSenderMe ? item.receiver : item.sender
-              return {
-                id: other?.id || item.id,
-                name: other?.name || other?.profile?.name || 'Student Friend',
-                username:
-                  other?.username ||
-                  (other?.email ? other.email.split('@')[0] : '') ||
-                  'friend_user',
-                avatar:
-                  other?.image ||
-                  other?.profile?.avatarUrl ||
-                  DEFAULT_WHATSAPP_AVATAR,
-              }
-            })
-            // Combine real friends with sample friends to ensure a complete list matching the design
-            const merged = [
-              ...realFriends,
-              ...SAMPLE_FRIENDS.filter(
-                (sf) => !realFriends.some((rf) => rf.username === sf.username)
-              ),
-            ]
-            setFriendsList(merged)
-          } else {
-            setFriendsList(SAMPLE_FRIENDS)
-            setFriendsCount(SAMPLE_FRIENDS.length)
-          }
+          setFriendsCount(res.data.length)
+          const myId = user?.id || meProfile?.id
+          const myEmail = user?.email || (meProfile as any)?.email
+          const realFriends: FriendUserItem[] = res.data.map((item: any) => {
+            const isSenderMe =
+              (myId && item.sender?.id === myId) ||
+              (myEmail && item.sender?.email === myEmail)
+            const other = isSenderMe ? item.receiver : item.sender
+            return {
+              id: other?.id || item.id,
+              name: other?.name || other?.profile?.name || 'Classmate',
+              username:
+                other?.username ||
+                (other?.email ? other.email.split('@')[0] : '') ||
+                'student_user',
+              avatar:
+                other?.image ||
+                other?.profile?.avatarUrl ||
+                DEFAULT_WHATSAPP_AVATAR,
+            }
+          })
+          setFriendsList(realFriends)
+        } else {
+          setFriendsList([])
+          setFriendsCount(0)
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        console.warn('[ProfilePage] Failed to fetch friends:', err)
         if (isMounted) {
-          setFriendsList(SAMPLE_FRIENDS)
+          setFriendsList([])
+          setFriendsCount(0)
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsFriendsLoading(false)
         }
       })
 
@@ -1833,15 +1752,18 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                         style={isDark ? { color: '#B1ADA1' } : undefined}
                         onClick={(e) => {
                           e.preventDefault()
-                          setShowFriendsModal(true)
+                          setActiveTab('friends')
+                          const tabsEl = document.querySelector('.ai-profile-tabs-card')
+                          if (tabsEl) {
+                            tabsEl.scrollIntoView({ behavior: 'smooth' })
+                          }
                         }}
                         title="Click to view friends"
                       >
-                        <Users size={14} className="ai-friends-count-icon" />
                         <span className="ai-followers-count" style={isDark ? { color: '#B1ADA1' } : undefined}>
-                          {friendsList.length > 0 ? friendsList.length : profile.stats.friends}
+                          {friendsCount !== null ? friendsCount : friendsList.length}
                         </span>{' '}
-                        friends
+                        {friendsCount === 1 || friendsList.length === 1 ? 'friend' : 'friends'}
                       </button>
                     </div>
                   </div>
@@ -1887,6 +1809,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   className={`ai-profile-tab ${activeTab === 'posts' ? 'is-active' : ''}`}
                   onClick={() => setActiveTab('posts')}
                 >
+                  <FileText size={14} />
                   <span>Posts</span>
                 </button>
                 <button
@@ -1896,7 +1819,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 >
                   <Users size={14} />
                   <span>Friends</span>
-                  <span className="ai-tab-badge-num">{friendsList.length}</span>
+                  <span className="ai-tab-badge-num">{friendsCount !== null ? friendsCount : friendsList.length}</span>
                 </button>
                 <button
                   type="button"
@@ -2758,7 +2681,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     <div>
                       <h3 className="ai-friends-tab-title">Friends</h3>
                       <p className="ai-friends-tab-subtitle">
-                        Connected classmates and peer collaborators ({friendsList.length})
+                        Connected classmates and peer collaborators ({friendsCount !== null ? friendsCount : friendsList.length})
                       </p>
                     </div>
                     <div className="ai-friends-search-bar tab-search">
@@ -2784,12 +2707,19 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   </div>
 
                   <div className="ai-friends-list-body">
-                    {filteredFriends.length === 0 ? (
+                    {isFriendsLoading ? (
+                      <div className="ai-friends-empty-state">
+                        <Loader2 size={24} className="animate-spin" />
+                        <p className="ai-friends-empty-title">Loading friends...</p>
+                      </div>
+                    ) : filteredFriends.length === 0 ? (
                       <div className="ai-friends-empty-state">
                         <Users size={28} className="ai-friends-empty-icon" />
-                        <p className="ai-friends-empty-title">No friends found</p>
+                        <p className="ai-friends-empty-title">
+                          {friendsSearchQuery ? 'No friends found' : 'No friends yet'}
+                        </p>
                         <span className="ai-friends-empty-sub">
-                          {friendsSearchQuery ? 'Try a different search query' : 'No friends to display'}
+                          {friendsSearchQuery ? 'Try a different search query' : 'Connect with classmates to grow your network'}
                         </span>
                       </div>
                     ) : (
@@ -3175,12 +3105,19 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             </div>
 
             <div className="ai-friends-list-body">
-              {filteredFriends.length === 0 ? (
+              {isFriendsLoading ? (
+                <div className="ai-friends-empty-state">
+                  <Loader2 size={24} className="animate-spin" />
+                  <p className="ai-friends-empty-title">Loading friends...</p>
+                </div>
+              ) : filteredFriends.length === 0 ? (
                 <div className="ai-friends-empty-state">
                   <Users size={28} className="ai-friends-empty-icon" />
-                  <p className="ai-friends-empty-title">No friends found</p>
+                  <p className="ai-friends-empty-title">
+                    {friendsSearchQuery ? 'No friends found' : 'No friends yet'}
+                  </p>
                   <span className="ai-friends-empty-sub">
-                    {friendsSearchQuery ? 'Try a different search query' : 'No friends to display'}
+                    {friendsSearchQuery ? 'Try a different search query' : 'Connect with classmates to grow your network'}
                   </span>
                 </div>
               ) : (
@@ -3233,7 +3170,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           >
             <div className="ai-friends-modal-header">
               <div className="ai-friends-modal-title-row">
-                <Send size={16} color="#EA580C" />
+                <Send size={16} color="#C15F3C" />
                 <h3 className="ai-friends-modal-title">
                   Message {directMessageFriend.name}
                 </h3>

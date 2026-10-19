@@ -2359,10 +2359,54 @@
 }
 
 .ai-profile-tab.is-active {
-  background-color: var(--ai-pill-active-bg);
-  color: var(--ai-pill-active-text);
+  background-color: #EDECE6;
+  color: #1C1A17;
+  border: 1px solid #B1ADA1;
   font-weight: 650;
   letter-spacing: -0.01em;
+}
+
+.lumina-ai-profile-root.light .ai-profile-tab.is-active,
+.lumina-ai-profile-root:not(.dark) .ai-profile-tab.is-active {
+  background-color: #EDECE6 !important;
+  color: #1C1A17 !important;
+  border: 1px solid #B1ADA1 !important;
+}
+
+.lumina-ai-profile-root.light .ai-profile-tab.is-active svg,
+.lumina-ai-profile-root:not(.dark) .ai-profile-tab.is-active svg {
+  stroke: #1C1A17 !important;
+  color: #1C1A17 !important;
+}
+
+.lumina-ai-profile-root.light .ai-profile-tab.is-active .ai-tab-badge-num,
+.lumina-ai-profile-root:not(.dark) .ai-profile-tab.is-active .ai-tab-badge-num {
+  background-color: #F4F3EE !important;
+  border-color: #B1ADA1 !important;
+  color: #1C1A17 !important;
+}
+
+.dark .lumina-ai-profile-root .ai-profile-tab.is-active,
+.lumina-ai-profile-root.dark .ai-profile-tab.is-active,
+[data-theme='dark'] .lumina-ai-profile-root .ai-profile-tab.is-active {
+  background-color: #2E2B26 !important;
+  color: #EDECE6 !important;
+  border: 1px solid rgba(177, 173, 161, 0.4) !important;
+}
+
+.dark .lumina-ai-profile-root .ai-profile-tab.is-active svg,
+.lumina-ai-profile-root.dark .ai-profile-tab.is-active svg,
+[data-theme='dark'] .lumina-ai-profile-root .ai-profile-tab.is-active svg {
+  stroke: #EDECE6 !important;
+  color: #EDECE6 !important;
+}
+
+.dark .lumina-ai-profile-root .ai-profile-tab.is-active .ai-tab-badge-num,
+.lumina-ai-profile-root.dark .ai-profile-tab.is-active .ai-tab-badge-num,
+[data-theme='dark'] .lumina-ai-profile-root .ai-profile-tab.is-active .ai-tab-badge-num {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(177, 173, 161, 0.3) !important;
+  color: #EDECE6 !important;
 }
 
 .ai-tab-dot-indicator {
@@ -2383,9 +2427,9 @@
 }
 
 .ai-profile-tab.is-active .ai-tab-badge-num {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-color: transparent;
-  color: #ffffff;
+  background-color: #F4F3EE;
+  border-color: #B1ADA1;
+  color: #1C1A17;
 }
 
 /* ==========================================================================
@@ -5606,30 +5650,52 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: transparent;
-  border: none;
-  padding: 4px 8px;
-  margin-left: -8px;
-  border-radius: 6px;
+  background: transparent !important;
+  border: none !important;
+  padding: 2px 4px;
+  margin-left: -4px;
+  border-radius: 4px;
   cursor: pointer;
   font-family: inherit;
   font-size: 14px;
   text-decoration: none;
-  transition: all 0.15s ease;
+  transition: opacity 0.15s ease;
+  color: var(--ai-text-secondary, #635F55) !important;
 }
 
-.ai-friends-count-icon {
-  color: #EA580C !important;
-  flex-shrink: 0;
+.lumina-ai-profile-root.light .ai-linkedin-connections-link.ai-friends-profile-btn {
+  color: #635F55 !important;
+}
+
+.dark .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn,
+.lumina-ai-profile-root.dark .ai-linkedin-connections-link.ai-friends-profile-btn,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn {
+  color: #B1ADA1 !important;
 }
 
 .ai-linkedin-connections-link.ai-friends-profile-btn:hover {
-  background-color: rgba(234, 88, 12, 0.12) !important;
-  color: #EA580C !important;
+  background-color: transparent !important;
+  text-decoration: underline !important;
 }
 
-.ai-linkedin-connections-link.ai-friends-profile-btn:hover .ai-followers-count {
-  color: #EA580C !important;
+.lumina-ai-profile-root.light .ai-linkedin-connections-link.ai-friends-profile-btn:hover {
+  color: #1C1A17 !important;
+}
+
+.dark .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn:hover,
+.lumina-ai-profile-root.dark .ai-linkedin-connections-link.ai-friends-profile-btn:hover,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn:hover {
+  color: #FFFFFF !important;
+}
+
+.ai-linkedin-connections-link.ai-friends-profile-btn:active {
+  background-color: #EDECE6 !important;
+}
+
+.dark .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn:active,
+.lumina-ai-profile-root.dark .ai-linkedin-connections-link.ai-friends-profile-btn:active,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn:active {
+  background-color: rgba(177, 173, 161, 0.15) !important;
 }
 
 /* Modal Overlay */
@@ -5667,9 +5733,9 @@
 }
 
 .lumina-ai-profile-root.light .ai-friends-modal-container {
-  background-color: #FFFFFF;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  background-color: #F4F3EE !important;
+  border: 1px solid #B1ADA1 !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12) !important;
 }
 
 @keyframes friendsModalScaleIn {
@@ -5693,7 +5759,7 @@
 }
 
 .lumina-ai-profile-root.light .ai-friends-modal-header {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(177, 173, 161, 0.35) !important;
 }
 
 .ai-friends-modal-title-row {
@@ -5719,8 +5785,14 @@
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 12px;
-  background-color: rgba(234, 88, 12, 0.18);
-  color: #EA580C;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #B1ADA1;
+}
+
+.lumina-ai-profile-root.light .ai-friends-count-pill {
+  background-color: #EDECE6 !important;
+  color: #635F55 !important;
+  border: 1px solid rgba(177, 173, 161, 0.5) !important;
 }
 
 .ai-friends-modal-close-btn {
@@ -5759,8 +5831,8 @@
 }
 
 .lumina-ai-profile-root.light .ai-friends-search-bar {
-  background-color: #F4F3EE;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #EDECE6 !important;
+  border: 1px solid rgba(177, 173, 161, 0.6) !important;
 }
 
 .ai-friends-search-icon {
@@ -5895,9 +5967,9 @@
   color: #6B7280;
 }
 
-/* Orange Action Button: Message */
+/* Claude Orange Action Button: Message */
 .ai-friends-message-btn {
-  background-color: #EA580C !important;
+  background-color: #C15F3C !important;
   color: #FFFFFF !important;
   font-weight: 600 !important;
   border: none !important;
@@ -5910,22 +5982,26 @@
   align-items: center !important;
   justify-content: center !important;
   gap: 6px !important;
-  transition: all 0.15s ease !important;
   white-space: nowrap !important;
   flex-shrink: 0 !important;
   text-decoration: none !important;
   line-height: 1.2 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
 }
 
 .ai-friends-message-btn:hover {
-  background-color: #C2410C !important;
+  background-color: #C15F3C !important;
   color: #FFFFFF !important;
-  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.4) !important;
-  transform: translateY(-1px);
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 .ai-friends-message-btn:active {
-  transform: scale(0.97) translateY(0);
+  background-color: #C15F3C !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 /* Empty State */
@@ -5977,9 +6053,9 @@
 }
 
 .lumina-ai-profile-root.light .ai-friends-tab-card {
-  background-color: #FFFFFF;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  background-color: #F4F3EE !important;
+  border: 1px solid #B1ADA1 !important;
+  box-shadow: none !important;
 }
 
 .ai-friends-tab-header {
@@ -5993,7 +6069,7 @@
 }
 
 .lumina-ai-profile-root.light .ai-friends-tab-header {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(177, 173, 161, 0.35) !important;
 }
 
 .ai-friends-tab-title {
@@ -6098,7 +6174,7 @@
 }
 
 .ai-dm-textarea:focus {
-  border-color: #EA580C;
+  border-color: #C15F3C;
 }
 
 .ai-dm-footer {
@@ -6126,7 +6202,7 @@
 }
 
 .ai-dm-send-btn {
-  background-color: #EA580C;
+  background-color: #C15F3C;
   color: #FFFFFF !important;
   border: none;
   padding: 8px 18px;
@@ -6137,11 +6213,13 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.15s ease;
+  transition: none;
 }
 
 .ai-dm-send-btn:hover:not(:disabled) {
-  background-color: #C2410C;
+  background-color: #C15F3C;
+  box-shadow: none;
+  transform: none;
 }
 
 .ai-dm-send-btn:disabled {
