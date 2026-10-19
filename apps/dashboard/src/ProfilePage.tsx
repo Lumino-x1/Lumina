@@ -2312,13 +2312,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             )}
           </main>
 
-          {/* 4. RIGHT SIDEBAR WIDGETS (Unblurred) */}
-          <aside className="ai-right-sidebar profile-right-col">
+          {/* 4. RIGHT SIDEBAR WIDGETS (Blurred) */}
+          <aside className="ai-right-sidebar profile-right-col ai-blurred-section" aria-hidden="true">
             {/* WIDGET 0: Suggested Friends */}
             <div className="ai-widget-card">
               <div className="ai-card-header-row">
                 <h4 className="ai-card-title">Suggested Friends</h4>
-                <span className="ai-card-counter">Campus</span>
               </div>
               <div className="ai-friend-list">
                 <div className="ai-friend-row">
@@ -2376,6 +2375,18 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     )}
                   </button>
                 </div>
+              </div>
+
+              <div style={{ marginTop: '12px' }}>
+                <a
+                  href="#explore-friends"
+                  className="ai-friends-explore-link"
+                  onClick={(e) => {
+                    e.preventDefault()
+                  }}
+                >
+                  explore more -&gt;
+                </a>
               </div>
             </div>
 

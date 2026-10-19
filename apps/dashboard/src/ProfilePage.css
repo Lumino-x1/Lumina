@@ -2620,6 +2620,23 @@
   color: var(--ai-text-muted);
 }
 
+.lumina-ai-profile-root .ai-friends-explore-link {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ai-linkedin-blue, #0a66c2) !important;
+  text-decoration: underline !important;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  transition: opacity 0.15s ease;
+}
+
+.lumina-ai-profile-root .ai-friends-explore-link:hover {
+  opacity: 0.8;
+}
+
 /* Technical Stack */
 .ai-tech-pills-wrap {
   display: flex;

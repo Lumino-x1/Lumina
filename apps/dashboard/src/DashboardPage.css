@@ -18,6 +18,7 @@
   --ai-bg: #F4F3EE;
   --ai-sidebar-bg: #F4F3EE;
   --ai-header-bg: #F4F3EE;
+  --ai-linkedin-blue: #0a66c2;
   --ai-card-bg: #FFFFFF;
   --ai-card-sub-bg: #F4F3EE;
   --ai-card-hover: #EDECE6;
@@ -58,6 +59,7 @@
   --ai-bg: #000000;
   --ai-sidebar-bg: #000000;
   --ai-header-bg: #000000;
+  --ai-linkedin-blue: #388fe6;
   --ai-card-bg: #000000;
   --ai-card-sub-bg: #0a0a0a;
   --ai-card-hover: #141414;
@@ -3155,6 +3157,24 @@
   background: #F4F3EE !important;
   border-color: #C15F3C !important;
   color: #C15F3C !important;
+}
+
+/* Suggested Friends - Explore More Link */
+.ai-friends-explore-link {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ai-linkedin-blue, #0a66c2) !important;
+  text-decoration: underline !important;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  transition: opacity 0.15s ease;
+}
+
+.ai-friends-explore-link:hover {
+  opacity: 0.8;
 }
 
 /* ==========================================================================
