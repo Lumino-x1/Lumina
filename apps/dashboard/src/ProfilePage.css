@@ -1508,6 +1508,7 @@
   line-height: 1.25;
 }
 
+.dark .ai-linkedin-name,
 .lumina-ai-profile-root.dark .ai-linkedin-name,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-name {
   color: var(--ai-text-primary, #B1ADA1) !important;
@@ -1537,15 +1538,31 @@
   background-color: rgba(10, 102, 194, 0.08);
 }
 
+.dark .ai-linkedin-verify-badge,
 .lumina-ai-profile-root.dark .ai-linkedin-verify-badge,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-verify-badge {
-  border-color: #388fe6;
-  color: #388fe6;
+  border-color: rgba(177, 173, 161, 0.4) !important;
+  color: var(--ai-text-primary, #B1ADA1) !important;
 }
 
+.dark .ai-linkedin-verify-badge svg,
+.lumina-ai-profile-root.dark .ai-linkedin-verify-badge svg,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-verify-badge svg {
+  stroke: var(--ai-text-primary, #B1ADA1) !important;
+}
+
+.dark .ai-linkedin-verify-badge:hover,
 .lumina-ai-profile-root.dark .ai-linkedin-verify-badge:hover,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-verify-badge:hover {
-  background-color: rgba(56, 143, 230, 0.12);
+  background-color: rgba(177, 173, 161, 0.12) !important;
+  border-color: var(--ai-text-primary, #B1ADA1) !important;
+  color: #ffffff !important;
+}
+
+.dark .ai-linkedin-verify-badge:hover svg,
+.lumina-ai-profile-root.dark .ai-linkedin-verify-badge:hover svg,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-verify-badge:hover svg {
+  stroke: #ffffff !important;
 }
 
 .ai-linkedin-headline {
@@ -1557,6 +1574,7 @@
   line-height: 1.4;
 }
 
+.dark .ai-linkedin-headline,
 .lumina-ai-profile-root.dark .ai-linkedin-headline,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-headline {
   color: var(--ai-text-primary, #B1ADA1) !important;
@@ -1576,8 +1594,12 @@
   font-family: var(--ai-font-sans), sans-serif;
 }
 
+.dark .ai-linkedin-location-row,
 .lumina-ai-profile-root.dark .ai-linkedin-location-row,
-[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-location-row {
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-location-row,
+.dark .ai-linkedin-location,
+.lumina-ai-profile-root.dark .ai-linkedin-location,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-location {
   color: var(--ai-text-primary, #B1ADA1) !important;
 }
 
@@ -1587,6 +1609,12 @@
 
 .ai-linkedin-dot {
   margin: 0 2px;
+  color: var(--ai-text-primary, #B1ADA1) !important;
+}
+
+.dark .ai-linkedin-dot,
+.lumina-ai-profile-root.dark .ai-linkedin-dot,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-dot {
   color: var(--ai-text-primary, #B1ADA1) !important;
 }
 
@@ -1605,11 +1633,13 @@
   color: #ffffff !important;
 }
 
+.dark .ai-linkedin-contact-link,
 .lumina-ai-profile-root.dark .ai-linkedin-contact-link,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-contact-link {
   color: var(--ai-text-primary, #B1ADA1) !important;
 }
 
+.dark .ai-linkedin-contact-link:hover,
 .lumina-ai-profile-root.dark .ai-linkedin-contact-link:hover,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-contact-link:hover {
   color: #ffffff !important;
@@ -1630,6 +1660,7 @@
   font-weight: 400;
 }
 
+.dark .ai-linkedin-connections-row,
 .lumina-ai-profile-root.dark .ai-linkedin-connections-row,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-row {
   color: var(--ai-text-primary, #B1ADA1) !important;
@@ -1648,8 +1679,12 @@
   cursor: pointer;
 }
 
+.dark .ai-linkedin-connections-link,
 .lumina-ai-profile-root.dark .ai-linkedin-connections-link,
-[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-link {
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-link,
+.dark .ai-followers-count,
+.lumina-ai-profile-root.dark .ai-followers-count,
+[data-theme='dark'] .lumina-ai-profile-root .ai-followers-count {
   color: var(--ai-text-primary, #B1ADA1) !important;
 }
 
@@ -1662,6 +1697,7 @@
   color: #ffffff !important;
 }
 
+.dark .ai-linkedin-connections-link:hover,
 .lumina-ai-profile-root.dark .ai-linkedin-connections-link:hover,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-link:hover {
   color: #ffffff !important;
@@ -1706,6 +1742,7 @@
   line-height: 1.25;
 }
 
+.dark .ai-linkedin-org-name,
 .lumina-ai-profile-root.dark .ai-linkedin-org-name,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-org-name {
   color: var(--ai-text-primary, #B1ADA1) !important;

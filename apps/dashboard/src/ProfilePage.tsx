@@ -358,6 +358,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   onLogout,
 }) => {
   const { theme, toggleTheme } = useTheme()
+  const isDark = theme === 'dark'
   const [activeTab, setActiveTab] = useState<'posts' | 'about' | 'projects' | 'achievements' | 'communities' | 'saved'>('posts')
   const [activeNav, setActiveNav] = useState('Profile')
   const [searchQuery, setSearchQuery] = useState('')
@@ -1390,7 +1391,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   title="Edit background banner"
                   onClick={() => alert('Change profile banner')}
                 >
-                  <Pencil size={15} color="#1C1A17" strokeWidth={2.4} />
+                  <Pencil size={15} color={isDark ? '#B1ADA1' : '#1C1A17'} strokeWidth={2.4} />
                 </button>
               </div>
 
@@ -1423,9 +1424,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   type="button"
                   className="ai-linkedin-card-edit-btn"
                   title="Edit intro"
+                  style={isDark ? { color: '#B1ADA1' } : undefined}
                   onClick={() => alert('Edit intro')}
                 >
-                  <Pencil size={20} color="currentColor" strokeWidth={2} />
+                  <Pencil size={20} color={isDark ? '#B1ADA1' : 'currentColor'} strokeWidth={2} />
                 </button>
               </div>
 
@@ -1435,29 +1437,31 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 <div className="ai-linkedin-left-col">
                   {/* Name + Verify badge */}
                   <div className="ai-linkedin-name-row">
-                    <h1 className="ai-linkedin-name">{profile.name}</h1>
+                    <h1 className="ai-linkedin-name" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.name}</h1>
                     <button
                       type="button"
                       className="ai-linkedin-verify-badge"
+                      style={isDark ? { color: '#B1ADA1', borderColor: 'rgba(177, 173, 161, 0.4)' } : undefined}
                       onClick={() => alert('Verify your profile with student ID or government credentials.')}
                     >
-                      <ShieldCheck size={16} strokeWidth={2.2} />
-                      <span>Verify</span>
+                      <ShieldCheck size={16} strokeWidth={2.2} color={isDark ? '#B1ADA1' : undefined} />
+                      <span style={isDark ? { color: '#B1ADA1' } : undefined}>Verify</span>
                     </button>
                   </div>
 
                   {/* Headline */}
-                  <p className="ai-linkedin-headline">
+                  <p className="ai-linkedin-headline" style={isDark ? { color: '#B1ADA1' } : undefined}>
                     {profile.headline}
                   </p>
 
                   {/* Location & Contact info */}
-                  <div className="ai-linkedin-location-row">
-                    <span className="ai-linkedin-location">{profile.location}</span>
-                    <span className="ai-linkedin-dot">·</span>
+                  <div className="ai-linkedin-location-row" style={isDark ? { color: '#B1ADA1' } : undefined}>
+                    <span className="ai-linkedin-location" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.location}</span>
+                    <span className="ai-linkedin-dot" style={isDark ? { color: '#B1ADA1' } : undefined}>·</span>
                     <a
                       href="#contact-info"
                       className="ai-linkedin-contact-link"
+                      style={isDark ? { color: '#B1ADA1' } : undefined}
                       onClick={(e) => {
                         e.preventDefault()
                         alert(`Contact Info:\nName: ${profile.name}\nEmail: ${profile.email}\nUniversity: ${profile.university}\nLocation: ${profile.location}`)
@@ -1468,25 +1472,27 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   </div>
 
                   {/* Followers & Following */}
-                  <div className="ai-linkedin-connections-row">
+                  <div className="ai-linkedin-connections-row" style={isDark ? { color: '#B1ADA1' } : undefined}>
                     <a
                       href="#followers"
                       className="ai-linkedin-connections-link"
+                      style={isDark ? { color: '#B1ADA1' } : undefined}
                       onClick={(e) => {
                         e.preventDefault()
                       }}
                     >
-                      <span className="ai-followers-count">{profile.stats.followers}</span> followers
+                      <span className="ai-followers-count" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.stats.followers}</span> followers
                     </a>
-                    <span className="ai-linkedin-dot">·</span>
+                    <span className="ai-linkedin-dot" style={isDark ? { color: '#B1ADA1' } : undefined}>·</span>
                     <a
                       href="#following"
                       className="ai-linkedin-connections-link"
+                      style={isDark ? { color: '#B1ADA1' } : undefined}
                       onClick={(e) => {
                         e.preventDefault()
                       }}
                     >
-                      <span className="ai-followers-count">{profile.stats.following}</span> following
+                      <span className="ai-followers-count" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.stats.following}</span> following
                     </a>
                   </div>
                 </div>
@@ -1503,7 +1509,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                         <rect x="17" y="17" width="10" height="10" rx="1.5" fill="#546E7A" />
                       </svg>
                     </div>
-                    <span className="ai-linkedin-org-name">{profile.department}</span>
+                    <span className="ai-linkedin-org-name" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.department}</span>
                   </div>
 
                   <div className="ai-linkedin-org-item">
@@ -1516,7 +1522,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                         <path d="M9 22 Q16 25 23 22" stroke="#283593" strokeWidth="1.5" fill="none" />
                       </svg>
                     </div>
-                    <span className="ai-linkedin-org-name">{profile.university}</span>
+                    <span className="ai-linkedin-org-name" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.university}</span>
                   </div>
                 </div>
               </div>
