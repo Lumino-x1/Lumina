@@ -3203,7 +3203,8 @@
   transform: none !important;
 }
 
-.lumina-ai-profile-root .ai-friend-btn.is-joined {
+.lumina-ai-profile-root .ai-friend-btn.is-joined,
+.lumina-ai-profile-root .ai-friend-btn.is-pending {
   background: transparent !important;
   background-color: transparent !important;
   border: none !important;
@@ -3211,7 +3212,8 @@
   color: var(--ai-text-muted) !important;
 }
 
-.lumina-ai-profile-root .ai-friend-btn.is-joined:hover {
+.lumina-ai-profile-root .ai-friend-btn.is-joined:hover,
+.lumina-ai-profile-root .ai-friend-btn.is-pending:hover {
   background: transparent !important;
   background-color: transparent !important;
   border: none !important;

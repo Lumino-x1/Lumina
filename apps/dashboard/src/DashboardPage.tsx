@@ -38,7 +38,11 @@ import {
   type RecommendedStudent,
   DEFAULT_FALLBACK_STUDENTS,
 } from './api/recommendationApi'
-import { sendFriendRequestApi } from './api/friendsApi'
+import {
+  sendFriendRequestApi,
+  cancelFriendRequestApi,
+  fetchOutgoingRequestsApi,
+} from './api/friendsApi'
 
 export type DashboardUser = MergedUser
 
@@ -410,8 +414,27 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   // Interactive state for posts and friend requests
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({})
   const [savedPosts, setSavedPosts] = useState<Record<string, boolean>>({})
-  const [friendRequestsSent, setFriendRequestsSent] = useState<Record<string, boolean>>({})
+  const [friendRequestsSent, setFriendRequestsSent] = useState<Record<string, string | boolean>>({})
   const [recommendedStudents, setRecommendedStudents] = useState<RecommendedStudent[]>(DEFAULT_FALLBACK_STUDENTS)
+
+  // Fetch initial outgoing pending friend requests
+  useEffect(() => {
+    let isMounted = true
+    fetchOutgoingRequestsApi().then((res) => {
+      if (isMounted && res.success && Array.isArray(res.data)) {
+        const pendingMap: Record<string, string> = {}
+        res.data.forEach((req) => {
+          if (req.receiverId && req.status === 'PENDING') {
+            pendingMap[req.receiverId] = req.id
+          }
+        })
+        setFriendRequestsSent((prev) => ({ ...prev, ...pendingMap }))
+      }
+    })
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   useEffect(() => {
     let isMounted = true
@@ -427,27 +450,58 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   }, [user?.collegeId])
 
   const handleToggleFriendRequest = async (friendId: string) => {
-    const isCurrentlyFollowing = !!friendRequestsSent[friendId]
+    const isCurrentlyPending = !!friendRequestsSent[friendId]
 
-    // Optimistic toggle
-    setFriendRequestsSent((prev) => ({
-      ...prev,
-      [friendId]: !isCurrentlyFollowing,
-    }))
+    if (isCurrentlyPending) {
+      // Currently pending -> cancel the friend request!
+      const currentRequestId = friendRequestsSent[friendId]
+      const paramToCancel = typeof currentRequestId === 'string' ? currentRequestId : friendId
 
-    if (!isCurrentlyFollowing) {
-      // Send friend request to backend: POST /api/friends/request/:userId
-      const res = await sendFriendRequestApi(friendId)
+      // Optimistically remove from pending state (revert to Follow)
+      setFriendRequestsSent((prev) => {
+        const next = { ...prev }
+        delete next[friendId]
+        return next
+      })
+
+      const res = await cancelFriendRequestApi(paramToCancel)
       if (!res.success) {
+        console.warn(`Cancel friend request to ${friendId} failed:`, res.error)
+        // Rollback to pending on error
+        setFriendRequestsSent((prev) => ({
+          ...prev,
+          [friendId]: currentRequestId,
+        }))
+      }
+    } else {
+      // Not pending -> send friend request!
+      // Optimistically show "Pending"
+      setFriendRequestsSent((prev) => ({
+        ...prev,
+        [friendId]: true,
+      }))
+
+      const res = await sendFriendRequestApi(friendId)
+      if (res.success && res.data?.id) {
+        setFriendRequestsSent((prev) => ({
+          ...prev,
+          [friendId]: res.data!.id,
+        }))
+      } else {
         if (
           res.error?.includes('EXISTS') ||
           res.error?.includes('already exists')
         ) {
-          // Keep as following if already exists
+          // If request already exists, keep as pending
           setFriendRequestsSent((prev) => ({ ...prev, [friendId]: true }))
         } else {
           console.warn(`Friend request to ${friendId} failed:`, res.error)
-          setFriendRequestsSent((prev) => ({ ...prev, [friendId]: false }))
+          // Rollback on error
+          setFriendRequestsSent((prev) => {
+            const next = { ...prev }
+            delete next[friendId]
+            return next
+          })
         }
       }
     }
@@ -1569,7 +1623,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
               <div className="ai-community-list">
                 {recommendedStudents.slice(0, 5).map((student) => {
-                  const isFollowing = !!friendRequestsSent[student.id]
+                  const isPending = !!friendRequestsSent[student.id]
                   return (
                     <div className="ai-community-row" key={student.id}>
                       <div className="ai-community-left">
@@ -1593,10 +1647,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                       </div>
                       <button
                         type="button"
-                        className={`ai-community-join-btn ${isFollowing ? 'is-joined' : ''}`}
+                        className={`ai-community-join-btn ${isPending ? 'is-pending is-joined' : ''}`}
                         onClick={() => handleToggleFriendRequest(student.id)}
+                        title={isPending ? 'Click to cancel request' : 'Click to send friend request'}
                       >
-                        {isFollowing ? 'Following' : 'Follow'}
+                        {isPending ? 'Pending' : 'Follow'}
                       </button>
                     </div>
                   )

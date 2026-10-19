@@ -44,6 +44,42 @@ export namespace FriendsRepo {
     })
   }
 
+  export async function findFriendRequestExact(senderId: string, receiverId: string) {
+    return prisma.friendRequest.findUnique({
+      where: {
+        senderId_receiverId: {
+          senderId,
+          receiverId,
+        },
+      },
+    })
+  }
+
+  export async function findPendingFriendRequest(senderId: string, receiverId: string) {
+    return prisma.friendRequest.findFirst({
+      where: {
+        senderId,
+        receiverId,
+        status: 'PENDING',
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+  }
+
+  export async function reopenFriendRequest(requestId: string) {
+    return prisma.friendRequest.update({
+      where: {
+        id: requestId,
+      },
+      data: {
+        status: 'PENDING',
+        createdAt: new Date(),
+      },
+    })
+  }
+
   export async function updateFriendRequestStatus(
     requestId: string,
     status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED'
@@ -219,6 +255,9 @@ export const findUserById = FriendsRepo.findUserById
 export const findFriendRequest = FriendsRepo.findFriendRequest
 export const createFriendRequest = FriendsRepo.createFriendRequest
 export const findFriendRequestById = FriendsRepo.findFriendRequestById
+export const findFriendRequestExact = FriendsRepo.findFriendRequestExact
+export const findPendingFriendRequest = FriendsRepo.findPendingFriendRequest
+export const reopenFriendRequest = FriendsRepo.reopenFriendRequest
 export const updateFriendRequestStatus = FriendsRepo.updateFriendRequestStatus
 export const findAcceptedFriendship = FriendsRepo.findAcceptedFriendship
 export const deleteFriendship = FriendsRepo.deleteFriendship

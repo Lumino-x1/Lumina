@@ -3093,7 +3093,8 @@
   transform: none;
 }
 
-.ai-community-join-btn.is-joined {
+.ai-community-join-btn.is-joined,
+.ai-community-join-btn.is-pending {
   background: transparent !important;
   background-color: transparent !important;
   border: none !important;
@@ -3101,7 +3102,8 @@
   color: var(--ai-text-muted, #8E897D) !important;
 }
 
-.ai-community-join-btn.is-joined:hover {
+.ai-community-join-btn.is-joined:hover,
+.ai-community-join-btn.is-pending:hover {
   background: transparent !important;
   background-color: transparent !important;
   border: none !important;
@@ -3122,14 +3124,16 @@
   opacity: 0.8;
 }
 
-.lumina-ai-dashboard-root.light .ai-community-join-btn.is-joined {
+.lumina-ai-dashboard-root.light .ai-community-join-btn.is-joined,
+.lumina-ai-dashboard-root.light .ai-community-join-btn.is-pending {
   background: transparent !important;
   background-color: transparent !important;
   border: none !important;
   color: var(--ai-text-muted, #8E897D) !important;
 }
 
-.lumina-ai-dashboard-root.light .ai-community-join-btn.is-joined:hover {
+.lumina-ai-dashboard-root.light .ai-community-join-btn.is-joined:hover,
+.lumina-ai-dashboard-root.light .ai-community-join-btn.is-pending:hover {
   background: transparent !important;
   background-color: transparent !important;
   border: none !important;

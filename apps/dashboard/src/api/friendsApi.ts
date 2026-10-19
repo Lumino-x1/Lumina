@@ -95,7 +95,7 @@ export async function sendFriendRequestApi(
 
 /**
  * Cancel an outgoing friend request
- * Calls DELETE /api/friends/request/:requestId
+ * Calls DELETE /api/friends/request/:requestId (also supports target userId)
  */
 export async function cancelFriendRequestApi(
   requestId: string
@@ -116,6 +116,19 @@ export async function cancelFriendRequestApi(
       return { success: true, data }
     }
 
+    if (res.status === 404) {
+      const fallbackEndpoint = `${baseUrl}/friends/request/${encodeURIComponent(requestId)}`
+      const fallbackRes = await fetch(fallbackEndpoint, {
+        method: 'DELETE',
+        headers,
+        credentials: 'include',
+      })
+      if (fallbackRes.ok) {
+        const data = await fallbackRes.json().catch(() => ({}))
+        return { success: true, data }
+      }
+    }
+
     const errorJson = await res.json().catch(() => ({}))
     return {
       success: false,
@@ -126,6 +139,54 @@ export async function cancelFriendRequestApi(
     return {
       success: false,
       error: err?.message || 'Network error while canceling friend request',
+    }
+  }
+}
+
+/**
+ * Fetch outgoing pending friend requests
+ * Calls GET /api/friends/requests/outgoing
+ */
+export async function fetchOutgoingRequestsApi(): Promise<ApiResponse<FriendRequestResult[]>> {
+  try {
+    const baseUrl = getBaseApiUrl()
+    const endpoint = `${baseUrl}/api/friends/requests/outgoing`
+    const headers = getAuthHeaders()
+
+    const res = await fetch(endpoint, {
+      method: 'GET',
+      headers,
+      credentials: 'include',
+    })
+
+    if (res.ok) {
+      const data = await res.json()
+      return { success: true, data }
+    }
+
+    if (res.status === 404) {
+      const fallbackEndpoint = `${baseUrl}/friends/requests/outgoing`
+      const fallbackRes = await fetch(fallbackEndpoint, {
+        method: 'GET',
+        headers,
+        credentials: 'include',
+      })
+      if (fallbackRes.ok) {
+        const data = await fallbackRes.json()
+        return { success: true, data }
+      }
+    }
+
+    const errorJson = await res.json().catch(() => ({}))
+    return {
+      success: false,
+      error: errorJson.message || `Failed to fetch outgoing requests: ${res.status}`,
+    }
+  } catch (err: any) {
+    console.error('fetchOutgoingRequestsApi error:', err)
+    return {
+      success: false,
+      error: err?.message || 'Network error while fetching outgoing requests',
     }
   }
 }

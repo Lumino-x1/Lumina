@@ -14,10 +14,30 @@ export namespace FriendsService {
       throw notFound('USER_NOT_FOUND')
     }
 
-    const existingRequest = await FriendsRepo.findFriendRequest(senderId, receiverId)
+    // Check existing request sent by sender to receiver
+    const exactSent = await FriendsRepo.findFriendRequestExact(senderId, receiverId)
 
-    if (existingRequest) {
-      throw conflict('FRIEND_REQUEST_EXISTS', 'Friend request already exists.')
+    if (exactSent) {
+      if (exactSent.status === 'ACCEPTED') {
+        throw conflict('ALREADY_FRIENDS', 'You are already friends.')
+      }
+      if (exactSent.status === 'PENDING') {
+        throw conflict('FRIEND_REQUEST_EXISTS', 'Friend request already exists.')
+      }
+      // Re-activate previously CANCELLED or REJECTED request
+      return FriendsRepo.reopenFriendRequest(exactSent.id)
+    }
+
+    // Check if receiver already sent a request to sender
+    const exactReceived = await FriendsRepo.findFriendRequestExact(receiverId, senderId)
+
+    if (exactReceived) {
+      if (exactReceived.status === 'ACCEPTED') {
+        throw conflict('ALREADY_FRIENDS', 'You are already friends.')
+      }
+      if (exactReceived.status === 'PENDING') {
+        throw conflict('FRIEND_REQUEST_EXISTS', 'Friend request already exists.')
+      }
     }
 
     try {
@@ -66,8 +86,13 @@ export namespace FriendsService {
     return FriendsRepo.updateFriendRequestStatus(requestId, 'REJECTED')
   }
 
-  export async function cancelFriendRequest(userId: string, requestId: string) {
-    const request = await FriendsRepo.findFriendRequestById(requestId)
+  export async function cancelFriendRequest(userId: string, requestIdOrReceiverId: string) {
+    let request = await FriendsRepo.findFriendRequestById(requestIdOrReceiverId)
+
+    if (!request) {
+      // Allow passing receiverId as the param to cancel the pending request
+      request = await FriendsRepo.findPendingFriendRequest(userId, requestIdOrReceiverId)
+    }
 
     if (!request) {
       throw notFound('FRIEND_REQUEST_NOT_FOUND')
@@ -81,7 +106,7 @@ export namespace FriendsService {
       throw conflict('FRIEND_REQUEST_NOT_PENDING', 'Only pending requests can be cancelled.')
     }
 
-    return FriendsRepo.updateFriendRequestStatus(requestId, 'CANCELLED')
+    return FriendsRepo.updateFriendRequestStatus(request.id, 'CANCELLED')
   }
 
   export async function unfriend(userId: string, friendId: string) {
