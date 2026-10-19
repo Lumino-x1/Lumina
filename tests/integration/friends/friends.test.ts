@@ -184,4 +184,52 @@ describe('Friends | POST /api/friends/request/:userId', () => {
     expect(listRes.body[0].receiverId).toBe(receiver.id)
     expect(listRes.body[0].status).toBe('PENDING')
   })
+
+  it('unfriends an accepted friend via DELETE /api/friends/:friendId', async () => {
+    const { user: userA, cookie: cookieA } = await createTestUserWithSession({ name: 'User A' })
+    const { user: userB, cookie: cookieB } = await createTestUserWithSession({ name: 'User B' })
+
+    // User A sends request to User B
+    const reqRes = await request(app)
+      .post(`/api/friends/request/${userB.id}`)
+      .set('Origin', TEST_ORIGIN)
+      .set('Cookie', cookieA)
+      .set('x-test-user-id', userA.id)
+    expect(reqRes.status).toBe(201)
+    const requestId = reqRes.body.id
+
+    // User B accepts request
+    const acceptRes = await request(app)
+      .patch(`/api/friends/request/${requestId}/accept`)
+      .set('Origin', TEST_ORIGIN)
+      .set('Cookie', cookieB)
+      .set('x-test-user-id', userB.id)
+    expect(acceptRes.status).toBe(200)
+
+    // Verify User A has 1 friend
+    const friendsBefore = await request(app)
+      .get('/api/friends')
+      .set('Origin', TEST_ORIGIN)
+      .set('Cookie', cookieA)
+      .set('x-test-user-id', userA.id)
+    expect(friendsBefore.status).toBe(200)
+    expect(friendsBefore.body.length).toBe(1)
+
+    // User A removes User B via DELETE /api/friends/:friendId
+    const deleteRes = await request(app)
+      .delete(`/api/friends/${userB.id}`)
+      .set('Origin', TEST_ORIGIN)
+      .set('Cookie', cookieA)
+      .set('x-test-user-id', userA.id)
+    expect(deleteRes.status).toBe(200)
+
+    // Verify User A now has 0 friends
+    const friendsAfter = await request(app)
+      .get('/api/friends')
+      .set('Origin', TEST_ORIGIN)
+      .set('Cookie', cookieA)
+      .set('x-test-user-id', userA.id)
+    expect(friendsAfter.status).toBe(200)
+    expect(friendsAfter.body.length).toBe(0)
+  })
 })

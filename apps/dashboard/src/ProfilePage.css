@@ -5967,7 +5967,8 @@
   color: #6B7280;
 }
 
-/* Claude Orange Action Button: Message */
+/* Claude Orange Action Button: Remove Friend / Message */
+.ai-friends-remove-btn,
 .ai-friends-message-btn {
   background-color: #C15F3C !important;
   color: #FFFFFF !important;
@@ -5988,9 +5989,10 @@
   line-height: 1.2 !important;
   box-shadow: none !important;
   transform: none !important;
-  transition: none !important;
+  transition: opacity 0.15s ease !important;
 }
 
+.ai-friends-remove-btn:hover,
 .ai-friends-message-btn:hover {
   background-color: #C15F3C !important;
   color: #FFFFFF !important;
@@ -5998,10 +6000,17 @@
   transform: none !important;
 }
 
+.ai-friends-remove-btn:active,
 .ai-friends-message-btn:active {
   background-color: #C15F3C !important;
   transform: none !important;
   box-shadow: none !important;
+}
+
+.ai-friends-remove-btn:disabled,
+.ai-friends-message-btn:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
 }
 
 /* Empty State */

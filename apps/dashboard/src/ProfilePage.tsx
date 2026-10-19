@@ -43,6 +43,7 @@ import {
   cancelFriendRequestApi,
   fetchOutgoingRequestsApi,
   fetchMyFriendsApi,
+  unfriendApi,
 } from './api/friendsApi'
 import { NotificationDropdown } from './components/NotificationDropdown'
 import { fetchMyProfile, type ProfileData } from './api/profileApi'
@@ -478,9 +479,44 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     )
   })
 
-  const handleOpenMessage = (friend: FriendUserItem) => {
-    setDirectMessageFriend(friend)
-    setDirectMessageText('')
+  const [removingFriendIds, setRemovingFriendIds] = useState<Record<string, boolean>>({})
+
+  const handleRemoveFriend = async (friend: FriendUserItem) => {
+    if (removingFriendIds[friend.id]) return
+
+    setRemovingFriendIds((prev) => ({ ...prev, [friend.id]: true }))
+
+    const prevFriendsList = [...friendsList]
+    const prevCount = friendsCount
+
+    // Optimistically update the list and counter
+    setFriendsList((prev) => prev.filter((f) => f.id !== friend.id))
+    setFriendsCount((prev) => (prev !== null ? Math.max(0, prev - 1) : 0))
+
+    try {
+      const res = await unfriendApi(friend.id)
+      if (res.success) {
+        setToastMessage(`Removed ${friend.name || friend.username} from friends`)
+        setTimeout(() => setToastMessage(null), 3000)
+      } else {
+        // Rollback state on failure
+        setFriendsList(prevFriendsList)
+        setFriendsCount(prevCount)
+        setToastMessage(res.error || 'Failed to remove friend')
+        setTimeout(() => setToastMessage(null), 3500)
+      }
+    } catch (err: any) {
+      setFriendsList(prevFriendsList)
+      setFriendsCount(prevCount)
+      setToastMessage(err?.message || 'Error removing friend')
+      setTimeout(() => setToastMessage(null), 3500)
+    } finally {
+      setRemovingFriendIds((prev) => {
+        const next = { ...prev }
+        delete next[friend.id]
+        return next
+      })
+    }
   }
 
   const handleSendDirectMessage = () => {
@@ -2751,10 +2787,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                           </div>
                           <button
                             type="button"
-                            className="ai-friends-message-btn"
-                            onClick={() => handleOpenMessage(friend)}
+                            className="ai-friends-remove-btn"
+                            onClick={() => handleRemoveFriend(friend)}
+                            disabled={!!removingFriendIds[friend.id]}
                           >
-                            Message
+                            {removingFriendIds[friend.id] ? 'Removing...' : 'Remove'}
                           </button>
                         </div>
                       ))
@@ -3149,10 +3186,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     </div>
                     <button
                       type="button"
-                      className="ai-friends-message-btn"
-                      onClick={() => handleOpenMessage(friend)}
+                      className="ai-friends-remove-btn"
+                      onClick={() => handleRemoveFriend(friend)}
+                      disabled={!!removingFriendIds[friend.id]}
                     >
-                      Message
+                      {removingFriendIds[friend.id] ? 'Removing...' : 'Remove'}
                     </button>
                   </div>
                 ))

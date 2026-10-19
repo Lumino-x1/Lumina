@@ -210,8 +210,23 @@ export async function unfriendApi(
     })
 
     if (res.ok) {
+      invalidateFriendsCache()
       const data = await res.json().catch(() => ({}))
       return { success: true, data }
+    }
+
+    if (res.status === 404) {
+      const fallbackEndpoint = `${baseUrl}/friends/${encodeURIComponent(friendId)}`
+      const fallbackRes = await fetch(fallbackEndpoint, {
+        method: 'DELETE',
+        headers,
+        credentials: 'include',
+      })
+      if (fallbackRes.ok) {
+        invalidateFriendsCache()
+        const data = await fallbackRes.json().catch(() => ({}))
+        return { success: true, data }
+      }
     }
 
     const errorJson = await res.json().catch(() => ({}))
