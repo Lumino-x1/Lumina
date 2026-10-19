@@ -2592,49 +2592,67 @@
 }
 
 .lumina-ai-profile-root .ai-friend-btn {
-  padding: 5px 14px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 600;
+  padding: 4px 0 !important;
+  border-radius: 0 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
   cursor: pointer;
-  background-color: #0077b5;
-  color: #ffffff;
-  border: 1px solid #0077b5;
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #C15F3C !important;
+  border: none !important;
+  box-shadow: none !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  transition: all 0.15s ease;
+  transition: opacity 0.15s ease;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .lumina-ai-profile-root .ai-friend-btn:hover {
-  opacity: 0.9;
-  transform: translateY(-0.5px);
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  opacity: 0.8;
+  transform: none !important;
 }
 
 .lumina-ai-profile-root .ai-friend-btn.is-joined {
-  background-color: transparent;
-  border: 1px solid var(--ai-border);
-  color: var(--ai-text-muted);
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--ai-text-muted) !important;
 }
 
-.lumina-ai-profile-root .ai-friends-explore-link {
-  display: inline-block;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ai-linkedin-blue, #0a66c2) !important;
-  text-decoration: underline !important;
+.lumina-ai-profile-root .ai-friend-btn.is-joined:hover {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  opacity: 0.8;
+}
+
+/* See All Link (Instagram style in header) */
+.lumina-ai-profile-root .ai-see-all-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ai-text-primary, #ffffff);
   cursor: pointer;
   background: transparent;
   border: none;
   padding: 0;
+  text-decoration: none;
   transition: opacity 0.15s ease;
+  line-height: 1;
 }
 
-.lumina-ai-profile-root .ai-friends-explore-link:hover {
-  opacity: 0.8;
+.lumina-ai-profile-root .ai-see-all-link:hover {
+  opacity: 0.7;
+}
+
+.lumina-ai-profile-root.light .ai-see-all-link {
+  color: var(--ai-text-primary, #1C1A17);
 }
 
 /* Technical Stack */

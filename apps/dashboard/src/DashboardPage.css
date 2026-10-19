@@ -3060,62 +3060,97 @@
   line-height: 1.2;
 }
 
-/* Join Button (Terracotta Orange pill) */
+/* Follow Button (Instagram style: transparent background, orange text) */
 .ai-community-join-btn {
-  padding: 6px 18px;
-  border-radius: 9999px;
-  font-size: 13px;
-  font-weight: 600;
+  padding: 4px 0 !important;
+  border-radius: 0 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
   cursor: pointer;
-  background-color: #C15F3C;
-  color: #ffffff;
-  border: 1px solid #C15F3C;
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #C15F3C !important;
+  border: none !important;
+  box-shadow: none !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  transition: all 0.15s ease;
+  transition: opacity 0.15s ease;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .ai-community-join-btn:hover {
-  background-color: #A94F30;
-  border-color: #A94F30;
-  transform: translateY(-0.5px);
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  opacity: 0.8;
+  transform: none;
 }
 
 .ai-community-join-btn.is-joined {
-  background-color: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  color: #ffffff;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--ai-text-muted, #8E897D) !important;
 }
 
 .ai-community-join-btn.is-joined:hover {
-  background-color: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.35);
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  opacity: 0.8;
 }
 
 .lumina-ai-dashboard-root.light .ai-community-join-btn {
-  background-color: #C15F3C !important;
-  border-color: #C15F3C !important;
-  color: #ffffff !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  color: #C15F3C !important;
 }
 
 .lumina-ai-dashboard-root.light .ai-community-join-btn:hover {
-  background-color: #A94F30 !important;
-  border-color: #A94F30 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  opacity: 0.8;
 }
 
 .lumina-ai-dashboard-root.light .ai-community-join-btn.is-joined {
-  background-color: #EDECE6 !important;
-  border: 1px solid #B1ADA1 !important;
-  color: #1C1A17 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  color: var(--ai-text-muted, #8E897D) !important;
 }
 
 .lumina-ai-dashboard-root.light .ai-community-join-btn.is-joined:hover {
-  background-color: #E2E0D8 !important;
-  border-color: #8E897D !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  opacity: 0.8;
+}
+
+/* See All Link (Instagram style in header) */
+.ai-see-all-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ai-text-primary, #ffffff);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+  line-height: 1;
+}
+
+.ai-see-all-link:hover {
+  opacity: 0.7;
+}
+
+.lumina-ai-dashboard-root.light .ai-see-all-link {
+  color: var(--ai-text-primary, #1C1A17);
 }
 
 /* Explore More Button */

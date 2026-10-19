@@ -1516,6 +1516,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             <div className="ai-widget-card" style={{ marginBottom: '16px' }}>
               <div className="ai-card-header-row">
                 <h4 className="ai-card-title">Suggested Friends</h4>
+                <a
+                  href="#see-all"
+                  className="ai-see-all-link"
+                  onClick={(e) => {
+                    e.preventDefault()
+                  }}
+                >
+                  See all
+                </a>
               </div>
 
               <div className="ai-community-list">
@@ -1539,14 +1548,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                     className={`ai-community-join-btn ${friendRequestsSent['f1'] ? 'is-joined' : ''}`}
                     onClick={() => handleToggleFriendRequest('f1')}
                   >
-                    {friendRequestsSent['f1'] ? (
-                      <>
-                        {Icons.Check}
-                        <span>Requested</span>
-                      </>
-                    ) : (
-                      'Add Friend'
-                    )}
+                    {friendRequestsSent['f1'] ? 'Following' : 'Follow'}
                   </button>
                 </div>
 
@@ -1570,28 +1572,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                     className={`ai-community-join-btn ${friendRequestsSent['f2'] ? 'is-joined' : ''}`}
                     onClick={() => handleToggleFriendRequest('f2')}
                   >
-                    {friendRequestsSent['f2'] ? (
-                      <>
-                        {Icons.Check}
-                        <span>Requested</span>
-                      </>
-                    ) : (
-                      'Add Friend'
-                    )}
+                    {friendRequestsSent['f2'] ? 'Following' : 'Follow'}
                   </button>
                 </div>
-              </div>
-
-              <div style={{ marginTop: '12px' }}>
-                <a
-                  href="#explore-friends"
-                  className="ai-friends-explore-link"
-                  onClick={(e) => {
-                    e.preventDefault()
-                  }}
-                >
-                  explore more -&gt;
-                </a>
               </div>
             </div>
           </aside>
