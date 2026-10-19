@@ -377,46 +377,74 @@ export async function fetchNotificationsApi(): Promise<ApiResponse<any[]>> {
   }
 }
 
+let friendsCache: { timestamp: number; data: ApiResponse<any[]> } | null = null
+let inFlightFriendsRequest: Promise<ApiResponse<any[]>> | null = null
+
+export function invalidateFriendsCache(): void {
+  friendsCache = null
+  inFlightFriendsRequest = null
+}
+
 /**
  * Fetch accepted friends for the current user
  * Calls GET /api/friends
+ * Automatically deduplicates in-flight calls and caches responses to avoid excessive backend requests
  */
-export async function fetchMyFriendsApi(): Promise<ApiResponse<any[]>> {
-  try {
-    const baseUrl = getBaseApiUrl()
-    const endpoint = `${baseUrl}/api/friends`
-    const headers = getAuthHeaders()
+export async function fetchMyFriendsApi(force = false): Promise<ApiResponse<any[]>> {
+  const now = Date.now()
+  if (!force && friendsCache && now - friendsCache.timestamp < 30000) {
+    return friendsCache.data
+  }
 
-    const res = await fetch(endpoint, {
-      method: 'GET',
-      headers,
-      credentials: 'include',
-    })
+  if (inFlightFriendsRequest) {
+    return inFlightFriendsRequest
+  }
 
-    if (res.ok) {
-      const data = await res.json()
-      return { success: true, data: Array.isArray(data) ? data : [] }
-    }
+  inFlightFriendsRequest = (async () => {
+    try {
+      const baseUrl = getBaseApiUrl()
+      const endpoint = `${baseUrl}/api/friends`
+      const headers = getAuthHeaders()
 
-    if (res.status === 404) {
-      const fallbackEndpoint = `${baseUrl}/friends`
-      const fallbackRes = await fetch(fallbackEndpoint, {
+      const res = await fetch(endpoint, {
         method: 'GET',
         headers,
         credentials: 'include',
       })
-      if (fallbackRes.ok) {
-        const data = await fallbackRes.json()
-        return { success: true, data: Array.isArray(data) ? data : [] }
-      }
-    }
 
-    return { success: false, data: [] }
-  } catch (err: any) {
-    return {
-      success: false,
-      error: err?.message || 'Network error while fetching friends',
-      data: [],
+      if (res.ok) {
+        const data = await res.json()
+        const result: ApiResponse<any[]> = { success: true, data: Array.isArray(data) ? data : [] }
+        friendsCache = { timestamp: Date.now(), data: result }
+        return result
+      }
+
+      if (res.status === 404) {
+        const fallbackEndpoint = `${baseUrl}/friends`
+        const fallbackRes = await fetch(fallbackEndpoint, {
+          method: 'GET',
+          headers,
+          credentials: 'include',
+        })
+        if (fallbackRes.ok) {
+          const data = await fallbackRes.json()
+          const result: ApiResponse<any[]> = { success: true, data: Array.isArray(data) ? data : [] }
+          friendsCache = { timestamp: Date.now(), data: result }
+          return result
+        }
+      }
+
+      return { success: false, data: [] }
+    } catch (err: any) {
+      return {
+        success: false,
+        error: err?.message || 'Network error while fetching friends',
+        data: [],
+      }
+    } finally {
+      inFlightFriendsRequest = null
     }
-  }
+  })()
+
+  return inFlightFriendsRequest
 }

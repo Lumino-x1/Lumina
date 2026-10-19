@@ -413,16 +413,23 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         }
       })
 
+    return () => {
+      isMounted = false
+    }
+  }, [user?.id])
+
+  useEffect(() => {
+    let isMounted = true
     setIsFriendsLoading(true)
     fetchMyFriendsApi()
       .then((res) => {
         if (isMounted && res.success && Array.isArray(res.data)) {
           setFriendsCount(res.data.length)
-          const myId = user?.id || meProfile?.id
+          const myId = user?.id || meProfile?.userId || meProfile?.user?.id || meProfile?.id
           const myEmail = user?.email || (meProfile as any)?.email
           const realFriends: FriendUserItem[] = res.data.map((item: any) => {
             const isSenderMe =
-              (myId && item.sender?.id === myId) ||
+              (myId && (item.sender?.id === myId || item.senderId === myId)) ||
               (myEmail && item.sender?.email === myEmail)
             const other = isSenderMe ? item.receiver : item.sender
             return {
@@ -439,7 +446,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             }
           })
           setFriendsList(realFriends)
-        } else {
+        } else if (isMounted) {
           setFriendsList([])
           setFriendsCount(0)
         }
@@ -460,7 +467,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     return () => {
       isMounted = false
     }
-  }, [user?.id, user?.email, meProfile])
+  }, [user?.id])
 
   const filteredFriends = friendsList.filter((f) => {
     const q = friendsSearchQuery.trim().toLowerCase()
@@ -1819,7 +1826,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 >
                   <Users size={14} />
                   <span>Friends</span>
-                  <span className="ai-tab-badge-num">{friendsCount !== null ? friendsCount : friendsList.length}</span>
                 </button>
                 <button
                   type="button"
