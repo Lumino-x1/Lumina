@@ -198,6 +198,20 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
     }
   }
 
+const formatDepartment = (dept?: string): string => {
+  if (!dept) return ''
+  const trimmed = dept.trim()
+  const lower = trimmed.toLowerCase()
+  if (lower.includes('computer science')) return 'CSE'
+  if (lower.includes('information technology')) return 'IT'
+  if (lower.includes('electronics') && (lower.includes('communication') || lower.includes('telecommunication'))) return 'ECE'
+  if (lower.includes('electrical')) return 'EEE'
+  if (lower.includes('mechanical')) return 'Mech'
+  if (lower.includes('civil')) return 'Civil'
+  if (lower.includes('artificial intelligence') || lower.includes('ai & ds') || lower.includes('data science')) return 'AI & DS'
+  return trimmed
+}
+
   const handleMarkAllAsRead = () => {
     setActivities((prev) => prev.map((a) => ({ ...a, read: true })))
   }
@@ -271,7 +285,7 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                         }}
                       />
                       <span className="ai-notif-req-icon" title="Friend Request">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                           <circle cx="8.5" cy="7" r="4" />
                           <line x1="20" y1="8" x2="20" y2="14" stroke="currentColor" strokeWidth="2.5" />
@@ -281,21 +295,31 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                     </div>
 
                     <div className="ai-notif-content">
-                      <div className="ai-notif-main-text">
-                        <strong className="ai-notif-user-name">{req.name}</strong>{' '}
-                        <span className="ai-notif-action-text">requested to follow you</span>
-                      </div>
-                      <div className="ai-notif-meta-line">
-                        <span className="ai-notif-dept">{req.department}</span>
-                        {req.mutualCount && (
-                          <>
-                            <span className="ai-notif-dot">·</span>
-                            <span className="ai-notif-mutual">{req.mutualCount} mutual friends</span>
-                          </>
-                        )}
-                        <span className="ai-notif-dot">·</span>
+                      <div className="ai-notif-top-row">
+                        <div className="ai-notif-main-text">
+                          <strong className="ai-notif-user-name">{req.name}</strong>{' '}
+                          <span className="ai-notif-action-text">requested to follow you</span>
+                        </div>
                         <span className="ai-notif-time">{req.timeAgo}</span>
                       </div>
+
+                      {(req.department || req.mutualCount) && (
+                        <div className="ai-notif-meta-line">
+                          {req.department && (
+                            <span className="ai-notif-dept" title={req.department}>
+                              {formatDepartment(req.department)}
+                            </span>
+                          )}
+                          {req.department && !!req.mutualCount && (
+                            <span className="ai-notif-dot">·</span>
+                          )}
+                          {!!req.mutualCount && (
+                            <span className="ai-notif-mutual">
+                              {req.mutualCount} mutual{req.mutualCount === 1 ? '' : 's'}
+                            </span>
+                          )}
+                        </div>
+                      )}
 
                       {/* Action buttons or resolved state */}
                       {req.status === 'PENDING' ? (
@@ -319,14 +343,14 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                         </div>
                       ) : req.status === 'ACCEPTED' ? (
                         <div className="ai-notif-resolved-status is-accepted">
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                             <polyline points="20 6 9 17 4 12" />
                           </svg>
-                          Request accepted · Following
+                          <span>Request accepted · Following</span>
                         </div>
                       ) : (
                         <div className="ai-notif-resolved-status is-rejected">
-                          Request removed
+                          <span>Request removed</span>
                         </div>
                       )}
                     </div>
@@ -334,6 +358,13 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                 )
               })}
             </div>
+          </div>
+        )}
+
+        {/* Empty state for Requests tab */}
+        {activeTab === 'requests' && followRequests.length === 0 && (
+          <div className="ai-notif-empty">
+            <p className="ai-notif-empty-text">No pending follow requests</p>
           </div>
         )}
 
@@ -353,11 +384,11 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                     </span>
                   </div>
                   <div className="ai-notif-content">
-                    <div className="ai-notif-main-text">
-                      <strong className="ai-notif-user-name">{act.actorName}</strong>{' '}
-                      <span className="ai-notif-desc">{act.message}</span>
-                    </div>
-                    <div className="ai-notif-meta-line">
+                    <div className="ai-notif-top-row">
+                      <div className="ai-notif-main-text">
+                        <strong className="ai-notif-user-name">{act.actorName}</strong>{' '}
+                        <span className="ai-notif-desc">{act.message}</span>
+                      </div>
                       <span className="ai-notif-time">{act.timeAgo}</span>
                     </div>
                   </div>
@@ -365,6 +396,13 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Empty state for All tab */}
+        {activeTab === 'all' && followRequests.length === 0 && activities.length === 0 && (
+          <div className="ai-notif-empty">
+            <p className="ai-notif-empty-text">No notifications right now</p>
           </div>
         )}
       </div>
