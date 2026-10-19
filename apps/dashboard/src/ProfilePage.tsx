@@ -479,10 +479,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     fetchRecommendedStudentsApi(collegeId, 5)
       .then((data) => {
         if (!isMounted) return
-        setRecommendedStudents(data || [])
-        if (data && data.length > 0) {
+        const activeSuggestions = (data || []).filter(
+          (s) => !s.isFriend && s.friendshipStatus !== 'ACCEPTED'
+        )
+        setRecommendedStudents(activeSuggestions)
+        if (activeSuggestions.length > 0) {
           const fromRecs: Record<string, string> = {}
-          data.forEach((student) => {
+          activeSuggestions.forEach((student) => {
             if (student.friendshipStatus === 'PENDING' && student.id) {
               fromRecs[student.id] = student.requestId || student.id
             }

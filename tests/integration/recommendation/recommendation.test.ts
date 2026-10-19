@@ -231,5 +231,62 @@ describe('Recommendation | GET /recommendation/:collegeId & /api/recommendation/
     expect(resAccepted.body.isFriend).toBe(true)
     expect(resAccepted.body.hasPendingRequest).toBe(false)
   })
+
+  it('excludes users who are already friends from friend recommendations', async () => {
+    const college = await createCollege({
+      name: 'PSG College of Technology',
+      slug: 'psg-tech-friends-exclude',
+      domain: 'psgtech4.edu',
+    })
+
+    const currentUser = await createTestUser({
+      name: 'Current User',
+      email: 'current@psgtech4.edu',
+      collegeId: college.id,
+      role: 'STUDENT',
+    })
+
+    const existingFriend = await createTestUser({
+      name: 'Already Friend',
+      email: 'friend@psgtech4.edu',
+      collegeId: college.id,
+      role: 'STUDENT',
+    })
+    await createProfile(existingFriend.id, { firstName: 'Already', lastName: 'Friend' })
+
+    const nonFriend = await createTestUser({
+      name: 'Not Friend',
+      email: 'nonfriend@psgtech4.edu',
+      collegeId: college.id,
+      role: 'STUDENT',
+    })
+    await createProfile(nonFriend.id, { firstName: 'Not', lastName: 'Friend' })
+
+    // Create an ACCEPTED friendship between currentUser and existingFriend
+    await prisma.friendRequest.create({
+      data: {
+        senderId: currentUser.id,
+        receiverId: existingFriend.id,
+        status: 'ACCEPTED',
+      },
+    })
+
+    const request = (await import('supertest')).default
+    const res = await request(app)
+      .get(`/api/recommendation/${college.id}`)
+      .set('Origin', 'http://localhost:3000')
+      .set('x-test-user-id', currentUser.id)
+
+    expect(res.status).toBe(200)
+    expect(res.body.success).toBe(true)
+
+    // Verify existingFriend is NOT in recommendations
+    const foundFriend = res.body.students.find((s: any) => s.id === existingFriend.id)
+    expect(foundFriend).toBeUndefined()
+
+    // Verify nonFriend IS in recommendations
+    const foundNonFriend = res.body.students.find((s: any) => s.id === nonFriend.id)
+    expect(foundNonFriend).toBeDefined()
+  })
 })
 

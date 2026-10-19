@@ -233,28 +233,47 @@ export namespace RecommendationService {
     const college = await RecommendationRepo.findCollege(collegeId)
     const targetCollegeId = college?.id || collegeId
 
-    let users = await RecommendationRepo.findRecommendedStudents(
+    // 1. Find all user IDs who are already accepted friends with currentUserId
+    const friendUserIds = currentUserId
+      ? await RecommendationRepo.findFriendUserIds(currentUserId)
+      : []
+
+    // Exclude current user + all existing accepted friends
+    const excludeIds = new Set<string>()
+    if (currentUserId) excludeIds.add(currentUserId)
+    for (const fId of friendUserIds) {
+      excludeIds.add(fId)
+    }
+
+    const excludeArray = Array.from(excludeIds)
+
+    // 2. Fetch candidates from target college, excluding existing friends and self
+    let candidates = await RecommendationRepo.findRecommendedStudents(
       targetCollegeId,
-      currentUserId,
+      excludeArray,
       limit
     )
 
-    // If we have fewer than limit users in this college, supplement with fallback students
-    if (users.length < limit) {
-      const existingIds = new Set(users.map((u) => u.id))
-      if (currentUserId) existingIds.add(currentUserId)
+    // Filter out any candidates that are in excludeIds (defensive check)
+    candidates = candidates.filter((u) => !excludeIds.has(u.id))
 
-      const fallbacks = await RecommendationRepo.findFallbackStudents(currentUserId, limit * 2)
+    // 3. If fewer than limit, supplement with fallback students (also excluding existing friends and self)
+    if (candidates.length < limit) {
+      const existingCandidateIds = new Set(candidates.map((u) => u.id))
+      const allExclude = Array.from(new Set([...excludeArray, ...existingCandidateIds]))
+      const fallbacks = await RecommendationRepo.findFallbackStudents(allExclude, limit * 2)
+
       for (const fb of fallbacks) {
-        if (!existingIds.has(fb.id)) {
-          existingIds.add(fb.id)
-          users.push(fb)
-          if (users.length >= limit) break
+        if (!excludeIds.has(fb.id) && !existingCandidateIds.has(fb.id)) {
+          existingCandidateIds.add(fb.id)
+          candidates.push(fb)
+          if (candidates.length >= limit) break
         }
       }
     }
 
-    const studentUserIds = users.slice(0, limit).map((u) => u.id)
+    // 4. Fetch friend requests to check status for remaining candidates
+    const studentUserIds = candidates.map((u) => u.id)
     const requestMap = new Map<string, { id: string; senderId: string; receiverId: string; status: string }>()
 
     if (currentUserId && studentUserIds.length > 0) {
@@ -271,7 +290,18 @@ export namespace RecommendationService {
       }
     }
 
-    const students: RecommendedStudent[] = users.slice(0, limit).map((u) => {
+    // 5. Build students list, explicitly skipping anyone who is already a friend (isFriend === true or ACCEPTED)
+    const students: RecommendedStudent[] = []
+
+    for (const u of candidates) {
+      const req = requestMap.get(u.id) || null
+      const statusInfo = computePersonRequestStatus(currentUserId, u.id, req)
+
+      // NEGLECT IF ALREADY FRIENDS
+      if (statusInfo.isFriend || statusInfo.status === 'ACCEPTED') {
+        continue
+      }
+
       const firstName = u.profile?.firstName?.trim()
       const lastName = u.profile?.lastName?.trim()
       const profileFullName = [firstName, lastName].filter(Boolean).join(' ')
@@ -286,10 +316,7 @@ export namespace RecommendationService {
         college?.name ||
         'PSG College of Technology'
 
-      const req = requestMap.get(u.id) || null
-      const statusInfo = computePersonRequestStatus(currentUserId, u.id, req)
-
-      return {
+      students.push({
         id: u.id,
         name: fullName,
         username: u.username || null,
@@ -307,8 +334,10 @@ export namespace RecommendationService {
         canSendRequest: statusInfo.canSendRequest,
         canCancelRequest: statusInfo.canCancelRequest,
         requestId: statusInfo.requestId,
-      }
-    })
+      })
+
+      if (students.length >= limit) break
+    }
 
     return {
       success: true,

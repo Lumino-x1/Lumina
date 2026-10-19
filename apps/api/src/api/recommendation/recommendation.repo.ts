@@ -14,16 +14,47 @@ export namespace RecommendationRepo {
     })
   }
 
+  /**
+   * Finds all user IDs who have an accepted friendship with the given user.
+   */
+  export async function findFriendUserIds(currentUserId: string): Promise<string[]> {
+    if (!currentUserId) return []
+    const accepted = await prisma.friendRequest.findMany({
+      where: {
+        status: 'ACCEPTED',
+        OR: [
+          { senderId: currentUserId },
+          { receiverId: currentUserId },
+        ],
+      },
+      select: {
+        senderId: true,
+        receiverId: true,
+      },
+    })
+
+    const friendIds = new Set<string>()
+    for (const r of accepted) {
+      if (r.senderId === currentUserId && r.receiverId) {
+        friendIds.add(r.receiverId)
+      } else if (r.receiverId === currentUserId && r.senderId) {
+        friendIds.add(r.senderId)
+      }
+    }
+    return Array.from(friendIds)
+  }
+
   export async function findRecommendedStudents(
     collegeId: string,
-    excludeUserId?: string,
+    excludeUserIds: string[] = [],
     limit: number = 5
   ) {
     return prisma.user.findMany({
-      where: excludeUserId
-        ? { collegeId, id: { not: excludeUserId } }
-        : { collegeId },
-      take: limit,
+      where: {
+        collegeId,
+        ...(excludeUserIds.length > 0 ? { id: { notIn: excludeUserIds } } : {}),
+      },
+      take: Math.max(limit * 2, 10),
       orderBy: [
         { createdAt: 'desc' },
       ],
@@ -63,12 +94,12 @@ export namespace RecommendationRepo {
     })
   }
 
-  export async function findFallbackStudents(excludeUserId?: string, limit: number = 5) {
+  export async function findFallbackStudents(excludeUserIds: string[] = [], limit: number = 5) {
     return prisma.user.findMany({
-      where: excludeUserId
-        ? { id: { not: excludeUserId } }
+      where: excludeUserIds.length > 0
+        ? { id: { notIn: excludeUserIds } }
         : undefined,
-      take: limit,
+      take: Math.max(limit * 2, 10),
       orderBy: [
         { createdAt: 'desc' },
       ],

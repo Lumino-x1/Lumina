@@ -94,6 +94,19 @@ function getAuthHeaders(): Record<string, string> {
   } catch {
     // ignore
   }
+
+  try {
+    const userStr = localStorage.getItem('lumina_user')
+    if (userStr) {
+      const u = JSON.parse(userStr)
+      if (u?.id) {
+        headers['x-user-id'] = u.id
+      }
+    }
+  } catch {
+    // ignore
+  }
+
   return headers
 }
 
@@ -103,8 +116,25 @@ export async function fetchRecommendedStudentsApi(
 ): Promise<RecommendedStudent[]> {
   try {
     const baseUrl = getBaseApiUrl()
-    const endpoint = `${baseUrl}/api/recommendation/${encodeURIComponent(collegeId)}?limit=${limit}`
     const headers = getAuthHeaders()
+
+    let currentUserId = ''
+    try {
+      const userStr = localStorage.getItem('lumina_user')
+      if (userStr) {
+        const u = JSON.parse(userStr)
+        if (u?.id) currentUserId = u.id
+      }
+    } catch {
+      // ignore
+    }
+
+    const queryParams = new URLSearchParams({ limit: String(limit) })
+    if (currentUserId) {
+      queryParams.set('userId', currentUserId)
+    }
+
+    const endpoint = `${baseUrl}/api/recommendation/${encodeURIComponent(collegeId)}?${queryParams.toString()}`
 
     const res = await fetch(endpoint, {
       method: 'GET',
@@ -114,7 +144,7 @@ export async function fetchRecommendedStudentsApi(
 
     if (!res.ok) {
       // Fallback try root alias /recommendation/:collegeId
-      const fallbackEndpoint = `${baseUrl}/recommendation/${encodeURIComponent(collegeId)}?limit=${limit}`
+      const fallbackEndpoint = `${baseUrl}/recommendation/${encodeURIComponent(collegeId)}?${queryParams.toString()}`
       const fallbackRes = await fetch(fallbackEndpoint, {
         method: 'GET',
         headers,
@@ -125,14 +155,14 @@ export async function fetchRecommendedStudentsApi(
       }
       const data: RecommendationResponse = await fallbackRes.json()
       if (Array.isArray(data.students)) {
-        return data.students
+        return data.students.filter((s) => !s.isFriend && s.friendshipStatus !== 'ACCEPTED')
       }
       return []
     }
 
     const data: RecommendationResponse = await res.json()
     if (Array.isArray(data.students)) {
-      return data.students
+      return data.students.filter((s) => !s.isFriend && s.friendshipStatus !== 'ACCEPTED')
     }
     return []
   } catch (err) {
