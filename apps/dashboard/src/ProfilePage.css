@@ -1518,6 +1518,36 @@
   color: #1C1A17 !important;
 }
 
+/* Blue Tick Verified Badge */
+.ai-linkedin-blue-tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  vertical-align: middle;
+  line-height: 1;
+  margin-left: 2px;
+  cursor: default;
+  transition: transform 0.15s ease;
+}
+
+.ai-linkedin-blue-tick:hover {
+  transform: scale(1.1);
+}
+
+.ai-linkedin-blue-tick svg {
+  display: block;
+  flex-shrink: 0;
+  fill: #0a66c2 !important;
+  stroke: #ffffff !important;
+}
+
+.lumina-ai-profile-root.dark .ai-linkedin-blue-tick svg,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-blue-tick svg {
+  fill: #388fe6 !important;
+  stroke: #ffffff !important;
+}
+
 .ai-linkedin-verify-badge {
   display: inline-flex;
   align-items: center;
@@ -3845,6 +3875,11 @@
     font-size: 19px !important;
   }
 
+  .lumina-ai-profile-root .ai-linkedin-blue-tick svg {
+    width: 19px !important;
+    height: 19px !important;
+  }
+
   .lumina-ai-profile-root .ai-linkedin-verify-badge {
     font-size: 12px !important;
     padding: 2px 9px !important;
@@ -4056,6 +4091,11 @@
     word-break: break-word !important;
   }
 
+  .lumina-ai-profile-root .ai-linkedin-blue-tick svg {
+    width: 17px !important;
+    height: 17px !important;
+  }
+
   .lumina-ai-profile-root .ai-linkedin-verify-badge {
     font-size: 11.5px !important;
     padding: 2px 8px !important;
@@ -4228,6 +4268,11 @@
   .lumina-ai-profile-root .ai-linkedin-name {
     font-size: 16px !important;
     line-height: 1.2 !important;
+  }
+
+  .lumina-ai-profile-root .ai-linkedin-blue-tick svg {
+    width: 15px !important;
+    height: 15px !important;
   }
 
   .lumina-ai-profile-root .ai-linkedin-verify-badge {
@@ -5315,9 +5360,9 @@
 }
 
 /* Lucide and UI icons default to light cream stroke */
-.dark .lumina-ai-profile-root svg:not(.ai-top-create-btn svg):not(.ai-linkedin-org-icon svg):not(.ai-profile-avatar-main svg):not(.ai-linkedin-silhouette svg):not(.ai-award-medal-icon svg),
-.lumina-ai-profile-root.dark svg:not(.ai-top-create-btn svg):not(.ai-linkedin-org-icon svg):not(.ai-profile-avatar-main svg):not(.ai-linkedin-silhouette svg):not(.ai-award-medal-icon svg),
-[data-theme='dark'] .lumina-ai-profile-root svg:not(.ai-top-create-btn svg):not(.ai-linkedin-org-icon svg):not(.ai-profile-avatar-main svg):not(.ai-linkedin-silhouette svg):not(.ai-award-medal-icon svg) {
+.dark .lumina-ai-profile-root svg:not(.ai-top-create-btn svg):not(.ai-linkedin-org-icon svg):not(.ai-profile-avatar-main svg):not(.ai-linkedin-silhouette svg):not(.ai-award-medal-icon svg):not(.ai-linkedin-blue-tick svg),
+.lumina-ai-profile-root.dark svg:not(.ai-top-create-btn svg):not(.ai-linkedin-org-icon svg):not(.ai-profile-avatar-main svg):not(.ai-linkedin-silhouette svg):not(.ai-award-medal-icon svg):not(.ai-linkedin-blue-tick svg),
+[data-theme='dark'] .lumina-ai-profile-root svg:not(.ai-top-create-btn svg):not(.ai-linkedin-org-icon svg):not(.ai-profile-avatar-main svg):not(.ai-linkedin-silhouette svg):not(.ai-award-medal-icon svg):not(.ai-linkedin-blue-tick svg) {
   stroke: #B1ADA1 !important;
 }
 

@@ -25,7 +25,7 @@ import {
   Award,
   ArrowLeft,
   Pencil,
-  ShieldCheck,
+  BadgeCheck,
 } from 'lucide-react'
 import './ProfilePage.css'
 import './DashboardPage.css'
@@ -1458,18 +1458,21 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               <div className="ai-linkedin-info-grid">
                 {/* Left Column */}
                 <div className="ai-linkedin-left-col">
-                  {/* Name + Verify badge */}
+                  {/* Name + Blue Tick Verified Badge */}
                   <div className="ai-linkedin-name-row">
                     <h1 className="ai-linkedin-name" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.name}</h1>
-                    <button
-                      type="button"
-                      className="ai-linkedin-verify-badge"
-                      style={isDark ? { color: '#B1ADA1', borderColor: 'rgba(177, 173, 161, 0.4)' } : undefined}
-                      onClick={() => alert('Verify your profile with student ID or government credentials.')}
+                    <span
+                      className="ai-linkedin-blue-tick"
+                      title="Verified Student Profile"
+                      aria-label="Verified Profile"
                     >
-                      <ShieldCheck size={16} strokeWidth={2.2} color={isDark ? '#B1ADA1' : undefined} />
-                      <span style={isDark ? { color: '#B1ADA1' } : undefined}>Verify</span>
-                    </button>
+                      <BadgeCheck
+                        size={21}
+                        fill={isDark ? '#388fe6' : '#0a66c2'}
+                        color="#ffffff"
+                        strokeWidth={2.2}
+                      />
+                    </span>
                   </div>
 
                   {/* Headline */}
