@@ -6168,8 +6168,8 @@
 }
 
 .lumina-ai-profile-root.light .ai-dm-textarea {
-  background-color: #FFFFFF;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: #EDECE6 !important;
+  border: 1px solid rgba(177, 173, 161, 0.6) !important;
   color: #111827;
 }
 
