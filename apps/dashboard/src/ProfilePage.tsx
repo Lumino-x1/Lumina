@@ -727,6 +727,46 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     (typeof user?.college === 'string' ? user.college : (user as any)?.college?.name) ||
     'PSG College of Technology'
 
+  const resolvedDepartment =
+    meProfile?.department?.name ||
+    (typeof meProfile?.department === 'string' ? meProfile.department : null) ||
+    (typeof user?.department === 'string' ? user.department : (user as any)?.department?.name) ||
+    'Computer Science & Engineering'
+
+  const resolvedDeptCode =
+    (meProfile?.department as any)?.code ||
+    (user as any)?.departmentCode ||
+    (() => {
+      const lower = resolvedDepartment.toLowerCase()
+      if (lower.includes('computer science') || lower.includes('cse')) return 'CSE'
+      if (lower.includes('information tech') || lower.includes(' it')) return 'IT'
+      if (lower.includes('electrical') && lower.includes('electronics')) return 'EEE'
+      if (lower.includes('electronics') && lower.includes('comm')) return 'ECE'
+      if (lower.includes('mechanical')) return 'Mech'
+      if (lower.includes('civil')) return 'Civil'
+      if (lower.includes('artificial intelligence') || lower.includes('ai')) return 'AI & DS'
+      if (resolvedDepartment.length <= 6) return resolvedDepartment
+      return 'CSE'
+    })()
+
+  const rawYear =
+    meProfile?.year ??
+    (meProfile as any)?.profile?.year ??
+    user?.year ??
+    (user as any)?.profile?.year ??
+    null
+
+  const formatYearRole = (yr: number | string | null | undefined): string => {
+    if (!yr) return 'Undergraduate'
+    const num = typeof yr === 'string' ? parseInt(yr, 10) : yr
+    if (num === 1) return '1st Year Undergraduate'
+    if (num === 2) return '2nd Year Undergraduate'
+    if (num === 3) return '3rd Year Undergraduate'
+    if (num === 4) return 'Final Year Undergraduate'
+    if (typeof yr === 'string' && yr.trim()) return yr.trim()
+    return 'Undergraduate'
+  }
+
   const resolvedImage =
     meProfile?.profilePicture ||
     meProfile?.user?.image ||
@@ -742,7 +782,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const resolvedHeadline =
     (meProfile as any)?.headline ||
     (user as any)?.headline ||
-    'CSE Undergraduate @ PSG College of Technology | Backend & Systems Engineering'
+    `${resolvedDeptCode} ${formatYearRole(rawYear)} @ ${resolvedCollege} | Backend & Systems Engineering`
 
   const resolvedLocation =
     meProfile?.location ||
@@ -761,7 +801,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     avatar: resolvedImage,
     hasCustomAvatar,
     university: resolvedCollege,
-    department: meProfile?.department?.name || user?.department || "B.S. & M.S. in Computer Science (Systems & AI, '26)",
+    department: resolvedDepartment,
     headline: resolvedHeadline,
     bio: meProfile?.bio || 'Building distributed consensus algorithms & neural infrastructure. Previously research intern @ Stanford AI Lab. Passionate about systems engineering, peer mentorship, and open-source tooling.',
     location: resolvedLocation,
@@ -1474,7 +1514,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                         <rect x="17" y="17" width="10" height="10" rx="1.5" fill="#546E7A" />
                       </svg>
                     </div>
-                    <span className="ai-linkedin-org-name">+ 1 more</span>
+                    <span className="ai-linkedin-org-name">{profile.department}</span>
                   </div>
 
                   <div className="ai-linkedin-org-item">

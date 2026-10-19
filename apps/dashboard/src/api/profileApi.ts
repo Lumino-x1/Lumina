@@ -58,8 +58,8 @@ export interface ProfileData {
     collegeId?: string | null
     departmentId?: string | null
   }
-  college?: { id?: string; name: string } | null
-  department?: { id?: string; name: string } | null
+  college?: { id?: string; name: string; shortName?: string | null } | null
+  department?: { id?: string; name: string; code?: string | null } | null
 }
 
 export interface MergedUser {
@@ -78,8 +78,10 @@ export interface MergedUser {
   bio?: string | null
   about?: string | null
   college?: string | null
+  collegeShort?: string | null
   collegeId?: string | null
   department?: string | null
+  departmentCode?: string | null
   location?: string | null
   hometown?: string | null
   batch?: string | null
@@ -265,6 +267,10 @@ export function buildMergedUser(
     bio: profile?.bio || p?.profile?.bio || null,
     about: profile?.about || p?.profile?.about || null,
     college: collegeName,
+    collegeShort:
+      (typeof profile?.college === 'object' && profile?.college?.shortName) ||
+      (typeof p?.profile?.college === 'object' && p?.profile?.college?.shortName) ||
+      null,
     collegeId:
       profile?.user?.collegeId ||
       p?.user?.collegeId ||
@@ -273,6 +279,10 @@ export function buildMergedUser(
       p?.college?.id ||
       null,
     department: departmentName,
+    departmentCode:
+      (typeof profile?.department === 'object' && profile?.department?.code) ||
+      (typeof p?.profile?.department === 'object' && p?.profile?.department?.code) ||
+      null,
     location: profile?.location || p?.profile?.location || profile?.hometown || null,
     hometown: profile?.hometown || p?.profile?.hometown || null,
     batch: batchVal,

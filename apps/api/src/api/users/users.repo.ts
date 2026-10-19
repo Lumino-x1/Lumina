@@ -55,6 +55,7 @@ export namespace UsersRepo {
           select: {
             id: true,
             name: true,
+            shortName: true,
           },
         },
 
@@ -62,6 +63,7 @@ export namespace UsersRepo {
           select: {
             id: true,
             name: true,
+            code: true,
           },
         },
       },
