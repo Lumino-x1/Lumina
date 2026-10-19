@@ -1140,6 +1140,17 @@
   color: var(--ai-text-primary);
 }
 
+.lumina-ai-profile-root .ai-bell-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.lumina-ai-profile-root .ai-bell-btn.is-active {
+  background-color: var(--ai-card-hover, rgba(255, 255, 255, 0.08)) !important;
+  color: var(--ai-text-primary, #E6E4DD) !important;
+}
+
 .lumina-ai-profile-root .ai-bell-dot {
   position: absolute;
   top: 7px;

@@ -43,6 +43,7 @@ import {
   cancelFriendRequestApi,
   fetchOutgoingRequestsApi,
 } from './api/friendsApi'
+import { NotificationDropdown } from './components/NotificationDropdown'
 import { fetchMyProfile, type ProfileData } from './api/profileApi'
 import {
   type ScheduledPostItem,
@@ -424,6 +425,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [friendRequestsSent, setFriendRequestsSent] = useState<Record<string, string | boolean>>({})
   const [recommendedStudents, setRecommendedStudents] = useState<RecommendedStudent[]>([])
   const [isRecommendationsLoading, setIsRecommendationsLoading] = useState<boolean>(true)
+
+  const [notificationsOpen, setNotificationsOpen] = useState<boolean>(false)
+  const [unreadNotifCount, setUnreadNotifCount] = useState<number>(2)
 
   // Fetch initial outgoing pending friend requests
   useEffect(() => {
@@ -1448,14 +1452,25 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             </div>
 
             {/* Bell Notifications */}
-            <button
-              type="button"
-              className="ai-top-icon-btn ai-bell-btn"
-              title="Notifications"
-            >
-              {Icons.Bell}
-              <span className="ai-bell-dot" />
-            </button>
+            <div className="ai-bell-wrap" style={{ position: 'relative' }}>
+              <button
+                type="button"
+                className={`ai-top-icon-btn ai-bell-btn ${notificationsOpen ? 'is-active' : ''}`}
+                onClick={() => setNotificationsOpen((prev) => !prev)}
+                title="Notifications"
+                aria-label="Notifications"
+                aria-expanded={notificationsOpen}
+              >
+                {Icons.Bell}
+                {unreadNotifCount > 0 && <span className="ai-bell-dot" />}
+              </button>
+
+              <NotificationDropdown
+                isOpen={notificationsOpen}
+                onClose={() => setNotificationsOpen(false)}
+                onUnreadCountChange={setUnreadNotifCount}
+              />
+            </div>
 
             {/* Theme Toggle Button */}
             <button

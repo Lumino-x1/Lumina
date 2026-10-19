@@ -227,3 +227,121 @@ export async function unfriendApi(
     }
   }
 }
+
+/**
+ * Fetch incoming pending friend requests
+ * Calls GET /api/friends/requests/incoming
+ */
+export async function fetchIncomingRequestsApi(): Promise<ApiResponse<any[]>> {
+  try {
+    const baseUrl = getBaseApiUrl()
+    const endpoint = `${baseUrl}/api/friends/requests/incoming`
+    const headers = getAuthHeaders()
+
+    const res = await fetch(endpoint, {
+      method: 'GET',
+      headers,
+      credentials: 'include',
+    })
+
+    if (res.ok) {
+      const data = await res.json()
+      return { success: true, data }
+    }
+
+    if (res.status === 404) {
+      const fallbackEndpoint = `${baseUrl}/friends/requests/incoming`
+      const fallbackRes = await fetch(fallbackEndpoint, {
+        method: 'GET',
+        headers,
+        credentials: 'include',
+      })
+      if (fallbackRes.ok) {
+        const data = await fallbackRes.json()
+        return { success: true, data }
+      }
+    }
+
+    const errorJson = await res.json().catch(() => ({}))
+    return {
+      success: false,
+      error: errorJson.message || `Failed to fetch incoming requests: ${res.status}`,
+    }
+  } catch (err: any) {
+    console.error('fetchIncomingRequestsApi error:', err)
+    return {
+      success: false,
+      error: err?.message || 'Network error while fetching incoming requests',
+    }
+  }
+}
+
+/**
+ * Accept a friend request
+ * Calls PATCH /api/friends/request/:requestId/accept
+ */
+export async function acceptFriendRequestApi(requestId: string): Promise<ApiResponse> {
+  try {
+    const baseUrl = getBaseApiUrl()
+    const endpoint = `${baseUrl}/api/friends/request/${encodeURIComponent(requestId)}/accept`
+    const headers = getAuthHeaders()
+
+    const res = await fetch(endpoint, {
+      method: 'PATCH',
+      headers,
+      credentials: 'include',
+    })
+
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}))
+      return { success: true, data }
+    }
+
+    const errorJson = await res.json().catch(() => ({}))
+    return {
+      success: false,
+      error: errorJson.message || `Failed to accept friend request: ${res.status}`,
+    }
+  } catch (err: any) {
+    console.error('acceptFriendRequestApi error:', err)
+    return {
+      success: false,
+      error: err?.message || 'Network error while accepting friend request',
+    }
+  }
+}
+
+/**
+ * Reject a friend request
+ * Calls PATCH /api/friends/request/:requestId/reject
+ */
+export async function rejectFriendRequestApi(requestId: string): Promise<ApiResponse> {
+  try {
+    const baseUrl = getBaseApiUrl()
+    const endpoint = `${baseUrl}/api/friends/request/${encodeURIComponent(requestId)}/reject`
+    const headers = getAuthHeaders()
+
+    const res = await fetch(endpoint, {
+      method: 'PATCH',
+      headers,
+      credentials: 'include',
+    })
+
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}))
+      return { success: true, data }
+    }
+
+    const errorJson = await res.json().catch(() => ({}))
+    return {
+      success: false,
+      error: errorJson.message || `Failed to reject friend request: ${res.status}`,
+    }
+  } catch (err: any) {
+    console.error('rejectFriendRequestApi error:', err)
+    return {
+      success: false,
+      error: err?.message || 'Network error while rejecting friend request',
+    }
+  }
+}

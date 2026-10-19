@@ -43,6 +43,7 @@ import {
   cancelFriendRequestApi,
   fetchOutgoingRequestsApi,
 } from './api/friendsApi'
+import { NotificationDropdown } from './components/NotificationDropdown'
 
 export type DashboardUser = MergedUser
 
@@ -417,6 +418,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   const [friendRequestsSent, setFriendRequestsSent] = useState<Record<string, string | boolean>>({})
   const [recommendedStudents, setRecommendedStudents] = useState<RecommendedStudent[]>([])
   const [isRecommendationsLoading, setIsRecommendationsLoading] = useState<boolean>(true)
+
+  const [notificationsOpen, setNotificationsOpen] = useState<boolean>(false)
+  const [unreadNotifCount, setUnreadNotifCount] = useState<number>(2)
 
   // Fetch initial outgoing pending friend requests
   useEffect(() => {
@@ -1205,15 +1209,25 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             </button>
 
             {/* Bell Notifications */}
-            <button
-              type="button"
-              className="ai-top-icon-btn ai-bell-btn is-unimplemented"
-              title="Notifications (Coming Soon)"
-              tabIndex={-1}
-            >
-              {Icons.Bell}
-              <span className="ai-bell-dot" />
-            </button>
+            <div className="ai-bell-wrap" style={{ position: 'relative' }}>
+              <button
+                type="button"
+                className={`ai-top-icon-btn ai-bell-btn ${notificationsOpen ? 'is-active' : ''}`}
+                onClick={() => setNotificationsOpen((prev) => !prev)}
+                title="Notifications"
+                aria-label="Notifications"
+                aria-expanded={notificationsOpen}
+              >
+                {Icons.Bell}
+                {unreadNotifCount > 0 && <span className="ai-bell-dot" />}
+              </button>
+
+              <NotificationDropdown
+                isOpen={notificationsOpen}
+                onClose={() => setNotificationsOpen(false)}
+                onUnreadCountChange={setUnreadNotifCount}
+              />
+            </div>
 
             {/* Theme Toggle Button */}
             <button
