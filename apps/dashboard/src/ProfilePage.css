@@ -2199,13 +2199,18 @@
   border: none;
   cursor: pointer;
   flex-shrink: 0;
-  transition: all 0.15s ease;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
-.lumina-ai-profile-root .ai-minimal-post-btn:hover {
-  background-color: var(--ai-btn-primary-hover, #A94F30);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(193, 95, 60, 0.35);
+.lumina-ai-profile-root .ai-minimal-post-btn:hover,
+.lumina-ai-profile-root .ai-minimal-post-btn:focus,
+.lumina-ai-profile-root .ai-minimal-post-btn:focus-visible,
+.lumina-ai-profile-root .ai-minimal-post-btn:active {
+  background-color: var(--ai-btn-primary-bg, #C15F3C) !important;
+  transform: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .lumina-ai-profile-root.light .ai-minimal-composer-card {
