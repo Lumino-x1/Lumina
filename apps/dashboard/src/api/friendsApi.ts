@@ -345,3 +345,34 @@ export async function rejectFriendRequestApi(requestId: string): Promise<ApiResp
     }
   }
 }
+
+/**
+ * Fetch user activity notifications
+ * Calls GET /api/notifications
+ */
+export async function fetchNotificationsApi(): Promise<ApiResponse<any[]>> {
+  try {
+    const baseUrl = getBaseApiUrl()
+    const endpoint = `${baseUrl}/api/notifications`
+    const headers = getAuthHeaders()
+
+    const res = await fetch(endpoint, {
+      method: 'GET',
+      headers,
+      credentials: 'include',
+    })
+
+    if (res.ok) {
+      const data = await res.json()
+      return { success: true, data: Array.isArray(data) ? data : [] }
+    }
+
+    return { success: false, data: [] }
+  } catch (err: any) {
+    return {
+      success: false,
+      error: err?.message || 'Network error while fetching notifications',
+      data: [],
+    }
+  }
+}

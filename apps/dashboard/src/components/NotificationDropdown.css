@@ -1,5 +1,10 @@
 /* Notification Dropdown / Panel Styling */
 
+/* Mobile Backdrop */
+.ai-notif-backdrop {
+  display: none;
+}
+
 .ai-notifications-dropdown {
   position: absolute;
   top: calc(100% + 8px);
@@ -296,36 +301,6 @@
   flex-shrink: 0;
 }
 
-.ai-notif-meta-line {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11px;
-  color: var(--ai-text-muted, #8E897D);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 1px;
-}
-
-.ai-notif-dept {
-  font-weight: 500;
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ai-notif-dot {
-  opacity: 0.5;
-  flex-shrink: 0;
-}
-
-.ai-notif-mutual {
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
 /* Actions */
 .ai-notif-actions {
   display: flex;
@@ -416,15 +391,68 @@
   margin-top: 5px;
 }
 
-.ai-notif-empty {
-  padding: 24px 16px;
-  text-align: center;
+/* Loading State */
+.ai-notif-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 36px 16px;
   color: var(--ai-text-muted, #8E897D);
+  font-size: 12px;
 }
 
-.ai-notif-empty-text {
+.ai-notif-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(193, 95, 60, 0.25);
+  border-top-color: #C15F3C;
+  border-radius: 50%;
+  animation: notifSpin 0.7s linear infinite;
+}
+
+@keyframes notifSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Empty State */
+.ai-notif-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 20px;
+  text-align: center;
+}
+
+.ai-notif-empty-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--ai-card-hover, rgba(255, 255, 255, 0.05));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ai-text-muted, #8E897D);
+  margin-bottom: 10px;
+}
+
+.ai-notif-empty-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ai-text-primary, #E6E4DD);
+  margin: 0 0 4px 0;
+}
+
+.ai-notif-empty-desc {
   font-size: 12px;
+  color: var(--ai-text-muted, #8E897D);
   margin: 0;
+  max-width: 220px;
+  line-height: 1.4;
 }
 
 /* Footer */
@@ -447,7 +475,69 @@
   color: #C15F3C;
 }
 
-/* Light Theme Overrides */
+/* ==========================================================================
+   Responsive Breakpoints: Mobile, Tablet & Touch Devices
+   ========================================================================== */
+
+@media (max-width: 480px) {
+  .ai-notif-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1040;
+  }
+
+  .ai-notifications-dropdown {
+    position: fixed;
+    top: 56px;
+    left: 10px;
+    right: 10px;
+    width: auto;
+    max-width: none;
+    max-height: calc(100dvh - 72px);
+    border-radius: 14px;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    z-index: 1050;
+  }
+
+  .ai-notif-body {
+    max-height: calc(100dvh - 190px);
+  }
+
+  .ai-notif-header {
+    padding: 12px 14px;
+  }
+
+  .ai-notif-item {
+    padding: 10px 14px;
+  }
+
+  .ai-notif-actions {
+    margin-top: 8px;
+    gap: 8px;
+  }
+
+  .ai-notif-btn-confirm,
+  .ai-notif-btn-delete {
+    height: 32px;
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .ai-notifications-dropdown {
+    width: 340px;
+    max-width: calc(100vw - 24px);
+  }
+}
+
+/* ==========================================================================
+   Light Theme Overrides
+   ========================================================================== */
+
 .lumina-ai-dashboard-root.light .ai-notifications-dropdown,
 .lumina-ai-profile-root.light .ai-notifications-dropdown {
   background-color: #FFFFFF;
@@ -511,6 +601,17 @@
 .lumina-ai-profile-root.light .ai-notif-section-count {
   background-color: #EDEBE6;
   color: #635F55;
+}
+
+.lumina-ai-dashboard-root.light .ai-notif-empty-icon,
+.lumina-ai-profile-root.light .ai-notif-empty-icon {
+  background-color: #F3F1EC;
+  color: #8E897D;
+}
+
+.lumina-ai-dashboard-root.light .ai-notif-empty-title,
+.lumina-ai-profile-root.light .ai-notif-empty-title {
+  color: #1A1918;
 }
 
 .lumina-ai-dashboard-root.light .ai-notif-footer,
