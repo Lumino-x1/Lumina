@@ -6,8 +6,6 @@ import {
   initiateSocialAuth,
   signInApi,
   signUpApi,
-  HARDCODED_TEST_USER,
-  isHardcodedTestCredentials,
 } from '@/api/authApi'
 import DotGrid from '@/components/ui/dot-grid'
 import { GrainGradient } from '@paper-design/shaders-react'
@@ -169,28 +167,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
     if (!loginEmail.trim() || !loginPassword) {
       setErrorMessage('Please enter both your email and password.')
-      return
-    }
-
-    // Check hardcoded credentials for UI testing (bypasses OTP completely)
-    if (isHardcodedTestCredentials(loginEmail, loginPassword)) {
-      setLoading(true)
-      try {
-        localStorage.setItem('lumina_hardcoded_user', 'true')
-        localStorage.setItem('lumina_user', JSON.stringify(HARDCODED_TEST_USER))
-        localStorage.setItem('lumina_session_token', 'mock_token_hardcoded_demo')
-      } catch {
-        // ignore
-      }
-
-      setSuccessMessage('Signed in successfully! Entering dashboard...')
-      setLoading(false)
-
-      if (onSuccess) {
-        onSuccess(HARDCODED_TEST_USER)
-      } else {
-        window.location.hash = 'dashboard'
-      }
       return
     }
 
@@ -527,48 +503,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                ========================================================== */}
             {mode === 'login' ? (
               <form onSubmit={handleLoginSubmit} className="lumina-auth-form">
-                {/* Quick UI Testing Banner */}
-                <div
-                  style={{
-                    marginBottom: '16px',
-                    padding: '10px 14px',
-                    backgroundColor: 'rgba(217, 119, 6, 0.08)',
-                    border: '1px solid rgba(217, 119, 6, 0.28)',
-                    borderRadius: '8px',
-                    fontSize: '12.5px',
-                    color: '#B45309',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '6px',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontWeight: 600 }}>🧪 UI Testing Credentials</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setLoginEmail('admin')
-                        setLoginPassword('password123')
-                      }}
-                      style={{
-                        background: '#B45309',
-                        color: '#FFFFFF',
-                        border: 'none',
-                        borderRadius: '6px',
-                        padding: '3px 8px',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      ⚡ Quick Fill
-                    </button>
-                  </div>
-                  <div style={{ fontSize: '11.5px', color: '#92400E' }}>
-                    Username: <strong>admin</strong> (or <strong>sunilbe2006@gmail.com</strong>) • Password: <strong>password123</strong>
-                  </div>
-                </div>
-
                 <div className="lumina-auth-field">
                   <label className="lumina-auth-label" htmlFor="login-email">
                     Email or Username

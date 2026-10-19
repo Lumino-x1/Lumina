@@ -248,10 +248,9 @@ async function main() {
   }
 
   console.log('\n✅ Mock PSG Tech user successfully seeded in the database!')
-  console.log('\n📋 Login Credentials:')
+  console.log('\n📋 Account Info:')
   console.log('  Email:    student@psgtech.ac.in (or 24z201@psgtech.ac.in)')
   console.log('  Password: Password123!')
-  console.log('  Mock OTP: 12345 (or 123456)')
   console.log('  College:  PSG College of Technology\n')
 }
 

@@ -124,12 +124,6 @@ function AppContent() {
       <VerifyEmailPage
         initialEmail={currentUser?.email}
         onSuccess={async (verifiedUser) => {
-          try {
-            if (verifiedUser?.email === 'sunilbe2006@gmail.com' || verifiedUser?.id === 'usr_hardcoded_sunil') {
-              localStorage.setItem('lumina_hardcoded_user', 'true')
-              localStorage.setItem('lumina_user', JSON.stringify(verifiedUser))
-            }
-          } catch {}
           setUser(verifiedUser)
 
           let redirectTarget: string | null = null

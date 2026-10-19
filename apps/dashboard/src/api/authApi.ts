@@ -29,9 +29,6 @@ export function handleAuthResponseError(res: Response): void {
   if (res.status === 401) {
     if (isProtected) {
       try {
-        if (localStorage.getItem('lumina_hardcoded_user') === 'true') {
-          return // Do not clear session or redirect hardcoded demo user
-        }
         localStorage.removeItem('lumina_user')
         localStorage.removeItem('lumina_session_token')
         localStorage.removeItem('better-auth.session_token')
@@ -53,59 +50,6 @@ export function handleAuthResponseError(res: Response): void {
       })
       .catch(() => {})
   }
-}
-
-export const HARDCODED_TEST_USER = {
-  id: 'cmve9hx0f0000z38azns4ei93',
-  name: 'Sunil Kumar',
-  email: 'student@psgtech.ac.in',
-  username: 'psg_student',
-  emailVerified: true,
-  image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&auto=format&fit=crop&q=80',
-  college: 'PSG College of Technology',
-  collegeId: 'cmv9h829300024y8akviwpsmm',
-  department: 'Computer Science & Engineering',
-}
-
-export function isHardcodedTestCredentials(emailOrUsername: string, password: string): boolean {
-  if (!emailOrUsername || !password) return false
-  const normUser = emailOrUsername.trim().toLowerCase()
-  const normPass = password.trim()
-
-  const validUsers = [
-    'admin',
-    'sunilkumar',
-    'sunilkumart2695',
-    'student@psgtech.ac.in',
-    '24z201@psgtech.ac.in',
-    'psg_student',
-    'sunilbe2006@gmail.com',
-    'admin@lumina.test',
-    'admin@lumina.com',
-    'demo',
-    'test',
-  ]
-
-  const validPasswords = [
-    'admin',
-    'admin123',
-    'password',
-    'password123',
-    'Password123!',
-    'sunil123',
-    'lumina123',
-    '12345',
-    '123456',
-    '12345678',
-  ]
-
-  return (
-    validUsers.includes(normUser) ||
-    normUser.startsWith('admin') ||
-    normUser.startsWith('sunil') ||
-    normUser.endsWith('@psgtech.ac.in') ||
-    validPasswords.includes(normPass)
-  )
 }
 
 export interface SignUpPayload {

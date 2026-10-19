@@ -22,11 +22,11 @@ const prisma = new PrismaClient()
 
 // ─── Seed Data ────────────────────────────────────────────────────────────────
 
-const DEMO_PASSWORD = 'Demo1234!'
+const SEED_PASSWORD = process.env.SEED_ADMIN_PASSWORD || 'LuminaSecure2026!'
 
 const organizations = [
   {
-    id: 'org_demo_acme',
+    id: 'org_acme',
     name: 'Acme Corp',
     slug: 'acme-corp',
     plan: 'GROWTH',
@@ -35,36 +35,29 @@ const organizations = [
 
 const users = [
   {
-    id: 'user_demo_admin',
-    email: 'admin@lumina.dev',
-    name: 'Demo Admin',
+    id: 'user_admin',
+    email: process.env.SEED_ADMIN_EMAIL || 'admin@lumina.app',
+    name: 'System Admin',
     role: 'ADMIN',
-    organizationId: 'org_demo_acme',
-  },
-  {
-    id: 'user_demo_analyst',
-    email: 'user@lumina.dev',
-    name: 'Demo Analyst',
-    role: 'VIEWER',
-    organizationId: 'org_demo_acme',
+    organizationId: 'org_acme',
   },
 ]
 
 const dashboards = [
   {
-    id: 'dash_demo_overview',
+    id: 'dash_overview',
     name: 'Business Overview',
     description: 'Key business metrics at a glance',
-    organizationId: 'org_demo_acme',
-    createdById: 'user_demo_admin',
+    organizationId: 'org_acme',
+    createdById: 'user_admin',
     isPublic: false,
   },
   {
-    id: 'dash_demo_revenue',
+    id: 'dash_revenue',
     name: 'Revenue Analytics',
     description: 'Monthly recurring revenue trends and cohort analysis',
-    organizationId: 'org_demo_acme',
-    createdById: 'user_demo_admin',
+    organizationId: 'org_acme',
+    createdById: 'user_admin',
     isPublic: false,
   },
 ]
@@ -74,8 +67,8 @@ const dashboards = [
 async function main() {
   console.log('🌱 Starting database seed...\n')
 
-  // Hash the demo password
-  const passwordHash = await hash(DEMO_PASSWORD, {
+  // Hash the seed password
+  const passwordHash = await hash(SEED_PASSWORD, {
     memoryCost: 19456,
     timeCost: 2,
     outputLen: 32,
@@ -146,11 +139,7 @@ async function main() {
     console.log(`  ✓ ${dashboard.name}`)
   }
 
-  console.log('\n✅ Database seeded successfully!')
-  console.log('\n📋 Demo Credentials:')
-  console.log('  Admin:  admin@lumina.dev / Demo1234!')
-  console.log('  User:   user@lumina.dev  / Demo1234!')
-  console.log('\n🌐 Start the app: bun run dev\n')
+  console.log('\n✅ Database seeded successfully!\n')
 }
 
 // ─── Run ──────────────────────────────────────────────────────────────────────

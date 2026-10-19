@@ -16,10 +16,9 @@ export interface ProtectedRouteProps {
  */
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, onRedirect }) => {
   const { isLoading, isAuthenticated, isEmailVerified } = useAuth()
-  const isHardcoded = typeof window !== 'undefined' && localStorage.getItem('lumina_hardcoded_user') === 'true'
 
   useEffect(() => {
-    if (isLoading || isHardcoded) return
+    if (isLoading) return
 
     if (!isAuthenticated) {
       if (typeof window !== 'undefined' && window.location.hash) {
@@ -41,20 +40,20 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, onRedi
         window.location.hash = 'verify-email'
       }
     }
-  }, [isLoading, isAuthenticated, isEmailVerified, isHardcoded, onRedirect])
+  }, [isLoading, isAuthenticated, isEmailVerified, onRedirect])
 
   // A. Session is loading: render neutral loading screen, DO NOT render protected children
-  if (isLoading && !isHardcoded) {
+  if (isLoading) {
     return <AuthLoadingScreen message="Checking authorization..." />
   }
 
   // B. User is unauthenticated: block rendering completely
-  if (!isAuthenticated && !isHardcoded) {
+  if (!isAuthenticated) {
     return null
   }
 
   // C. User is authenticated but email is unverified: block rendering completely
-  if (!isEmailVerified && !isHardcoded) {
+  if (!isEmailVerified) {
     return null
   }
 

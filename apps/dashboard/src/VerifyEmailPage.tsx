@@ -5,7 +5,6 @@ import {
   resendOtpApi,
   getSessionApi,
   updateProfileApi,
-  HARDCODED_TEST_USER,
 } from './api/authApi'
 import './VerifyEmailPage.css'
 
@@ -139,50 +138,14 @@ export const VerifyEmailPage: React.FC<VerifyEmailPageProps> = ({
     let cleanEmail = email.trim().toLowerCase()
     const code = (overrideCode ?? otpDigits.join('')).trim()
 
-    const isTestCode =
-      code === '12345' ||
-      code === '123456' ||
-      code.startsWith('12345') ||
-      code === '000000' ||
-      code === '00000' ||
-      code === '111111' ||
-      code === '1234' ||
-      cleanEmail === 'sunilbe2006@gmail.com'
-
     if (!cleanEmail) {
-      if (isTestCode) {
-        cleanEmail = 'sunilbe2006@gmail.com'
-        setEmail('sunilbe2006@gmail.com')
-      } else {
-        setErrorMessage('Please enter your registered email address.')
-        setIsEditingEmail(true)
-        return
-      }
-    }
-
-    if (!isTestCode && (code.length !== 6 || !/^\d{6}$/.test(code))) {
-      setErrorMessage('Please enter the complete 6-digit verification code.')
+      setErrorMessage('Please enter your registered email address.')
+      setIsEditingEmail(true)
       return
     }
 
-    // Allow test OTP for UI testing (12345, 123456, 000000, etc.)
-    if (isTestCode) {
-      try {
-        localStorage.setItem('lumina_hardcoded_user', 'true')
-        localStorage.setItem('lumina_user', JSON.stringify(HARDCODED_TEST_USER))
-        localStorage.setItem('lumina_session_token', 'mock_token_hardcoded_demo')
-        localStorage.removeItem('lumina_pending_verification_email')
-      } catch {
-        // ignore
-      }
-      setSuccessMessage('Email verified successfully! Entering dashboard...')
-      setTimeout(() => {
-        if (onSuccess) {
-          onSuccess(HARDCODED_TEST_USER)
-        } else {
-          window.location.hash = 'dashboard'
-        }
-      }, 150)
+    if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+      setErrorMessage('Please enter the complete 6-digit verification code.')
       return
     }
 
@@ -286,17 +249,7 @@ export const VerifyEmailPage: React.FC<VerifyEmailPageProps> = ({
   }
 
   const rawCode = otpDigits.join('')
-  const isTestCode =
-    rawCode === '12345' ||
-    rawCode === '123456' ||
-    rawCode.startsWith('12345') ||
-    rawCode === '00000' ||
-    rawCode === '000000' ||
-    rawCode === '111111' ||
-    rawCode === '1234' ||
-    email.trim().toLowerCase() === 'sunilbe2006@gmail.com'
-
-  const isCodeComplete = rawCode.length === 6 || isTestCode
+  const isCodeComplete = rawCode.length === 6 && /^\d{6}$/.test(rawCode)
 
   return (
     <div className="verify-email-page-root">
@@ -327,46 +280,6 @@ export const VerifyEmailPage: React.FC<VerifyEmailPageProps> = ({
               </button>
             </div>
           ) : null}
-        </div>
-
-        {/* Demo OTP Helper Banner */}
-        <div
-          style={{
-            marginBottom: '16px',
-            padding: '10px 14px',
-            backgroundColor: 'rgba(217, 119, 6, 0.08)',
-            border: '1px solid rgba(217, 119, 6, 0.28)',
-            borderRadius: '8px',
-            fontSize: '13px',
-            color: '#B45309',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '8px',
-          }}
-        >
-          <span>🧪 Demo Test OTP: <strong>12345</strong> or <strong>123456</strong></span>
-          <button
-            type="button"
-            onClick={() => {
-              setOtpDigits(['1', '2', '3', '4', '5', '6'])
-              setEmail((prev) => prev || 'sunilbe2006@gmail.com')
-              void handleVerifySubmit(undefined, '123456')
-            }}
-            style={{
-              background: '#B45309',
-              color: '#FFFFFF',
-              border: 'none',
-              borderRadius: '6px',
-              padding: '4px 12px',
-              fontSize: '12px',
-              cursor: 'pointer',
-              fontWeight: 600,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            ⚡ Instant Enter
-          </button>
         </div>
 
         {errorMessage && (
@@ -430,7 +343,7 @@ export const VerifyEmailPage: React.FC<VerifyEmailPageProps> = ({
           <button
             type="submit"
             className="verify-email-submit-btn"
-            disabled={!isCodeComplete || loading || (!isTestCode && !email.trim())}
+            disabled={!isCodeComplete || loading || !email.trim()}
           >
             {loading ? (
               <>

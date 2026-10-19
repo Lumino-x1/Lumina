@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import type { DashboardUser } from '../DashboardPage'
-import { getSessionApi, signOutApi, HARDCODED_TEST_USER } from '../api/authApi'
+import { getSessionApi, signOutApi } from '../api/authApi'
 import { fetchMyProfile, buildMergedUser } from '../api/profileApi'
 
 export interface AuthContextType {
@@ -18,40 +18,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUserState] = useState<DashboardUser | null>(() => {
     try {
-      if (typeof window !== 'undefined' && localStorage.getItem('lumina_hardcoded_user') === 'true') {
-        const raw = localStorage.getItem('lumina_user')
-        return raw ? JSON.parse(raw) : HARDCODED_TEST_USER
-      }
+      const raw = typeof window !== 'undefined' ? localStorage.getItem('lumina_user') : null
+      return raw ? JSON.parse(raw) : null
     } catch {}
     return null
   })
-  const [isLoading, setIsLoading] = useState<boolean>(() => {
-    try {
-      if (typeof window !== 'undefined' && localStorage.getItem('lumina_hardcoded_user') === 'true') {
-        return false
-      }
-    } catch {}
-    return true
-  })
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   const refreshSession = useCallback(async (silent = false): Promise<DashboardUser | null> => {
     if (!silent) {
-      const isHardcodedNow = typeof window !== 'undefined' && localStorage.getItem('lumina_hardcoded_user') === 'true'
-      if (!isHardcodedNow) {
-        setIsLoading(true)
-      }
-    }
-
-    try {
-      if (typeof window !== 'undefined' && localStorage.getItem('lumina_hardcoded_user') === 'true') {
-        const raw = localStorage.getItem('lumina_user')
-        const hardcodedUser = raw ? JSON.parse(raw) : HARDCODED_TEST_USER
-        setUserState(hardcodedUser)
-        setIsLoading(false)
-        return hardcodedUser
-      }
-    } catch {
-      // ignore
+      setIsLoading(true)
     }
 
     try {
@@ -158,16 +134,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     void refreshSession(false)
   }, [refreshSession])
 
-  const isHardcoded = typeof window !== 'undefined' && localStorage.getItem('lumina_hardcoded_user') === 'true'
-  const effectiveUser = user || (isHardcoded ? HARDCODED_TEST_USER : null)
-  const isAuthenticated = Boolean(isHardcoded || (effectiveUser && effectiveUser.id))
-  const isEmailVerified = Boolean(isHardcoded || (effectiveUser && effectiveUser.emailVerified === true))
+  const isAuthenticated = Boolean(user && user.id)
+  const isEmailVerified = Boolean(user && user.emailVerified === true)
 
   return (
     <AuthContext.Provider
       value={{
-        user: effectiveUser,
-        isLoading: isHardcoded ? false : isLoading,
+        user,
+        isLoading,
         isAuthenticated,
         isEmailVerified,
         refreshSession,
