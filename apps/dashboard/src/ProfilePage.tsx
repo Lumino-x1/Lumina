@@ -1374,27 +1374,15 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           <main className="ai-center-stream profile-center-col">
             {/* PROFILE HEADER HERO CARD (LinkedIn style top intro card) */}
             <div className="ai-profile-hero-card ai-linkedin-hero-card">
-              {/* Cover Graphic Banner */}
-              <div className="ai-linkedin-banner">
-                {/* Left Gold & Dark Chevrons Graphic */}
-                <svg className="ai-banner-gold-chevrons" viewBox="0 0 240 200" fill="none" preserveAspectRatio="none">
-                  <polygon points="0,0 80,0 15,200 0,200" fill="#1C1A17" />
-                  <polygon points="75,0 105,0 40,200 10,200" fill="#C5A059" />
-                  <polygon points="100,0 135,0 70,200 35,200" fill="#1C1A17" />
-                  <polygon points="130,0 148,0 83,200 65,200" fill="#D4AF37" />
-                  <polygon points="0,0 90,0 0,90" fill="#1C1A17" opacity="0.4" />
-                  <polygon points="0,0 60,0 0,60" fill="#D4AF37" opacity="0.9" />
-                  <polygon points="0,0 35,0 0,35" fill="#1C1A17" />
-                  <polygon points="0,150 45,200 0,200" fill="#1C1A17" />
-                  <polygon points="0,175 25,200 0,200" fill="#C5A059" />
-                </svg>
-
-                {/* Center Typography */}
-                <div className="ai-banner-center-title-box">
-                  <div className="ai-banner-title">SUNILKUMAR</div>
-                  <div className="ai-banner-subtitle">BACKEND DEVELOPER</div>
-                </div>
-
+              {/* Cover Banner (Dashboard Cream Color) */}
+              <div
+                className="ai-linkedin-banner"
+                style={
+                  meProfile?.coverImage
+                    ? { backgroundImage: `url(${meProfile.coverImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+                    : undefined
+                }
+              >
                 {/* Top Right Edit Banner Button */}
                 <button
                   type="button"
