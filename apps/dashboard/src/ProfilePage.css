@@ -1464,6 +1464,10 @@
   color: #B1ADA1;
 }
 
+.ai-linkedin-card-edit-btn svg {
+  stroke: currentColor;
+}
+
 .ai-linkedin-card-edit-btn:hover {
   background-color: rgba(0, 0, 0, 0.06);
 }
@@ -1495,17 +1499,18 @@
 }
 
 .ai-linkedin-name {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--ai-font-heading), var(--ai-font-sans), sans-serif;
   font-size: 24px;
   font-weight: 700;
-  color: #191919;
+  color: var(--ai-text-primary, #191919);
   margin: 0;
   letter-spacing: -0.015em;
   line-height: 1.25;
 }
 
-.lumina-ai-profile-root.dark .ai-linkedin-name {
-  color: #ffffff;
+.lumina-ai-profile-root.dark .ai-linkedin-name,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-name {
+  color: var(--ai-text-primary, #B1ADA1);
 }
 
 .ai-linkedin-verify-badge {
@@ -1540,16 +1545,17 @@
 }
 
 .ai-linkedin-headline {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--ai-font-sans), sans-serif;
   font-size: 15px;
   font-weight: 400;
-  color: #191919;
+  color: var(--ai-text-secondary, #191919);
   margin: 6px 0 0;
   line-height: 1.4;
 }
 
-.lumina-ai-profile-root.dark .ai-linkedin-headline {
-  color: #e0e0e0;
+.lumina-ai-profile-root.dark .ai-linkedin-headline,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-headline {
+  color: var(--ai-text-primary, #B1ADA1);
 }
 
 .ai-linkedin-location-row {
@@ -1558,12 +1564,13 @@
   gap: 4px;
   margin-top: 6px;
   font-size: 14px;
-  color: #5e5e5e;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--ai-text-muted, #5e5e5e);
+  font-family: var(--ai-font-sans), sans-serif;
 }
 
-.lumina-ai-profile-root.dark .ai-linkedin-location-row {
-  color: #9e9e9e;
+.lumina-ai-profile-root.dark .ai-linkedin-location-row,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-location-row {
+  color: var(--ai-text-muted, #B1ADA1);
 }
 
 .ai-linkedin-dot {
@@ -1597,26 +1604,28 @@
   gap: 4px;
   margin-top: 6px;
   font-size: 14px;
-  color: #5e5e5e;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--ai-text-muted, #5e5e5e);
+  font-family: var(--ai-font-sans), sans-serif;
   font-weight: 400;
 }
 
-.lumina-ai-profile-root.dark .ai-linkedin-connections-row {
-  color: #9e9e9e;
+.lumina-ai-profile-root.dark .ai-linkedin-connections-row,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-row {
+  color: var(--ai-text-muted, #B1ADA1);
 }
 
 .ai-linkedin-connections-link {
   font-size: 14px;
   font-weight: 400;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  color: #5e5e5e !important;
+  font-family: var(--ai-font-sans), sans-serif;
+  color: var(--ai-text-muted, #5e5e5e) !important;
   text-decoration: none;
   cursor: pointer;
 }
 
-.lumina-ai-profile-root.dark .ai-linkedin-connections-link {
-  color: #9e9e9e !important;
+.lumina-ai-profile-root.dark .ai-linkedin-connections-link,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-link {
+  color: var(--ai-text-muted, #B1ADA1) !important;
 }
 
 .ai-linkedin-connections-link:hover {
@@ -1624,7 +1633,8 @@
   color: #191919 !important;
 }
 
-.lumina-ai-profile-root.dark .ai-linkedin-connections-link:hover {
+.lumina-ai-profile-root.dark .ai-linkedin-connections-link:hover,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-link:hover {
   color: #ffffff !important;
 }
 
@@ -1660,15 +1670,16 @@
 }
 
 .ai-linkedin-org-name {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--ai-font-sans), sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: #191919;
+  color: var(--ai-text-primary, #191919);
   line-height: 1.25;
 }
 
-.lumina-ai-profile-root.dark .ai-linkedin-org-name {
-  color: #ffffff;
+.lumina-ai-profile-root.dark .ai-linkedin-org-name,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-org-name {
+  color: var(--ai-text-primary, #B1ADA1);
 }
 
 .ai-linkedin-org-name:hover {

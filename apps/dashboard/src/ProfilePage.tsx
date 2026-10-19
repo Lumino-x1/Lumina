@@ -1425,7 +1425,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   title="Edit intro"
                   onClick={() => alert('Edit intro')}
                 >
-                  <Pencil size={20} color="#5e5e5e" strokeWidth={2} />
+                  <Pencil size={20} color="currentColor" strokeWidth={2} />
                 </button>
               </div>
 
