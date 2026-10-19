@@ -379,6 +379,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [currentWorkspace, setCurrentWorkspace] = useState<'primary' | 'secondary'>('primary')
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const [meProfile, setMeProfile] = useState<ProfileData | null>(null)
+  const [loadingProfile, setLoadingProfile] = useState<boolean>(true)
 
   useEffect(() => {
     let isMounted = true
@@ -388,7 +389,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           setMeProfile(data)
         }
       })
-      .catch(() => {})
+      .catch((err) => {
+        console.warn('[ProfilePage] Failed to fetch profile:', err)
+      })
+      .finally(() => {
+        if (isMounted) {
+          setLoadingProfile(false)
+        }
+      })
     return () => {
       isMounted = false
     }
@@ -1536,8 +1544,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               {/* Avatar Row */}
               <div className="ai-linkedin-avatar-row">
                 <div className="ai-linkedin-avatar-wrapper">
-                  <div className="ai-linkedin-avatar-circle">
-                    {profile.hasCustomAvatar ? (
+                  <div className={`ai-linkedin-avatar-circle ${loadingProfile ? 'is-loading' : ''}`}>
+                    {loadingProfile ? (
+                      <div className="ai-avatar-skeleton-shimmer">
+                        <Loader2 className="ai-profile-avatar-spinner" size={28} />
+                      </div>
+                    ) : profile.hasCustomAvatar ? (
                       <img
                         src={profile.avatar}
                         alt={profile.name}
@@ -1547,126 +1559,155 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                       <LinkedInSilhouette />
                     )}
                   </div>
-                  <button
-                    type="button"
-                    className="ai-avatar-add-story-btn"
-                    title="Add profile photo or frame"
-                    onClick={() => alert('Add profile photo or frame')}
-                  >
-                    <Plus size={20} strokeWidth={2.8} />
-                  </button>
+                  {!loadingProfile && (
+                    <button
+                      type="button"
+                      className="ai-avatar-add-story-btn"
+                      title="Add profile photo or frame"
+                      onClick={() => alert('Add profile photo or frame')}
+                    >
+                      <Plus size={20} strokeWidth={2.8} />
+                    </button>
+                  )}
                 </div>
 
                 {/* Card Top Right Edit Button */}
-                <button
-                  type="button"
-                  className="ai-linkedin-card-edit-btn"
-                  title="Edit intro"
-                  style={isDark ? { color: '#B1ADA1' } : undefined}
-                  onClick={() => alert('Edit intro')}
-                >
-                  <Pencil size={20} color={isDark ? '#B1ADA1' : 'currentColor'} strokeWidth={2} />
-                </button>
+                {!loadingProfile && (
+                  <button
+                    type="button"
+                    className="ai-linkedin-card-edit-btn"
+                    title="Edit intro"
+                    style={isDark ? { color: '#B1ADA1' } : undefined}
+                    onClick={() => alert('Edit intro')}
+                  >
+                    <Pencil size={20} color={isDark ? '#B1ADA1' : 'currentColor'} strokeWidth={2} />
+                  </button>
+                )}
               </div>
 
               {/* Main Info Grid (Two Columns) */}
-              <div className="ai-linkedin-info-grid">
-                {/* Left Column */}
-                <div className="ai-linkedin-left-col">
-                  {/* Name + Blue Tick Verified Badge */}
-                  <div className="ai-linkedin-name-row">
-                    <h1 className="ai-linkedin-name" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.name}</h1>
-                    <span
-                      className="ai-linkedin-blue-tick"
-                      title="Verified Student Profile"
-                      aria-label="Verified Profile"
-                    >
-                      <BadgeCheck
-                        size={21}
-                        fill={isDark ? '#388fe6' : '#0a66c2'}
-                        color="#ffffff"
-                        strokeWidth={2.2}
-                      />
-                    </span>
+              {loadingProfile ? (
+                <div className="ai-linkedin-info-grid ai-profile-loading-grid" aria-label="Loading profile details...">
+                  {/* Left Column Skeleton */}
+                  <div className="ai-linkedin-left-col">
+                    <div className="ai-profile-skeleton-name" />
+                    <div className="ai-profile-skeleton-headline" />
+                    <div className="ai-profile-skeleton-headline-sub" />
+                    <div className="ai-profile-skeleton-meta" />
+                    <div className="ai-profile-skeleton-stats" />
                   </div>
 
-                  {/* Headline */}
-                  <p className="ai-linkedin-headline" style={isDark ? { color: '#B1ADA1' } : undefined}>
-                    {profile.headline}
-                  </p>
-
-                  {/* Location & Contact info */}
-                  <div className="ai-linkedin-location-row" style={isDark ? { color: '#B1ADA1' } : undefined}>
-                    <span className="ai-linkedin-location" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.location}</span>
-                    <span className="ai-linkedin-dot" style={isDark ? { color: '#B1ADA1' } : undefined}>·</span>
-                    <a
-                      href="#contact-info"
-                      className="ai-linkedin-contact-link"
-                      style={isDark ? { color: '#B1ADA1' } : undefined}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        alert(`Contact Info:\nName: ${profile.name}\nEmail: ${profile.email}\nUniversity: ${profile.university}\nLocation: ${profile.location}`)
-                      }}
-                    >
-                      Contact info
-                    </a>
-                  </div>
-
-                  {/* Followers & Following */}
-                  <div className="ai-linkedin-connections-row" style={isDark ? { color: '#B1ADA1' } : undefined}>
-                    <a
-                      href="#followers"
-                      className="ai-linkedin-connections-link"
-                      style={isDark ? { color: '#B1ADA1' } : undefined}
-                      onClick={(e) => {
-                        e.preventDefault()
-                      }}
-                    >
-                      <span className="ai-followers-count" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.stats.followers}</span> followers
-                    </a>
-                    <span className="ai-linkedin-dot" style={isDark ? { color: '#B1ADA1' } : undefined}>·</span>
-                    <a
-                      href="#following"
-                      className="ai-linkedin-connections-link"
-                      style={isDark ? { color: '#B1ADA1' } : undefined}
-                      onClick={(e) => {
-                        e.preventDefault()
-                      }}
-                    >
-                      <span className="ai-followers-count" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.stats.following}</span> following
-                    </a>
+                  {/* Right Column Skeleton */}
+                  <div className="ai-linkedin-right-col">
+                    <div className="ai-linkedin-org-item ai-profile-skeleton-org">
+                      <div className="ai-profile-skeleton-box" />
+                      <div className="ai-profile-skeleton-line" />
+                    </div>
+                    <div className="ai-linkedin-org-item ai-profile-skeleton-org">
+                      <div className="ai-profile-skeleton-box" />
+                      <div className="ai-profile-skeleton-line" />
+                    </div>
                   </div>
                 </div>
-
-                {/* Right Column (Organizations & Education) */}
-                <div className="ai-linkedin-right-col">
-                  <div className="ai-linkedin-org-item">
-                    <div className="ai-linkedin-org-icon ai-org-icon-squares">
-                      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                        <rect width="32" height="32" rx="4" fill="#E8EEF3" />
-                        <rect x="5" y="5" width="10" height="10" rx="1.5" fill="#78909C" />
-                        <rect x="17" y="5" width="10" height="10" rx="1.5" fill="#90A4AE" />
-                        <rect x="5" y="17" width="10" height="10" rx="1.5" fill="#B0BEC5" />
-                        <rect x="17" y="17" width="10" height="10" rx="1.5" fill="#546E7A" />
-                      </svg>
+              ) : (
+                <div className="ai-linkedin-info-grid">
+                  {/* Left Column */}
+                  <div className="ai-linkedin-left-col">
+                    {/* Name + Blue Tick Verified Badge */}
+                    <div className="ai-linkedin-name-row">
+                      <h1 className="ai-linkedin-name" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.name}</h1>
+                      <span
+                        className="ai-linkedin-blue-tick"
+                        title="Verified Student Profile"
+                        aria-label="Verified Profile"
+                      >
+                        <BadgeCheck
+                          size={21}
+                          fill={isDark ? '#388fe6' : '#0a66c2'}
+                          color="#ffffff"
+                          strokeWidth={2.2}
+                        />
+                      </span>
                     </div>
-                    <span className="ai-linkedin-org-name" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.department}</span>
+
+                    {/* Headline */}
+                    <p className="ai-linkedin-headline" style={isDark ? { color: '#B1ADA1' } : undefined}>
+                      {profile.headline}
+                    </p>
+
+                    {/* Location & Contact info */}
+                    <div className="ai-linkedin-location-row" style={isDark ? { color: '#B1ADA1' } : undefined}>
+                      <span className="ai-linkedin-location" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.location}</span>
+                      <span className="ai-linkedin-dot" style={isDark ? { color: '#B1ADA1' } : undefined}>·</span>
+                      <a
+                        href="#contact-info"
+                        className="ai-linkedin-contact-link"
+                        style={isDark ? { color: '#B1ADA1' } : undefined}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          alert(`Contact Info:\nName: ${profile.name}\nEmail: ${profile.email}\nUniversity: ${profile.university}\nLocation: ${profile.location}`)
+                        }}
+                      >
+                        Contact info
+                      </a>
+                    </div>
+
+                    {/* Followers & Following */}
+                    <div className="ai-linkedin-connections-row" style={isDark ? { color: '#B1ADA1' } : undefined}>
+                      <a
+                        href="#followers"
+                        className="ai-linkedin-connections-link"
+                        style={isDark ? { color: '#B1ADA1' } : undefined}
+                        onClick={(e) => {
+                          e.preventDefault()
+                        }}
+                      >
+                        <span className="ai-followers-count" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.stats.followers}</span> followers
+                      </a>
+                      <span className="ai-linkedin-dot" style={isDark ? { color: '#B1ADA1' } : undefined}>·</span>
+                      <a
+                        href="#following"
+                        className="ai-linkedin-connections-link"
+                        style={isDark ? { color: '#B1ADA1' } : undefined}
+                        onClick={(e) => {
+                          e.preventDefault()
+                        }}
+                      >
+                        <span className="ai-followers-count" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.stats.following}</span> following
+                      </a>
+                    </div>
                   </div>
 
-                  <div className="ai-linkedin-org-item">
-                    <div className="ai-linkedin-org-icon ai-org-icon-psg">
-                      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                        <path d="M16 2 L27 6 V16 C27 23 16 29 16 29 C16 29 5 23 5 16 V6 Z" fill="#ffffff" stroke="#283593" strokeWidth="1.5" />
-                        <path d="M16 4.5 L24.5 7.5 V15.5 C24.5 21 16 26 16 26 C16 26 7.5 21 7.5 15.5 V7.5 Z" fill="#E8EAF6" opacity="0.4" />
-                        <path d="M16 7 L17.5 9 H14.5 Z M15 9.5 H17 V13 H15 Z M14 13.5 H18 V18 H14 Z M13 18.5 H19 V21 H13 Z" fill="#283593" />
-                        <circle cx="16" cy="18" r="4.5" stroke="#283593" strokeWidth="1" strokeDasharray="1.5 1" fill="none" />
-                        <path d="M9 22 Q16 25 23 22" stroke="#283593" strokeWidth="1.5" fill="none" />
-                      </svg>
+                  {/* Right Column (Organizations & Education) */}
+                  <div className="ai-linkedin-right-col">
+                    <div className="ai-linkedin-org-item">
+                      <div className="ai-linkedin-org-icon ai-org-icon-squares">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                          <rect width="32" height="32" rx="4" fill="#E8EEF3" />
+                          <rect x="5" y="5" width="10" height="10" rx="1.5" fill="#78909C" />
+                          <rect x="5" y="17" width="10" height="10" rx="1.5" fill="#B0BEC5" />
+                          <rect x="17" y="5" width="10" height="10" rx="1.5" fill="#90A4AE" />
+                          <rect x="17" y="17" width="10" height="10" rx="1.5" fill="#546E7A" />
+                        </svg>
+                      </div>
+                      <span className="ai-linkedin-org-name" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.department}</span>
                     </div>
-                    <span className="ai-linkedin-org-name" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.university}</span>
+
+                    <div className="ai-linkedin-org-item">
+                      <div className="ai-linkedin-org-icon ai-org-icon-psg">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                          <path d="M16 2 L27 6 V16 C27 23 16 29 16 29 C16 29 5 23 5 16 V6 Z" fill="#ffffff" stroke="#283593" strokeWidth="1.5" />
+                          <path d="M16 4.5 L24.5 7.5 V15.5 C24.5 21 16 26 16 26 C16 26 7.5 21 7.5 15.5 V7.5 Z" fill="#E8EAF6" opacity="0.4" />
+                          <path d="M16 7 L17.5 9 H14.5 Z M15 9.5 H17 V13 H15 Z M14 13.5 H18 V18 H14 Z M13 18.5 H19 V21 H13 Z" fill="#283593" />
+                          <circle cx="16" cy="18" r="4.5" stroke="#283593" strokeWidth="1" strokeDasharray="1.5 1" fill="none" />
+                          <path d="M9 22 Q16 25 23 22" stroke="#283593" strokeWidth="1.5" fill="none" />
+                        </svg>
+                      </div>
+                      <span className="ai-linkedin-org-name" style={isDark ? { color: '#B1ADA1' } : undefined}>{profile.university}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
             </div>
 

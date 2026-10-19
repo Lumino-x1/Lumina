@@ -1300,7 +1300,7 @@
    ========================================================================== */
 .ai-profile-hero-card.ai-linkedin-hero-card {
   background: var(--ai-bg, #ffffff) !important;
-  border: 1px solid var(--ai-border) !important;
+  border: 1px solid rgba(177, 173, 161, 0.22) !important;
   border-radius: 10px !important;
   box-shadow: none !important;
   margin-bottom: 12px;
@@ -1313,7 +1313,7 @@
 .lumina-ai-profile-root.dark .ai-profile-hero-card.ai-linkedin-hero-card,
 [data-theme='dark'] .lumina-ai-profile-root .ai-profile-hero-card.ai-linkedin-hero-card {
   background: var(--ai-bg, #000000) !important;
-  border: 1px solid var(--ai-border) !important;
+  border: 1px solid rgba(177, 173, 161, 0.14) !important;
   box-shadow: none !important;
 }
 
@@ -1327,7 +1327,7 @@
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
   border: none !important;
-  border-bottom: 1px solid var(--ai-border) !important;
+  border-bottom: 1px solid rgba(177, 173, 161, 0.18) !important;
   box-sizing: border-box;
 }
 
@@ -1335,7 +1335,113 @@
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-banner {
   background-color: var(--ai-bg, #000000) !important;
   border: none !important;
-  border-bottom: 1px solid var(--ai-border) !important;
+  border-bottom: 1px solid rgba(177, 173, 161, 0.14) !important;
+}
+
+/* ==========================================================================
+   PROFILE HERO LOADER & SKELETON
+   ========================================================================== */
+.ai-avatar-skeleton-shimmer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ai-card-hover, rgba(177, 173, 161, 0.15));
+  color: #C15F3C;
+}
+
+.ai-profile-avatar-spinner {
+  animation: aiProfileSpin 1s linear infinite;
+  color: #C15F3C;
+}
+
+@keyframes aiProfileSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ai-profile-loading-grid {
+  animation: aiProfilePulse 1.6s ease-in-out infinite;
+}
+
+@keyframes aiProfilePulse {
+  0% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0.55;
+  }
+}
+
+.ai-profile-skeleton-name {
+  height: 26px;
+  width: 180px;
+  border-radius: 6px;
+  background: var(--ai-card-hover, rgba(177, 173, 161, 0.22));
+  margin-bottom: 10px;
+}
+
+.ai-profile-skeleton-headline {
+  height: 14px;
+  width: 92%;
+  max-width: 480px;
+  border-radius: 4px;
+  background: var(--ai-card-hover, rgba(177, 173, 161, 0.18));
+  margin-bottom: 8px;
+}
+
+.ai-profile-skeleton-headline-sub {
+  height: 14px;
+  width: 65%;
+  max-width: 320px;
+  border-radius: 4px;
+  background: var(--ai-card-hover, rgba(177, 173, 161, 0.16));
+  margin-bottom: 14px;
+}
+
+.ai-profile-skeleton-meta {
+  height: 13px;
+  width: 220px;
+  border-radius: 4px;
+  background: var(--ai-card-hover, rgba(177, 173, 161, 0.16));
+  margin-bottom: 10px;
+}
+
+.ai-profile-skeleton-stats {
+  height: 13px;
+  width: 170px;
+  border-radius: 4px;
+  background: var(--ai-card-hover, rgba(177, 173, 161, 0.16));
+}
+
+.ai-profile-skeleton-org {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.ai-profile-skeleton-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: var(--ai-card-hover, rgba(177, 173, 161, 0.22));
+  flex-shrink: 0;
+}
+
+.ai-profile-skeleton-line {
+  height: 14px;
+  width: 150px;
+  border-radius: 4px;
+  background: var(--ai-card-hover, rgba(177, 173, 161, 0.18));
 }
 
 .ai-banner-edit-pencil-btn {
