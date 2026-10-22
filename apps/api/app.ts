@@ -1,4 +1,4 @@
-import { redis } from './config/config.redis.ts';
+// import { redis } from './config/config.redis.ts';
 import authRouter from './src/api/auth/auth.routes.ts';
 import commentsRouter from './src/api/comments/comments.routes.ts';
 import feedRouter from './src/api/feed/feed.routes.ts';
@@ -30,26 +30,26 @@ export function createApp() {
   // Trust first proxy hop (Vite dev server / ngrok)
   app.set('trust proxy', 1)
 
-  const globalLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    limit: 300,
-    standardHeaders: 'draft-7',
-    legacyHeaders: false,
-    skip: (req) =>
-      process.env.NODE_ENV === 'test' ||
-      req.path === '/health' ||
-      req.path === '/api/health' ||
-      req.path === '/ready' ||
-      req.path === '/api/ready' ||
-      req.path === '/ok' ||
-      req.path === '/metrics',
-    message: {
-      status: 'error',
-      message: 'Too many requests from this IP, please try again later.',
-    },
-  })
+  // const globalLimiter = rateLimit({
+  //   windowMs: 15 * 60 * 1000,
+  //   limit: 300,
+  //   standardHeaders: 'draft-7',
+  //   legacyHeaders: false,
+  //   skip: (req) =>
+  //     process.env.NODE_ENV === 'test' ||
+  //     req.path === '/health' ||
+  //     req.path === '/api/health' ||
+  //     req.path === '/ready' ||
+  //     req.path === '/api/ready' ||
+  //     req.path === '/ok' ||
+  //     req.path === '/metrics',
+  //   message: {
+  //     status: 'error',
+  //     message: 'Too many requests from this IP, please try again later.',
+  //   },
+  // })
 
-  app.use(globalLimiter)
+  // app.use(globalLimiter)
   app.use(httpLoggerMiddleware('api'))
   app.use(express.json({ limit: '25mb' }))
   app.use(express.urlencoded({ limit: '25mb', extended: true }))
@@ -174,16 +174,16 @@ export function createApp() {
       isReady = false
     }
 
-    try {
-      const redisPong = await withTimeout(redis.ping(), 2000)
-      checks.redis = redisPong === 'PONG' ? 'ok' : 'unavailable'
-      if (checks.redis !== 'ok') {
-        isReady = false
-      }
-    } catch {
-      checks.redis = 'unavailable'
-      isReady = false
-    }
+    // try {
+    //   const redisPong = await withTimeout(redis.ping(), 2000)
+    //   checks.redis = redisPong === 'PONG' ? 'ok' : 'unavailable'
+    //   if (checks.redis !== 'ok') {
+    //     isReady = false
+    //   }
+    // } catch {
+    //   checks.redis = 'unavailable'
+    //   isReady = false
+    // }
 
     res.status(isReady ? 200 : 503).json({
       status: isReady ? 'ready' : 'unavailable',

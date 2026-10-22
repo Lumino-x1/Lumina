@@ -7,7 +7,7 @@
 .saascn-footer-section {
   position: relative;
   width: 100%;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   color: #ffffff;
   overflow: hidden;
   box-sizing: border-box;
@@ -21,7 +21,7 @@
   border-left: 1px dashed rgba(255, 255, 255, 0.12);
   border-right: 1px dashed rgba(255, 255, 255, 0.12);
   box-sizing: border-box;
-  background-color: #000000;
+  background-color: var(--background, #191919);
 }
 
 /* ==========================================================================
@@ -72,13 +72,13 @@
 
 /* Clean Sharp Rectangular Buttons */
 .saascn-btn-primary {
-  background-color: #2563EB;
-  color: #ffffff;
-  border: 1px solid #2563EB;
-  border-radius: 9999px !important;
-  padding: 11px 24px;
+  background-color: #FFFFFF;
+  color: #191919;
+  border: 1px solid #FFFFFF;
+  border-radius: 5px !important;
+  padding: 10px 20px;
   font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.01em;
   display: inline-flex;
@@ -87,23 +87,23 @@
   gap: 8.5px;
   line-height: 1;
   cursor: pointer;
-  transition: background-color 0.18s ease, color 0.18s ease, opacity 0.18s ease;
+  transition: opacity 0.18s ease;
   text-decoration: none;
 }
 
 .saascn-btn-primary:hover {
-  background-color: #1D4ED8;
-  border-color: #1D4ED8;
+  background-color: rgba(255, 255, 255, 0.88);
+  border-color: rgba(255, 255, 255, 0.88);
 }
 
 .saascn-btn-secondary {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(247, 243, 235, 0.08);
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 9999px !important;
-  padding: 11px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 5px !important;
+  padding: 10px 20px;
   font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.01em;
   display: inline-flex;
@@ -264,22 +264,27 @@
 .saascn-user-btn {
   width: 32px;
   height: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 50% !important;
+  border: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: 5px !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   padding: 0;
   color: rgba(255, 255, 255, 0.7);
-  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+  transition: opacity 0.18s ease, color 0.18s ease;
 }
 
 .saascn-user-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.28);
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   color: #ffffff;
+  opacity: 1;
 }
 
 .saascn-copyright {
@@ -344,13 +349,39 @@
 /* ==========================================================================
    Light / Bright Theme Overrides for Footer Controls
    ========================================================================== */
+[data-theme="bright"] .saascn-btn-primary,
+[data-theme="light"] .saascn-btn-primary,
+.bright .saascn-btn-primary,
+.light .saascn-btn-primary {
+  background-color: #191919 !important;
+  color: #FFFFFF !important;
+  border-color: #191919 !important;
+}
+
+[data-theme="bright"] .saascn-btn-primary:hover,
+[data-theme="light"] .saascn-btn-primary:hover,
+.bright .saascn-btn-primary:hover,
+.light .saascn-btn-primary:hover {
+  background-color: rgba(25, 25, 25, 0.85) !important;
+  border-color: rgba(25, 25, 25, 0.85) !important;
+}
+
+[data-theme="bright"] .saascn-btn-secondary,
+[data-theme="light"] .saascn-btn-secondary,
+.bright .saascn-btn-secondary,
+.light .saascn-btn-secondary {
+  background-color: #F7F3EB !important;
+  color: #191919 !important;
+  border-color: rgba(25, 25, 25, 0.16) !important;
+}
+
 [data-theme="bright"] .saascn-theme-toggle,
 [data-theme="light"] .saascn-theme-toggle,
 .bright .saascn-theme-toggle,
 .light .saascn-theme-toggle {
-  background-color: #F7F8FA !important;
-  border: 1px solid #E5E7EB !important;
-  box-shadow: 0 1px 2px rgba(177, 173, 161, 0.25) !important;
+  background-color: #F7F3EB !important;
+  border: 1px solid rgba(25, 25, 25, 0.12) !important;
+  box-shadow: none !important;
 }
 
 [data-theme="bright"] .saascn-theme-toggle:hover,
@@ -358,7 +389,7 @@
 .bright .saascn-theme-toggle:hover,
 .light .saascn-theme-toggle:hover {
   background-color: #FFFFFF !important;
-  border-color: #2563EB !important;
+  border-color: #191919 !important;
 }
 
 [data-theme="bright"] .saascn-theme-active-indicator,
@@ -366,16 +397,16 @@
 .bright .saascn-theme-active-indicator,
 .light .saascn-theme-active-indicator {
   background: transparent !important;
-  color: #9CA3AF !important;
+  color: rgba(25, 25, 25, 0.45) !important;
 }
 
 [data-theme="bright"] .saascn-theme-active-indicator.is-active,
 [data-theme="light"] .saascn-theme-active-indicator.is-active,
 .bright .saascn-theme-active-indicator.is-active,
 .light .saascn-theme-active-indicator.is-active {
-  background-color: #2563EB !important;
+  background-color: #191919 !important;
   color: #FFFFFF !important;
-  box-shadow: 0 1px 4px rgba(193, 95, 60, 0.35) !important;
+  box-shadow: none !important;
 }
 
 [data-theme="bright"] .saascn-theme-active-indicator.is-active .saascn-icon-active,
@@ -390,7 +421,7 @@
 [data-theme="light"] .saascn-theme-active-indicator .saascn-icon-inactive,
 .bright .saascn-theme-active-indicator .saascn-icon-inactive,
 .light .saascn-theme-active-indicator .saascn-icon-inactive {
-  color: #9CA3AF !important;
+  color: rgba(25, 25, 25, 0.45) !important;
   opacity: 0.6 !important;
 }
 
@@ -398,32 +429,37 @@
 [data-theme="light"] .saascn-user-btn,
 .bright .saascn-user-btn,
 .light .saascn-user-btn {
-  background-color: #F7F8FA !important;
-  border: 1px solid #E5E7EB !important;
-  color: #111111 !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #191919 !important;
 }
 
 [data-theme="bright"] .saascn-user-btn:hover,
 [data-theme="light"] .saascn-user-btn:hover,
 .bright .saascn-user-btn:hover,
 .light .saascn-user-btn:hover {
-  background-color: #FFFFFF !important;
-  border-color: #2563EB !important;
-  color: #2563EB !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #191919 !important;
+  opacity: 0.8;
 }
 
 [data-theme="bright"] .saascn-social-link,
 [data-theme="light"] .saascn-social-link,
 .bright .saascn-social-link,
 .light .saascn-social-link {
-  color: #6B7280 !important;
+  color: rgba(25, 25, 25, 0.65) !important;
 }
 
 [data-theme="bright"] .saascn-social-link:hover,
 [data-theme="light"] .saascn-social-link:hover,
 .bright .saascn-social-link:hover,
 .light .saascn-social-link:hover {
-  color: #2563EB !important;
+  color: #191919 !important;
 }
 
 /* ==========================================================================

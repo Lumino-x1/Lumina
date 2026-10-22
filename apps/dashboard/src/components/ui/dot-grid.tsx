@@ -24,7 +24,7 @@ export default function DotGrid({ theme: themeProp, spacing = 20, className, sty
       style={{
         position: 'absolute',
         inset: 0,
-        backgroundImage: `radial-gradient(circle, ${theme === 'light' ? '#d4d4d4' : '#333'} 1px, transparent 1px)`,
+        backgroundImage: `radial-gradient(circle, ${theme === 'light' ? 'rgba(25, 25, 25, 0.12)' : 'rgba(255, 255, 255, 0.12)'} 1px, transparent 1px)`,
         backgroundSize: `${spacing}px ${spacing}px`,
         borderRadius: 'inherit',
         pointerEvents: 'none',

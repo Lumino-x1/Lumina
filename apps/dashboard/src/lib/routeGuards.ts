@@ -27,10 +27,14 @@ export function parseViewFromLocation(
     cleanHash === '#dashboard' ||
     cleanHash === '#feed' ||
     cleanHash === '#/feed' ||
+    cleanHash === '#messages' ||
+    cleanHash === '#messaging' ||
+    cleanHash === '#/messages' ||
     cleanHash.startsWith('#post') ||
     cleanHash.startsWith('#story') ||
     cleanPath === '/dashboard' ||
     cleanPath === '/feed' ||
+    cleanPath === '/messages' ||
     cleanPath.startsWith('/post') ||
     cleanPath === '/api/feed'
   ) {

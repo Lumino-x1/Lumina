@@ -10,7 +10,7 @@
 .trust-quote-section {
   position: relative;
   width: 100%;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   color: #ffffff;
   box-sizing: border-box;
 }
@@ -23,7 +23,7 @@
   border-left: 1px dashed rgba(255, 255, 255, 0.12);
   border-right: 1px dashed rgba(255, 255, 255, 0.12);
   border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
-  background-color: #000000;
+  background-color: var(--background, #191919);
   box-sizing: border-box;
 }
 
@@ -61,7 +61,7 @@
   box-sizing: border-box;
   border-right: 1px dashed rgba(255, 255, 255, 0.12);
   border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
-  background-color: #000000;
+  background-color: var(--background, #191919);
   transition: background-color 0.2s ease;
 }
 
@@ -139,7 +139,7 @@
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   position: relative;
 }
 
@@ -180,7 +180,7 @@
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.2);
   flex-shrink: 0;
-  background-color: #1a1a1a;
+  background-color: #191919;
 }
 
 .trust-quote-avatar-img {

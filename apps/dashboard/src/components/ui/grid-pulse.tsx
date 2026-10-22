@@ -20,18 +20,8 @@ export type GridPulseProps = Omit<
   avoid?: string;
 };
 
-/** Hue at the top of the field and how far it turns: clean lumina blue matching #2563EB */
-const HUE_TOP = 220;
-const HUE_SPAN = 14;
-/**
- * Each cell takes one of these lightnesses, so a sweep reads as a field of
- * tints rather than one flat colour. Harmonized with lumina blue #2563EB.
- */
-const TINTS = [54, 50, 46, 58, 42];
-const TINTS_DARK = [52, 56, 60, 48, 64];
 /** How faint a cell goes right behind a line of text. */
 const FAINT = 0.13;
-/** How many cells it takes to come back up to full strength. */
 const FADE = 2.2;
 /** Clearing kept around each line of text, in px. */
 const PAD = 5;
@@ -88,7 +78,7 @@ export function GridPulse({
     let width = 0;
     let height = 0;
     let clear: DOMRect[] = [];
-    let tints = TINTS;
+    let isDarkTheme = false;
     const cells = new Map<string, Cell>();
 
     // Light or dark ground, read from the text colour the grid inherits,
@@ -104,7 +94,7 @@ export function GridPulse({
       probe.fillRect(0, 0, 1, 1);
       const [r, g, b] = probe.getImageData(0, 0, 1, 1).data;
       const light = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 > 0.5;
-      tints = light ? TINTS_DARK : TINTS;
+      isDarkTheme = light;
     };
 
     // Protect the lines of text, not the boxes that hold them: a paragraph
@@ -166,11 +156,8 @@ export function GridPulse({
       return FAINT + (1 - FAINT) * Math.min(1, nearest / (FADE * cell));
     };
 
-    const ink = (row: number) => {
-      const t = rows > 1 ? Math.min(1, row / (rows - 1)) : 0;
-      const hue = (((HUE_TOP - t * HUE_SPAN) % 360) + 360) % 360;
-      const tint = tints[Math.floor(Math.random() * tints.length)];
-      return `hsl(${Math.round(hue)} 60% ${tint}%)`;
+    const ink = (_row: number) => {
+      return isDarkTheme ? 'rgba(255, 255, 255, 0.2)' : 'rgba(25, 25, 25, 0.12)';
     };
 
     // One loop draws every cell; it runs only while something is lit.
@@ -334,14 +321,14 @@ export function GridPulse({
       data-slot="grid-pulse"
       className={cn(
         "pointer-events-none absolute inset-0 overflow-hidden w-full h-full",
-        "[--grid-pulse-line:var(--theme-border-subtle,rgba(177,173,161,0.25))]",
+        "[--grid-pulse-line:var(--theme-border-subtle,rgba(25,25,25,0.08))]",
         className,
       )}
       style={
         {
           "--grid-pulse-cell": `${cell}px`,
           backgroundImage:
-            "linear-gradient(to right, var(--grid-pulse-line,rgba(177,173,161,0.25)) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-pulse-line,rgba(177,173,161,0.25)) 1px, transparent 1px)",
+            "linear-gradient(to right, var(--grid-pulse-line,rgba(25,25,25,0.08)) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-pulse-line,rgba(25,25,25,0.08)) 1px, transparent 1px)",
           backgroundSize: "var(--grid-pulse-cell) var(--grid-pulse-cell)",
           ...style,
         } as React.CSSProperties

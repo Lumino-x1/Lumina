@@ -1,0 +1,1344 @@
+/* ==========================================================================
+   LUMINA MESSAGING OS - FULL-SCREEN RESPONSIVE CAMPUS MESSAGING
+   Theme: Notion Black (#191919) Dark Theme
+   Exact Lumina Palette & Typography
+   ========================================================================== */
+
+.lumina-messaging-screen {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  background-color: #191919;
+  color: #FFFFFF;
+  font-family: var(--ai-font-sans, anthropicSans, system-ui, -apple-system, sans-serif);
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  box-sizing: border-box;
+}
+
+.lumina-messaging-screen *,
+.lumina-messaging-screen *::before,
+.lumina-messaging-screen *::after {
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   1. LEFT SIDEBAR: CHATS LIST
+   ========================================================================== */
+.lumina-msg-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  min-width: 320px;
+  max-width: 460px;
+  height: 100%;
+  background-color: #191919;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Header */
+.lumina-msg-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 16px;
+  background-color: #191919;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.lumina-msg-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lumina-msg-user-avatar-mini {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+}
+
+.lumina-msg-sidebar-title {
+  font-family: var(--ai-font-heading, anthropicSans, 'Geist', sans-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.lumina-msg-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lumina-msg-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.lumina-msg-icon-btn:hover {
+  background-color: rgba(247, 243, 235, 0.08);
+  color: #FFFFFF;
+}
+
+/* New Chat Action Button (Lumina Site White & Notion Black) */
+.lumina-msg-new-chat-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  border: none;
+  color: #191919;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lumina-msg-new-chat-btn:hover {
+  background-color: rgba(255, 255, 255, 0.90);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.lumina-msg-new-chat-btn:active {
+  transform: scale(0.97);
+}
+
+/* Search Box */
+.lumina-msg-search-section {
+  padding: 8px 12px;
+  background-color: #191919;
+  flex-shrink: 0;
+}
+
+.lumina-msg-search-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 36px;
+  padding: 0 12px;
+  background-color: rgba(247, 243, 235, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.lumina-msg-search-input-wrap:focus-within {
+  background-color: rgba(247, 243, 235, 0.09);
+  border-color: rgba(255, 255, 255, 0.20);
+}
+
+.lumina-msg-search-icon {
+  color: rgba(255, 255, 255, 0.45);
+  flex-shrink: 0;
+}
+
+.lumina-msg-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #FFFFFF;
+  font-size: 14px;
+}
+
+.lumina-msg-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.40);
+}
+
+.lumina-msg-search-clear-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.50);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+
+.lumina-msg-search-clear-btn:hover {
+  color: #FFFFFF;
+}
+
+/* Filter Pills */
+.lumina-msg-filter-pills-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 10px;
+  background-color: #191919;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+
+.lumina-msg-filter-pills-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.lumina-msg-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  background-color: rgba(247, 243, 235, 0.06);
+  color: rgba(255, 255, 255, 0.70);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.lumina-msg-filter-pill:hover {
+  background-color: rgba(247, 243, 235, 0.10);
+  color: #FFFFFF;
+}
+
+.lumina-msg-filter-pill.is-active {
+  background-color: rgba(247, 243, 235, 0.14);
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.lumina-msg-pill-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+/* Archived Row */
+.lumina-msg-archived-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.lumina-msg-archived-row:hover {
+  background-color: rgba(247, 243, 235, 0.05);
+}
+
+.lumina-msg-archived-row.is-archived-active {
+  background-color: rgba(247, 243, 235, 0.08);
+}
+
+.lumina-msg-archived-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.lumina-msg-archived-icon {
+  color: rgba(255, 255, 255, 0.60);
+}
+
+.lumina-msg-archived-label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.lumina-msg-archived-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+}
+
+/* Chat Items Scroll List */
+.lumina-msg-chat-items-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #191919;
+}
+
+.lumina-msg-chat-items-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lumina-msg-chat-items-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+
+.lumina-msg-empty-filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  color: rgba(255, 255, 255, 0.40);
+  font-size: 14px;
+}
+
+/* Single Chat Row */
+.lumina-msg-chat-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background-color 0.15s ease;
+  position: relative;
+  outline: none;
+}
+
+.lumina-msg-chat-row:hover {
+  background-color: rgba(247, 243, 235, 0.05);
+}
+
+.lumina-msg-chat-row.is-selected {
+  background-color: rgba(247, 243, 235, 0.10);
+}
+
+/* Avatar */
+.lumina-msg-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+}
+
+.lumina-msg-avatar-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #262626;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lumina-msg-avatar-img.is-header {
+  width: 40px;
+  height: 40px;
+}
+
+.lumina-msg-group-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.lumina-msg-group-avatar.is-header {
+  width: 40px;
+  height: 40px;
+}
+
+.lumina-msg-online-dot {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background-color: #25D366;
+  border: 2px solid #191919;
+}
+
+/* Chat Metadata */
+.lumina-msg-chat-meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lumina-msg-chat-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.lumina-msg-chat-name {
+  font-family: var(--ai-font-heading, anthropicSans, sans-serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.lumina-msg-chat-time {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.lumina-msg-chat-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.lumina-msg-snippet-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.lumina-msg-tick {
+  flex-shrink: 0;
+}
+
+.lumina-msg-tick-read {
+  color: #53bdeb;
+}
+
+.lumina-msg-tick-delivered,
+.lumina-msg-tick-sent {
+  color: rgba(255, 255, 255, 0.50);
+}
+
+.lumina-msg-type-icon {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.60);
+}
+
+.lumina-msg-snippet-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.60);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lumina-msg-meta-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.lumina-msg-pin-icon {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* Unread count badge (Lumina Site White & Notion Black) */
+.lumina-msg-unread-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+  color: #191919;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   2. RIGHT MAIN WORKSPACE: ACTIVE CHAT & EMPTY STATE
+   ========================================================================== */
+.lumina-msg-main {
+  flex: 1;
+  height: 100%;
+  background-color: #141414;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* EMPTY HERO STATE (Matching user screenshot) */
+.lumina-msg-empty-hero-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  background: radial-gradient(circle at center, #1b1b1b 0%, #111111 100%);
+  position: relative;
+  padding: 40px 24px 60px;
+  text-align: center;
+}
+
+.lumina-msg-empty-center-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 480px;
+  margin: auto;
+}
+
+.lumina-msg-brand-mark {
+  margin-bottom: 20px;
+  filter: drop-shadow(0 8px 24px rgba(255, 255, 255, 0.12));
+}
+
+.lumina-msg-hero-svg {
+  border-radius: 18px;
+}
+
+.lumina-msg-empty-title {
+  font-family: var(--ai-font-heading, anthropicSans, sans-serif);
+  font-size: 34px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 6px;
+  letter-spacing: -0.03em;
+}
+
+.lumina-msg-empty-version {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Bottom Lock Encryption Notice (Exact match to screenshot bottom) */
+.lumina-msg-empty-bottom-lock {
+  position: absolute;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.lumina-msg-lock-icon {
+  color: rgba(255, 255, 255, 0.50);
+}
+
+.lumina-msg-encrypted-link {
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   ACTIVE CONVERSATION VIEW
+   ========================================================================== */
+.lumina-msg-active-chat-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: #141414;
+}
+
+/* Active Chat Top Header */
+.lumina-msg-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 16px;
+  background-color: #191919;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.lumina-msg-chat-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.lumina-msg-mobile-back-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+.lumina-msg-header-avatar {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.lumina-msg-header-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.lumina-msg-header-name {
+  font-family: var(--ai-font-heading, anthropicSans, sans-serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lumina-msg-header-status {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.50);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lumina-msg-chat-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Dropdown Menu */
+.lumina-msg-dropdown-menu {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  width: 180px;
+  background-color: #222222;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+
+.lumina-msg-dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #FFFFFF;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.lumina-msg-dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.lumina-msg-dropdown-item.text-danger {
+  color: #ef4444;
+}
+
+.lumina-msg-dropdown-item.text-danger:hover {
+  background-color: rgba(239, 68, 68, 0.12);
+}
+
+/* Message Stream Wrapper & Notion B&W Ambient Canvas */
+.lumina-msg-stream-wrapper {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.lumina-msg-convo-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Message Stream Container */
+.lumina-msg-stream-container {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: transparent;
+}
+
+.lumina-msg-stream-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lumina-msg-stream-container::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+}
+
+.lumina-msg-stream-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.28);
+}
+
+/* Encryption Pill */
+.lumina-msg-encryption-banner {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background-color: rgba(247, 243, 235, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.60);
+  font-size: 12px;
+  line-height: 1.4;
+  max-width: 540px;
+  text-align: center;
+  margin: 6px 0 12px;
+}
+
+.lumina-msg-lock-mini {
+  color: rgba(255, 255, 255, 0.50);
+  flex-shrink: 0;
+}
+
+/* Date Divider */
+.lumina-msg-date-divider {
+  align-self: center;
+  margin: 4px 0 10px;
+}
+
+.lumina-msg-date-divider span {
+  padding: 4px 10px;
+  background-color: rgba(247, 243, 235, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.60);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Message Bubbles */
+.lumina-msg-bubble-wrap {
+  display: flex;
+  width: 100%;
+  padding: 1px 0;
+}
+
+.lumina-msg-bubble-wrap.is-them {
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.lumina-msg-bubble-wrap.is-me {
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.lumina-msg-bubble {
+  max-width: 65%;
+  min-width: 80px;
+  padding: 8px 12px 6px 12px;
+  font-size: 14px;
+  line-height: 1.45;
+  position: relative;
+  word-break: break-word;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Incoming bubble */
+.lumina-msg-bubble-wrap.is-them .lumina-msg-bubble {
+  background-color: #212121;
+  color: #FFFFFF;
+  border-radius: 12px 12px 12px 2px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Outgoing bubble (Notion Dark Surface) */
+.lumina-msg-bubble-wrap.is-me .lumina-msg-bubble {
+  background-color: #2b2b2b;
+  color: #FFFFFF;
+  border-radius: 12px 12px 2px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.lumina-msg-bubble-sender {
+  font-size: 12px;
+  font-weight: 600;
+  color: #38bdf8;
+  margin-bottom: 3px;
+  letter-spacing: -0.01em;
+  text-align: left;
+}
+
+.lumina-msg-bubble-text {
+  font-size: 14px;
+  line-height: 1.45;
+  color: #FFFFFF;
+  word-break: break-word;
+  white-space: pre-wrap;
+  text-align: left;
+}
+
+.lumina-msg-deleted-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.50);
+}
+
+/* Document Attachment Card */
+.lumina-msg-doc-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background-color: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 8px;
+  margin-bottom: 4px;
+}
+
+.lumina-msg-doc-icon-wrap {
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.lumina-msg-doc-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.lumina-msg-doc-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lumina-msg-doc-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.50);
+}
+
+.lumina-msg-doc-dl-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.70);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lumina-msg-doc-dl-btn:hover {
+  color: #FFFFFF;
+}
+
+/* Image Attachment */
+.lumina-msg-img-preview {
+  margin-bottom: 4px;
+}
+
+.lumina-msg-img {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 6px;
+  display: block;
+}
+
+.lumina-msg-img-caption {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 4px;
+}
+
+/* Bubble Footer */
+.lumina-msg-bubble-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 4px;
+  margin-left: auto;
+  font-size: 11px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.45);
+  user-select: none;
+}
+
+.lumina-msg-bubble-tick {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Quick Emoji Bar */
+.lumina-msg-emoji-bar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #1e1e1e;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+}
+
+.lumina-msg-emoji-btn {
+  font-size: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: transform 0.12s ease, background-color 0.12s ease;
+}
+
+.lumina-msg-emoji-btn:hover {
+  background-color: rgba(255, 255, 255, 0.10);
+  transform: scale(1.2);
+}
+
+/* Attachment Popover */
+.lumina-msg-attachment-popover {
+  position: absolute;
+  bottom: 68px;
+  left: 56px;
+  width: 200px;
+  background-color: #222222;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lumina-msg-attachment-opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #FFFFFF;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.lumina-msg-attachment-opt:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.lumina-msg-attachment-icon {
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+/* Chat Input Bar */
+.lumina-msg-chat-input-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 62px;
+  padding: 0 16px;
+  background-color: #191919;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.lumina-msg-input-tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.lumina-msg-input-tool-btn:hover {
+  background-color: rgba(247, 243, 235, 0.08);
+  color: #FFFFFF;
+}
+
+.lumina-msg-input-tool-btn.is-active {
+  background-color: rgba(247, 243, 235, 0.14);
+  color: #FFFFFF;
+}
+
+.lumina-msg-input-box-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: rgba(247, 243, 235, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  height: 42px;
+  padding: 0 14px;
+}
+
+.lumina-msg-input-box-wrapper:focus-within {
+  background-color: rgba(247, 243, 235, 0.09);
+  border-color: rgba(255, 255, 255, 0.20);
+}
+
+.lumina-msg-text-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #FFFFFF;
+  font-size: 14px;
+}
+
+.lumina-msg-text-input::placeholder {
+  color: rgba(255, 255, 255, 0.40);
+}
+
+.lumina-msg-send-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  border: none;
+  color: #191919;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.lumina-msg-send-action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.90);
+  transform: scale(1.05);
+}
+
+.lumina-msg-send-action-btn:active {
+  transform: scale(0.96);
+}
+
+/* ==========================================================================
+   3. NEW CHAT MODAL
+   ========================================================================== */
+.lumina-msg-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 10000;
+}
+
+.lumina-msg-modal-dialog {
+  width: 100%;
+  max-width: 480px;
+  background-color: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.lumina-msg-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lumina-msg-modal-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lumina-msg-modal-title-icon {
+  color: #FFFFFF;
+}
+
+.lumina-msg-modal-title {
+  font-family: var(--ai-font-heading, anthropicSans, sans-serif);
+  font-size: 17px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.lumina-msg-modal-close {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.60);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.lumina-msg-modal-close:hover {
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.lumina-msg-modal-body {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.lumina-msg-modal-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  height: 40px;
+  background-color: rgba(247, 243, 235, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 8px;
+}
+
+.lumina-msg-modal-search-wrap:focus-within {
+  border-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(247, 243, 235, 0.09);
+}
+
+.lumina-msg-modal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #FFFFFF;
+  font-size: 14px;
+}
+
+.lumina-msg-suggestions-heading {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.lumina-msg-suggestions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lumina-msg-suggestion-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.lumina-msg-suggestion-item:hover {
+  background-color: rgba(247, 243, 235, 0.08);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.lumina-msg-suggestion-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lumina-msg-suggest-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.lumina-msg-suggest-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.lumina-msg-suggest-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.lumina-msg-suggest-role {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.50);
+}
+
+.lumina-msg-suggest-plus {
+  color: rgba(255, 255, 255, 0.50);
+}
+
+.lumina-msg-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lumina-msg-btn-secondary {
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.lumina-msg-btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.lumina-msg-btn-primary {
+  padding: 8px 16px;
+  border-radius: 6px;
+  background-color: #FFFFFF;
+  border: none;
+  color: #191919;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.lumina-msg-btn-primary:hover {
+  background-color: rgba(255, 255, 255, 0.90);
+}
+
+/* ==========================================================================
+   4. MOBILE RESPONSIVENESS (< 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .lumina-msg-sidebar {
+    width: 100%;
+    max-width: 100%;
+    border-right: none;
+  }
+
+  .lumina-msg-main {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* When on mobile, toggle between sidebar and active chat */
+  .msg-hidden-on-mobile {
+    display: none !important;
+  }
+
+  .lumina-msg-mobile-back-btn {
+    display: flex;
+  }
+
+  .lumina-msg-bubble {
+    max-width: 82%;
+  }
+
+  .lumina-msg-empty-title {
+    font-size: 28px;
+  }
+}

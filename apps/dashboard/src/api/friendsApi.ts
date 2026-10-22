@@ -368,7 +368,7 @@ export async function rejectFriendRequestApi(requestId: string): Promise<ApiResp
 export async function fetchNotificationsApi(): Promise<ApiResponse<any[]>> {
   try {
     const baseUrl = getBaseApiUrl()
-    const endpoint = `${baseUrl}/api/notifications`
+    const endpoint = `${baseUrl}/api/notifications?limit=100`
     const headers = getAuthHeaders()
 
     const res = await fetch(endpoint, {

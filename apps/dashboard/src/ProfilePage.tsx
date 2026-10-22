@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react'
 import {
   Search,
   PanelLeft,
-  Inbox,
   SquarePen,
   ArrowUpCircle,
   Settings,
@@ -23,7 +22,6 @@ import {
   X,
   Sparkles,
   Award,
-  ArrowLeft,
   Pencil,
   BadgeCheck,
   Loader2,
@@ -80,9 +78,9 @@ export interface ProfilePageProps {
 
 const LinkedInSilhouette: React.FC = () => (
   <svg viewBox="0 0 140 140" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="140" height="140" fill="#D9E2EC" />
-    <circle cx="70" cy="50" r="26" fill="#627D98" />
-    <path d="M18 136 C22 96 46 86 70 86 C94 86 118 96 122 136 Z" fill="#627D98" />
+    <rect width="140" height="140" fill="#F7F3EB" />
+    <circle cx="70" cy="50" r="26" fill="#191919" opacity="0.4" />
+    <path d="M18 136 C22 96 46 86 70 86 C94 86 118 96 122 136 Z" fill="#191919" opacity="0.4" />
   </svg>
 )
 
@@ -240,7 +238,7 @@ const Icons = {
     >
       <path
         d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"
-        fill="var(--ai-linkedin-blue, #0a66c2)"
+        fill="currentColor"
       />
       <path
         d="m16 9-5.5 5.5L8 12"
@@ -377,8 +375,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   onNavigateHome,
   onLogout,
 }) => {
-  const { theme, toggleTheme } = useTheme()
-  const isDark = theme === 'dark'
+  const { theme: _theme } = useTheme()
   const [activeTab, setActiveTab] = useState<'posts' | 'about' | 'projects' | 'achievements' | 'communities' | 'saved' | 'friends'>('posts')
   const [activeNav, setActiveNav] = useState('Profile')
   const [searchQuery, setSearchQuery] = useState('')
@@ -603,13 +600,41 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       'cmv9h829300024y8akviwpsmm'
 
     setIsRecommendationsLoading(true)
-    fetchRecommendedStudentsApi(collegeId, 5)
-      .then((data) => {
+    Promise.all([
+      fetchRecommendedStudentsApi(collegeId, 10),
+      fetchMyFriendsApi(),
+    ])
+      .then(([data, friendsRes]) => {
         if (!isMounted) return
-        const activeSuggestions = (data || []).filter(
-          (s) => !s.isFriend && s.friendshipStatus !== 'ACCEPTED'
-        )
-        setRecommendedStudents(activeSuggestions)
+        const myFriendIds = new Set<string>()
+        const myFriendUsers = new Set<string>()
+        if (friendsRes.success && Array.isArray(friendsRes.data)) {
+          const myId = user?.id || meProfile?.userId || meProfile?.user?.id
+          const myUser = (user?.username || meProfile?.user?.username || '').replace(/^@/, '').toLowerCase().trim()
+          friendsRes.data.forEach((item: any) => {
+            if (item.status && item.status !== 'ACCEPTED') return
+            const isSenderMe =
+              (myId && (item.sender?.id === myId || item.senderId === myId)) ||
+              (myUser && item.sender?.username?.replace(/^@/, '').toLowerCase().trim() === myUser)
+            const other = isSenderMe ? item.receiver : item.sender
+            const otherId = other?.id || (isSenderMe ? item.receiverId : item.senderId)
+            const otherUser = (other?.username || other?.profile?.username || '').replace(/^@/, '').toLowerCase().trim()
+            if (otherId) myFriendIds.add(otherId)
+            if (otherUser) myFriendUsers.add(otherUser)
+            if (item.senderId && item.senderId !== myId) myFriendIds.add(item.senderId)
+            if (item.receiverId && item.receiverId !== myId) myFriendIds.add(item.receiverId)
+          })
+        }
+
+        const activeSuggestions = (data || []).filter((s) => {
+          if (s.isFriend || s.friendshipStatus === 'ACCEPTED') return false
+          if (s.id && myFriendIds.has(s.id)) return false
+          const sUser = (s.username || '').replace(/^@/, '').toLowerCase().trim()
+          if (sUser && myFriendUsers.has(sUser)) return false
+          return true
+        })
+
+        setRecommendedStudents(activeSuggestions.slice(0, 5))
         if (activeSuggestions.length > 0) {
           const fromRecs: Record<string, string> = {}
           activeSuggestions.forEach((student) => {
@@ -1129,9 +1154,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   }
 
   return (
-    <div className={`lumina-ai-profile-root ${theme === 'dark' ? 'dark' : 'light'}`}>
-      {/* 1. LEFT SIDEBAR (Blurred per user request) */}
-      <aside className={`ai-sidebar ai-blurred-section ${isSidebarCollapsed ? 'is-collapsed' : ''}`} aria-hidden="true">
+    <div className="lumina-ai-profile-root dark">
+      {/* 1. LEFT SIDEBAR */}
+      <aside className={`ai-sidebar ${isSidebarCollapsed ? 'is-collapsed' : ''}`}>
         {/* Sidebar Header matching reference image */}
         <div className="ai-sidebar-top-section">
           <div className="ai-sidebar-action-row">
@@ -1145,16 +1170,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               <PanelLeft size={18} />
             </button>
             <div className="ai-sidebar-action-group">
-              <button
-                type="button"
-                className="ai-sidebar-icon-btn ai-inbox-btn"
-                title="Inbox (2 new)"
-                aria-label="Inbox"
-                onClick={() => alert('2 unread messages')}
-              >
-                <Inbox size={18} />
-                <span className="ai-inbox-badge">2</span>
-              </button>
               <button
                 type="button"
                 className="ai-sidebar-icon-btn"
@@ -1345,6 +1360,35 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               >
                 <span className="ai-nav-icon">{Icons.People}</span>
                 <span className="ai-nav-label">Mentorship</span>
+              </button>
+            </nav>
+          </div>
+
+          {/* PERSONAL */}
+          <div className="ai-nav-group">
+            <span className="ai-nav-category-title">PERSONAL</span>
+            <nav className="ai-nav-list">
+              <button
+                type="button"
+                className="ai-nav-item is-unimplemented"
+                title="My Notes (Coming soon)"
+                tabIndex={-1}
+              >
+                <span className="ai-nav-icon">{Icons.FileText}</span>
+                <span className="ai-nav-label">My Notes</span>
+                <span className="ai-soon-badge">Soon</span>
+              </button>
+              <button
+                type="button"
+                className={`ai-nav-item ${activeNav === 'Messaging' ? 'is-active' : ''}`}
+                title="Messaging"
+                onClick={() => {
+                  window.location.hash = 'messages'
+                  if (onBackToDashboard) onBackToDashboard()
+                }}
+              >
+                <span className="ai-nav-icon">{Icons.MessageSquare}</span>
+                <span className="ai-nav-label">Messaging</span>
               </button>
             </nav>
           </div>
@@ -1562,17 +1606,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       <div className="ai-app-main-layout">
         {/* TOP BAR */}
         <header className="ai-top-bar">
-          <div className="ai-top-bar-left">
-            <button
-              type="button"
-              className="ai-top-back-btn"
-              onClick={onBackToDashboard}
-              title="Back to Dashboard"
-            >
-              <ArrowLeft size={15} />
-              <span>Dashboard</span>
-            </button>
-          </div>
+          <div className="ai-top-bar-left" />
 
           <div className="ai-top-bar-right">
             {/* Search Input (Landing Page Search Bar) */}
@@ -1614,16 +1648,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 onUnreadCountChange={setUnreadNotifCount}
               />
             </div>
-
-            {/* Theme Toggle Button */}
-            <button
-              type="button"
-              className="ai-top-icon-btn"
-              onClick={toggleTheme}
-              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-            >
-              {theme === 'dark' ? Icons.Sun : Icons.Moon}
-            </button>
 
             {/* + Create Button */}
             <button
@@ -1719,7 +1743,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 )}
               </div>
 
-              {/* Main Info Grid (Two Columns) */}
+              {/* Main Info Grid */}
               {loadingProfile ? (
                 <div className="ai-linkedin-info-grid ai-profile-loading-grid" aria-label="Loading profile details...">
                   {/* Left Column Skeleton */}
@@ -1729,18 +1753,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     <div className="ai-profile-skeleton-headline-sub" />
                     <div className="ai-profile-skeleton-meta" />
                     <div className="ai-profile-skeleton-stats" />
-                  </div>
-
-                  {/* Right Column Skeleton */}
-                  <div className="ai-linkedin-right-col">
-                    <div className="ai-linkedin-org-item ai-profile-skeleton-org">
-                      <div className="ai-profile-skeleton-box" />
-                      <div className="ai-profile-skeleton-line" />
-                    </div>
-                    <div className="ai-linkedin-org-item ai-profile-skeleton-org">
-                      <div className="ai-profile-skeleton-box" />
-                      <div className="ai-profile-skeleton-line" />
-                    </div>
                   </div>
                 </div>
               ) : (
@@ -1757,8 +1769,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                       >
                         <BadgeCheck
                           size={21}
-                          fill={isDark ? '#60A5FA' : '#2563EB'}
-                          color="#ffffff"
+                          fill="#FFFFFF"
+                          color="#191919"
                           strokeWidth={2.2}
                         />
                       </span>
@@ -1805,35 +1817,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                         </span>{' '}
                         {friendsCount === 1 || friendsList.length === 1 ? 'friend' : 'friends'}
                       </button>
-                    </div>
-                  </div>
-
-                  {/* Right Column (Organizations & Education) */}
-                  <div className="ai-linkedin-right-col">
-                    <div className="ai-linkedin-org-item">
-                      <div className="ai-linkedin-org-icon ai-org-icon-squares">
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                          <rect width="32" height="32" rx="4" fill="#E8EEF3" />
-                          <rect x="5" y="5" width="10" height="10" rx="1.5" fill="#78909C" />
-                          <rect x="5" y="17" width="10" height="10" rx="1.5" fill="#B0BEC5" />
-                          <rect x="17" y="5" width="10" height="10" rx="1.5" fill="#90A4AE" />
-                          <rect x="17" y="17" width="10" height="10" rx="1.5" fill="#546E7A" />
-                        </svg>
-                      </div>
-                      <span className="ai-linkedin-org-name">{profile.department}</span>
-                    </div>
-
-                    <div className="ai-linkedin-org-item">
-                      <div className="ai-linkedin-org-icon ai-org-icon-psg">
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                          <path d="M16 2 L27 6 V16 C27 23 16 29 16 29 C16 29 5 23 5 16 V6 Z" fill="#ffffff" stroke="#283593" strokeWidth="1.5" />
-                          <path d="M16 4.5 L24.5 7.5 V15.5 C24.5 21 16 26 16 26 C16 26 7.5 21 7.5 15.5 V7.5 Z" fill="#E8EAF6" opacity="0.4" />
-                          <path d="M16 7 L17.5 9 H14.5 Z M15 9.5 H17 V13 H15 Z M14 13.5 H18 V18 H14 Z M13 18.5 H19 V21 H13 Z" fill="#283593" />
-                          <circle cx="16" cy="18" r="4.5" stroke="#283593" strokeWidth="1" strokeDasharray="1.5 1" fill="none" />
-                          <path d="M9 22 Q16 25 23 22" stroke="#283593" strokeWidth="1.5" fill="none" />
-                        </svg>
-                      </div>
-                      <span className="ai-linkedin-org-name">{profile.university}</span>
                     </div>
                   </div>
                 </div>
@@ -2105,8 +2088,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                                   >
                                     <Heart
                                       size={16}
-                                      fill={isPostLiked ? '#ef4444' : 'none'}
-                                      color={isPostLiked ? '#ef4444' : 'currentColor'}
+                                      fill={isPostLiked ? 'currentColor' : 'none'}
+                                      color="currentColor"
                                       className={`ai-heart-icon ${isPostLiked ? 'is-liked' : ''}`}
                                     />
                                     <span>{displayLikes}</span>
@@ -2644,8 +2627,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                                 >
                                   <Heart
                                     size={16}
-                                    fill={isPostLiked ? '#ef4444' : 'none'}
-                                    color={isPostLiked ? '#ef4444' : 'currentColor'}
+                                    fill={isPostLiked ? 'currentColor' : 'none'}
+                                    color="currentColor"
                                     className={`ai-heart-icon ${isPostLiked ? 'is-liked' : ''}`}
                                   />
                                   <span>{displayLikes}</span>
@@ -3211,7 +3194,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           >
             <div className="ai-friends-modal-header">
               <div className="ai-friends-modal-title-row">
-                <Send size={16} color="var(--ai-btn-primary-bg, #2563EB)" />
+                <Send size={16} color="var(--ai-btn-primary-bg, #191919)" />
                 <h3 className="ai-friends-modal-title">
                   Message {directMessageFriend.name}
                 </h3>

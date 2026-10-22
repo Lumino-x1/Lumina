@@ -6,7 +6,7 @@
 .faq-section {
   position: relative;
   width: 100%;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   color: #ffffff;
   padding: 100px 24px 120px;
   overflow: hidden;
@@ -18,7 +18,7 @@
   margin: 0 auto;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 0;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   display: grid;
   grid-template-columns: 1fr 1.35fr;
   box-sizing: border-box;
@@ -188,21 +188,21 @@
 }
 
 /* ==========================================================================
-   Bright Mode Support
+   Bright / Light Mode Support
    ========================================================================== */
 [data-theme="bright"] .faq-section,
 [data-theme="light"] .faq-section,
 .bright .faq-section,
 .light .faq-section {
   background-color: #FFFFFF;
-  color: #111111;
+  color: #191919;
 }
 
 [data-theme="bright"] .faq-framed-container,
 [data-theme="light"] .faq-framed-container,
 .bright .faq-framed-container,
 .light .faq-framed-container {
-  border-color: #E5E7EB;
+  border-color: rgba(25, 25, 25, 0.12);
   background-color: #FFFFFF;
 }
 
@@ -210,56 +210,56 @@
 [data-theme="light"] .faq-left-col,
 .bright .faq-left-col,
 .light .faq-left-col {
-  border-right-color: #E5E7EB;
+  border-right-color: rgba(25, 25, 25, 0.12);
 }
 
 [data-theme="bright"] .faq-kicker,
 [data-theme="light"] .faq-kicker,
 .bright .faq-kicker,
 .light .faq-kicker {
-  color: #9CA3AF;
+  color: rgba(25, 25, 25, 0.45);
 }
 
 [data-theme="bright"] .faq-serif-title,
 [data-theme="light"] .faq-serif-title,
 .bright .faq-serif-title,
 .light .faq-serif-title {
-  color: #111111;
+  color: #191919;
 }
 
 [data-theme="bright"] .faq-description,
 [data-theme="light"] .faq-description,
 .bright .faq-description,
 .light .faq-description {
-  color: #6B7280;
+  color: rgba(25, 25, 25, 0.65);
 }
 
 [data-theme="bright"] .faq-row-item,
 [data-theme="light"] .faq-row-item,
 .bright .faq-row-item,
 .light .faq-row-item {
-  border-bottom-color: #E5E7EB;
+  border-bottom-color: rgba(25, 25, 25, 0.12);
 }
 
 [data-theme="bright"] .faq-row-btn,
 [data-theme="light"] .faq-row-btn,
 .bright .faq-row-btn,
 .light .faq-row-btn {
-  color: #111111 !important;
+  color: #191919 !important;
 }
 
 [data-theme="bright"] .faq-row-btn:hover,
 [data-theme="light"] .faq-row-btn:hover,
 .bright .faq-row-btn:hover,
 .light .faq-row-btn:hover {
-  color: #2563EB !important;
+  color: #191919 !important;
 }
 
 [data-theme="bright"] .faq-row-question,
 [data-theme="light"] .faq-row-question,
 .bright .faq-row-question,
 .light .faq-row-question {
-  color: #111111;
+  color: #191919;
 }
 
 [data-theme="bright"] .faq-row-chevron,
@@ -270,7 +270,7 @@
 [data-theme="light"] .faq-row-chevron svg,
 .bright .faq-row-chevron svg,
 .light .faq-row-chevron svg {
-  color: #9CA3AF;
+  color: rgba(25, 25, 25, 0.45);
 }
 
 [data-theme="bright"] .faq-row-btn:hover .faq-row-chevron,
@@ -289,14 +289,14 @@
 .bright .faq-row-item.is-open .faq-row-chevron svg,
 .light .faq-row-btn:hover .faq-row-chevron svg,
 .light .faq-row-item.is-open .faq-row-chevron svg {
-  color: #2563EB;
+  color: #191919;
 }
 
 [data-theme="bright"] .faq-row-answer-text,
 [data-theme="light"] .faq-row-answer-text,
 .bright .faq-row-answer-text,
 .light .faq-row-answer-text {
-  color: #6B7280;
+  color: rgba(25, 25, 25, 0.65);
 }
 
 @media (max-width: 900px) {

@@ -6,7 +6,7 @@
 .integrations-section {
   position: relative;
   width: 100%;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   color: #ffffff;
   overflow: hidden;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -20,7 +20,7 @@
   display: flex;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   border-top: 1px solid rgba(255, 255, 255, 0.04);
-  background: #000000;
+  background: var(--background, #191919);
   overflow: hidden;
   user-select: none;
 }
@@ -127,13 +127,13 @@
   font-weight: 600;
 }
 
-/* 2-Column Inner Layout - Matching Landing Page Background (#000000) */
+/* 2-Column Inner Layout - Matching Landing Page Background (#191919) */
 .integrations-inner-layout {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   align-items: center;
   gap: 60px;
-  background: #000000;
+  background: var(--background, #191919);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 0;
   padding: 56px 64px;
@@ -189,7 +189,7 @@
 }
 
 .integration-card-box.is-active-logo {
-  background: #1e1e1e;
+  background: #191919;
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
   cursor: pointer;
@@ -198,7 +198,7 @@
 .integration-card-box.is-active-logo:hover {
   transform: scale(1.08) translateY(-2px);
   border-color: rgba(255, 255, 255, 0.3);
-  background: #242424;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .integration-card-box.is-empty-tile {

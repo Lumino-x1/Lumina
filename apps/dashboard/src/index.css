@@ -26,63 +26,67 @@
   --font-size-xl: 52px;
   --font-size-2xl: 78px;
 
-  /* Centralized Semantic Design Tokens (Black + White + Blue) */
+  /* Centralized Semantic Design Tokens (Notion-Inspired: Black, White, Cream) */
+  --lumina-black: #191919;
+  --lumina-white: #FFFFFF;
+  --lumina-cream: #F7F3EB;
+
   --background: #FFFFFF;
-  --foreground: #111111;
+  --foreground: #191919;
 
   --surface: #FFFFFF;
-  --surface-secondary: #F7F8FA;
-  --surface-tertiary: #F0F2F5;
+  --surface-secondary: #F7F3EB;
+  --surface-tertiary: rgba(25, 25, 25, 0.04);
 
   --card: #FFFFFF;
-  --card-foreground: #111111;
+  --card-foreground: #191919;
 
-  --primary: #2563EB;
-  --primary-hover: #1D4ED8;
+  --primary: #191919;
+  --primary-hover: rgba(25, 25, 25, 0.85);
   --primary-foreground: #FFFFFF;
 
-  --secondary: #F3F4F6;
-  --secondary-foreground: #111827;
+  --secondary: #F7F3EB;
+  --secondary-foreground: #191919;
 
-  --muted: #F3F4F6;
-  --muted-foreground: #6B7280;
+  --muted: #F7F3EB;
+  --muted-foreground: rgba(25, 25, 25, 0.65);
 
-  --border: #E5E7EB;
-  --border-strong: #D1D5DB;
+  --border: rgba(25, 25, 25, 0.12);
+  --border-strong: rgba(25, 25, 25, 0.22);
 
   --input: #FFFFFF;
-  --input-border: #D1D5DB;
-  --input-focus: #2563EB;
+  --input-border: rgba(25, 25, 25, 0.16);
+  --input-focus: #191919;
 
-  --link: #2563EB;
-  --link-hover: #1D4ED8;
+  --link: #191919;
+  --link-hover: rgba(25, 25, 25, 0.70);
 
-  --ring: #2563EB;
+  --ring: #191919;
 
   --popover: #FFFFFF;
-  --popover-foreground: #111111;
+  --popover-foreground: #191919;
 
   --sidebar-background: #FFFFFF;
-  --sidebar-foreground: #111111;
-  --sidebar-border: #E5E7EB;
-  --sidebar-active: #EFF6FF;
-  --sidebar-active-foreground: #1D4ED8;
+  --sidebar-foreground: #191919;
+  --sidebar-border: rgba(25, 25, 25, 0.08);
+  --sidebar-active: #F7F3EB;
+  --sidebar-active-foreground: #191919;
 
-  --overlay: rgba(0, 0, 0, 0.45);
+  --overlay: rgba(25, 25, 25, 0.45);
 
-  --destructive: #EF4444;
+  --destructive: #191919;
   --destructive-foreground: #FFFFFF;
-  --success: #10B981;
+  --success: #191919;
   --success-foreground: #FFFFFF;
-  --warning: #F59E0B;
+  --warning: #191919;
   --warning-foreground: #FFFFFF;
-  --info: #2563EB;
+  --info: #191919;
   --info-foreground: #FFFFFF;
-  --badge: #EFF6FF;
-  --badge-foreground: #1D4ED8;
-  --skeleton: #E5E7EB;
+  --badge: #F7F3EB;
+  --badge-foreground: #191919;
+  --skeleton: #F7F3EB;
   --scrollbar-track: transparent;
-  --scrollbar-thumb: #D1D5DB;
+  --scrollbar-thumb: rgba(25, 25, 25, 0.20);
 
   /* Legacy aliases for backward compatibility */
   --color-terracotta: var(--primary);
@@ -95,14 +99,14 @@
 
   --color-text-primary: var(--foreground);
   --color-text-secondary: var(--muted-foreground);
-  --color-text-tertiary: #9CA3AF;
+  --color-text-tertiary: rgba(25, 25, 25, 0.45);
   --color-surface-raised: var(--surface-secondary);
   --color-surface-base: var(--background);
   --color-surface-muted: var(--surface-secondary);
   --color-surface-strong: var(--surface);
   --color-border-default: var(--border);
-  --color-border-subtle: rgba(0, 0, 0, 0.08);
-  --color-focus-ring: rgba(37, 99, 235, 0.35);
+  --color-border-subtle: rgba(25, 25, 25, 0.08);
+  --color-focus-ring: rgba(25, 25, 25, 0.35);
 
   /* Spacing Scale */
   --space-1: 6px;
@@ -132,63 +136,67 @@
 
 [data-theme="dark"],
 .dark {
-  /* Centralized Semantic Design Tokens (Dark Theme) */
-  --background: #09090B;
-  --foreground: #FAFAFA;
+  /* Centralized Semantic Design Tokens (Notion Dark Theme: Black, White, Cream) */
+  --lumina-black: #191919;
+  --lumina-white: #FFFFFF;
+  --lumina-cream: #F7F3EB;
 
-  --surface: #111113;
-  --surface-secondary: #18181B;
-  --surface-tertiary: #222225;
+  --background: #191919;
+  --foreground: #FFFFFF;
 
-  --card: #111113;
-  --card-foreground: #FAFAFA;
+  --surface: #191919;
+  --surface-secondary: rgba(247, 243, 235, 0.08);
+  --surface-tertiary: rgba(255, 255, 255, 0.04);
 
-  --primary: #60A5FA;
-  --primary-hover: #93C5FD;
-  --primary-foreground: #0B1220;
+  --card: #191919;
+  --card-foreground: #FFFFFF;
 
-  --secondary: #202024;
-  --secondary-foreground: #F4F4F5;
+  --primary: #FFFFFF;
+  --primary-hover: rgba(255, 255, 255, 0.88);
+  --primary-foreground: #191919;
 
-  --muted: #18181B;
-  --muted-foreground: #A1A1AA;
+  --secondary: rgba(247, 243, 235, 0.12);
+  --secondary-foreground: #FFFFFF;
 
-  --border: #27272A;
-  --border-strong: #3F3F46;
+  --muted: rgba(247, 243, 235, 0.08);
+  --muted-foreground: rgba(255, 255, 255, 0.65);
 
-  --input: #111113;
-  --input-border: #3F3F46;
-  --input-focus: #60A5FA;
+  --border: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.22);
 
-  --link: #60A5FA;
-  --link-hover: #93C5FD;
+  --input: #191919;
+  --input-border: rgba(255, 255, 255, 0.16);
+  --input-focus: #FFFFFF;
 
-  --ring: #60A5FA;
+  --link: #FFFFFF;
+  --link-hover: rgba(255, 255, 255, 0.80);
 
-  --popover: #18181B;
-  --popover-foreground: #FAFAFA;
+  --ring: #FFFFFF;
 
-  --sidebar-background: #09090B;
-  --sidebar-foreground: #FAFAFA;
-  --sidebar-border: #27272A;
-  --sidebar-active: #172554;
-  --sidebar-active-foreground: #93C5FD;
+  --popover: #191919;
+  --popover-foreground: #FFFFFF;
 
-  --overlay: rgba(0, 0, 0, 0.70);
+  --sidebar-background: #191919;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-active: rgba(247, 243, 235, 0.12);
+  --sidebar-active-foreground: #FFFFFF;
 
-  --destructive: #F87171;
-  --destructive-foreground: #450A0A;
-  --success: #34D399;
-  --success-foreground: #022C22;
-  --warning: #FBBF24;
-  --warning-foreground: #451A03;
-  --info: #60A5FA;
-  --info-foreground: #0B1220;
-  --badge: rgba(96, 165, 250, 0.15);
-  --badge-foreground: #93C5FD;
-  --skeleton: #27272A;
+  --overlay: rgba(0, 0, 0, 0.75);
+
+  --destructive: #FFFFFF;
+  --destructive-foreground: #191919;
+  --success: #FFFFFF;
+  --success-foreground: #191919;
+  --warning: #FFFFFF;
+  --warning-foreground: #191919;
+  --info: #FFFFFF;
+  --info-foreground: #191919;
+  --badge: rgba(247, 243, 235, 0.12);
+  --badge-foreground: #FFFFFF;
+  --skeleton: rgba(255, 255, 255, 0.08);
   --scrollbar-track: transparent;
-  --scrollbar-thumb: #3F3F46;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.20);
 
   /* Legacy aliases for backward compatibility */
   --color-terracotta: var(--primary);
@@ -201,16 +209,16 @@
 
   --color-text-primary: var(--foreground);
   --color-text-secondary: var(--muted-foreground);
-  --color-text-tertiary: #71717A;
+  --color-text-tertiary: rgba(255, 255, 255, 0.45);
   --color-surface-raised: var(--surface-secondary);
   --color-surface-base: var(--background);
   --color-surface-muted: var(--surface-secondary);
   --color-surface-strong: var(--surface);
   --color-border-default: var(--border);
   --color-border-subtle: rgba(255, 255, 255, 0.08);
-  --color-focus-ring: rgba(96, 165, 250, 0.35);
+  --color-focus-ring: rgba(255, 255, 255, 0.35);
 
-  --notion-bg: var(--surface);
+  --notion-bg: var(--background);
   --notion-text: var(--foreground);
   --notion-text-muted: var(--muted-foreground);
   --notion-border: var(--border);
@@ -231,8 +239,8 @@
 }
 
 html, body {
-  background-color: #000000;
-  color: var(--notion-text);
+  background-color: var(--background);
+  color: var(--foreground);
   font-family: var(--font-sans);
   min-height: 100vh;
   width: 100%;
@@ -249,7 +257,14 @@ body.bright,
 [data-theme="light"] body,
 [data-theme="bright"] body {
   background-color: #FFFFFF !important;
-  color: #111111 !important;
+  color: #191919 !important;
+}
+
+html.dark,
+body.dark,
+[data-theme="dark"] body {
+  background-color: #191919 !important;
+  color: #FFFFFF !important;
 }
 
 #root {
@@ -258,7 +273,7 @@ body.bright,
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #000000;
+  background-color: var(--background);
   overflow-x: hidden;
 }
 
@@ -266,7 +281,7 @@ body.bright,
   width: 100%;
   max-width: 100%;
   min-height: 100vh;
-  background-color: #000000;
+  background-color: var(--background);
   position: relative;
   overflow-x: hidden;
 }
@@ -282,12 +297,19 @@ body.bright .app-main-wrapper {
   background-color: #FFFFFF !important;
 }
 
+[data-theme="dark"] #root,
+body.dark #root,
+[data-theme="dark"] .app-main-wrapper,
+body.dark .app-main-wrapper {
+  background-color: #191919 !important;
+}
+
 a {
   color: inherit;
   text-decoration: none;
 }
 
-/* All buttons across the site default to smooth oval/pill shape, never sharp rectangles/squares */
+/* Notion-inspired button styling: compact, subtle rounding (5px), never oversized pills */
 button:not(.faq-box-btn):not(.faq-row-btn),
 .btn,
 .btn-primary-pill,
@@ -318,10 +340,10 @@ button:not(.faq-box-btn):not(.faq-row-btn),
 .saascn-btn-secondary,
 .saascn-nav-dash-link {
   font-family: inherit;
-  border-radius: 9999px !important;
+  border-radius: 5px !important;
 }
 
-/* Icon and 1:1 action buttons are perfectly circular/round */
+/* Icon and 1:1 action buttons have subtle 5px radius (Notion-style) */
 .ai-sidebar-icon-btn,
 .ai-top-icon-btn,
 .ai-tool-btn,
@@ -334,7 +356,7 @@ button:not(.faq-box-btn):not(.faq-row-btn),
 .saascn-user-btn,
 .lumina-theme-toggle,
 .theme-toggle-btn {
-  border-radius: 50% !important;
+  border-radius: 5px !important;
 }
 
 /* Grid Corner Crosshairs (+) */

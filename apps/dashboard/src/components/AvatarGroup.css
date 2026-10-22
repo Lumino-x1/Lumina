@@ -19,8 +19,8 @@
   justify-content: center;
   border-radius: 50%;
   overflow: hidden;
-  background-color: #242424;
-  box-shadow: 0 0 0 2px #000000;
+  background-color: var(--surface-secondary, #F7F3EB);
+  box-shadow: 0 0 0 2px var(--background, #FFFFFF);
   flex-shrink: 0;
   transition: transform 0.15s ease, z-index 0.15s ease;
 }
@@ -61,7 +61,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #26272b;
+  background-color: #191919;
   color: rgba(255, 255, 255, 0.7);
 }
 

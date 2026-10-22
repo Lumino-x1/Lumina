@@ -10,7 +10,7 @@
 .hero-section-root {
   position: relative;
   width: 100%;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   color: #ffffff;
   overflow: hidden;
   box-sizing: border-box;
@@ -28,7 +28,7 @@
   border-right: 1px dashed rgba(255, 255, 255, 0.12);
   border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
   box-sizing: border-box;
-  background-color: #000000;
+  background-color: var(--background, #191919);
 }
 
 /* Extended Horizontal Dashed Guide Line at section bottom */
@@ -91,8 +91,8 @@
   justify-content: center;
   width: 17px;
   height: 17px;
-  background-color: #ff6600;
-  color: #ffffff;
+  background-color: #FFFFFF;
+  color: #191919;
   font-weight: 800;
   font-size: 11px;
   border-radius: 2px;
@@ -136,13 +136,13 @@
 }
 
 .hero-btn-primary {
-  background-color: #2563EB;
-  border: 1px solid #2563EB;
-  border-radius: 9999px !important;
-  color: #FFFFFF;
-  padding: 12px 24px;
+  background-color: #FFFFFF;
+  border: 1px solid #FFFFFF;
+  border-radius: 5px !important;
+  color: #191919;
+  padding: 10px 20px;
   font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.01em;
   display: inline-flex;
@@ -152,23 +152,23 @@
   line-height: 1;
   cursor: pointer;
   text-decoration: none;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
 }
 
 .hero-btn-primary:hover {
-  background-color: #1D4ED8;
-  border-color: #1D4ED8;
-  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.88);
+  border-color: rgba(255, 255, 255, 0.88);
+  color: #191919;
 }
 
 .hero-btn-secondary {
   background-color: transparent;
   border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 9999px !important;
+  border-radius: 5px !important;
   color: #ffffff;
-  padding: 12px 24px;
+  padding: 10px 20px;
   font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.01em;
   display: inline-flex;
@@ -205,7 +205,7 @@
   padding: 0;
   display: flex;
   position: relative;
-  background-color: #000000;
+  background-color: var(--background, #191919);
 }
 
 /* Isometric CAD/Blueprint Background Grid */
@@ -320,8 +320,8 @@
 [data-theme="light"] .hero-btn-primary,
 .bright .hero-btn-primary,
 .light .hero-btn-primary {
-  background-color: #2563EB;
-  border-color: #2563EB;
+  background-color: #191919;
+  border-color: #191919;
   color: #ffffff;
 }
 
@@ -329,8 +329,8 @@
 [data-theme="light"] .hero-btn-primary:hover,
 .bright .hero-btn-primary:hover,
 .light .hero-btn-primary:hover {
-  background-color: #1D4ED8;
-  border-color: #1D4ED8;
+  background-color: rgba(25, 25, 25, 0.85);
+  border-color: rgba(25, 25, 25, 0.85);
   color: #ffffff;
 }
 
@@ -338,17 +338,17 @@
 [data-theme="light"] .hero-btn-secondary,
 .bright .hero-btn-secondary,
 .light .hero-btn-secondary {
-  background-color: transparent;
-  border-color: rgba(0, 0, 0, 0.25);
-  color: #000000;
+  background-color: #F7F3EB;
+  border-color: rgba(25, 25, 25, 0.16);
+  color: #191919;
 }
 
 [data-theme="bright"] .hero-btn-secondary:hover,
 [data-theme="light"] .hero-btn-secondary:hover,
 .bright .hero-btn-secondary:hover,
 .light .hero-btn-secondary:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(25, 25, 25, 0.04);
+  border-color: rgba(25, 25, 25, 0.35);
 }
 
 [data-theme="bright"] .hero-image-col,
@@ -410,7 +410,7 @@
   [data-theme="light"] .hero-image-col,
   .bright .hero-image-col,
   .light .hero-image-col {
-    border-top-color: #E5E7EB;
+    border-top-color: rgba(25, 25, 25, 0.12);
   }
 
   .crosshair-top-divider,

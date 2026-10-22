@@ -1,14 +1,14 @@
 import {
   createPostCommentApi,
   deleteCommentApi,
-  fetchPostCommentsApi,
+  fetchPostCommentsPageApi,
   reportCommentApi,
   toggleCommentLikeApi,
   togglePinCommentApi,
 } from '../api/feedApi'
 import { useTheme } from '../lib/themeContext'
 import { DEFAULT_WHATSAPP_AVATAR } from './WhatsAppDefaultAvatar'
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 
 import type { PostCommentItem } from '../api/feedApi'
 
@@ -214,7 +214,7 @@ const DrawerIcons = {
     </svg>
   ),
   Sparkle: (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="#fbbf24" stroke="none">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none">
       <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z" />
     </svg>
   ),
@@ -408,9 +408,6 @@ export const CommentsDrawer: React.FC<CommentsDrawerProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [onClose])
 
-  if (isOpen === false) {
-    return null
-  }
   const [isComposerExpanded, setIsComposerExpanded] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [activeReplyCommentId, setActiveReplyCommentId] = useState<string | null>(null)
@@ -418,7 +415,12 @@ export const CommentsDrawer: React.FC<CommentsDrawerProps> = ({
   const [replyText, setReplyText] = useState('')
   const [hiddenReplies, setHiddenReplies] = useState<Record<string, boolean>>({})
   const [expandedComments, setExpandedComments] = useState<Record<string, boolean>>({})
-  const [visibleCount, setVisibleCount] = useState<number>(3)
+  const [visibleCount, setVisibleCount] = useState<number>(10)
+  const [nextCommentsCursor, setNextCommentsCursor] = useState<string | null>(null)
+  const [isLoadingComments, setIsLoadingComments] = useState<boolean>(true)
+  const [isLoadingMoreComments, setIsLoadingMoreComments] = useState<boolean>(false)
+  const [hasMoreComments, setHasMoreComments] = useState<boolean>(true)
+  const commentsBottomSentinelRef = useRef<HTMLDivElement>(null)
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -447,25 +449,36 @@ export const CommentsDrawer: React.FC<CommentsDrawerProps> = ({
     let isMounted = true
     if (!postId) return
 
+    setIsLoadingComments(true)
+    setHasMoreComments(true)
+    setNextCommentsCursor(null)
+    setVisibleCount(10)
+
     async function loadPostComments() {
       try {
-        const fetched = await fetchPostCommentsApi(postId)
+        const pageResult = await fetchPostCommentsPageApi(postId, { limit: 10 })
         if (isMounted) {
-          if (Array.isArray(fetched) && fetched.length > 0) {
-            setComments(fetched)
-            const countWithReplies = fetched.reduce(
+          if (Array.isArray(pageResult.comments) && pageResult.comments.length > 0) {
+            setComments(pageResult.comments)
+            setNextCommentsCursor(pageResult.nextCursor ?? null)
+            setHasMoreComments(Boolean(pageResult.nextCursor))
+            const countWithReplies = pageResult.comments.reduce(
               (acc, c) =>
                 acc + (c.isDeleted ? 0 : 1) + (c.replies?.filter((r) => !r.isDeleted).length || 0),
               0
             )
-            setCommentCount(countWithReplies)
+            setCommentCount((prev) => Math.max(prev, countWithReplies))
           } else if (typeof postId === 'string' && postId.startsWith('post_seed')) {
             // Seed post demo fallback
             setComments(DEMO_SEED_COMMENTS)
             setCommentCount(420)
+            setHasMoreComments(false)
+            setNextCommentsCursor(null)
           } else {
             setComments([])
             setCommentCount(0)
+            setHasMoreComments(false)
+            setNextCommentsCursor(null)
           }
         }
       } catch (err) {
@@ -478,7 +491,11 @@ export const CommentsDrawer: React.FC<CommentsDrawerProps> = ({
             setComments([])
             setCommentCount(0)
           }
+          setHasMoreComments(false)
+          setNextCommentsCursor(null)
         }
+      } finally {
+        if (isMounted) setIsLoadingComments(false)
       }
     }
 
@@ -487,6 +504,98 @@ export const CommentsDrawer: React.FC<CommentsDrawerProps> = ({
       isMounted = false
     }
   }, [postId])
+
+  // Fetch next set of comments when user scrolls down
+  const loadMoreComments = useCallback(async () => {
+    if (isLoadingMoreComments || isLoadingComments) return
+
+    // If there are more local comments already loaded beyond visibleCount, reveal them first
+    if (visibleCount < comments.length) {
+      setVisibleCount((prev) => Math.min(prev + 10, comments.length))
+      return
+    }
+
+    if (!hasMoreComments || !nextCommentsCursor) return
+
+    setIsLoadingMoreComments(true)
+    try {
+      const pageResult = await fetchPostCommentsPageApi(postId, {
+        cursor: nextCommentsCursor,
+        limit: 10,
+      })
+
+      if (pageResult.comments && pageResult.comments.length > 0) {
+        setComments((prev) => {
+          const existingIds = new Set(prev.map((c) => c.id))
+          const newUnique = pageResult.comments.filter((c) => !existingIds.has(c.id))
+          return [...prev, ...newUnique]
+        })
+        setVisibleCount((prev) => prev + pageResult.comments.length)
+        setNextCommentsCursor(pageResult.nextCursor ?? null)
+        setHasMoreComments(Boolean(pageResult.nextCursor))
+      } else {
+        setHasMoreComments(false)
+        setNextCommentsCursor(null)
+      }
+    } catch (err) {
+      console.error('Failed to load more comments on scroll:', err)
+      setHasMoreComments(false)
+    } finally {
+      setIsLoadingMoreComments(false)
+    }
+  }, [
+    isLoadingMoreComments,
+    isLoadingComments,
+    visibleCount,
+    comments.length,
+    hasMoreComments,
+    nextCommentsCursor,
+    postId,
+  ])
+
+  // Scroll observer: ask for next set of comments when user scrolls down to sentinel
+  useEffect(() => {
+    const sentinel = commentsBottomSentinelRef.current
+    if (!sentinel) return
+
+    const canLoad = hasMoreComments || visibleCount < comments.length
+    if (!canLoad || isLoadingComments) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0]
+        if (first && first.isIntersecting) {
+          loadMoreComments()
+        }
+      },
+      {
+        root: null,
+        rootMargin: '250px',
+        threshold: 0.1,
+      }
+    )
+
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [loadMoreComments, hasMoreComments, visibleCount, comments.length, isLoadingComments])
+
+  // Window scroll fallback
+  useEffect(() => {
+    const canLoad = hasMoreComments || visibleCount < comments.length
+    if (!canLoad || isLoadingComments) return
+
+    const handleWindowScroll = () => {
+      const sentinel = commentsBottomSentinelRef.current
+      if (!sentinel) return
+      const rect = sentinel.getBoundingClientRect()
+      if (rect.top <= window.innerHeight + 300) {
+        loadMoreComments()
+      }
+    }
+
+    window.addEventListener('scroll', handleWindowScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleWindowScroll)
+  }, [loadMoreComments, hasMoreComments, visibleCount, comments.length, isLoadingComments])
 
   // User display metadata
   const currentUserName = currentUser?.name || (currentUser?.username ? `@${currentUser.username.replace(/^@/, '')}` : 'Sunilkumar T')
@@ -831,6 +940,10 @@ export const CommentsDrawer: React.FC<CommentsDrawerProps> = ({
 
   const visibleComments = sortedComments.slice(0, visibleCount)
 
+  if (isOpen === false) {
+    return null
+  }
+
   return (
     <section
       id="comments-section"
@@ -849,6 +962,13 @@ export const CommentsDrawer: React.FC<CommentsDrawerProps> = ({
           {DrawerIcons.Shield}
         </button>
       </div>
+
+      {/* Top indeterminate loading bar when fetching responses or submitting */}
+      {(isLoadingComments || isSubmitting) && (
+        <div className="comments-header-loading-bar" aria-hidden="true">
+          <div className="comments-header-loading-progress" />
+        </div>
+      )}
 
       {/* 2. Composer Section */}
       <div className="comments-composer-section">
@@ -952,7 +1072,31 @@ export const CommentsDrawer: React.FC<CommentsDrawerProps> = ({
 
       {/* 3. Comments List Stream */}
       <div className="comments-list-stream">
-        {comments.length === 0 ? (
+        {isLoadingComments ? (
+          <div className="comments-loading-state" role="status" aria-label="Loading responses">
+            <div className="comments-loading-bar-track">
+              <div className="comments-loading-bar-indicator" />
+            </div>
+
+            <div className="comments-skeleton-list">
+              {[1, 2, 3].map((n) => (
+                <div key={n} className="comments-skeleton-item" style={{ opacity: 1 - (n - 1) * 0.25 }}>
+                  <div className="comments-skeleton-header">
+                    <div className="comments-skeleton-avatar" />
+                    <div className="comments-skeleton-meta">
+                      <div className="comments-skeleton-line short" />
+                      <div className="comments-skeleton-line tiny" />
+                    </div>
+                  </div>
+                  <div className="comments-skeleton-body">
+                    <div className="comments-skeleton-line full" />
+                    <div className="comments-skeleton-line medium" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : comments.length === 0 ? (
           <div className="comments-empty-state">
             <p className="comments-empty-title">
               There are currently no responses for this story.
@@ -1351,16 +1495,14 @@ export const CommentsDrawer: React.FC<CommentsDrawerProps> = ({
         )}
       </div>
 
-      {/* 4. "See all responses" pill button */}
-      {visibleCount < sortedComments.length && (
-        <div className="comments-see-all-wrapper">
-          <button
-            type="button"
-            className="comments-see-all-btn"
-            onClick={() => setVisibleCount((prev) => prev + 5)}
-          >
-            See all responses
-          </button>
+      {/* Sentinel for infinite scroll on scroll */}
+      <div ref={commentsBottomSentinelRef} className="comments-scroll-sentinel" />
+
+      {/* Loading more comments spinner */}
+      {isLoadingMoreComments && (
+        <div className="comments-loading-more" role="status" aria-label="Loading more responses">
+          <div className="comments-spinner-sm" />
+          <span>Loading more responses...</span>
         </div>
       )}
     </section>

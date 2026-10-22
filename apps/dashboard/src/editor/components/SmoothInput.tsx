@@ -250,7 +250,7 @@ export const SmoothInput = ({
         />
         <motion.div
           className="pointer-events-none col-start-1 col-end-2 row-start-1 row-end-2 h-[0.9em] w-0.5 self-center"
-          style={{ x: springCaretX, opacity: caretOpacity, backgroundColor: '#9ca3af' }}
+          style={{ x: springCaretX, opacity: caretOpacity, backgroundColor: 'currentColor' }}
         />
       </div>
     </div>

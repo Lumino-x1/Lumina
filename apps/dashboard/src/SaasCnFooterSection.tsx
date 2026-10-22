@@ -1,6 +1,5 @@
 import React from 'react'
-import { ArrowUpRight, Sun, Moon, User } from 'lucide-react'
-import { useTheme } from './lib/themeContext'
+import { ArrowUpRight, User } from 'lucide-react'
 import './SaasCnFooterSection.css'
 
 export interface SaasCnFooterSectionProps {
@@ -8,8 +7,6 @@ export interface SaasCnFooterSectionProps {
 }
 
 export const SaasCnFooterSection: React.FC<SaasCnFooterSectionProps> = ({ onOpenAuth }) => {
-  const { theme, toggleTheme } = useTheme()
-  const isDarkMode = theme === 'dark'
 
   const handleGetStarted = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -189,28 +186,6 @@ export const SaasCnFooterSection: React.FC<SaasCnFooterSectionProps> = ({ onOpen
           <div className="saascn-copyright">
             © 2026 Lumina. All rights reserved.
           </div>
-
-          {/* Theme Toggle Pill (Sun / Moon) */}
-          <button
-            type="button"
-            className="saascn-theme-toggle"
-            onClick={toggleTheme}
-            aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
-            title={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
-          >
-            <div
-              className={`saascn-theme-active-indicator ${!isDarkMode ? 'is-active is-light' : ''}`}
-              title="Light mode"
-            >
-              <Sun className={`w-3.5 h-3.5 saascn-theme-icon ${!isDarkMode ? 'saascn-icon-active' : 'saascn-icon-inactive'}`} />
-            </div>
-            <div
-              className={`saascn-theme-active-indicator ${isDarkMode ? 'is-dark is-active' : ''}`}
-              title="Dark mode"
-            >
-              <Moon className={`w-3.5 h-3.5 saascn-theme-icon ${isDarkMode ? 'saascn-icon-active' : 'saascn-icon-inactive'}`} />
-            </div>
-          </button>
         </div>
       </div>
     </section>

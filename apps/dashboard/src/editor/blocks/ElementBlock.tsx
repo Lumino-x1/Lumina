@@ -55,7 +55,7 @@ export const ElementBlock: React.FC<ElementBlockProps> = ({ block, isSelected })
           className="lumina-canvas-cta-button"
           style={{
             backgroundColor: block.styles?.backgroundColor || '#ffffff',
-            color: block.styles?.color || '#121212',
+            color: block.styles?.color || '#191919',
             borderRadius: block.styles?.borderRadius ?? 8,
             padding: `${block.styles?.padding ?? 10}px 24px`,
           }}

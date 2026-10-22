@@ -1,7 +1,7 @@
 .lumina-auth-loading-root {
   min-height: 100vh;
   width: 100%;
-  background-color: #000000;
+  background-color: #191919;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,6 +32,6 @@
 
 [data-theme="light"] .lumina-auth-loading-spinner,
 .light .lumina-auth-loading-spinner {
-  border: 3px solid #E5E7EB;
-  border-top-color: #2563EB;
+  border: 3px solid rgba(25, 25, 25, 0.15);
+  border-top-color: #191919;
 }

@@ -81,7 +81,7 @@ export const NEUFORM_BATCH_DEFAULTS = {
   brightness: 1,
 } as const;
 
-const LIGHT_PAPER = "#eef1f6";
+const LIGHT_PAPER = "#F7F3EB";
 
 function clamp(value: number, minimum: number, maximum: number) {
   return Math.min(maximum, Math.max(minimum, value));
@@ -167,8 +167,8 @@ function patchDiagnosticsPanel(source: string, { mode }: BakeKnobs) {
   if (mode === "light") {
     // Match canvas cutouts to light paper; deepen emerald strokes for contrast.
     next = next
-      .replaceAll("ctx.fillStyle = '#020804';", `ctx.fillStyle = '${LIGHT_PAPER}';`)
-      .replaceAll("rgba(52,211,153,", "rgba(4,120,87,");
+      .replaceAll("ctx.fillStyle = '#191919';", `ctx.fillStyle = '${LIGHT_PAPER}';`)
+      .replaceAll("rgba(52,211,153,", "rgba(25, 25, 25,");
   }
   return next;
 }
@@ -178,7 +178,7 @@ const EFFECTS = {
     title: "Constellation Field",
     source: constellationFieldSource,
     supportsMode: true,
-    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#070914"),
+    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#191919"),
     targets: [{ selector: "#constellationCanvas", role: "background" }],
     patch(source, { size, length, density, strokeWidth, mode }) {
       let next = source
@@ -197,8 +197,8 @@ const EFFECTS = {
       if (mode === "light") {
         // Deeper bronze ink so gold nodes stay readable on paper.
         next = next
-          .replace("ctx.strokeStyle = '#E6C879';", "ctx.strokeStyle = '#8B6914';")
-          .replace("ctx.fillStyle = '#E6C879';", "ctx.fillStyle = '#8B6914';");
+          .replace("ctx.strokeStyle = '#191919';", "ctx.strokeStyle = '#191919';")
+          .replace("ctx.fillStyle = '#191919';", "ctx.fillStyle = '#191919';");
       }
       return next;
     },
@@ -207,7 +207,7 @@ const EFFECTS = {
     title: "Particle Drift",
     source: particleDriftSource,
     supportsMode: true,
-    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#030509"),
+    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#191919"),
     targets: [{ selector: "#particle-canvas", role: "background" }],
     patch(source, { size, length, density, mode }) {
       const link = Math.round(120 * length);
@@ -223,9 +223,8 @@ const EFFECTS = {
         .replace("ctx.lineWidth = 1.5;", `ctx.lineWidth = ${Number((1.5 * size).toFixed(2))};`);
       if (mode === "light") {
         next = next
-          .replaceAll("rgba(96, 165, 250,", "rgba(37, 99, 235,")
-          .replaceAll("rgba(156, 163, 175,", "rgba(36, 48, 68,")
-          .replace("ctx.fillStyle = dist < 180 ? '#60A5FA' : 'rgba(36, 48, 68, 0.4)';", "ctx.fillStyle = dist < 180 ? '#2563EB' : 'rgba(36, 48, 68, 0.55)';");
+          .replaceAll("rgba(96, 165, 250,", "rgba(25, 25, 25,")
+          .replaceAll("rgba(156, 163, 175,", "rgba(25, 25, 25,");
       }
       return next;
     },
@@ -234,7 +233,7 @@ const EFFECTS = {
     title: "Particle Network",
     source: particleNetworkSource,
     supportsMode: true,
-    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#05070d"),
+    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#191919"),
     targets: [{ selector: "#particle-canvas", role: "background" }],
     patch(source, { size, length, density, mode }) {
       let next = source
@@ -256,7 +255,7 @@ const EFFECTS = {
   fluxVortex: {
     title: "Flux Vortex",
     source: fluxVortexSource,
-    background: "#050505",
+    background: "#191919",
     targets: [{ selector: "#webgl-canvas", role: "background" }],
     patch(source, { size, density }) {
       return source
@@ -269,7 +268,7 @@ const EFFECTS = {
   portalField: {
     title: "Portal Field",
     source: portalFieldSource,
-    background: "#05060a",
+    background: "#191919",
     targets: [{ selector: "#webgl-container", role: "background" }],
     patch(source, { size, length }) {
       return source
@@ -286,7 +285,7 @@ const EFFECTS = {
   flowField: {
     title: "Flow Field",
     source: flowFieldSource,
-    background: "#0a0a0a",
+    background: "#191919",
     targets: [{ selector: "#canvas", role: "background" }],
     patch(source, { size, length, density }) {
       return source
@@ -309,7 +308,7 @@ const EFFECTS = {
     title: "Amber Halftone",
     source: amberHalftoneSource,
     supportsMode: true,
-    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#0A0A0A"),
+    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#191919"),
     targets: [{ selector: "#webgl-halftone", role: "background" }],
     patch(source, { size, length, density, mode }) {
       // Density must tighten spacing (not grow gridSize). Growing gridSize only adds
@@ -343,7 +342,7 @@ const EFFECTS = {
     title: "Layered Planes",
     source: diagnosticsPanelSource,
     supportsMode: true,
-    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#020804"),
+    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#191919"),
     targets: [{ selector: "#main-container article:nth-of-type(1) .flex-grow", role: "ui", width: "360px" }],
     focusCss: DIAGNOSTICS_PANEL_FOCUS_CSS,
     patch: patchDiagnosticsPanel,
@@ -352,7 +351,7 @@ const EFFECTS = {
     title: "Node Cubes",
     source: diagnosticsPanelSource,
     supportsMode: true,
-    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#020804"),
+    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#191919"),
     targets: [{ selector: "#main-container article:nth-of-type(2) .flex-grow", role: "ui", width: "360px" }],
     focusCss: DIAGNOSTICS_PANEL_FOCUS_CSS,
     patch: patchDiagnosticsPanel,
@@ -361,7 +360,7 @@ const EFFECTS = {
     title: "Flowing Mesh",
     source: diagnosticsPanelSource,
     supportsMode: true,
-    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#020804"),
+    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#191919"),
     targets: [{ selector: "#main-container article:nth-of-type(3) .flex-grow", role: "ui", width: "360px" }],
     focusCss: DIAGNOSTICS_PANEL_FOCUS_CSS,
     patch: patchDiagnosticsPanel,
@@ -370,7 +369,7 @@ const EFFECTS = {
     title: "Signal Particles",
     source: signalParticlesSource,
     supportsMode: true,
-    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#0a0a0a"),
+    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#191919"),
     targets: [{ selector: "#particle-canvas", role: "background" }],
     patch(source, { size, length, mode }) {
       let next = source
@@ -379,9 +378,9 @@ const EFFECTS = {
         .replace("time += 0.02;", "time += 0.02 * ((window.__SF_CONTROLS&&window.__SF_CONTROLS.speed)||1);");
       if (mode === "light") {
         next = next
-          .replace("ctx.fillStyle = '#3b82f6'; // Blue highlight", "ctx.fillStyle = '#1d4ed8'; // Blue highlight")
-          .replace("ctx.fillStyle = '#8b5cf6'; // Purple highlight", "ctx.fillStyle = '#5b21b6'; // Purple highlight")
-          .replace("ctx.fillStyle = `rgba(148, 163, 184, ${alpha})`;", `ctx.fillStyle = \`rgba(36, 48, 68, \${alpha})\`;`);
+          .replace("ctx.fillStyle = '#3b82f6'; // Blue highlight", "ctx.fillStyle = '#191919'; // Monochrome highlight")
+          .replace("ctx.fillStyle = '#8b5cf6'; // Purple highlight", "ctx.fillStyle = '#191919'; // Monochrome highlight")
+          .replace("ctx.fillStyle = `rgba(148, 163, 184, ${alpha})`;", `ctx.fillStyle = \`rgba(25, 25, 25, \${alpha})\`;`);
       }
       return next;
     },
@@ -391,7 +390,7 @@ const EFFECTS = {
     source: skeuomorphicToggleSource,
     supportsMode: true,
     defaultMode: "auto",
-    background: (mode) => (mode === "light" ? "#f8fafc" : "#0b1220"),
+    background: (mode) => (mode === "light" ? "#F7F3EB" : "#191919"),
     targets: [{ selector: "#skeuomorphic-toggle", role: "ui", width: "192px" }],
     focusCss: `
 #skeuomorphic-toggle {
@@ -407,33 +406,41 @@ const EFFECTS = {
       return source
         .replace(
           "var ON_BG = 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px), linear-gradient(180deg, #dbeafe 0%, #93c5fd 100%)';",
-          "var ON_BG = 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.035) 2px, rgba(255,255,255,0.035) 4px), linear-gradient(180deg, #1e3a8a 0%, #172554 100%)';",
+          "var ON_BG = 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px), linear-gradient(180deg, #FFFFFF 0%, #F7F3EB 100%)';",
         )
         .replace(
-          "var OFF_BG = 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px), linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%)';",
+          "var ON_BG = 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.035) 2px, rgba(255,255,255,0.035) 4px), linear-gradient(180deg, #1e3a8a 0%, #172554 100%)';",
+          "var ON_BG = 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.035) 2px, rgba(255,255,255,0.035) 4px), linear-gradient(180deg, #191919 0%, #191919 100%)';",
+        )
+        .replace(
+          "var OFF_BG = 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px), linear-gradient(180deg, #F7F3EB 0%, #cbd5e1 100%)';",
+          "var OFF_BG = 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px), linear-gradient(180deg, #F7F3EB 0%, #FFFFFF 100%)';",
+        )
+        .replace(
           "var OFF_BG = 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.025) 2px, rgba(255,255,255,0.025) 4px), linear-gradient(180deg, #1e293b 0%, #0f172a 100%)';",
+          "var OFF_BG = 'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.025) 2px, rgba(255,255,255,0.025) 4px), linear-gradient(180deg, #191919 0%, #191919 100%)';",
         )
         .replace(
           "var ON_SHADOW = 'inset 0 4px 8px rgba(0,0,0,0.1), inset 0 -2px 4px rgba(255,255,255,0.7), 0 0 0 6px rgba(239, 246, 255, 0.8), 0 0 25px 5px rgba(96, 165, 250, 0.4)';",
-          "var ON_SHADOW = 'inset 0 5px 10px rgba(0,0,0,0.52), inset 0 -2px 4px rgba(147,197,253,0.24), 0 0 0 6px rgba(15,23,42,0.96), 0 0 26px 5px rgba(59,130,246,0.42)';",
+          "var ON_SHADOW = 'inset 0 5px 10px rgba(0,0,0,0.52), inset 0 -2px 4px rgba(255,255,255,0.24), 0 0 0 6px rgba(25,25,25,0.96), 0 0 26px 5px rgba(25,25,25,0.42)';",
         )
         .replace(
           "var OFF_SHADOW = 'inset 0 4px 8px rgba(0,0,0,0.12), inset 0 -2px 4px rgba(255,255,255,0.55), 0 0 0 6px rgba(241, 245, 249, 0.9), 0 0 18px 2px rgba(148, 163, 184, 0.25)';",
-          "var OFF_SHADOW = 'inset 0 5px 10px rgba(0,0,0,0.56), inset 0 -2px 4px rgba(148,163,184,0.12), 0 0 0 6px rgba(15,23,42,0.96), 0 0 18px 2px rgba(30,64,175,0.2)';",
+          "var OFF_SHADOW = 'inset 0 5px 10px rgba(0,0,0,0.56), inset 0 -2px 4px rgba(255,255,255,0.12), 0 0 0 6px rgba(25,25,25,0.96), 0 0 18px 2px rgba(25,25,25,0.2)';",
         )
-        .replace("var ON_BORDER = '#60a5fa';", "var ON_BORDER = '#3b82f6';")
-        .replace("var OFF_BORDER = '#94a3b8';", "var OFF_BORDER = '#334155';")
+        .replace("var ON_BORDER = '#60a5fa';", "var ON_BORDER = '#191919';")
+        .replace("var OFF_BORDER = 'rgba(25, 25, 25, 0.65)';", "var OFF_BORDER = '#191919';")
         .replace(
-          "background: linear-gradient(180deg, #ffffff 0%, #f4f8ff 100%);",
-          "background: linear-gradient(180deg, #e2e8f0 0%, #94a3b8 100%);",
+          "background: linear-gradient(180deg, #ffffff 0%, #F7F3EB 100%);",
+          "background: linear-gradient(180deg, #F7F3EB 0%, rgba(25, 25, 25, 0.65) 100%);",
         )
-        .replace("border: 1px solid #e0edfa;", "border: 1px solid #64748b;");
+        .replace("border: 1px solid rgba(25, 25, 25, 0.12);", "border: 1px solid rgba(25, 25, 25, 0.65);");
     },
   },
   matrixField: {
     title: "Matrix Field",
     source: matrixFieldSource,
-    background: "#000000",
+    background: "#191919",
     targets: [{ selector: "#glcanvas", role: "background" }],
     patch(source, { size, length }) {
       return source.replace(
@@ -446,7 +453,7 @@ const EFFECTS = {
     title: "Gateway Flow",
     source: gatewayFlowSource,
     supportsMode: true,
-    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#000000"),
+    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#191919"),
     targets: [{ selector: "#flow-canvas", role: "background" }],
     patch(source, { size, density, mode }) {
       let next = source
@@ -455,8 +462,8 @@ const EFFECTS = {
         .replace("ctx.lineWidth = 1.2;", `ctx.lineWidth = ${Number((1.2 * size).toFixed(2))};`);
       if (mode === "light") {
         next = next
-          .replace("ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';", `ctx.strokeStyle = 'rgba(26, 31, 42, 0.4)';`)
-          .replace("ctx.fillStyle = `rgba(255, 255, 255, 0.7)`;", `ctx.fillStyle = \`rgba(26, 31, 42, 0.75)\`;`);
+          .replace("ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';", `ctx.strokeStyle = 'rgba(25, 25, 25, 0.4)';`)
+          .replace("ctx.fillStyle = `rgba(255, 255, 255, 0.7)`;", `ctx.fillStyle = \`rgba(25, 25, 25, 0.75)\`;`);
       }
       return next;
     },
@@ -466,7 +473,7 @@ const EFFECTS = {
     source: connectivityGraphSource,
     supportsMode: true,
     defaultMode: "light",
-    background: (mode) => (mode === "light" ? "#c4d9ef" : "#0a1220"),
+    background: (mode) => (mode === "light" ? "LIGHT_PAPER" : "#191919"),
     targets: [{ selector: "#networkCanvas", role: "background" }],
     patch(source, { size, length, density, mode }) {
       let next = source
@@ -492,7 +499,7 @@ const EFFECTS = {
     title: "Interface Lines",
     source: interfaceLinesSource,
     supportsMode: true,
-    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#050505"),
+    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#191919"),
     targets: [{ selector: "#bg-canvas", role: "background" }],
     patch(source, { size, length, density, mode }) {
       const link = Math.round(120 * length);
@@ -509,9 +516,9 @@ const EFFECTS = {
         next = next
           .replace(
             "ctx.strokeStyle = `rgba(255, 255, 255, ${0.28 + (1 - dist / 120) * 0.42})`;",
-            `ctx.strokeStyle = \`rgba(26, 31, 42, \${0.28 + (1 - dist / ${link}) * 0.42})\`;`,
+            `ctx.strokeStyle = \`rgba(25, 25, 25, \${0.28 + (1 - dist / ${link}) * 0.42})\`;`,
           )
-          .replace("ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';", `ctx.fillStyle = 'rgba(26, 31, 42, 0.85)';`);
+          .replace("ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';", `ctx.fillStyle = 'rgba(25, 25, 25, 0.85)';`);
       } else {
         // Keep stroke alpha formula in sync with baked link distance on dark path.
         next = next.replace(
@@ -601,11 +608,11 @@ main > .group > [data-wireframe-visual] > :not(canvas) { display: none !importan
         next = next
           .replace(
             "this.ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.4})`;",
-            "this.ctx.strokeStyle = `rgba(26, 31, 42, ${alpha * 0.45})`;",
+            "this.ctx.strokeStyle = `rgba(25, 25, 25, ${alpha * 0.45})`;",
           )
           .replace(
             "this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;",
-            "this.ctx.fillStyle = `rgba(26, 31, 42, ${alpha})`;",
+            "this.ctx.fillStyle = `rgba(25, 25, 25, ${alpha})`;",
           );
       }
       return next;
@@ -615,7 +622,7 @@ main > .group > [data-wireframe-visual] > :not(canvas) { display: none !importan
     title: "Defense Lines",
     source: defenseLinesSource,
     supportsMode: true,
-    background: (mode) => (mode === "light" ? "#f4ecec" : "#120303"),
+    background: (mode) => (mode === "light" ? "LIGHT_PAPER" : "#191919"),
     targets: [{ selector: "#bg-canvas", role: "background" }],
     patch(source, { size, length, density, mode }) {
       let next = source
@@ -642,7 +649,7 @@ main > .group > [data-wireframe-visual] > :not(canvas) { display: none !importan
     title: "Override Grid",
     source: overrideGridSource,
     supportsMode: true,
-    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#050505"),
+    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#191919"),
     targets: [{ selector: "#grid-canvas", role: "background" }],
     patch(source, { size, gap, mode }) {
       const blockSize = Math.max(8, Math.round(size));
@@ -664,7 +671,7 @@ main > .group > [data-wireframe-visual] > :not(canvas) { display: none !importan
     title: "Topo Field",
     source: topoFieldSource,
     supportsMode: true,
-    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#000000"),
+    background: (mode) => (mode === "light" ? LIGHT_PAPER : "#191919"),
     targets: [{ selector: "#topo-canvas", role: "background" }],
     patch(source, { length, density, mode }) {
       let next = source

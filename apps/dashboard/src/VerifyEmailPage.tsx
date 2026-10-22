@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Check, Mail, ArrowLeft, AlertCircle } from 'lucide-react'
-import { ThemeToggle } from './components/ThemeToggle'
 import {
   verifyOtpApi,
   resendOtpApi,
@@ -254,9 +253,6 @@ export const VerifyEmailPage: React.FC<VerifyEmailPageProps> = ({
 
   return (
     <div className="verify-email-page-root">
-      <div className="verify-email-top-actions">
-        <ThemeToggle />
-      </div>
       <div className="verify-email-container">
         <span className="crosshair-marker crosshair-top-left">+</span>
         <span className="crosshair-marker crosshair-top-right">+</span>

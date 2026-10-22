@@ -10,7 +10,7 @@
 .command-section {
   position: relative;
   width: 100%;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   color: #ffffff;
   box-sizing: border-box;
 }
@@ -24,7 +24,7 @@
   border-right: 1px dashed rgba(255, 255, 255, 0.12);
   border-top: 1px dashed rgba(255, 255, 255, 0.12);
   border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
-  background-color: #000000;
+  background-color: var(--background, #191919);
   box-sizing: border-box;
 }
 
@@ -128,25 +128,25 @@
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  background-color: #2563EB;
-  color: #FFFFFF;
-  border: 1px solid #2563EB;
-  border-radius: 9999px !important;
-  padding: 12px 24px;
+  background-color: #FFFFFF;
+  color: #191919;
+  border: 1px solid #FFFFFF;
+  border-radius: 5px !important;
+  padding: 10px 20px;
   font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 500;
   letter-spacing: -0.01em;
   cursor: pointer;
   text-decoration: none;
-  transition: background-color 0.18s ease, transform 0.15s ease;
+  transition: opacity 0.18s ease, transform 0.15s ease;
   white-space: nowrap;
 }
 
 .command-btn-primary:hover {
-  background-color: #1D4ED8;
-  border-color: #1D4ED8;
-  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.88);
+  border-color: rgba(255, 255, 255, 0.88);
+  color: #191919;
   transform: translateY(-1px);
 }
 
@@ -154,13 +154,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(247, 243, 235, 0.08);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 9999px !important;
-  padding: 12px 24px;
+  border-radius: 5px !important;
+  padding: 10px 20px;
   font-family: var(--font-family-primary, 'Geist', sans-serif);
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   text-decoration: none;
@@ -190,7 +190,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   position: relative;
   text-align: left;
   transition: background-color 0.2s ease;
@@ -214,21 +214,31 @@
 }
 
 .command-stat-icon-box {
-  width: 36px;
-  height: 36px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 4px;
-  background-color: rgba(37, 99, 235, 0.08);
+  width: auto;
+  height: auto;
+  border: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: #2563EB;
+  justify-content: flex-start;
+  color: #FFFFFF;
   flex-shrink: 0;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.command-stat-icon-box svg {
+  width: 20px;
+  height: 20px;
 }
 
 .command-stat-cell:hover .command-stat-icon-box {
-  border-color: #2563EB;
+  border: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
 }
 
 .command-stat-index {
@@ -247,7 +257,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #2563EB;
+  color: rgba(255, 255, 255, 0.7);
   margin-bottom: 10px;
 }
 
@@ -278,14 +288,14 @@
 
 
 /* ==========================================================================
-   BRIGHT / LIGHT MODE SUPPORT (Pure White & Black)
+   BRIGHT / LIGHT MODE SUPPORT (Notion: Pure White, Black & Cream)
    ========================================================================== */
 [data-theme="bright"] .command-section,
 [data-theme="light"] .command-section,
 .bright .command-section,
 .light .command-section {
   background-color: #ffffff;
-  color: #000000;
+  color: #191919;
 }
 
 [data-theme="bright"] .command-container-frame,
@@ -293,24 +303,24 @@
 .bright .command-container-frame,
 .light .command-container-frame {
   background-color: #ffffff;
-  border-left-color: #E5E7EB;
-  border-right-color: #E5E7EB;
-  border-top-color: #E5E7EB;
-  border-bottom-color: #E5E7EB;
+  border-left-color: rgba(25, 25, 25, 0.12);
+  border-right-color: rgba(25, 25, 25, 0.12);
+  border-top-color: rgba(25, 25, 25, 0.12);
+  border-bottom-color: rgba(25, 25, 25, 0.12);
 }
 
 [data-theme="bright"] .command-container-frame::before,
 [data-theme="light"] .command-container-frame::before,
 .bright .command-container-frame::before,
 .light .command-container-frame::before {
-  border-top-color: #E5E7EB;
+  border-top-color: rgba(25, 25, 25, 0.12);
 }
 
 [data-theme="bright"] .command-container-frame::after,
 [data-theme="light"] .command-container-frame::after,
 .bright .command-container-frame::after,
 .light .command-container-frame::after {
-  border-bottom-color: #E5E7EB;
+  border-bottom-color: rgba(25, 25, 25, 0.12);
 }
 
 [data-theme="bright"] .command-testimonial-row,
@@ -318,75 +328,75 @@
 .bright .command-testimonial-row,
 .light .command-testimonial-row {
   background-color: #FFFFFF;
-  border-bottom-color: #E5E7EB;
+  border-bottom-color: rgba(25, 25, 25, 0.12);
 }
 
 [data-theme="bright"] .command-testimonial-row::after,
 [data-theme="light"] .command-testimonial-row::after,
 .bright .command-testimonial-row::after,
 .light .command-testimonial-row::after {
-  border-bottom-color: #E5E7EB;
+  border-bottom-color: rgba(25, 25, 25, 0.12);
 }
 
 [data-theme="bright"] .command-middle-row,
 [data-theme="light"] .command-middle-row,
 .bright .command-middle-row,
 .light .command-middle-row {
-  border-bottom-color: rgba(0, 0, 0, 0.12);
+  border-bottom-color: rgba(25, 25, 25, 0.12);
 }
 
 [data-theme="bright"] .command-middle-row::after,
 [data-theme="light"] .command-middle-row::after,
 .bright .command-middle-row::after,
 .light .command-middle-row::after {
-  border-bottom-color: rgba(0, 0, 0, 0.12);
+  border-bottom-color: rgba(25, 25, 25, 0.12);
 }
 
 [data-theme="bright"] .command-desc-col,
 [data-theme="light"] .command-desc-col,
 .bright .command-desc-col,
 .light .command-desc-col {
-  border-right-color: rgba(0, 0, 0, 0.12);
+  border-right-color: rgba(25, 25, 25, 0.12);
 }
 
 [data-theme="bright"] .command-desc-text,
 [data-theme="light"] .command-desc-text,
 .bright .command-desc-text,
 .light .command-desc-text {
-  color: rgba(0, 0, 0, 0.85);
+  color: #191919;
 }
 
 [data-theme="bright"] .command-btn-primary,
 [data-theme="light"] .command-btn-primary,
 .bright .command-btn-primary,
 .light .command-btn-primary {
-  background-color: #000000;
+  background-color: #191919;
   color: #ffffff;
-  border-color: #000000;
+  border-color: #191919;
 }
 
 [data-theme="bright"] .command-btn-primary:hover,
 [data-theme="light"] .command-btn-primary:hover,
 .bright .command-btn-primary:hover,
 .light .command-btn-primary:hover {
-  background-color: #222222;
+  background-color: rgba(25, 25, 25, 0.85);
 }
 
 [data-theme="bright"] .command-btn-secondary,
 [data-theme="light"] .command-btn-secondary,
 .bright .command-btn-secondary,
 .light .command-btn-secondary {
-  background-color: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.22);
-  color: #000000;
+  background-color: #F7F3EB;
+  border-color: rgba(25, 25, 25, 0.16);
+  color: #191919;
 }
 
 [data-theme="bright"] .command-btn-secondary:hover,
 [data-theme="light"] .command-btn-secondary:hover,
 .bright .command-btn-secondary:hover,
 .light .command-btn-secondary:hover {
-  background-color: rgba(0, 0, 0, 0.08);
-  border-color: rgba(0, 0, 0, 0.45);
+  background-color: rgba(25, 25, 25, 0.08);
+  border-color: rgba(25, 25, 25, 0.35);
 }
 
 [data-theme="bright"] .command-stat-cell,
@@ -394,45 +404,49 @@
 .bright .command-stat-cell,
 .light .command-stat-cell {
   background-color: #FFFFFF;
-  border-right-color: #E5E7EB;
+  border-right-color: rgba(25, 25, 25, 0.12);
 }
 
 [data-theme="bright"] .command-stat-cell:hover,
 [data-theme="light"] .command-stat-cell:hover,
 .bright .command-stat-cell:hover,
 .light .command-stat-cell:hover {
-  background-color: #FFFFFF;
+  background-color: #F7F3EB;
 }
 
 [data-theme="bright"] .command-stat-icon-box,
 [data-theme="light"] .command-stat-icon-box,
 .bright .command-stat-icon-box,
 .light .command-stat-icon-box {
-  border-color: #E5E7EB;
-  background-color: #FFFFFF;
-  color: #2563EB;
+  border: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: #191919;
 }
 
 [data-theme="bright"] .command-stat-cell:hover .command-stat-icon-box,
 [data-theme="light"] .command-stat-cell:hover .command-stat-icon-box,
 .bright .command-stat-cell:hover .command-stat-icon-box,
 .light .command-stat-cell:hover .command-stat-icon-box {
-  border-color: #2563EB;
-  background-color: #FFFFFF;
+  border: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
 }
 
 [data-theme="bright"] .command-stat-index,
 [data-theme="light"] .command-stat-index,
 .bright .command-stat-index,
 .light .command-stat-index {
-  color: #9CA3AF;
+  color: rgba(25, 25, 25, 0.45);
 }
 
 [data-theme="bright"] .command-stat-category,
 [data-theme="light"] .command-stat-category,
 .bright .command-stat-category,
 .light .command-stat-category {
-  color: #2563EB;
+  color: #191919;
 }
 
 [data-theme="bright"] .command-stat-headline,
@@ -443,21 +457,21 @@
 .bright .command-stat-value,
 .light .command-stat-headline,
 .light .command-stat-value {
-  color: #000000;
+  color: #191919;
 }
 
 [data-theme="bright"] .command-stat-desc,
 [data-theme="light"] .command-stat-desc,
 .bright .command-stat-desc,
 .light .command-stat-desc {
-  color: #6B7280;
+  color: rgba(25, 25, 25, 0.65);
 }
 
 [data-theme="bright"] .crosshair-marker,
 [data-theme="light"] .crosshair-marker,
 .bright .crosshair-marker,
 .light .crosshair-marker {
-  color: rgba(0, 0, 0, 0.4);
+  color: rgba(25, 25, 25, 0.25);
 }
 
 /* ==========================================================================
@@ -501,7 +515,7 @@
   .bright .command-stat-cell,
   .light .command-stat-cell {
     border-right: none !important;
-    border-bottom: 1px dashed #E5E7EB !important;
+    border-bottom: 1px dashed rgba(25, 25, 25, 0.12) !important;
   }
 
   [data-theme="bright"] .command-stat-cell:last-child,

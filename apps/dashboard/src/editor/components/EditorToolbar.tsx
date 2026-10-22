@@ -1,7 +1,6 @@
 import React from 'react'
 import { useEditorStore } from '../state/editorStore'
 import { EditorIcons } from '../icons'
-import { ThemeToggle } from '../../components/ThemeToggle'
 
 interface EditorToolbarProps {
   onBackToDashboard: () => void
@@ -54,10 +53,8 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         </div>
       </div>
 
-      {/* Right: Theme Toggle, Share and Publish */}
+      {/* Right: Share and Publish */}
       <div className="topbar-right-cluster">
-        <ThemeToggle />
-
         <button
           type="button"
           className="topbar-text-action-btn"

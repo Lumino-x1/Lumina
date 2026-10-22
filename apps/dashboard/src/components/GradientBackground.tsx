@@ -170,13 +170,12 @@ export function GradientBackground({
   gradientSize = '125% 125%',
   gradientOrigin = 'bottom-middle',
   colors = [
-    { color: 'rgba(245,87,2,1)', stop: '10.5%' },
-    { color: 'rgba(245,120,2,1)', stop: '16%' },
-    { color: 'rgba(245,140,2,1)', stop: '17.5%' },
-    { color: 'rgba(245,170,100,1)', stop: '25%' },
-    { color: 'rgba(238,174,202,1)', stop: '40%' },
-    { color: 'rgba(202,179,214,1)', stop: '65%' },
-    { color: 'rgba(148,201,233,1)', stop: '100%' },
+    { color: 'rgba(247,243,235,0.08)', stop: '10.5%' },
+    { color: 'rgba(247,243,235,0.06)', stop: '16%' },
+    { color: 'rgba(247,243,235,0.04)', stop: '25%' },
+    { color: 'rgba(255,255,255,0.03)', stop: '40%' },
+    { color: 'rgba(25,25,25,0.02)', stop: '65%' },
+    { color: 'rgba(25,25,25,0.05)', stop: '100%' },
   ],
 
   // Noise customization

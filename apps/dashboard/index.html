@@ -13,15 +13,9 @@
     <script>
       (function() {
         try {
-          var t = localStorage.getItem('lumina_theme');
-          if (t === 'bright' || t === 'light') {
-            t = 'light';
-          } else if (t !== 'dark') {
-            t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-          }
-          document.documentElement.setAttribute('data-theme', t);
-          document.documentElement.classList.add(t);
-          if (t === 'light') document.documentElement.classList.add('bright');
+          document.documentElement.setAttribute('data-theme', 'dark');
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light', 'bright');
         } catch (e) {}
       })();
     </script>

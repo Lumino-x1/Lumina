@@ -13,89 +13,90 @@
   --ai-font-mono: 'Geist Mono', 'Fira Code', 'JetBrains Mono', Menlo, monospace;
   --ai-profile-font-sans: var(--ai-font-sans);
   --ai-profile-font-heading: var(--ai-font-heading);
-  --ai-linkedin-blue: #0a66c2;
+  --ai-linkedin-blue: #3b82f6;
 }
 
-/* Base Light Theme (Brand Palette: #2563EB, #FFFFFF, #FFFFFF, #E5E7EB) */
-/* Base Light Theme (Black + White + Blue System) */
+/* ==========================================================================
+   Base Notion Black Theme (Matching Dashboard: Black #191919 + White #FFFFFF + Warm Cream #F7F3EB)
+   ========================================================================== */
 .lumina-ai-profile-root,
-.lumina-ai-profile-root.light,
-[data-theme='light'] .lumina-ai-profile-root {
-  --ai-linkedin-blue: var(--primary, #2563EB);
-  --ai-bg: var(--surface-secondary, #F7F8FA);
-  --ai-sidebar-bg: var(--sidebar-background, #FFFFFF);
-  --ai-header-bg: var(--sidebar-background, #FFFFFF);
-  --ai-card-bg: var(--card, #FFFFFF);
-  --ai-card-sub-bg: var(--surface-secondary, #F7F8FA);
-  --ai-card-hover: var(--surface-tertiary, #F0F2F5);
-  --ai-border: var(--border, #E5E7EB);
-  --ai-border-subtle: rgba(0, 0, 0, 0.06);
-  --ai-border-focus: var(--ring, #2563EB);
-
-  --ai-text-primary: var(--foreground, #111111);
-  --ai-text-secondary: var(--muted-foreground, #6B7280);
-  --ai-text-muted: #9CA3AF;
-  --ai-text-subtle: #D1D5DB;
-
-  --ai-pill-active-bg: var(--primary, #2563EB);
-  --ai-pill-active-text: #FFFFFF;
-  --ai-pill-inactive-bg: var(--secondary, #F3F4F6);
-  --ai-pill-inactive-text: var(--muted-foreground, #6B7280);
-
-  --ai-accent-blue: var(--primary, #2563EB);
-  --ai-accent-blue-bg: rgba(37, 99, 235, 0.08);
-  --ai-accent-blue-text: var(--primary, #2563EB);
-
-  --ai-accent-coral: rgba(37, 99, 235, 0.1);
-  --ai-accent-coral-text: var(--primary, #2563EB);
-
-  --ai-btn-primary-bg: var(--primary, #2563EB);
-  --ai-btn-primary-text: #FFFFFF;
-  --ai-btn-primary-hover: var(--primary-hover, #1D4ED8);
-
-  --ai-code-bg: var(--secondary, #F3F4F6);
-  --ai-code-border: var(--border, #E5E7EB);
-  --ai-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --ai-shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
-}
-
-/* Symmetrical Dark Theme (Black + White + Blue System) */
 .lumina-ai-profile-root.dark,
 [data-theme='dark'] .lumina-ai-profile-root {
-  --ai-linkedin-blue: var(--primary, #60A5FA);
-  --ai-bg: var(--background, #09090B);
-  --ai-sidebar-bg: var(--sidebar-background, #09090B);
-  --ai-header-bg: var(--sidebar-background, #09090B);
-  --ai-card-bg: var(--card, #111113);
-  --ai-card-sub-bg: var(--surface-secondary, #18181B);
-  --ai-card-hover: var(--secondary, #202024);
-  --ai-border: var(--border, #27272A);
-  --ai-border-subtle: rgba(255, 255, 255, 0.08);
-  --ai-border-focus: var(--ring, #60A5FA);
+  --ai-linkedin-blue: #3b82f6;
+  --ai-bg: #191919 !important;
+  --ai-sidebar-bg: #191919 !important;
+  --ai-header-bg: #191919 !important;
+  --ai-card-bg: #191919 !important;
+  --ai-card-sub-bg: rgba(247, 243, 235, 0.08) !important;
+  --ai-card-hover: rgba(247, 243, 235, 0.12) !important;
+  --ai-border: rgba(255, 255, 255, 0.12) !important;
+  --ai-border-subtle: rgba(255, 255, 255, 0.08) !important;
+  --ai-border-focus: #FFFFFF;
 
-  --ai-text-primary: var(--foreground, #FAFAFA);
-  --ai-text-secondary: var(--muted-foreground, #A1A1AA);
-  --ai-text-muted: #71717A;
-  --ai-text-subtle: #52525B;
+  --ai-text-primary: #FFFFFF !important;
+  --ai-text-secondary: rgba(255, 255, 255, 0.85) !important;
+  --ai-text-muted: rgba(255, 255, 255, 0.70) !important;
+  --ai-text-subtle: rgba(255, 255, 255, 0.55) !important;
 
-  --ai-pill-active-bg: #2563EB;
-  --ai-pill-active-text: #FFFFFF;
-  --ai-pill-inactive-bg: var(--muted, #18181B);
-  --ai-pill-inactive-text: var(--muted-foreground, #A1A1AA);
+  --ai-pill-active-bg: #FFFFFF;
+  --ai-pill-active-text: #191919;
+  --ai-pill-inactive-bg: rgba(247, 243, 235, 0.10);
+  --ai-pill-inactive-text: rgba(255, 255, 255, 0.70);
 
-  --ai-accent-blue: var(--primary, #60A5FA);
-  --ai-accent-blue-bg: rgba(96, 165, 250, 0.12);
-  --ai-accent-blue-text: var(--primary, #60A5FA);
+  --ai-accent-blue: #3b82f6;
+  --ai-accent-blue-bg: rgba(59, 130, 246, 0.12);
+  --ai-accent-blue-text: #3b82f6;
 
-  --ai-accent-coral: rgba(96, 165, 250, 0.15);
-  --ai-accent-coral-text: #93C5FD;
+  --ai-accent-coral: rgba(247, 243, 235, 0.10);
+  --ai-accent-coral-text: #FFFFFF;
 
-  --ai-btn-primary-bg: #2563EB;
-  --ai-btn-primary-text: #FFFFFF;
-  --ai-btn-primary-hover: #1D4ED8;
+  --ai-btn-primary-bg: #FFFFFF;
+  --ai-btn-primary-text: #191919;
+  --ai-btn-primary-hover: rgba(255, 255, 255, 0.88);
 
-  --ai-code-bg: var(--card, #111113);
-  --ai-code-border: var(--border, #27272A);
+  --ai-code-bg: rgba(247, 243, 235, 0.08);
+  --ai-code-border: rgba(255, 255, 255, 0.12);
+  --ai-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.6);
+  --ai-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.7);
+}
+
+/* Notion Black Theme Guarantee (Ensuring Notion #191919 parity with Dashboard) */
+.lumina-ai-profile-root.light,
+[data-theme='light'] .lumina-ai-profile-root {
+  --ai-linkedin-blue: #0a66c2;
+  --ai-bg: #191919 !important;
+  --ai-sidebar-bg: #191919 !important;
+  --ai-header-bg: #191919 !important;
+  --ai-card-bg: #191919 !important;
+  --ai-card-sub-bg: rgba(247, 243, 235, 0.08) !important;
+  --ai-card-hover: rgba(247, 243, 235, 0.12) !important;
+  --ai-border: rgba(255, 255, 255, 0.12) !important;
+  --ai-border-subtle: rgba(255, 255, 255, 0.08) !important;
+  --ai-border-focus: #FFFFFF;
+
+  --ai-text-primary: #FFFFFF !important;
+  --ai-text-secondary: rgba(255, 255, 255, 0.85) !important;
+  --ai-text-muted: rgba(255, 255, 255, 0.70) !important;
+  --ai-text-subtle: rgba(255, 255, 255, 0.55) !important;
+
+  --ai-pill-active-bg: #FFFFFF;
+  --ai-pill-active-text: #191919;
+  --ai-pill-inactive-bg: rgba(247, 243, 235, 0.10);
+  --ai-pill-inactive-text: rgba(255, 255, 255, 0.70);
+
+  --ai-accent-blue: #FFFFFF;
+  --ai-accent-blue-bg: rgba(247, 243, 235, 0.10);
+  --ai-accent-blue-text: #FFFFFF;
+
+  --ai-accent-coral: rgba(247, 243, 235, 0.10);
+  --ai-accent-coral-text: #FFFFFF;
+
+  --ai-btn-primary-bg: #FFFFFF;
+  --ai-btn-primary-text: #191919;
+  --ai-btn-primary-hover: rgba(255, 255, 255, 0.88);
+
+  --ai-code-bg: rgba(247, 243, 235, 0.08);
+  --ai-code-border: rgba(255, 255, 255, 0.12);
   --ai-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.6);
   --ai-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.7);
 }
@@ -106,8 +107,8 @@
   height: 100vh;
   max-height: 100vh;
   width: 100%;
-  background-color: var(--ai-bg);
-  color: var(--ai-text-primary);
+  background-color: var(--ai-bg, #191919);
+  color: var(--ai-text-primary, #FFFFFF);
   font-family: var(--ai-font-sans);
   font-size: var(--font-size-base, 15px);
   font-weight: var(--font-weight-base, 450);
@@ -120,6 +121,22 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* Layout Containers matching Dashboard */
+.lumina-ai-profile-root .ai-app-body,
+.lumina-ai-profile-root .ai-app-main-layout,
+.lumina-ai-profile-root .ai-main-scrollable,
+.lumina-ai-profile-root .profile-page-main,
+.lumina-ai-profile-root .profile-content-grid,
+.lumina-ai-profile-root .ai-content-columns,
+.lumina-ai-profile-root .ai-profile-center-col,
+.lumina-ai-profile-root .profile-center-col,
+.lumina-ai-profile-root .ai-right-sidebar,
+.lumina-ai-profile-root .profile-right-col,
+.lumina-ai-profile-root .ai-top-bar,
+.lumina-ai-profile-root .ai-sidebar {
+  background-color: var(--ai-bg, #191919) !important;
 }
 
 .lumina-ai-profile-root *,
@@ -326,7 +343,7 @@
   height: 32px;
   padding: 0;
   border-radius: 50%;
-  color: #a1a1aa;
+  color: rgba(255, 255, 255, 0.70);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -363,7 +380,7 @@
   position: absolute;
   top: -3px;
   right: -5px;
-  background-color: #eb5757;
+  background-color: #191919;
   color: #ffffff;
   font-size: 10px;
   font-weight: 700;
@@ -375,7 +392,7 @@
   align-items: center;
   justify-content: center;
   line-height: 1;
-  border: 2px solid var(--ai-sidebar-bg, #000000);
+  border: 2px solid var(--ai-sidebar-bg, #191919);
 }
 
 .lumina-ai-profile-root .ai-sidebar-search-box {
@@ -422,7 +439,7 @@
 }
 
 .lumina-ai-profile-root .ai-sidebar-search-input::placeholder {
-  color: #71717a;
+  color: rgba(255, 255, 255, 0.65);
   font-weight: 400;
 }
 
@@ -434,7 +451,7 @@
   background-color: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 5px;
-  color: #8e8e93;
+  color: rgba(255, 255, 255, 0.70);
   font-size: 11px;
   font-weight: 500;
   line-height: 1.2;
@@ -470,7 +487,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--ai-btn-primary-bg, #2563EB);
+  background-color: var(--ai-btn-primary-bg, #191919);
   flex-shrink: 0;
 }
 
@@ -581,44 +598,34 @@
 
 .lumina-ai-profile-root .ai-nav-item.is-active,
 .lumina-ai-profile-root .ai-nav-item:active {
-  background-color: #F7F8FA !important;
-  color: var(--ai-text-primary, #111111) !important;
+  background-color: rgba(247, 243, 235, 0.12) !important;
+  color: #FFFFFF !important;
   font-weight: 600 !important;
   border: none !important;
   box-shadow: none !important;
 }
 
 .lumina-ai-profile-root .ai-nav-item.is-active:hover {
-  background-color: #E5E3DC !important;
-  color: var(--ai-text-primary, #111111) !important;
+  background-color: rgba(247, 243, 235, 0.18) !important;
+  color: #FFFFFF !important;
 }
 
 .lumina-ai-profile-root .ai-nav-item.is-active .ai-nav-icon,
 .lumina-ai-profile-root .ai-nav-item:active .ai-nav-icon {
-  color: var(--ai-text-primary, #111111) !important;
-}
-
-.lumina-ai-profile-root.dark .ai-nav-item.is-active,
-.lumina-ai-profile-root.dark .ai-nav-item:active,
-[data-theme='dark'] .lumina-ai-profile-root .ai-nav-item.is-active,
-[data-theme='dark'] .lumina-ai-profile-root .ai-nav-item:active {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: #E5E7EB !important;
-  border: none !important;
-  box-shadow: none !important;
+  color: #FFFFFF !important;
 }
 
 .lumina-ai-profile-root.dark .ai-nav-item.is-active:hover,
 [data-theme='dark'] .lumina-ai-profile-root .ai-nav-item.is-active:hover {
-  background-color: rgba(255, 255, 255, 0.14) !important;
-  color: #E5E7EB !important;
+  background-color: rgba(247, 243, 235, 0.18) !important;
+  color: #FFFFFF !important;
 }
 
 .lumina-ai-profile-root.dark .ai-nav-item.is-active .ai-nav-icon,
 .lumina-ai-profile-root.dark .ai-nav-item:active .ai-nav-icon,
 [data-theme='dark'] .lumina-ai-profile-root .ai-nav-item.is-active .ai-nav-icon,
 [data-theme='dark'] .lumina-ai-profile-root .ai-nav-item:active .ai-nav-icon {
-  color: #E5E7EB !important;
+  color: #FFFFFF !important;
 }
 
 .lumina-ai-profile-root .ai-nav-icon {
@@ -690,7 +697,7 @@
   bottom: calc(100% + 8px);
   left: 6px;
   right: 6px;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 14px;
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08);
@@ -713,7 +720,7 @@
   width: 34px;
   height: 34px;
   border-radius: 7px;
-  background-color: #171717;
+  background-color: #191919;
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -742,7 +749,7 @@
 
 .lumina-ai-profile-root .ai-popover-plan {
   font-size: 11.5px;
-  color: #a1a1aa;
+  color: rgba(255, 255, 255, 0.70);
   line-height: 1.25;
   margin-top: 1px;
 }
@@ -767,7 +774,7 @@
   border-radius: 9999px;
   border: none;
   background: transparent;
-  color: #f4f4f5;
+  color: #FFFFFF;
   font-size: 13.5px;
   font-weight: 450;
   cursor: pointer;
@@ -786,7 +793,7 @@
 
 .lumina-ai-profile-root .ai-popover-menu-item .text-blue,
 .lumina-ai-profile-root .ai-popover-ws-left.text-blue {
-  color: var(--ai-btn-primary-bg, #2563EB) !important;
+  color: var(--ai-text-primary, #FFFFFF) !important;
 }
 
 .lumina-ai-profile-root .ai-popover-workspaces-section {
@@ -804,7 +811,7 @@
 
 .lumina-ai-profile-root .ai-popover-email {
   font-size: 12px;
-  color: #94949e;
+  color: rgba(255, 255, 255, 0.70);
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
@@ -817,7 +824,7 @@
   width: 20px;
   height: 20px;
   padding: 0;
-  color: #85858d;
+  color: rgba(255, 255, 255, 0.70);
   cursor: pointer;
   border-radius: 50%;
   display: inline-flex;
@@ -858,7 +865,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: #171717;
+  background-color: #191919;
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -877,7 +884,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #f87171;
+  background-color: #191919;
   border: 1.5px solid #000000;
 }
 
@@ -895,8 +902,8 @@
 }
 
 .lumina-ai-profile-root .ai-popover-guest-badge {
-  background-color: #3b3017;
-  color: #f59e0b;
+  background-color: #F7F3EB;
+  color: #191919;
   font-size: 10.5px;
   font-weight: 600;
   padding: 1px 7px;
@@ -914,7 +921,7 @@
   border-radius: 9999px;
   border: none;
   background: transparent;
-  color: #f4f4f5;
+  color: #FFFFFF;
   font-size: 13.5px;
   cursor: pointer;
   text-align: left;
@@ -923,7 +930,7 @@
 
 .lumina-ai-profile-root .ai-popover-logout-btn:hover {
   background-color: rgba(255, 255, 255, 0.08);
-  color: #f87171;
+  color: #FFFFFF;
 }
 
 .lumina-ai-profile-root .ai-user-profile-card {
@@ -1150,7 +1157,7 @@
 
 .lumina-ai-profile-root .ai-bell-btn.is-active {
   background-color: var(--ai-card-hover, rgba(255, 255, 255, 0.08)) !important;
-  color: var(--ai-text-primary, #E6E4DD) !important;
+  color: var(--ai-text-primary, #FFFFFF) !important;
 }
 
 .lumina-ai-profile-root .ai-bell-dot {
@@ -1160,7 +1167,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background-color: #ef4444;
+  background-color: var(--ai-text-primary, #FFFFFF);
   border: 1.5px solid var(--ai-header-bg);
 }
 
@@ -1171,9 +1178,9 @@
   gap: 6px;
   height: 35px;
   padding: 0 16px;
-  background-color: var(--ai-btn-primary-bg, #2563EB);
-  color: var(--ai-btn-primary-text, #ffffff);
-  border: none;
+  background-color: #191919 !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
   border-radius: 9999px;
   font-size: 13px;
   font-weight: 600;
@@ -1181,10 +1188,13 @@
   margin-left: 4px;
   transition: all 0.15s ease;
   flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .lumina-ai-profile-root .ai-create-action-btn:hover {
-  background-color: var(--ai-btn-primary-hover, #1D4ED8);
+  background-color: #262626 !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #FFFFFF !important;
 }
 
 .lumina-ai-profile-root .ai-create-action-btn .ai-create-icon {
@@ -1301,9 +1311,9 @@
    LINKEDIN STYLE PROFILE HERO CARD
    ========================================================================== */
 .ai-profile-hero-card.ai-linkedin-hero-card {
-  background: var(--ai-bg, #ffffff) !important;
-  border: 1px solid rgba(177, 173, 161, 0.22) !important;
-  border-radius: 10px !important;
+  background: #191919 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 6px !important;
   box-shadow: none !important;
   margin-bottom: 12px;
   position: relative;
@@ -1314,8 +1324,8 @@
 
 .lumina-ai-profile-root.dark .ai-profile-hero-card.ai-linkedin-hero-card,
 [data-theme='dark'] .lumina-ai-profile-root .ai-profile-hero-card.ai-linkedin-hero-card {
-  background: var(--ai-bg, #000000) !important;
-  border: 1px solid rgba(177, 173, 161, 0.14) !important;
+  background: #191919 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   box-shadow: none !important;
 }
 
@@ -1324,20 +1334,20 @@
   position: relative;
   width: 100%;
   height: 180px;
-  background-color: var(--ai-bg, #FFFFFF) !important;
+  background-color: rgba(247, 243, 235, 0.06) !important;
   overflow: hidden;
-  border-top-left-radius: 9px;
-  border-top-right-radius: 9px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
   border: none !important;
-  border-bottom: 1px solid rgba(177, 173, 161, 0.18) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
   box-sizing: border-box;
 }
 
 .lumina-ai-profile-root.dark .ai-linkedin-banner,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-banner {
-  background-color: var(--ai-bg, #000000) !important;
+  background-color: rgba(247, 243, 235, 0.06) !important;
   border: none !important;
-  border-bottom: 1px solid rgba(177, 173, 161, 0.14) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
 /* ==========================================================================
@@ -1349,13 +1359,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--ai-card-hover, rgba(177, 173, 161, 0.15));
-  color: #2563EB;
+  background: var(--ai-card-hover, #F7F3EB);
+  color: var(--ai-text-primary, #FFFFFF);
 }
 
 .ai-profile-avatar-spinner {
   animation: aiProfileSpin 1s linear infinite;
-  color: #2563EB;
+  color: var(--ai-text-primary, #FFFFFF);
 }
 
 @keyframes aiProfileSpin {
@@ -1387,7 +1397,7 @@
   height: 26px;
   width: 180px;
   border-radius: 6px;
-  background: var(--ai-card-hover, rgba(177, 173, 161, 0.22));
+  background: var(--ai-card-hover, var(--surface-secondary, #F7F3EB));
   margin-bottom: 10px;
 }
 
@@ -1396,7 +1406,7 @@
   width: 92%;
   max-width: 480px;
   border-radius: 4px;
-  background: var(--ai-card-hover, rgba(177, 173, 161, 0.18));
+  background: var(--ai-card-hover, var(--surface-secondary, #F7F3EB));
   margin-bottom: 8px;
 }
 
@@ -1405,7 +1415,7 @@
   width: 65%;
   max-width: 320px;
   border-radius: 4px;
-  background: var(--ai-card-hover, rgba(177, 173, 161, 0.16));
+  background: var(--ai-card-hover, var(--surface-secondary, #F7F3EB));
   margin-bottom: 14px;
 }
 
@@ -1413,7 +1423,7 @@
   height: 13px;
   width: 220px;
   border-radius: 4px;
-  background: var(--ai-card-hover, rgba(177, 173, 161, 0.16));
+  background: var(--ai-card-hover, var(--surface-secondary, #F7F3EB));
   margin-bottom: 10px;
 }
 
@@ -1421,7 +1431,7 @@
   height: 13px;
   width: 95px;
   border-radius: 4px;
-  background: var(--ai-card-hover, rgba(177, 173, 161, 0.16));
+  background: var(--ai-card-hover, var(--surface-secondary, #F7F3EB));
 }
 
 .ai-profile-skeleton-org {
@@ -1435,7 +1445,7 @@
   width: 32px;
   height: 32px;
   border-radius: 6px;
-  background: var(--ai-card-hover, rgba(177, 173, 161, 0.22));
+  background: var(--ai-card-hover, var(--surface-secondary, #F7F3EB));
   flex-shrink: 0;
 }
 
@@ -1443,7 +1453,7 @@
   height: 14px;
   width: 150px;
   border-radius: 4px;
-  background: var(--ai-card-hover, rgba(177, 173, 161, 0.18));
+  background: var(--ai-card-hover, var(--surface-secondary, #F7F3EB));
 }
 
 .ai-banner-edit-pencil-btn {
@@ -1466,14 +1476,14 @@
 
 .lumina-ai-profile-root.dark .ai-banner-edit-pencil-btn,
 [data-theme='dark'] .lumina-ai-profile-root .ai-banner-edit-pencil-btn {
-  background: #141414;
+  background: #191919;
   border-color: rgba(255, 255, 255, 0.18);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .lumina-ai-profile-root.dark .ai-banner-edit-pencil-btn svg,
 [data-theme='dark'] .lumina-ai-profile-root .ai-banner-edit-pencil-btn svg {
-  stroke: #E5E7EB;
+  stroke: #FFFFFF;
 }
 
 .ai-banner-edit-pencil-btn:hover {
@@ -1509,9 +1519,9 @@
   width: 144px;
   height: 144px;
   border-radius: 50%;
-  border: 4px solid var(--ai-bg, #ffffff);
+  border: 4px solid #191919 !important;
   overflow: hidden;
-  background-color: #d9e2ec;
+  background-color: #191919 !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1520,8 +1530,8 @@
 
 .lumina-ai-profile-root.dark .ai-linkedin-avatar-circle,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-avatar-circle {
-  border-color: var(--ai-bg, #000000) !important;
-  background-color: #141414;
+  border-color: #191919 !important;
+  background-color: #191919 !important;
 }
 
 .ai-linkedin-avatar-circle img {
@@ -1538,14 +1548,14 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: #ffffff;
-  border: 2px solid #2563EB;
-  color: #2563EB;
+  background-color: #191919;
+  border: 2px solid #FFFFFF;
+  color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
   z-index: 4;
   padding: 0;
   transition: transform 0.15s ease, background-color 0.15s ease;
@@ -1553,15 +1563,15 @@
 
 .lumina-ai-profile-root.dark .ai-avatar-add-story-btn,
 [data-theme='dark'] .lumina-ai-profile-root .ai-avatar-add-story-btn {
-  background-color: #000000;
-  border-color: #2563EB;
-  color: #2563EB;
+  background-color: #191919;
+  border-color: #FFFFFF;
+  color: #FFFFFF;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
 }
 
 .ai-avatar-add-story-btn:hover {
   transform: scale(1.08);
-  background-color: rgba(37, 99, 235, 0.08);
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 .ai-linkedin-card-edit-btn {
@@ -1574,14 +1584,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #5e5e5e;
+  color: rgba(255, 255, 255, 0.70);
   transition: background-color 0.15s ease;
   margin-bottom: 20px;
 }
 
 .lumina-ai-profile-root.dark .ai-linkedin-card-edit-btn,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-card-edit-btn {
-  color: #E5E7EB;
+  color: #FFFFFF;
 }
 
 .ai-linkedin-card-edit-btn svg {
@@ -1589,7 +1599,8 @@
 }
 
 .ai-linkedin-card-edit-btn:hover {
-  background-color: rgba(0, 0, 0, 0.06);
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
 }
 
 .lumina-ai-profile-root.dark .ai-linkedin-card-edit-btn:hover,
@@ -1622,7 +1633,7 @@
   font-family: 'Geist', var(--font-family-primary), -apple-system, BlinkMacSystemFont, sans-serif !important;
   font-size: 24px;
   font-weight: 450 !important;
-  color: var(--ai-text-primary, #E5E7EB) !important;
+  color: var(--ai-text-primary, #FFFFFF) !important;
   margin: 0;
   letter-spacing: -0.025em !important;
   line-height: 1.22 !important;
@@ -1632,12 +1643,9 @@
 
 .dark .ai-linkedin-name,
 .lumina-ai-profile-root.dark .ai-linkedin-name,
-[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-name {
-  color: var(--ai-text-primary, #E5E7EB) !important;
-}
-
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-name,
 .lumina-ai-profile-root.light .ai-linkedin-name {
-  color: #111111 !important;
+  color: var(--ai-text-primary, #FFFFFF) !important;
 }
 
 /* Blue Tick Verified Badge */
@@ -1660,68 +1668,46 @@
 .ai-linkedin-blue-tick svg {
   display: block;
   flex-shrink: 0;
-  fill: #0a66c2 !important;
+  fill: #191919 !important;
   stroke: #ffffff !important;
 }
 
 .lumina-ai-profile-root.dark .ai-linkedin-blue-tick svg,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-blue-tick svg {
-  fill: #388fe6 !important;
-  stroke: #ffffff !important;
+  fill: #FFFFFF !important;
+  stroke: #191919 !important;
 }
 
 .ai-linkedin-verify-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 3px 12px;
-  border-radius: 9999px;
-  border: 1.5px dashed #0a66c2;
-  color: #0a66c2;
+  padding: 3px 10px;
+  border-radius: 5px !important;
+  border: 1px dashed rgba(255, 255, 255, 0.25) !important;
+  color: #FFFFFF !important;
   background: transparent;
   font-size: 13.5px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: background-color 0.15s ease;
   white-space: nowrap;
 }
 
-.ai-linkedin-verify-badge:hover {
-  background-color: rgba(10, 102, 194, 0.08);
-}
-
-.dark .ai-linkedin-verify-badge,
-.lumina-ai-profile-root.dark .ai-linkedin-verify-badge,
-[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-verify-badge {
-  border-color: rgba(177, 173, 161, 0.4) !important;
-  color: var(--ai-text-primary, #E5E7EB) !important;
-}
-
-.dark .ai-linkedin-verify-badge svg,
-.lumina-ai-profile-root.dark .ai-linkedin-verify-badge svg,
-[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-verify-badge svg {
-  stroke: var(--ai-text-primary, #E5E7EB) !important;
-}
-
+.ai-linkedin-verify-badge:hover,
 .dark .ai-linkedin-verify-badge:hover,
 .lumina-ai-profile-root.dark .ai-linkedin-verify-badge:hover,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-verify-badge:hover {
-  background-color: rgba(177, 173, 161, 0.12) !important;
-  border-color: var(--ai-text-primary, #E5E7EB) !important;
-  color: #ffffff !important;
-}
-
-.dark .ai-linkedin-verify-badge:hover svg,
-.lumina-ai-profile-root.dark .ai-linkedin-verify-badge:hover svg,
-[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-verify-badge:hover svg {
-  stroke: #ffffff !important;
+  background-color: rgba(247, 243, 235, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  color: #FFFFFF !important;
 }
 
 .ai-linkedin-headline {
   font-family: var(--ai-font-sans), sans-serif;
   font-size: 15px;
   font-weight: 400;
-  color: var(--ai-text-primary, #E5E7EB) !important;
+  color: rgba(255, 255, 255, 0.70) !important;
   margin: 6px 0 0;
   line-height: 1.4;
   letter-spacing: -0.01em;
@@ -1731,12 +1717,9 @@
 
 .dark .ai-linkedin-headline,
 .lumina-ai-profile-root.dark .ai-linkedin-headline,
-[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-headline {
-  color: var(--ai-text-primary, #E5E7EB) !important;
-}
-
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-headline,
 .lumina-ai-profile-root.light .ai-linkedin-headline {
-  color: #6B7280 !important;
+  color: rgba(255, 255, 255, 0.70) !important;
 }
 
 .ai-linkedin-location-row {
@@ -1745,7 +1728,7 @@
   gap: 4px;
   margin-top: 6px;
   font-size: 14px;
-  color: var(--ai-text-primary, #E5E7EB) !important;
+  color: rgba(255, 255, 255, 0.55) !important;
   font-family: var(--ai-font-sans), sans-serif;
 }
 
@@ -1754,54 +1737,46 @@
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-location-row,
 .dark .ai-linkedin-location,
 .lumina-ai-profile-root.dark .ai-linkedin-location,
-[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-location {
-  color: var(--ai-text-primary, #E5E7EB) !important;
-}
-
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-location,
 .lumina-ai-profile-root.light .ai-linkedin-location-row {
-  color: #9CA3AF !important;
+  color: rgba(255, 255, 255, 0.55) !important;
 }
 
 .ai-linkedin-dot {
   margin: 0 2px;
-  color: var(--ai-text-primary, #E5E7EB) !important;
+  color: rgba(255, 255, 255, 0.35) !important;
 }
 
 .dark .ai-linkedin-dot,
 .lumina-ai-profile-root.dark .ai-linkedin-dot,
-[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-dot {
-  color: var(--ai-text-primary, #E5E7EB) !important;
-}
-
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-dot,
 .lumina-ai-profile-root.light .ai-linkedin-dot {
-  color: #9CA3AF !important;
+  color: rgba(255, 255, 255, 0.35) !important;
 }
 
 .ai-linkedin-contact-link {
-  color: var(--ai-text-primary, #E5E7EB) !important;
+  color: #3b82f6 !important;
   font-weight: 500;
   text-decoration: underline;
   cursor: pointer;
+  transition: color 0.15s ease;
 }
 
-.ai-linkedin-contact-link:hover {
-  color: #ffffff !important;
-}
-
-.dark .ai-linkedin-contact-link,
-.lumina-ai-profile-root.dark .ai-linkedin-contact-link,
-[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-contact-link {
-  color: var(--ai-text-primary, #E5E7EB) !important;
-}
-
+.ai-linkedin-contact-link:hover,
 .dark .ai-linkedin-contact-link:hover,
 .lumina-ai-profile-root.dark .ai-linkedin-contact-link:hover,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-contact-link:hover {
-  color: #ffffff !important;
+  color: #60a5fa !important;
 }
 
-.lumina-ai-profile-root.light .ai-linkedin-contact-link {
+.lumina-ai-profile-root.light .ai-linkedin-contact-link,
+[data-theme='light'] .lumina-ai-profile-root .ai-linkedin-contact-link {
   color: #0a66c2 !important;
+}
+
+.lumina-ai-profile-root.light .ai-linkedin-contact-link:hover,
+[data-theme='light'] .lumina-ai-profile-root .ai-linkedin-contact-link:hover {
+  color: #004182 !important;
 }
 
 .ai-linkedin-connections-row {
@@ -1810,26 +1785,23 @@
   gap: 4px;
   margin-top: 6px;
   font-size: 14px;
-  color: var(--ai-text-primary, #E5E7EB) !important;
+  color: rgba(255, 255, 255, 0.65) !important;
   font-family: var(--ai-font-sans), sans-serif;
   font-weight: 400;
 }
 
 .dark .ai-linkedin-connections-row,
 .lumina-ai-profile-root.dark .ai-linkedin-connections-row,
-[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-row {
-  color: var(--ai-text-primary, #E5E7EB) !important;
-}
-
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-row,
 .lumina-ai-profile-root.light .ai-linkedin-connections-row {
-  color: #9CA3AF !important;
+  color: rgba(255, 255, 255, 0.65) !important;
 }
 
 .ai-linkedin-connections-link {
   font-size: 14px;
   font-weight: 400;
   font-family: var(--ai-font-sans), sans-serif;
-  color: var(--ai-text-primary, #E5E7EB) !important;
+  color: #FFFFFF !important;
   text-decoration: none;
   cursor: pointer;
 }
@@ -1839,12 +1811,9 @@
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-link,
 .dark .ai-followers-count,
 .lumina-ai-profile-root.dark .ai-followers-count,
-[data-theme='dark'] .lumina-ai-profile-root .ai-followers-count {
-  color: var(--ai-text-primary, #E5E7EB) !important;
-}
-
+[data-theme='dark'] .lumina-ai-profile-root .ai-followers-count,
 .lumina-ai-profile-root.light .ai-linkedin-connections-link {
-  color: #9CA3AF !important;
+  color: #FFFFFF !important;
 }
 
 .ai-linkedin-connections-link:hover {
@@ -1893,22 +1862,19 @@
   font-family: var(--ai-font-sans), sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: var(--ai-text-primary, #E5E7EB) !important;
+  color: var(--ai-text-primary, #FFFFFF) !important;
   line-height: 1.25;
 }
 
 .dark .ai-linkedin-org-name,
 .lumina-ai-profile-root.dark .ai-linkedin-org-name,
-[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-org-name {
-  color: var(--ai-text-primary, #E5E7EB) !important;
-}
-
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-org-name,
 .lumina-ai-profile-root.light .ai-linkedin-org-name {
-  color: #111111 !important;
+  color: var(--ai-text-primary, #FFFFFF) !important;
 }
 
 .ai-linkedin-org-name:hover {
-  color: #2563EB !important;
+  color: var(--ai-text-primary) !important;
   text-decoration: underline;
 }
 
@@ -1922,47 +1888,68 @@
 }
 
 .ai-linkedin-btn {
-  height: 34px;
-  padding: 0 16px;
-  border-radius: 9999px;
-  font-size: 15px;
-  font-weight: 600;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 5px !important;
+  font-size: 13.5px;
+  font-weight: 500;
+  font-family: var(--ai-font-sans);
   cursor: pointer;
   transition: all 0.15s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 
-.ai-linkedin-btn-primary {
-  background-color: #2563EB !important;
-  color: #ffffff !important;
-  border: none !important;
+.ai-linkedin-btn-primary,
+.lumina-ai-profile-root .ai-linkedin-btn-primary,
+.dark .ai-linkedin-btn-primary,
+.lumina-ai-profile-root.dark .ai-linkedin-btn-primary {
+  background-color: #FFFFFF !important;
+  color: #191919 !important;
+  border: 1px solid #FFFFFF !important;
+  border-radius: 5px !important;
 }
 
-.ai-linkedin-btn-primary:hover {
-  background-color: #1D4ED8 !important;
+.ai-linkedin-btn-primary:hover,
+.lumina-ai-profile-root .ai-linkedin-btn-primary:hover,
+.dark .ai-linkedin-btn-primary:hover,
+.lumina-ai-profile-root.dark .ai-linkedin-btn-primary:hover {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.88) !important;
+  color: #191919 !important;
 }
 
-.ai-linkedin-btn-secondary {
-  background-color: transparent !important;
-  color: #2563EB !important;
-  border: 1px solid #2563EB !important;
+.ai-linkedin-btn-secondary,
+.lumina-ai-profile-root .ai-linkedin-btn-secondary,
+.dark .ai-linkedin-btn-secondary,
+.lumina-ai-profile-root.dark .ai-linkedin-btn-secondary {
+  background-color: rgba(247, 243, 235, 0.10) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 5px !important;
 }
 
-.ai-linkedin-btn-secondary:hover {
-  background-color: rgba(37, 99, 235, 0.08) !important;
-  box-shadow: inset 0 0 0 1px #2563EB !important;
+.ai-linkedin-btn-secondary:hover,
+.lumina-ai-profile-root .ai-linkedin-btn-secondary:hover,
+.dark .ai-linkedin-btn-secondary:hover,
+.lumina-ai-profile-root.dark .ai-linkedin-btn-secondary:hover {
+  background-color: rgba(247, 243, 235, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #FFFFFF !important;
 }
 
-.ai-linkedin-btn-more {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 1px solid #707070;
-  background: transparent;
-  color: #5e5e5e;
+.ai-linkedin-btn-more,
+.lumina-ai-profile-root .ai-linkedin-btn-more,
+.dark .ai-linkedin-btn-more,
+.lumina-ai-profile-root.dark .ai-linkedin-btn-more {
+  width: 32px;
+  height: 32px;
+  border-radius: 5px !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  background: transparent !important;
+  color: #FFFFFF !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1970,10 +1957,13 @@
   transition: all 0.15s ease;
 }
 
-.ai-linkedin-btn-more:hover {
-  background-color: rgba(0, 0, 0, 0.06);
-  border-color: #191919;
-  color: #191919;
+.ai-linkedin-btn-more:hover,
+.lumina-ai-profile-root .ai-linkedin-btn-more:hover,
+.dark .ai-linkedin-btn-more:hover,
+.lumina-ai-profile-root.dark .ai-linkedin-btn-more:hover {
+  background-color: rgba(247, 243, 235, 0.10) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #FFFFFF !important;
 }
 
 /* Tabs Card below hero - borderless */
@@ -1992,7 +1982,7 @@
    ========================================================================== */
 .ai-profile-hero-card {
   background-color: var(--ai-bg);
-  border: 1px solid var(--ai-border) !important;
+  border: none !important;
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 16px;
@@ -2004,7 +1994,7 @@
   background-color: var(--ai-card-sub-bg);
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid var(--ai-border);
+  border-bottom: none !important;
 }
 
 .ai-profile-constellation-svg {
@@ -2077,7 +2067,7 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background-color: rgba(9, 9, 11, 0.85);
+  background-color: rgba(25, 25, 25, 0.85);
   color: #ffffff;
   border: 2px solid var(--ai-card-bg);
   display: flex;
@@ -2171,7 +2161,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--ai-linkedin-blue, #0a66c2);
+  color: var(--ai-linkedin-blue, #191919);
   line-height: 1;
 }
 
@@ -2271,7 +2261,7 @@
 }
 
 .ai-meta-item.is-open-role {
-  color: var(--ai-btn-primary-bg, #2563EB);
+  color: var(--ai-text-primary, #FFFFFF);
   font-weight: 600;
 }
 
@@ -2307,7 +2297,7 @@
 
 .ai-counter-item.ai-counter-followers,
 .ai-counter-item.ai-counter-following {
-  color: var(--ai-text-secondary, #9CA3AF);
+  color: var(--ai-text-secondary, rgba(255, 255, 255, 0.85));
   cursor: pointer;
   transition: opacity 0.15s ease, color 0.15s ease;
 }
@@ -2320,8 +2310,13 @@
 
 .ai-counter-item.ai-counter-followers strong,
 .ai-counter-item.ai-counter-following strong {
-  color: var(--ai-text-primary, #E5E7EB);
+  color: var(--ai-text-primary, #FFFFFF);
   font-weight: 550;
+}
+
+.dark .ai-counter-item.ai-counter-followers strong,
+.dark .ai-counter-item.ai-counter-following strong {
+  color: #FFFFFF !important;
 }
 
 /* Tabs Bar */
@@ -2342,13 +2337,13 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 14px;
-  border-radius: 9999px;
-  border: none;
+  padding: 6px 12px;
+  border-radius: 5px !important;
+  border: 1px solid transparent;
   background: transparent;
-  color: var(--ai-text-muted);
+  color: rgba(255, 255, 255, 0.65) !important;
   font-size: 13px;
-  font-weight: 550;
+  font-weight: 500;
   letter-spacing: -0.01em;
   cursor: pointer;
   white-space: nowrap;
@@ -2356,63 +2351,46 @@
 }
 
 .ai-profile-tab:hover {
-  color: var(--ai-text-primary);
-  background-color: var(--ai-card-hover);
+  color: #FFFFFF !important;
+  background-color: rgba(247, 243, 235, 0.08) !important;
 }
 
-.ai-profile-tab.is-active {
-  background-color: #18181B;
-  color: #FAFAFA;
-  border: 1px solid #27272A;
-  font-weight: 650;
-  letter-spacing: -0.01em;
-}
-
-.lumina-ai-profile-root.light .ai-profile-tab.is-active,
-.lumina-ai-profile-root:not(.dark) .ai-profile-tab.is-active,
-[data-theme='light'] .ai-profile-tab.is-active {
-  background-color: #FFFFFF !important;
-  color: #111111 !important;
-  border: 1px solid #E5E7EB !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-}
-
-.lumina-ai-profile-root.light .ai-profile-tab.is-active svg,
-.lumina-ai-profile-root:not(.dark) .ai-profile-tab.is-active svg,
-[data-theme='light'] .ai-profile-tab.is-active svg {
-  stroke: #2563EB !important;
-  color: #2563EB !important;
-}
-
-.lumina-ai-profile-root.light .ai-profile-tab.is-active .ai-tab-badge-num,
-.lumina-ai-profile-root:not(.dark) .ai-profile-tab.is-active .ai-tab-badge-num,
-[data-theme='light'] .ai-profile-tab.is-active .ai-tab-badge-num {
-  background-color: #EFF6FF !important;
-  border-color: #DBEAFE !important;
-  color: #1D4ED8 !important;
-}
-
+.ai-profile-tab.is-active,
+.lumina-ai-profile-root .ai-profile-tab.is-active,
 .dark .lumina-ai-profile-root .ai-profile-tab.is-active,
 .lumina-ai-profile-root.dark .ai-profile-tab.is-active,
-[data-theme='dark'] .lumina-ai-profile-root .ai-profile-tab.is-active {
-  background-color: #18181B !important;
-  color: #FAFAFA !important;
-  border: 1px solid #27272A !important;
+[data-theme='dark'] .lumina-ai-profile-root .ai-profile-tab.is-active,
+.lumina-ai-profile-root.light .ai-profile-tab.is-active,
+[data-theme='light'] .ai-profile-tab.is-active {
+  background-color: rgba(247, 243, 235, 0.12) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 5px !important;
+  font-weight: 600;
+  box-shadow: none !important;
 }
 
+.ai-profile-tab.is-active svg,
+.lumina-ai-profile-root .ai-profile-tab.is-active svg,
 .dark .lumina-ai-profile-root .ai-profile-tab.is-active svg,
 .lumina-ai-profile-root.dark .ai-profile-tab.is-active svg,
-[data-theme='dark'] .lumina-ai-profile-root .ai-profile-tab.is-active svg {
-  stroke: #60A5FA !important;
-  color: #60A5FA !important;
+[data-theme='dark'] .lumina-ai-profile-root .ai-profile-tab.is-active svg,
+.lumina-ai-profile-root.light .ai-profile-tab.is-active svg,
+[data-theme='light'] .ai-profile-tab.is-active svg {
+  stroke: #FFFFFF !important;
+  color: #FFFFFF !important;
 }
 
+.ai-profile-tab.is-active .ai-tab-badge-num,
+.lumina-ai-profile-root .ai-profile-tab.is-active .ai-tab-badge-num,
 .dark .lumina-ai-profile-root .ai-profile-tab.is-active .ai-tab-badge-num,
 .lumina-ai-profile-root.dark .ai-profile-tab.is-active .ai-tab-badge-num,
-[data-theme='dark'] .lumina-ai-profile-root .ai-profile-tab.is-active .ai-tab-badge-num {
-  background-color: #172554 !important;
-  border-color: #1E3A8A !important;
-  color: #93C5FD !important;
+[data-theme='dark'] .lumina-ai-profile-root .ai-profile-tab.is-active .ai-tab-badge-num,
+.lumina-ai-profile-root.light .ai-profile-tab.is-active .ai-tab-badge-num,
+[data-theme='light'] .ai-profile-tab.is-active .ai-tab-badge-num {
+  background-color: rgba(247, 243, 235, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #FFFFFF !important;
 }
 
 .ai-tab-dot-indicator {
@@ -2423,19 +2401,18 @@
 }
 
 .ai-tab-badge-num {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 600;
   padding: 1px 6px;
-  border-radius: 9999px;
-  background-color: var(--ai-card-sub-bg);
-  border: 1px solid var(--ai-border);
-  color: var(--ai-text-secondary);
+  border-radius: 4px !important;
+  background-color: rgba(247, 243, 235, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.70);
 }
 
 .ai-profile-tab.is-active .ai-tab-badge-num {
-  background-color: #FFFFFF;
-  border-color: #E5E7EB;
-  color: #111111;
+  background-color: rgba(247, 243, 235, 0.18);
+  color: #FFFFFF;
 }
 
 /* ==========================================================================
@@ -2447,18 +2424,19 @@
   justify-content: space-between;
   gap: 14px;
   padding: 10px 16px;
-  background-color: var(--ai-card-bg);
-  border: 1px solid var(--ai-border);
-  border-radius: 12px;
+  background-color: #191919 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 6px !important;
   cursor: pointer;
   margin-bottom: 20px;
   transition: all 0.15s ease;
   user-select: none;
+  box-shadow: none !important;
 }
 
 .lumina-ai-profile-root .ai-minimal-composer-card:hover {
-  border-color: rgba(255, 255, 255, 0.22);
-  background-color: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  background-color: rgba(247, 243, 235, 0.04) !important;
 }
 
 .lumina-ai-profile-root .ai-minimal-composer-avatar {
@@ -2467,7 +2445,7 @@
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  border: 1px solid var(--ai-border);
+  border: none !important;
 }
 
 .lumina-ai-profile-root .ai-minimal-composer-input-area {
@@ -2478,7 +2456,7 @@
 }
 
 .lumina-ai-profile-root .ai-minimal-composer-placeholder {
-  color: #71717a;
+  color: rgba(255, 255, 255, 0.50) !important;
   font-size: 14px;
   font-weight: 400;
   white-space: nowrap;
@@ -2488,49 +2466,37 @@
 }
 
 .lumina-ai-profile-root .ai-minimal-composer-card:hover .ai-minimal-composer-placeholder {
-  color: #a1a1aa;
+  color: rgba(255, 255, 255, 0.70) !important;
 }
 
 .lumina-ai-profile-root .ai-minimal-post-btn {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 7px 16px;
-  background-color: var(--ai-btn-primary-bg, #2563EB);
-  color: var(--ai-btn-primary-text, #ffffff);
+  padding: 6px 14px;
+  background-color: #191919 !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
   font-size: 13px;
   font-weight: 600;
-  border-radius: 9999px;
-  border: none;
+  border-radius: 5px !important;
   cursor: pointer;
   flex-shrink: 0;
-  box-shadow: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
   outline: none !important;
+  transition: all 0.15s ease;
 }
 
 .lumina-ai-profile-root .ai-minimal-post-btn:hover,
 .lumina-ai-profile-root .ai-minimal-post-btn:focus,
 .lumina-ai-profile-root .ai-minimal-post-btn:focus-visible,
 .lumina-ai-profile-root .ai-minimal-post-btn:active {
-  background-color: var(--ai-btn-primary-bg, #2563EB) !important;
+  background-color: #262626 !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #FFFFFF !important;
   transform: none !important;
   box-shadow: none !important;
   outline: none !important;
-}
-
-.lumina-ai-profile-root.light .ai-minimal-composer-card {
-  background-color: #ffffff;
-  border-color: rgba(0, 0, 0, 0.1);
-}
-
-.lumina-ai-profile-root.light .ai-minimal-composer-card:hover,
-.lumina-ai-profile-root.light .ai-minimal-composer-card:focus,
-.lumina-ai-profile-root.light .ai-minimal-composer-card:focus-visible,
-.lumina-ai-profile-root.light .ai-minimal-composer-card:active {
-  border-color: rgba(0, 0, 0, 0.2) !important;
-  background-color: rgba(0, 0, 0, 0.01);
-  outline: none !important;
-  box-shadow: none !important;
 }
 
 .lumina-ai-profile-root .ai-minimal-composer-card:focus,
@@ -2538,14 +2504,6 @@
 .lumina-ai-profile-root .ai-minimal-composer-card:active {
   outline: none !important;
   box-shadow: none !important;
-}
-
-.lumina-ai-profile-root.light .ai-minimal-composer-placeholder {
-  color: #94a3b8;
-}
-
-.lumina-ai-profile-root.light .ai-minimal-composer-card:hover .ai-minimal-composer-placeholder {
-  color: #64748b;
 }
 
 /* ==========================================================================
@@ -2583,17 +2541,17 @@
 }
 
 .lumina-ai-profile-root.light .ai-feed-post-card {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .lumina-ai-profile-root .ai-feed-post-card:focus-visible {
-  outline: 2px solid var(--ai-accent-blue, #3b82f6);
+  outline: 2px solid var(--ai-accent-blue, #191919);
   outline-offset: 4px;
 }
 
 /* PINNED WORK CARD */
 .ai-pinned-card {
-  border-left: 3px solid var(--ai-btn-primary-bg, #2563EB);
+  border-left: 3px solid var(--ai-btn-primary-bg, #191919);
 }
 
 .ai-pinned-header {
@@ -2616,7 +2574,7 @@
   gap: 4px;
   font-weight: 600;
   letter-spacing: 0.05em;
-  color: var(--ai-btn-primary-bg, #2563EB);
+  color: var(--ai-btn-primary-bg, #191919);
 }
 
 .ai-pinned-sep {
@@ -2699,7 +2657,7 @@
 }
 
 .ai-diag-node.is-leader {
-  border-left: 3px solid var(--ai-btn-primary-bg, #2563EB);
+  border-left: 3px solid var(--ai-btn-primary-bg, #191919);
 }
 
 .ai-diag-node.is-follower {
@@ -2707,8 +2665,8 @@
 }
 
 .ai-diag-node.is-quorum {
-  border: 1px solid #10b981;
-  background-color: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(247, 243, 235, 0.12);
 }
 
 .ai-diag-node-name {
@@ -2726,12 +2684,12 @@
 .ai-diag-quorum-txt {
   font-size: 12px;
   font-weight: 600;
-  color: #10b981;
+  color: var(--ai-text-primary);
 }
 
 .ai-diag-quorum-sub {
   font-size: 10.5px;
-  color: #10b981;
+  color: var(--ai-text-secondary);
 }
 
 .ai-diag-arrows {
@@ -2777,14 +2735,14 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #dea584;
+  background-color: #191919;
 }
 
 .ai-dot-asm {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #6e7681;
+  background-color: #191919;
 }
 
 .ai-diag-meta-right {
@@ -2797,7 +2755,7 @@
   background: none;
   border: none;
   padding: 0;
-  color: var(--ai-btn-primary-bg, #2563EB);
+  color: var(--ai-btn-primary-bg, #191919);
   font-size: 11.5px;
   font-weight: 500;
   cursor: pointer;
@@ -2894,7 +2852,7 @@
 }
 
 .ai-award-medal-icon {
-  color: #f59e0b;
+  color: #FFFFFF;
   display: flex;
   align-items: center;
 }
@@ -2961,13 +2919,13 @@
 .lumina-ai-profile-root .ai-code-filename {
   font-family: var(--ai-font-mono, monospace);
   font-size: 11.5px;
-  color: #94a3b8;
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .lumina-ai-profile-root .ai-code-lang {
   font-family: var(--ai-font-mono, monospace);
   font-size: 11px;
-  color: #64748b;
+  color: rgba(255, 255, 255, 0.70);
 }
 
 .lumina-ai-profile-root .ai-code-pre {
@@ -2976,24 +2934,25 @@
   font-family: var(--ai-font-mono, monospace);
   font-size: 12.5px;
   line-height: 1.6;
-  color: #e2e8f0;
+  color: #FFFFFF;
   overflow-x: auto;
 }
 
 .lumina-ai-profile-root .code-kw {
-  color: #c084fc;
+  color: #FFFFFF;
+  font-weight: 600;
 }
 
 .lumina-ai-profile-root .code-fn {
-  color: #60a5fa;
+  color: #FFFFFF;
 }
 
 .lumina-ai-profile-root .code-type {
-  color: #34d399;
+  color: #FFFFFF;
 }
 
 .lumina-ai-profile-root .code-comment {
-  color: #64748b;
+  color: rgba(255, 255, 255, 0.65);
   font-style: italic;
 }
 
@@ -3025,7 +2984,7 @@
   width: 34px;
   height: 34px;
   border-radius: 6px;
-  background-color: var(--ai-btn-primary-bg, #2563EB);
+  background-color: var(--ai-btn-primary-bg, #191919);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -3109,7 +3068,7 @@
 .ai-grant-amount-badge {
   font-size: 12px;
   font-weight: 600;
-  background-color: var(--ai-btn-primary-bg, #2563EB);
+  background-color: var(--ai-btn-primary-bg, #191919);
   color: #ffffff;
   padding: 6px 12px;
   border-radius: 6px;
@@ -3126,50 +3085,6 @@
   border-top: none;
 }
 
-.lumina-ai-profile-root.light .ai-post-byline {
-  color: #6B7280;
-}
-
-.lumina-ai-profile-root.light .ai-byline-author {
-  color: #111111;
-}
-
-.lumina-ai-profile-root.light .ai-byline-handle {
-  color: #6B7280;
-}
-
-.lumina-ai-profile-root.light .ai-byline-date {
-  color: #9CA3AF;
-}
-
-.lumina-ai-profile-root.light .ai-post-title {
-  color: #111111;
-}
-
-.lumina-ai-profile-root.light .ai-post-subtitle {
-  color: #6B7280;
-}
-
-.lumina-ai-profile-root.light .ai-post-stat-btn,
-.lumina-ai-profile-root.light .ai-post-icon-btn {
-  color: #2D2A26;
-}
-
-.lumina-ai-profile-root.light .ai-post-stat-btn:hover,
-.lumina-ai-profile-root.light .ai-post-icon-btn:hover {
-  color: #000000;
-  background-color: rgba(0, 0, 0, 0.06);
-}
-
-.lumina-ai-profile-root.light .ai-post-icon-btn.is-saved {
-  color: #2563EB !important;
-}
-
-.lumina-ai-profile-root.light .ai-post-icon-btn.is-saved:hover {
-  color: #1D4ED8 !important;
-  background-color: rgba(37, 99, 235, 0.12);
-}
-
 .lumina-ai-profile-root .ai-post-footer-actions {
   display: flex;
   align-items: center;
@@ -3180,11 +3095,11 @@
 .lumina-ai-profile-root .ai-post-action-btn {
   background: transparent;
   border: none;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   padding: 0;
-  border-radius: 50%;
-  color: #8e8e93;
+  border-radius: 5px;
+  color: rgba(255, 255, 255, 0.65);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -3193,27 +3108,52 @@
   line-height: 1;
 }
 
-.lumina-ai-profile-root .ai-post-action-btn:hover {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.08);
+.lumina-ai-profile-root .ai-post-icon-btn,
+.lumina-ai-profile-root .ai-post-action-btn {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.lumina-ai-profile-root .ai-post-action-btn:hover,
+.lumina-ai-profile-root .ai-post-icon-btn:hover {
+  color: #FFFFFF;
+  background-color: rgba(247, 243, 235, 0.10);
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .lumina-ai-profile-root .ai-post-action-btn.is-liked {
-  color: #ef4444;
+  color: #FFFFFF;
 }
 
 .lumina-ai-profile-root .ai-post-action-btn.is-liked:hover {
-  color: #f87171;
-  background-color: rgba(239, 68, 68, 0.12);
+  color: #FFFFFF;
+  background-color: rgba(247, 243, 235, 0.12);
 }
 
-.lumina-ai-profile-root .ai-post-action-btn.is-saved {
-  color: var(--ai-btn-primary-bg, #2563EB);
+.lumina-ai-profile-root .ai-post-action-btn.is-saved,
+.lumina-ai-profile-root .ai-post-icon-btn.is-saved,
+.lumina-ai-profile-root .ai-post-action-btn:focus,
+.lumina-ai-profile-root .ai-post-icon-btn:focus,
+.lumina-ai-profile-root .ai-post-action-btn:focus-visible,
+.lumina-ai-profile-root .ai-post-icon-btn:focus-visible,
+.lumina-ai-profile-root .ai-post-action-btn:active,
+.lumina-ai-profile-root .ai-post-icon-btn:active {
+  color: #FFFFFF !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-.lumina-ai-profile-root .ai-post-action-btn.is-saved:hover {
-  color: var(--ai-btn-primary-hover, #1D4ED8);
-  background-color: rgba(37, 99, 235, 0.12);
+.lumina-ai-profile-root .ai-post-action-btn.is-saved:hover,
+.lumina-ai-profile-root .ai-post-icon-btn.is-saved:hover {
+  color: #FFFFFF;
+  background-color: rgba(247, 243, 235, 0.12);
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .lumina-ai-profile-root .ai-post-footer-left {
@@ -3261,11 +3201,12 @@
    4. RIGHT SIDEBAR WIDGETS
    ========================================================================== */
 .lumina-ai-profile-root .ai-widget-card {
-  background-color: var(--ai-card-bg);
-  border: 1px solid var(--ai-border);
-  border-radius: 12px;
+  background-color: #191919 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 6px !important;
   padding: 16px 18px;
-  box-shadow: var(--ai-shadow-sm);
+  box-shadow: none !important;
+  margin-bottom: 12px;
 }
 
 .lumina-ai-profile-root .ai-card-header-row {
@@ -3358,13 +3299,13 @@
   cursor: pointer;
   background: transparent !important;
   background-color: transparent !important;
-  color: #2563EB !important;
+  color: #3b82f6 !important;
   border: none !important;
   box-shadow: none !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.15s ease, color 0.15s ease;
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -3373,7 +3314,8 @@
   background: transparent !important;
   background-color: transparent !important;
   border: none !important;
-  opacity: 0.8;
+  opacity: 0.85;
+  color: #60a5fa !important;
   transform: none !important;
 }
 
@@ -3392,6 +3334,24 @@
   background-color: transparent !important;
   border: none !important;
   opacity: 0.8;
+  color: var(--ai-text-muted) !important;
+}
+
+.lumina-ai-profile-root.light .ai-friend-btn,
+[data-theme='light'] .lumina-ai-profile-root .ai-friend-btn {
+  color: #0a66c2 !important;
+}
+
+.lumina-ai-profile-root.light .ai-friend-btn:hover,
+[data-theme='light'] .lumina-ai-profile-root .ai-friend-btn:hover {
+  color: #004182 !important;
+}
+
+.lumina-ai-profile-root.light .ai-friend-btn.is-joined,
+.lumina-ai-profile-root.light .ai-friend-btn.is-pending,
+[data-theme='light'] .lumina-ai-profile-root .ai-friend-btn.is-joined,
+[data-theme='light'] .lumina-ai-profile-root .ai-friend-btn.is-pending {
+  color: var(--ai-text-muted) !important;
 }
 
 /* See All Link (Instagram style in header) */
@@ -3412,8 +3372,12 @@
   opacity: 0.7;
 }
 
+.lumina-ai-profile-root .ai-see-all-link {
+  color: var(--ai-text-primary, #FFFFFF);
+}
+
 .lumina-ai-profile-root.light .ai-see-all-link {
-  color: var(--ai-text-primary, #111111);
+  color: var(--ai-text-primary, #FFFFFF);
 }
 
 /* Suggested Friends Loading & Empty States */
@@ -3441,20 +3405,25 @@
 .lumina-ai-profile-root .ai-friend-spinner,
 .lumina-ai-dashboard-root .ai-friend-spinner {
   animation: ai-spin 0.8s linear infinite;
-  color: var(--ai-border-focus, #2563EB);
+  color: var(--ai-border-focus, #FFFFFF);
+}
+
+.lumina-ai-profile-root.dark .ai-friend-spinner,
+.lumina-ai-dashboard-root.dark .ai-friend-spinner {
+  color: #FFFFFF !important;
 }
 
 .lumina-ai-profile-root .ai-friend-loading-text,
 .lumina-ai-dashboard-root .ai-friend-loading-text {
   font-size: 12px;
-  color: var(--ai-text-secondary, #6B7280);
+  color: var(--ai-text-secondary, rgba(255, 255, 255, 0.70));
 }
 
 .lumina-ai-profile-root.dark .ai-friend-loading-text,
 [data-theme='dark'] .lumina-ai-profile-root .ai-friend-loading-text,
 .lumina-ai-dashboard-root.dark .ai-friend-loading-text,
 [data-theme='dark'] .lumina-ai-dashboard-root .ai-friend-loading-text {
-  color: #E5E7EB;
+  color: #FFFFFF;
 }
 
 .lumina-ai-profile-root .ai-friend-empty-state,
@@ -3470,7 +3439,7 @@
 
 .lumina-ai-profile-root .ai-friend-empty-icon,
 .lumina-ai-dashboard-root .ai-friend-empty-icon {
-  color: var(--ai-text-muted, #948f83);
+  color: var(--ai-text-muted, rgba(255, 255, 255, 0.70));
   margin-bottom: 2px;
 }
 
@@ -3479,21 +3448,21 @@
   margin: 0;
   font-size: 13px;
   font-weight: 600;
-  color: var(--ai-text-primary, #111111);
+  color: var(--ai-text-primary, #FFFFFF);
 }
 
 .lumina-ai-profile-root.dark .ai-friend-empty-title,
 [data-theme='dark'] .lumina-ai-profile-root .ai-friend-empty-title,
 .lumina-ai-dashboard-root.dark .ai-friend-empty-title,
 [data-theme='dark'] .lumina-ai-dashboard-root .ai-friend-empty-title {
-  color: #E5E7EB;
+  color: #FFFFFF;
 }
 
 .lumina-ai-profile-root .ai-friend-empty-sub,
 .lumina-ai-dashboard-root .ai-friend-empty-sub {
   margin: 0;
   font-size: 11px;
-  color: var(--ai-text-secondary, #6B7280);
+  color: var(--ai-text-secondary, rgba(255, 255, 255, 0.70));
   line-height: 1.35;
 }
 
@@ -3501,7 +3470,7 @@
 [data-theme='dark'] .lumina-ai-profile-root .ai-friend-empty-sub,
 .lumina-ai-dashboard-root.dark .ai-friend-empty-sub,
 [data-theme='dark'] .lumina-ai-dashboard-root .ai-friend-empty-sub {
-  color: rgba(177, 173, 161, 0.7);
+  color: rgba(255, 255, 255, 0.70);
 }
 
 /* Technical Stack */
@@ -3665,7 +3634,7 @@
 .ai-paper-arxiv {
   font-family: var(--ai-font-mono, monospace);
   font-weight: 600;
-  color: var(--ai-btn-primary-bg, #2563EB);
+  color: var(--ai-btn-primary-bg, #191919);
 }
 
 .ai-paper-cites {
@@ -3702,7 +3671,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #10b981;
+  background-color: #191919;
   display: inline-block;
   margin-right: -80px;
 }
@@ -4607,9 +4576,9 @@
 .ai-post-subfilters {
   display: inline-flex;
   align-items: center;
-  background-color: var(--ai-card-sub-bg);
-  border: 1px solid var(--ai-border);
-  border-radius: 9999px;
+  background-color: #121212 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 5px !important;
   padding: 3px;
   gap: 3px;
   box-sizing: border-box;
@@ -4622,10 +4591,10 @@
   gap: 6px;
   height: 28px;
   padding: 0 12px;
-  border-radius: 9999px;
-  border: none;
-  background: transparent;
-  color: var(--ai-text-muted);
+  border-radius: 4px !important;
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.65);
   font-family: var(--ai-font-sans);
   font-size: 13px;
   font-weight: 500;
@@ -4637,15 +4606,16 @@
 }
 
 .ai-subfilter-btn:hover {
-  color: var(--ai-text-primary);
-  background-color: var(--ai-card-hover);
+  color: #FFFFFF;
+  background-color: #191919 !important;
 }
 
 .ai-subfilter-btn.is-active {
-  background-color: var(--ai-pill-active-bg);
+  background-color: #191919 !important;
   color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .ai-subfilter-count {
@@ -4659,29 +4629,30 @@
   font-size: 11px;
   font-weight: 600;
   line-height: 1;
-  background-color: rgba(177, 173, 161, 0.2);
-  color: var(--ai-text-secondary);
+  background-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.85);
   box-sizing: border-box;
   transition: all 0.15s ease;
 }
 
 .ai-subfilter-btn:hover .ai-subfilter-count {
-  color: var(--ai-text-primary);
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.18);
 }
 
 .ai-subfilter-btn.is-active .ai-subfilter-count {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.18) !important;
   color: #FFFFFF !important;
 }
 
 .lumina-ai-profile-root.dark .ai-subfilter-count {
   background-color: rgba(255, 255, 255, 0.12);
-  color: var(--ai-text-secondary);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .lumina-ai-profile-root.dark .ai-subfilter-btn.is-active .ai-subfilter-count {
-  background-color: rgba(255, 255, 255, 0.25);
-  color: #E5E7EB !important;
+  background-color: rgba(255, 255, 255, 0.18) !important;
+  color: #FFFFFF !important;
 }
 
 /* Post sub-cards (Draft & Scheduled) */
@@ -4692,11 +4663,16 @@
 }
 
 .ai-draft-card {
-  border-left-color: #f59e0b;
+  border-left-color: rgba(255, 255, 255, 0.4);
+}
+
+.dark .ai-draft-card,
+.lumina-ai-profile-root.dark .ai-draft-card {
+  border-left-color: rgba(255, 255, 255, 0.4);
 }
 
 .ai-scheduled-card {
-  border-left-color: var(--ai-btn-primary-bg, #2563EB);
+  border-left-color: var(--ai-btn-primary-bg, #FFFFFF);
 }
 
 .ai-draft-badge {
@@ -4705,8 +4681,9 @@
   gap: 4px;
   padding: 2px 7px;
   border-radius: 4px;
-  background-color: rgba(245, 158, 11, 0.15);
-  color: #d97706;
+  background-color: rgba(247, 243, 235, 0.12);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -4714,8 +4691,9 @@
 }
 
 .lumina-ai-profile-root.dark .ai-draft-badge {
-  background-color: rgba(245, 158, 11, 0.2);
-  color: #fbbf24;
+  background-color: rgba(247, 243, 235, 0.12);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .ai-scheduled-badge {
@@ -4724,16 +4702,18 @@
   gap: 5px;
   padding: 2px 8px;
   border-radius: 4px;
-  background-color: rgba(37, 99, 235, 0.12);
-  color: var(--ai-btn-primary-bg, #2563EB);
+  background-color: rgba(247, 243, 235, 0.12);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
 
 .lumina-ai-profile-root.dark .ai-scheduled-badge {
-  background-color: rgba(37, 99, 235, 0.2);
-  color: #E07D5A;
+  background-color: rgba(247, 243, 235, 0.12);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .ai-scheduled-time-label {
@@ -4815,10 +4795,10 @@
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  border-radius: 7px;
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 5px;
+  border: 1px solid var(--ai-border, rgba(255, 255, 255, 0.16));
   background-color: transparent;
-  color: #ef4444;
+  color: var(--ai-text-primary, #FFFFFF);
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
@@ -4826,8 +4806,8 @@
 }
 
 .ai-action-danger-btn:hover {
-  background-color: rgba(239, 68, 68, 0.1);
-  border-color: #ef4444;
+  background-color: var(--ai-card-hover, rgba(255, 255, 255, 0.08));
+  border-color: var(--ai-text-primary, #FFFFFF);
 }
 
 .ai-draft-status-indicator,
@@ -4845,9 +4825,10 @@
   justify-content: center;
   padding: 48px 24px;
   text-align: center;
-  background-color: var(--ai-card-bg);
-  border: 1px dashed var(--ai-border);
-  border-radius: 12px;
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 6px;
+  box-shadow: none !important;
 }
 
 .ai-empty-icon {
@@ -4875,13 +4856,26 @@
   align-items: center;
   gap: 6px;
   padding: 7px 15px;
-  border-radius: 8px;
-  background-color: var(--ai-btn-primary-bg);
-  color: var(--ai-btn-primary-text);
-  border: none;
+  border-radius: 6px !important;
+  background-color: #191919 !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
   font-size: 12.5px;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.ai-empty-action-btn:hover {
+  background-color: #262626 !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #FFFFFF !important;
+}
+
+.ai-empty-action-btn svg {
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
 }
 
 /* Reschedule Modal */
@@ -5122,29 +5116,30 @@
 }
 
 .ai-toast-icon {
-  color: #10b981;
+  color: currentColor;
 }
 
 /* Tab Card Showcases (About, Projects, Achievements, Communities) */
 .ai-profile-section-card {
-  background-color: var(--ai-card-bg);
-  border: 1px solid var(--ai-border);
-  border-radius: 12px;
+  background-color: #191919 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 6px !important;
   padding: 20px;
   margin-bottom: 16px;
+  box-shadow: none !important;
 }
 
 .ai-section-card-title {
   font-size: 15px;
   font-weight: 700;
-  color: var(--ai-text-primary);
+  color: var(--ai-text-primary, #FFFFFF);
   margin: 0 0 12px 0;
 }
 
 .ai-section-card-desc {
   font-size: 13.5px;
   line-height: 1.6;
-  color: var(--ai-text-secondary);
+  color: rgba(255, 255, 255, 0.70);
   margin: 0 0 14px 0;
 }
 
@@ -5155,9 +5150,9 @@
 }
 
 .ai-interactive-item-card {
-  background-color: var(--ai-card-sub-bg);
-  border: 1px solid var(--ai-border);
-  border-radius: 10px;
+  background-color: rgba(247, 243, 235, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 6px !important;
   padding: 14px;
   display: flex;
   flex-direction: column;
@@ -5166,8 +5161,8 @@
 }
 
 .ai-interactive-item-card:hover {
-  border-color: rgba(255, 255, 255, 0.22);
-  background-color: var(--ai-card-hover);
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  background-color: rgba(247, 243, 235, 0.10) !important;
 }
 
 /* ==========================================================================
@@ -5236,18 +5231,18 @@
 }
 
 /* ==========================================================================
-   GLOBAL PROFILE DARK MODE TEXT COLOR (#E5E7EB)
-   Applies the light cream theme color across all text elements in dark mode
+   GLOBAL PROFILE DARK MODE TEXT COLOR (#FFFFFF)
+   Applies the white theme color across all text elements in dark mode
    ========================================================================== */
 .dark .lumina-ai-profile-root,
 .lumina-ai-profile-root.dark,
 [data-theme='dark'] .lumina-ai-profile-root {
-  --ai-text-primary: #FAFAFA !important;
-  --ai-text-secondary: #A1A1AA !important;
-  --ai-text-muted: #71717A !important;
-  --ai-text-subtle: #52525B !important;
-  --ai-pill-inactive-text: #A1A1AA !important;
-  color: #FAFAFA !important;
+  --ai-text-primary: #FFFFFF !important;
+  --ai-text-secondary: rgba(255, 255, 255, 0.85) !important;
+  --ai-text-muted: rgba(255, 255, 255, 0.70) !important;
+  --ai-text-subtle: rgba(255, 255, 255, 0.55) !important;
+  --ai-pill-inactive-text: rgba(255, 255, 255, 0.70) !important;
+  color: #FFFFFF !important;
 }
 
 /* Typography elements in dark mode */
@@ -5266,8 +5261,8 @@
 .dark .lumina-ai-profile-root label,
 .dark .lumina-ai-profile-root li,
 .dark .lumina-ai-profile-root small,
-.dark .lumina-ai-profile-root a:not(.ai-top-create-btn),
-.dark .lumina-ai-profile-root button:not(.ai-top-create-btn):not(.ai-linkedin-btn-primary):not(.ai-action-primary-btn),
+.dark .lumina-ai-profile-root a:not(.ai-top-create-btn):not(.ai-linkedin-contact-link),
+.dark .lumina-ai-profile-root button:not(.ai-top-create-btn):not(.ai-linkedin-btn-primary):not(.ai-action-primary-btn):not(.ai-friend-btn):not(.ai-friends-remove-btn):not(.ai-friends-message-btn),
 .dark .lumina-ai-profile-root input,
 .dark .lumina-ai-profile-root textarea,
 .lumina-ai-profile-root.dark h1,
@@ -5285,8 +5280,8 @@
 .lumina-ai-profile-root.dark label,
 .lumina-ai-profile-root.dark li,
 .lumina-ai-profile-root.dark small,
-.lumina-ai-profile-root.dark a:not(.ai-top-create-btn),
-.lumina-ai-profile-root.dark button:not(.ai-top-create-btn):not(.ai-linkedin-btn-primary):not(.ai-action-primary-btn),
+.lumina-ai-profile-root.dark a:not(.ai-top-create-btn):not(.ai-linkedin-contact-link),
+.lumina-ai-profile-root.dark button:not(.ai-top-create-btn):not(.ai-linkedin-btn-primary):not(.ai-action-primary-btn):not(.ai-friend-btn):not(.ai-friends-remove-btn):not(.ai-friends-message-btn),
 .lumina-ai-profile-root.dark input,
 .lumina-ai-profile-root.dark textarea,
 [data-theme='dark'] .lumina-ai-profile-root h1,
@@ -5304,11 +5299,11 @@
 [data-theme='dark'] .lumina-ai-profile-root label,
 [data-theme='dark'] .lumina-ai-profile-root li,
 [data-theme='dark'] .lumina-ai-profile-root small,
-[data-theme='dark'] .lumina-ai-profile-root a:not(.ai-top-create-btn),
-[data-theme='dark'] .lumina-ai-profile-root button:not(.ai-top-create-btn):not(.ai-linkedin-btn-primary):not(.ai-action-primary-btn),
+[data-theme='dark'] .lumina-ai-profile-root a:not(.ai-top-create-btn):not(.ai-linkedin-contact-link),
+[data-theme='dark'] .lumina-ai-profile-root button:not(.ai-top-create-btn):not(.ai-linkedin-btn-primary):not(.ai-action-primary-btn):not(.ai-friend-btn):not(.ai-friends-remove-btn):not(.ai-friends-message-btn),
 [data-theme='dark'] .lumina-ai-profile-root input,
 [data-theme='dark'] .lumina-ai-profile-root textarea {
-  color: #E5E7EB !important;
+  color: #FFFFFF !important;
 }
 
 /* Placeholders in dark mode */
@@ -5318,7 +5313,7 @@
 .lumina-ai-profile-root.dark textarea::placeholder,
 [data-theme='dark'] .lumina-ai-profile-root input::placeholder,
 [data-theme='dark'] .lumina-ai-profile-root textarea::placeholder {
-  color: rgba(177, 173, 161, 0.6) !important;
+  color: rgba(255, 255, 255, 0.65) !important;
 }
 
 /* Specific elements across sidebar, top bar, hero, tabs, feed, and widgets */
@@ -5637,14 +5632,14 @@
 [data-theme='dark'] .lumina-ai-profile-root .ai-form-label,
 [data-theme='dark'] .lumina-ai-profile-root .ai-datetime-input,
 [data-theme='dark'] .lumina-ai-profile-root .ai-modal-cancel-btn {
-  color: #E5E7EB !important;
+  color: #FFFFFF !important;
 }
 
-/* Lucide and UI icons default to light cream stroke */
+/* Lucide and UI icons default to white stroke in dark mode */
 .dark .lumina-ai-profile-root svg:not(.ai-top-create-btn svg):not(.ai-linkedin-org-icon svg):not(.ai-profile-avatar-main svg):not(.ai-linkedin-silhouette svg):not(.ai-award-medal-icon svg):not(.ai-linkedin-blue-tick svg),
 .lumina-ai-profile-root.dark svg:not(.ai-top-create-btn svg):not(.ai-linkedin-org-icon svg):not(.ai-profile-avatar-main svg):not(.ai-linkedin-silhouette svg):not(.ai-award-medal-icon svg):not(.ai-linkedin-blue-tick svg),
 [data-theme='dark'] .lumina-ai-profile-root svg:not(.ai-top-create-btn svg):not(.ai-linkedin-org-icon svg):not(.ai-profile-avatar-main svg):not(.ai-linkedin-silhouette svg):not(.ai-award-medal-icon svg):not(.ai-linkedin-blue-tick svg) {
-  stroke: #E5E7EB !important;
+  stroke: #FFFFFF !important;
 }
 
 /* ==========================================================================
@@ -5666,42 +5661,24 @@
   font-size: 14px;
   text-decoration: none;
   transition: opacity 0.15s ease;
-  color: var(--ai-text-secondary, #6B7280) !important;
-}
-
-.lumina-ai-profile-root.light .ai-linkedin-connections-link.ai-friends-profile-btn {
-  color: #6B7280 !important;
-}
-
-.dark .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn,
-.lumina-ai-profile-root.dark .ai-linkedin-connections-link.ai-friends-profile-btn,
-[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn {
-  color: #E5E7EB !important;
-}
-
-.ai-linkedin-connections-link.ai-friends-profile-btn:hover {
-  background-color: transparent !important;
-  text-decoration: underline !important;
-}
-
-.lumina-ai-profile-root.light .ai-linkedin-connections-link.ai-friends-profile-btn:hover {
-  color: #111111 !important;
-}
-
-.dark .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn:hover,
-.lumina-ai-profile-root.dark .ai-linkedin-connections-link.ai-friends-profile-btn:hover,
-[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn:hover {
   color: #FFFFFF !important;
 }
 
-.ai-linkedin-connections-link.ai-friends-profile-btn:active {
-  background-color: #F7F8FA !important;
+.ai-linkedin-connections-link.ai-friends-profile-btn:hover,
+.dark .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn:hover,
+.lumina-ai-profile-root.dark .ai-linkedin-connections-link.ai-friends-profile-btn:hover,
+[data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn:hover,
+.lumina-ai-profile-root.light .ai-linkedin-connections-link.ai-friends-profile-btn:hover {
+  background-color: transparent !important;
+  text-decoration: underline !important;
+  color: #FFFFFF !important;
 }
 
+.ai-linkedin-connections-link.ai-friends-profile-btn:active,
 .dark .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn:active,
 .lumina-ai-profile-root.dark .ai-linkedin-connections-link.ai-friends-profile-btn:active,
 [data-theme='dark'] .lumina-ai-profile-root .ai-linkedin-connections-link.ai-friends-profile-btn:active {
-  background-color: rgba(177, 173, 161, 0.15) !important;
+  background-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 /* Modal Overlay */
@@ -5730,20 +5707,12 @@
   max-height: 85vh;
   display: flex;
   flex-direction: column;
-  background-color: #000000;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.75);
+  background-color: #191919 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6) !important;
   overflow: hidden;
   animation: friendsModalScaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.lumina-ai-profile-root.light .ai-friends-modal-container,
-.lumina-ai-profile-root:not(.dark) .ai-friends-modal-container,
-[data-theme='light'] .ai-friends-modal-container {
-  background-color: #FFFFFF !important;
-  border: 1px solid #E5E7EB !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12) !important;
 }
 
 @keyframes friendsModalScaleIn {
@@ -5763,13 +5732,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.lumina-ai-profile-root.light .ai-friends-modal-header,
-.lumina-ai-profile-root:not(.dark) .ai-friends-modal-header,
-[data-theme='light'] .ai-friends-modal-header {
-  border-bottom: 1px solid #E5E7EB !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
 }
 
 .ai-friends-modal-title-row {
@@ -5786,34 +5749,22 @@
   letter-spacing: -0.01em;
 }
 
-.lumina-ai-profile-root.light .ai-friends-modal-title {
-  color: #111827;
-}
-
 .ai-friends-count-pill {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #E5E7EB;
-}
-
-.lumina-ai-profile-root.light .ai-friends-count-pill,
-.lumina-ai-profile-root:not(.dark) .ai-friends-count-pill,
-[data-theme='light'] .ai-friends-count-pill {
-  background-color: #F3F4F6 !important;
-  color: #4B5563 !important;
-  border: 1px solid #E5E7EB !important;
+  padding: 2px 7px;
+  border-radius: 4px !important;
+  background-color: rgba(247, 243, 235, 0.12);
+  color: #FFFFFF;
 }
 
 .ai-friends-modal-close-btn {
   background: transparent;
   border: none;
-  color: #9CA3AF;
+  color: rgba(255, 255, 255, 0.45);
   cursor: pointer;
   padding: 6px;
-  border-radius: 50%;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5821,13 +5772,8 @@
 }
 
 .ai-friends-modal-close-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(247, 243, 235, 0.10);
   color: #FFFFFF;
-}
-
-.lumina-ai-profile-root.light .ai-friends-modal-close-btn:hover {
-  background-color: rgba(0, 0, 0, 0.06);
-  color: #111827;
 }
 
 /* Search Bar */
@@ -5837,34 +5783,14 @@
   gap: 8px;
   padding: 8px 14px;
   margin: 12px 16px 8px;
-  border-radius: 10px;
-  background-color: #18181B;
-  border: 1px solid #27272A;
-}
-
-.lumina-ai-profile-root.light .ai-friends-search-bar,
-.lumina-ai-profile-root:not(.dark) .ai-friends-search-bar,
-[data-theme='light'] .ai-friends-search-bar {
-  background-color: #F7F8FA !important;
-  border: 1px solid #E5E7EB !important;
-}
-
-.lumina-ai-profile-root.light .ai-friends-search-bar:focus-within,
-.lumina-ai-profile-root:not(.dark) .ai-friends-search-bar:focus-within,
-[data-theme='light'] .ai-friends-search-bar:focus-within {
-  border-color: #2563EB !important;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) !important;
+  border-radius: 5px !important;
+  background-color: #191919 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
 .ai-friends-search-icon {
-  color: #9CA3AF;
+  color: rgba(255, 255, 255, 0.45);
   flex-shrink: 0;
-}
-
-.lumina-ai-profile-root.light .ai-friends-search-icon,
-.lumina-ai-profile-root:not(.dark) .ai-friends-search-icon,
-[data-theme='light'] .ai-friends-search-icon {
-  color: #6B7280 !important;
 }
 
 .ai-friends-search-input {
@@ -5872,25 +5798,19 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   font-size: 13.5px;
   font-family: inherit;
 }
 
-.lumina-ai-profile-root.light .ai-friends-search-input,
-.lumina-ai-profile-root:not(.dark) .ai-friends-search-input,
-[data-theme='light'] .ai-friends-search-input {
-  color: #111111 !important;
-}
-
 .ai-friends-search-input::placeholder {
-  color: #6B7280;
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .ai-friends-search-clear {
   background: transparent;
   border: none;
-  color: #9CA3AF;
+  color: var(--ai-text-muted, rgba(255, 255, 255, 0.70));
   cursor: pointer;
   padding: 2px;
   display: flex;
@@ -5917,27 +5837,19 @@
   border-radius: 3px;
 }
 
-.lumina-ai-profile-root.light .ai-friends-list-body::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.16);
-}
-
 /* Friend Row Item */
 .ai-friends-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 14px;
-  border-radius: 8px;
+  border-radius: 6px;
   transition: background-color 0.15s ease;
   gap: 12px;
 }
 
 .ai-friends-row:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.lumina-ai-profile-root.light .ai-friends-row:hover {
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: rgba(247, 243, 235, 0.06);
 }
 
 .ai-friends-left {
@@ -5954,7 +5866,7 @@
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  background-color: #1f2937;
+  background-color: #191919;
 }
 
 .ai-friends-info {
@@ -5977,35 +5889,27 @@
   display: block;
 }
 
-.lumina-ai-profile-root.light .ai-friends-username {
-  color: #111827;
-}
-
 .ai-friends-name {
   font-size: 13.5px;
   font-weight: 400;
   line-height: 1.25;
-  color: #9CA3AF;
+  color: rgba(255, 255, 255, 0.65);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
 }
 
-.lumina-ai-profile-root.light .ai-friends-name {
-  color: #6B7280;
-}
-
-/* Claude Orange Action Button: Remove Friend / Message */
+/* Action Button: Remove Friend / Message */
 .ai-friends-remove-btn,
 .ai-friends-message-btn {
-  background-color: #2563EB !important;
-  color: #FFFFFF !important;
-  font-weight: 600 !important;
-  border: none !important;
-  border-radius: 8px !important;
-  padding: 8px 18px !important;
-  font-size: 13.5px !important;
+  background-color: #FFFFFF !important;
+  color: #191919 !important;
+  font-weight: 500 !important;
+  border: 1px solid #FFFFFF !important;
+  border-radius: 5px !important;
+  padding: 6px 14px !important;
+  font-size: 13px !important;
   font-family: inherit !important;
   cursor: pointer !important;
   display: inline-flex !important;
@@ -6021,17 +5925,36 @@
   transition: opacity 0.15s ease !important;
 }
 
+.dark .ai-friends-remove-btn,
+.dark .ai-friends-message-btn,
+.lumina-ai-profile-root .ai-friends-remove-btn,
+.lumina-ai-profile-root .ai-friends-message-btn,
+.lumina-ai-profile-root.dark .ai-friends-remove-btn,
+.lumina-ai-profile-root.dark .ai-friends-message-btn,
+.dark .lumina-ai-profile-root button.ai-friends-remove-btn,
+.lumina-ai-profile-root.dark button.ai-friends-remove-btn,
+[data-theme='dark'] .lumina-ai-profile-root button.ai-friends-remove-btn,
+.ai-friends-row button.ai-friends-remove-btn {
+  background-color: #FFFFFF !important;
+  color: #191919 !important;
+  border: 1px solid #FFFFFF !important;
+  border-radius: 5px !important;
+}
+
 .ai-friends-remove-btn:hover,
-.ai-friends-message-btn:hover {
-  background-color: #2563EB !important;
-  color: #FFFFFF !important;
+.ai-friends-message-btn:hover,
+.dark .ai-friends-remove-btn:hover,
+.dark .ai-friends-message-btn:hover,
+.lumina-ai-profile-root.dark .ai-friends-remove-btn:hover,
+.lumina-ai-profile-root.dark .ai-friends-message-btn:hover {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  color: #191919 !important;
   box-shadow: none !important;
   transform: none !important;
 }
 
 .ai-friends-remove-btn:active,
 .ai-friends-message-btn:active {
-  background-color: #2563EB !important;
   transform: none !important;
   box-shadow: none !important;
 }
@@ -6050,7 +5973,7 @@
   justify-content: center;
   padding: 40px 20px;
   text-align: center;
-  color: #9CA3AF;
+  color: var(--ai-text-muted, rgba(255, 255, 255, 0.70));
   gap: 6px;
 }
 
@@ -6062,17 +5985,13 @@
 .ai-friends-empty-title {
   font-size: 15px;
   font-weight: 600;
-  color: #E5E7EB;
+  color: #FFFFFF;
   margin: 0;
-}
-
-.lumina-ai-profile-root.light .ai-friends-empty-title {
-  color: #1F2937;
 }
 
 .ai-friends-empty-sub {
   font-size: 13px;
-  color: #9CA3AF;
+  color: rgba(255, 255, 255, 0.65);
 }
 
 /* Friends Tab View (In Center Stream) */
@@ -6083,19 +6002,11 @@
 }
 
 .ai-friends-tab-card {
-  background-color: #111113;
-  border: 1px solid #27272A;
-  border-radius: 14px;
+  background-color: #191919 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 6px !important;
   padding: 18px 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-}
-
-.lumina-ai-profile-root.light .ai-friends-tab-card,
-.lumina-ai-profile-root:not(.dark) .ai-friends-tab-card,
-[data-theme='light'] .ai-friends-tab-card {
-  background-color: #FFFFFF !important;
-  border: 1px solid #E5E7EB !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: none !important;
 }
 
 .ai-friends-tab-header {
@@ -6103,15 +6014,9 @@
   align-items: center;
   justify-content: space-between;
   padding-bottom: 14px;
-  border-bottom: 1px solid #27272A;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   flex-wrap: wrap;
   gap: 12px;
-}
-
-.lumina-ai-profile-root.light .ai-friends-tab-header,
-.lumina-ai-profile-root:not(.dark) .ai-friends-tab-header,
-[data-theme='light'] .ai-friends-tab-header {
-  border-bottom: 1px solid #E5E7EB !important;
 }
 
 .ai-friends-tab-title {
@@ -6121,22 +6026,10 @@
   margin: 0 0 2px 0;
 }
 
-.lumina-ai-profile-root.light .ai-friends-tab-title,
-.lumina-ai-profile-root:not(.dark) .ai-friends-tab-title,
-[data-theme='light'] .ai-friends-tab-title {
-  color: #111111 !important;
-}
-
 .ai-friends-tab-subtitle {
   font-size: 13px;
-  color: #9CA3AF;
+  color: rgba(255, 255, 255, 0.65);
   margin: 0;
-}
-
-.lumina-ai-profile-root.light .ai-friends-tab-subtitle,
-.lumina-ai-profile-root:not(.dark) .ai-friends-tab-subtitle,
-[data-theme='light'] .ai-friends-tab-subtitle {
-  color: #6B7280 !important;
 }
 
 .tab-search {
@@ -6161,14 +6054,9 @@
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
-  background-color: rgba(255, 255, 255, 0.04);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.lumina-ai-profile-root.light .ai-dm-user-badge {
-  background-color: #FFFFFF;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: rgba(247, 243, 235, 0.06);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
 }
 
 .ai-dm-avatar {
@@ -6185,42 +6073,28 @@
   display: block;
 }
 
-.lumina-ai-profile-root.light .ai-dm-username {
-  color: #111827;
-}
-
 .ai-dm-name {
   font-size: 12.5px;
-  color: #9CA3AF;
+  color: rgba(255, 255, 255, 0.65);
   display: block;
-}
-
-.lumina-ai-profile-root.light .ai-dm-name {
-  color: #6B7280;
 }
 
 .ai-dm-textarea {
   width: 100%;
   box-sizing: border-box;
   padding: 12px 14px;
-  border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #FFFFFF;
+  border-radius: 5px;
+  background-color: #191919 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #FFFFFF !important;
   font-family: inherit;
   font-size: 13.5px;
   resize: vertical;
   outline: none;
 }
 
-.lumina-ai-profile-root.light .ai-dm-textarea {
-  background-color: #F7F8FA !important;
-  border: 1px solid rgba(177, 173, 161, 0.6) !important;
-  color: #111827;
-}
-
 .ai-dm-textarea:focus {
-  border-color: #2563EB;
+  border-color: #FFFFFF;
 }
 
 .ai-dm-footer {
@@ -6234,36 +6108,32 @@
 .ai-dm-cancel-btn {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #D1D5DB;
+  color: rgba(255, 255, 255, 0.7);
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: 5px;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
 }
 
-.lumina-ai-profile-root.light .ai-dm-cancel-btn {
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  color: #374151;
-}
-
-.ai-dm-send-btn {
-  background-color: #2563EB;
-  color: #FFFFFF !important;
-  border: none;
+.ai-dm-send-btn,
+.dark .ai-dm-send-btn {
+  background-color: #FFFFFF !important;
+  color: #191919 !important;
+  border: 1px solid #FFFFFF !important;
   padding: 8px 18px;
-  border-radius: 8px;
+  border-radius: 5px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: none;
+  transition: opacity 0.15s ease;
 }
 
 .ai-dm-send-btn:hover:not(:disabled) {
-  background-color: #2563EB;
+  opacity: 0.88;
   box-shadow: none;
   transform: none;
 }

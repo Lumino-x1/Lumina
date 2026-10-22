@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   padding: 110px 48px;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   color: #ffffff;
   overflow: hidden;
   box-sizing: border-box;
@@ -93,39 +93,18 @@
   pointer-events: none;
 }
 
-/* Neon Gray & Yellow Glowing Pip on the Right Dashed Border Line */
+/* Subtle Monochrome Pip on the Right Dashed Border Line */
 .skiper-blueprint-neon-pip {
   position: absolute;
   right: -1.5px;
   top: 26%;
   width: 3px;
   height: 56px;
-  background: linear-gradient(180deg, #94a3b8 0%, #cbd5e1 28%, #fff01f 68%, #ffe600 100%);
+  background: #FFFFFF;
   border-radius: 3px;
-  box-shadow:
-    0 0 10px rgba(255, 230, 0, 0.9),
-    0 0 20px rgba(203, 213, 225, 0.7),
-    0 0 34px rgba(255, 230, 0, 0.45);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
   z-index: 5;
   pointer-events: none;
-  animation: neonPipPulse 3s ease-in-out infinite alternate;
-}
-
-@keyframes neonPipPulse {
-  0% {
-    box-shadow:
-      0 0 8px rgba(255, 230, 0, 0.85),
-      0 0 16px rgba(203, 213, 225, 0.65),
-      0 0 28px rgba(255, 230, 0, 0.35);
-    opacity: 0.92;
-  }
-  100% {
-    box-shadow:
-      0 0 14px rgba(255, 230, 0, 1),
-      0 0 24px rgba(255, 255, 255, 0.85),
-      0 0 42px rgba(255, 230, 0, 0.65);
-    opacity: 1;
-  }
 }
 
 .skiper-text-block {
@@ -163,7 +142,7 @@
   font-weight: 450;
 }
 
-/* White Contact Us Button */
+/* Contact Us Button */
 .skiper-cta-row {
   margin-top: 28px;
   display: flex;
@@ -174,23 +153,23 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background-color: #2563EB;
-  color: #ffffff;
+  background-color: var(--theme-btn-primary-bg, #FFFFFF);
+  color: var(--theme-btn-primary-text, #191919);
   font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-  font-size: 14.5px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   letter-spacing: -0.01em;
-  padding: 12px 28px;
-  border-radius: 9999px;
+  padding: 10px 22px;
+  border-radius: 5px;
   text-decoration: none;
-  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35);
-  transition: all 0.22s ease;
+  box-shadow: none;
+  transition: opacity 0.18s ease;
 }
 
 .skiper-contact-btn:hover {
-  background-color: #1D4ED8;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 26px rgba(37, 99, 235, 0.45);
+  opacity: 0.88;
+  transform: none;
+  box-shadow: none;
 }
 
 .skiper-contact-btn:active {

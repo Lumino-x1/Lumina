@@ -10,6 +10,10 @@ export const leetcodeQueue = new Queue(LEETCODE_QUEUE_NAME, {
   connection: redis,
 })
 
+leetcodeQueue.on('error', () => {
+  // Suppress unhandled connection errors when Redis is offline in local dev
+})
+
 const defaultJobOptions = {
   attempts: 3,
   backoff: {

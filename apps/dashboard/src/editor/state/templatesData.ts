@@ -158,7 +158,7 @@ export const TEMPLATES_DATA: EditorTemplate[] = [
         id: 's3',
         type: 'callout',
         content: 'Exam Rule Reminder: 1 double-sided handwritten 8.5x11 reference sheet allowed. Calculators not permitted.',
-        styles: { backgroundColor: 'rgba(245, 158, 11, 0.1)', borderColor: '#f59e0b' },
+        styles: { backgroundColor: 'rgba(247, 243, 235, 0.15)', borderColor: 'rgba(255, 255, 255, 0.15)' },
       },
       {
         id: 's4',

@@ -11,7 +11,7 @@
 .lumina-auth-root input:-webkit-autofill:hover,
 .lumina-auth-root input:-webkit-autofill:focus,
 .lumina-auth-root input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #18181b inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #191919 inset !important;
   -webkit-text-fill-color: #ffffff !important;
   caret-color: #ffffff !important;
   border-color: rgba(255, 255, 255, 0.25) !important;

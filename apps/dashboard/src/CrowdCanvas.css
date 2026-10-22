@@ -50,7 +50,7 @@
   margin-top: 12px;
   height: 48px;
   width: 1px;
-  background: linear-gradient(to bottom, #000000, transparent);
+  background: linear-gradient(to bottom, #191919, transparent);
   transform: translateX(-50%);
 }
 

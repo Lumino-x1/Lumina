@@ -67,7 +67,7 @@ export const TestimonialsColumn = (props: {
             <React.Fragment key={index}>
               {props.testimonials.map(({ text, image, name, role }, i) => (
                 <div
-                  className="aspect-square p-5 sm:p-6 rounded-xl border border-white/[0.08] bg-[#0c0c0e] text-white shadow-xl shadow-black/80 w-full flex flex-col justify-between backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-[#141417]"
+                  className="aspect-square p-5 sm:p-6 rounded-[6px] border border-white/[0.08] bg-[#191919] text-white shadow-xl shadow-black/80 w-full flex flex-col justify-between backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-[#191919]/90"
                   style={{ fontFamily: "var(--font-sans, 'Plus Jakarta Sans', sans-serif)" }}
                   key={i}
                 >

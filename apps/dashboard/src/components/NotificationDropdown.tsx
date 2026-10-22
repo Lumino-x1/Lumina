@@ -4,6 +4,7 @@ import {
   acceptFriendRequestApi,
   rejectFriendRequestApi,
   fetchNotificationsApi,
+  invalidateFriendsCache,
 } from '../api/friendsApi'
 import './NotificationDropdown.css'
 
@@ -20,6 +21,7 @@ export interface FollowRequestNotification {
 export interface ActivityNotification {
   id: string
   type: 'LIKE' | 'COMMENT' | 'SYSTEM'
+  title?: string
   actorName: string
   actorAvatar: string
   message: string
@@ -55,7 +57,6 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
   const [followRequests, setFollowRequests] = useState<FollowRequestNotification[]>([])
   const [activities, setActivities] = useState<ActivityNotification[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [actionLoading, setActionLoading] = useState<Record<string, boolean>>({})
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   // Fetch real incoming requests and activity notifications from backend
@@ -92,6 +93,7 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
           const mappedActivities: ActivityNotification[] = notifRes.data.map((item: any) => ({
             id: item.id,
             type: item.type === 'COMMENT' ? 'COMMENT' : item.type === 'LIKE' ? 'LIKE' : 'SYSTEM',
+            title: item.title,
             actorName: item.data?.actorName || item.title || 'Lumina',
             actorAvatar:
               item.data?.actorAvatar ||
@@ -159,30 +161,24 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
   }, [isOpen, onClose])
 
   const handleAcceptRequest = async (req: FollowRequestNotification) => {
-    setActionLoading((prev) => ({ ...prev, [req.id]: true }))
+    // Immediately remove notification without showing accepted text
+    setFollowRequests((prev) => prev.filter((r) => r.id !== req.id))
     try {
       await acceptFriendRequestApi(req.id)
-      setFollowRequests((prev) =>
-        prev.map((r) => (r.id === req.id ? { ...r, status: 'ACCEPTED' } : r))
-      )
+      invalidateFriendsCache()
     } catch (err) {
       console.error('Accept request failed:', err)
-    } finally {
-      setActionLoading((prev) => ({ ...prev, [req.id]: false }))
     }
   }
 
   const handleRejectRequest = async (req: FollowRequestNotification) => {
-    setActionLoading((prev) => ({ ...prev, [req.id]: true }))
+    // Immediately remove notification without showing rejected text
+    setFollowRequests((prev) => prev.filter((r) => r.id !== req.id))
     try {
       await rejectFriendRequestApi(req.id)
-      setFollowRequests((prev) =>
-        prev.map((r) => (r.id === req.id ? { ...r, status: 'REJECTED' } : r))
-      )
+      invalidateFriendsCache()
     } catch (err) {
       console.error('Reject request failed:', err)
-    } finally {
-      setActionLoading((prev) => ({ ...prev, [req.id]: false }))
     }
   }
 
@@ -266,15 +262,11 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                   </div>
 
                   <div className="ai-notif-list">
-                    {followRequests.map((req) => {
-                      const isLoadingAction = !!actionLoading[req.id]
-                      return (
-                        <div
-                          className={`ai-notif-item ai-follow-req-item ${
-                            req.status !== 'PENDING' ? 'is-resolved' : ''
-                          }`}
-                          key={req.id}
-                        >
+                    {followRequests.map((req) => (
+                      <div
+                        className="ai-notif-item ai-follow-req-item"
+                        key={req.id}
+                      >
                           <div className="ai-notif-avatar-wrap">
                             <img
                               src={req.avatar}
@@ -304,49 +296,26 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                               <span className="ai-notif-time">{req.timeAgo}</span>
                             </div>
 
-                            {/* Action buttons or resolved state */}
-                            {req.status === 'PENDING' ? (
-                              <div className="ai-notif-actions">
-                                <button
-                                  type="button"
-                                  className="ai-notif-btn-confirm"
-                                  disabled={isLoadingAction}
-                                  onClick={() => handleAcceptRequest(req)}
-                                >
-                                  {isLoadingAction ? 'Confirming...' : 'Confirm'}
-                                </button>
-                                <button
-                                  type="button"
-                                  className="ai-notif-btn-delete"
-                                  disabled={isLoadingAction}
-                                  onClick={() => handleRejectRequest(req)}
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            ) : req.status === 'ACCEPTED' ? (
-                              <div className="ai-notif-resolved-status is-accepted">
-                                <svg
-                                  width="12"
-                                  height="12"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2.5"
-                                >
-                                  <polyline points="20 6 9 17 4 12" />
-                                </svg>
-                                <span>Request accepted · Following</span>
-                              </div>
-                            ) : (
-                              <div className="ai-notif-resolved-status is-rejected">
-                                <span>Request removed</span>
-                              </div>
-                            )}
+                            {/* Action buttons */}
+                            <div className="ai-notif-actions">
+                              <button
+                                type="button"
+                                className="ai-notif-btn-confirm"
+                                onClick={() => handleAcceptRequest(req)}
+                              >
+                                Confirm
+                              </button>
+                              <button
+                                type="button"
+                                className="ai-notif-btn-delete"
+                                onClick={() => handleRejectRequest(req)}
+                              >
+                                Delete
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      )
-                    })}
+                      ))}
                   </div>
                 </div>
               )}
@@ -384,7 +353,9 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                         <div className="ai-notif-content">
                           <div className="ai-notif-top-row">
                             <div className="ai-notif-main-text">
-                              <strong className="ai-notif-user-name">{act.actorName}</strong>{' '}
+                              <strong className="ai-notif-user-name">
+                                {act.title || act.actorName}
+                              </strong>{' '}
                               <span className="ai-notif-desc">{act.message}</span>
                             </div>
                             <span className="ai-notif-time">{act.timeAgo}</span>
@@ -413,22 +384,6 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
             </>
           )}
         </div>
-
-        {/* Footer */}
-        {hasAnyNotifications && (
-          <div className="ai-notif-footer">
-            <a
-              href="#notifications"
-              className="ai-notif-footer-link"
-              onClick={(e) => {
-                e.preventDefault()
-                onClose()
-              }}
-            >
-              View all notifications
-            </a>
-          </div>
-        )}
       </div>
     </>
   )

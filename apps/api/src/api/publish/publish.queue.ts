@@ -23,6 +23,10 @@ export const publishingQueue = new Queue<PublishPostJob>('lumina-publishing', {
   },
 })
 
+publishingQueue.on('error', () => {
+  // Suppress unhandled connection errors when Redis is offline in local dev
+})
+
 export const publishJobId = (postId: string, scheduleVersion: number) =>
   `publish-${postId}-v${scheduleVersion}`
 

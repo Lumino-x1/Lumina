@@ -218,7 +218,7 @@ export function mapFeedPostToStory(item: FeedPostItem): FeedStory {
     content: item.content || undefined,
     blocks: item.blocks || undefined,
     media: item.media || undefined,
-    authorId: item.author?.id,
+    authorId: item.author?.id || (item as any).authorId || (item as any).userId,
   }
 }
 
@@ -348,16 +348,21 @@ export const DEFAULT_FEED_ITEMS: FeedPostItem[] = [
   },
 ]
 
+export interface FetchFeedPageResult {
+  items: FeedPostItem[]
+  nextCursor: string | null
+}
+
 /**
- * Fetch college feed from GET /api/feed
+ * Fetch college feed page with nextCursor from GET /api/feed
  * Always sends credentials: 'include' and authorization bearer token
  */
-export async function fetchFeedApi(options?: {
+export async function fetchFeedPageApi(options?: {
   limit?: number
   cursor?: string
-}): Promise<FeedPostItem[]> {
+}): Promise<FetchFeedPageResult> {
   const baseUrl = getBaseApiUrl()
-  const limit = options?.limit || 20
+  const limit = options?.limit || 15
   const cursorParam = options?.cursor ? `&cursor=${encodeURIComponent(options.cursor)}` : ''
   const endpoint = `${baseUrl}/api/feed?limit=${limit}${cursorParam}`
 
@@ -402,7 +407,10 @@ export async function fetchFeedApi(options?: {
     if (res.ok) {
       const payload = (await res.json()) as FeedApiResponse
       if (payload.success && Array.isArray(payload.data?.items)) {
-        return payload.data.items
+        return {
+          items: payload.data.items,
+          nextCursor: payload.data.nextCursor ?? null,
+        }
       }
     } else {
       handleAuthResponseError(res)
@@ -411,7 +419,19 @@ export async function fetchFeedApi(options?: {
     console.error('Failed to fetch from /api/feed:', err)
   }
 
-  return []
+  return { items: [], nextCursor: null }
+}
+
+/**
+ * Fetch college feed from GET /api/feed
+ * Always sends credentials: 'include' and authorization bearer token
+ */
+export async function fetchFeedApi(options?: {
+  limit?: number
+  cursor?: string
+}): Promise<FeedPostItem[]> {
+  const result = await fetchFeedPageApi(options)
+  return result.items
 }
 
 /**
@@ -879,15 +899,20 @@ export interface PostCommentItem {
   quote?: string | null
 }
 
+export interface FetchCommentsPageResult {
+  comments: PostCommentItem[]
+  nextCursor: string | null
+}
+
 /**
- * Fetch comments tree for a post from GET /api/comments/posts/:postId/comments
+ * Fetch comments page with nextCursor from GET /api/comments/posts/:postId/comments
  */
-export async function fetchPostCommentsApi(
+export async function fetchPostCommentsPageApi(
   postId: string,
   options?: { cursor?: string; limit?: number }
-): Promise<PostCommentItem[]> {
+): Promise<FetchCommentsPageResult> {
   const baseUrl = getBaseApiUrl()
-  const limit = options?.limit ?? 20
+  const limit = options?.limit ?? 10
   const cursorParam = options?.cursor ? `&cursor=${encodeURIComponent(options.cursor)}` : ''
   const endpoint = `${baseUrl}/api/comments/posts/${encodeURIComponent(postId)}/comments?limit=${limit}${cursorParam}`
 
@@ -942,7 +967,7 @@ export async function fetchPostCommentsApi(
     if (!res.ok) {
       try {
         const fallbackRes = await fetch(
-          `${baseUrl}/api/posts/${encodeURIComponent(postId)}/comments`,
+          `${baseUrl}/api/posts/${encodeURIComponent(postId)}/comments?limit=${limit}${cursorParam}`,
           {
             method: 'GET',
             headers,
@@ -957,21 +982,36 @@ export async function fetchPostCommentsApi(
 
     if (res.ok) {
       const payload = await res.json()
+      let comments: PostCommentItem[] = []
+      let nextCursor: string | null = payload?.nextCursor ?? null
+
       if (payload && Array.isArray(payload.data)) {
-        return payload.data as PostCommentItem[]
+        comments = payload.data as PostCommentItem[]
+        if (!nextCursor && payload.dataNextCursor) nextCursor = payload.dataNextCursor
+      } else if (payload && Array.isArray(payload.comments)) {
+        comments = payload.comments as PostCommentItem[]
+      } else if (Array.isArray(payload)) {
+        comments = payload as PostCommentItem[]
       }
-      if (payload && Array.isArray(payload.comments)) {
-        return payload.comments as PostCommentItem[]
-      }
-      if (Array.isArray(payload)) {
-        return payload as PostCommentItem[]
-      }
+
+      return { comments, nextCursor }
     }
   } catch (err) {
     console.error(`Failed to fetch comments for post ${postId}:`, err)
   }
 
-  return []
+  return { comments: [], nextCursor: null }
+}
+
+/**
+ * Fetch comments tree for a post from GET /api/comments/posts/:postId/comments
+ */
+export async function fetchPostCommentsApi(
+  postId: string,
+  options?: { cursor?: string; limit?: number }
+): Promise<PostCommentItem[]> {
+  const result = await fetchPostCommentsPageApi(postId, options)
+  return result.comments
 }
 
 /**

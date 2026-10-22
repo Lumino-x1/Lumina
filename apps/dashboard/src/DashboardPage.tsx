@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import {
   Search,
   PanelLeft,
-  Inbox,
   SquarePen,
   ArrowUpCircle,
   Settings,
@@ -23,7 +22,7 @@ import './DashboardPage.css'
 import './Navbar.css'
 import type { MergedUser } from './api/profileApi'
 import {
-  fetchFeedApi,
+  fetchFeedPageApi,
   togglePostLikeApi,
   toggleSavePostApi,
   mapFeedPostToStory,
@@ -32,6 +31,7 @@ import {
   type FeedPostItem,
 } from './api/feedApi'
 import BlogReaderView from './BlogReaderView'
+import LuminaMessagingView from './components/messaging/LuminaMessagingView'
 import { DEFAULT_WHATSAPP_AVATAR } from './components/WhatsAppDefaultAvatar'
 import { useTheme } from './lib/themeContext'
 import {
@@ -42,6 +42,7 @@ import {
   sendFriendRequestApi,
   cancelFriendRequestApi,
   fetchOutgoingRequestsApi,
+  fetchMyFriendsApi,
 } from './api/friendsApi'
 import { NotificationDropdown } from './components/NotificationDropdown'
 
@@ -398,7 +399,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   onOpenWrite,
   onOpenProfile,
 }) => {
-  const { theme, toggleTheme } = useTheme()
+  const { theme: _theme } = useTheme()
   const [activeNav, setActiveNav] = useState<string>('Overview')
   const [activeTab, setActiveTab] = useState<'for-you' | 'following' | 'communities' | 'academic-ai'>('for-you')
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -421,6 +422,21 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
 
   const [notificationsOpen, setNotificationsOpen] = useState<boolean>(false)
   const [unreadNotifCount, setUnreadNotifCount] = useState<number>(2)
+
+  // Sync URL hash with navigation (e.g. #messages, #feed)
+  useEffect(() => {
+    const handleHashSync = () => {
+      const hash = window.location.hash.toLowerCase()
+      if (hash === '#messages' || hash === '#messaging' || hash === '#/messages') {
+        setActiveNav('Messaging')
+      } else if (hash === '#feed' || hash === '#dashboard' || hash === '#/feed') {
+        setActiveNav('Overview')
+      }
+    }
+    handleHashSync()
+    window.addEventListener('hashchange', handleHashSync)
+    return () => window.removeEventListener('hashchange', handleHashSync)
+  }, [])
 
   // Fetch initial outgoing pending friend requests
   useEffect(() => {
@@ -445,13 +461,44 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     let isMounted = true
     const collegeId = user?.collegeId || 'cmv9h829300024y8akviwpsmm'
     setIsRecommendationsLoading(true)
-    fetchRecommendedStudentsApi(collegeId, 5)
-      .then((data) => {
+
+    Promise.all([
+      fetchRecommendedStudentsApi(collegeId, 10),
+      fetchMyFriendsApi(),
+    ])
+      .then(([data, friendsRes]) => {
         if (!isMounted) return
-        const activeSuggestions = (data || []).filter(
-          (s) => !s.isFriend && s.friendshipStatus !== 'ACCEPTED'
-        )
-        setRecommendedStudents(activeSuggestions)
+
+        const myFriendIds = new Set<string>()
+        const myFriendUsers = new Set<string>()
+        if (friendsRes.success && Array.isArray(friendsRes.data)) {
+          const myId = user?.id
+          const myUser = (user?.username || '').replace(/^@/, '').toLowerCase().trim()
+          friendsRes.data.forEach((item: any) => {
+            if (item.status && item.status !== 'ACCEPTED') return
+            const isSenderMe =
+              (myId && (item.sender?.id === myId || item.senderId === myId)) ||
+              (myUser && item.sender?.username?.replace(/^@/, '').toLowerCase().trim() === myUser)
+            const other = isSenderMe ? item.receiver : item.sender
+            const otherId = other?.id || (isSenderMe ? item.receiverId : item.senderId)
+            const otherUser = (other?.username || other?.profile?.username || '').replace(/^@/, '').toLowerCase().trim()
+            if (otherId) myFriendIds.add(otherId)
+            if (otherUser) myFriendUsers.add(otherUser)
+            if (item.senderId && item.senderId !== myId) myFriendIds.add(item.senderId)
+            if (item.receiverId && item.receiverId !== myId) myFriendIds.add(item.receiverId)
+          })
+        }
+
+        const activeSuggestions = (data || []).filter((s) => {
+          if (s.isFriend || s.friendshipStatus === 'ACCEPTED') return false
+          if (s.id && myFriendIds.has(s.id)) return false
+          const sUser = (s.username || '').replace(/^@/, '').toLowerCase().trim()
+          if (sUser && myFriendUsers.has(sUser)) return false
+          return true
+        })
+
+        setRecommendedStudents(activeSuggestions.slice(0, 5))
+
         if (activeSuggestions.length > 0) {
           const fromRecs: Record<string, string> = {}
           activeSuggestions.forEach((student) => {
@@ -477,7 +524,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     return () => {
       isMounted = false
     }
-  }, [user?.collegeId])
+  }, [user?.collegeId, user?.id, user?.username])
 
   const handleToggleFriendRequest = async (friendId: string) => {
     const isCurrentlyPending = !!friendRequestsSent[friendId]
@@ -538,6 +585,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   }
   const [feedPosts, setFeedPosts] = useState<FeedPostItem[]>([])
   const [loadingFeed, setLoadingFeed] = useState<boolean>(true)
+  const [nextFeedCursor, setNextFeedCursor] = useState<string | null>(null)
+  const [isLoadingMorePosts, setIsLoadingMorePosts] = useState<boolean>(false)
+  const [hasMorePosts, setHasMorePosts] = useState<boolean>(true)
+  const feedBottomSentinelRef = useRef<HTMLDivElement>(null)
+  const contentColumnsRef = useRef<HTMLDivElement>(null)
 
   const handleOpenPost = (post: FeedPostItem, openComments = false) => {
     const story = mapFeedPostToStory(post)
@@ -607,11 +659,17 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   useEffect(() => {
     let isMounted = true
     setLoadingFeed(true)
-    fetchFeedApi()
-      .then((items) => {
+    setHasMorePosts(true)
+    setNextFeedCursor(null)
+
+    fetchFeedPageApi({ limit: 12 })
+      .then((res) => {
         if (isMounted) {
-          const list = items && items.length > 0 ? items : DEFAULT_FEED_ITEMS
+          const list = res.items && res.items.length > 0 ? res.items : DEFAULT_FEED_ITEMS
           setFeedPosts(list)
+          setNextFeedCursor(res.nextCursor)
+          setHasMorePosts(Boolean(res.nextCursor && res.items.length > 0))
+
           const hash = window.location.hash
           if (hash.startsWith('#post/')) {
             const pid = hash.replace('#post/', '')
@@ -623,7 +681,11 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         }
       })
       .catch(() => {
-        if (isMounted) setFeedPosts(DEFAULT_FEED_ITEMS)
+        if (isMounted) {
+          setFeedPosts(DEFAULT_FEED_ITEMS)
+          setHasMorePosts(false)
+          setNextFeedCursor(null)
+        }
       })
       .finally(() => {
         if (isMounted) setLoadingFeed(false)
@@ -633,6 +695,73 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
       isMounted = false
     }
   }, [activeTab])
+
+  const loadMorePosts = useCallback(async () => {
+    if (isLoadingMorePosts || loadingFeed || !hasMorePosts || !nextFeedCursor) {
+      return
+    }
+
+    setIsLoadingMorePosts(true)
+    try {
+      const res = await fetchFeedPageApi({ limit: 12, cursor: nextFeedCursor })
+      if (res.items && res.items.length > 0) {
+        setFeedPosts((prev) => {
+          const existingIds = new Set(prev.map((p) => p.id))
+          const newUnique = res.items.filter((p) => !existingIds.has(p.id))
+          return [...prev, ...newUnique]
+        })
+        setNextFeedCursor(res.nextCursor)
+        setHasMorePosts(Boolean(res.nextCursor))
+      } else {
+        setHasMorePosts(false)
+        setNextFeedCursor(null)
+      }
+    } catch (err) {
+      console.error('Failed to load more feed posts on scroll:', err)
+      setHasMorePosts(false)
+    } finally {
+      setIsLoadingMorePosts(false)
+    }
+  }, [isLoadingMorePosts, loadingFeed, hasMorePosts, nextFeedCursor])
+
+  // Scroll observer: ask for next set of posts when scrolling near bottom
+  useEffect(() => {
+    const sentinel = feedBottomSentinelRef.current
+    if (!sentinel || !hasMorePosts || loadingFeed) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0]
+        if (first && first.isIntersecting) {
+          loadMorePosts()
+        }
+      },
+      {
+        root: null,
+        rootMargin: '250px',
+        threshold: 0.1,
+      }
+    )
+
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [loadMorePosts, hasMorePosts, loadingFeed])
+
+  // Scroll container backup listener
+  useEffect(() => {
+    const container = contentColumnsRef.current
+    if (!container || !hasMorePosts || loadingFeed) return
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container
+      if (scrollHeight - (scrollTop + clientHeight) < 300) {
+        loadMorePosts()
+      }
+    }
+
+    container.addEventListener('scroll', handleScroll, { passive: true })
+    return () => container.removeEventListener('scroll', handleScroll)
+  }, [loadMorePosts, hasMorePosts, loadingFeed])
 
   const activeAccount = {
     name: user?.name || 'Sunilkumar',
@@ -737,8 +866,21 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
     )
   }
 
+  // Full Screen Lumina Campus Messaging View
+  if (activeNav === 'Messaging') {
+    return (
+      <LuminaMessagingView
+        currentUser={user}
+        onBackToDashboard={() => {
+          setActiveNav('Overview')
+          window.location.hash = 'feed'
+        }}
+      />
+    )
+  }
+
   return (
-    <div className={`lumina-ai-dashboard-root ${theme === 'dark' ? 'dark' : 'light'}`}>
+    <div className="lumina-ai-dashboard-root dark">
       {/* 1. LEFT SIDEBAR */}
       <aside className={`ai-sidebar ${isSidebarCollapsed ? 'is-collapsed' : ''} ${isMobileSidebarOpen ? 'is-mobile-open' : ''}`}>
         {/* Sidebar Header matching reference image */}
@@ -763,16 +905,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               <X size={18} />
             </button>
             <div className="ai-sidebar-action-group">
-              <button
-                type="button"
-                className="ai-sidebar-icon-btn ai-inbox-btn is-unimplemented"
-                title="Inbox (Coming soon)"
-                aria-label="Inbox"
-                tabIndex={-1}
-              >
-                <Inbox size={18} />
-                <span className="ai-inbox-badge">2</span>
-              </button>
               <button
                 type="button"
                 className="ai-sidebar-icon-btn"
@@ -935,13 +1067,16 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               </button>
               <button
                 type="button"
-                className="ai-nav-item is-unimplemented"
-                title="Citations Library (Coming soon)"
-                tabIndex={-1}
+                className={`ai-nav-item ${activeNav === 'Messaging' ? 'is-active' : ''}`}
+                title="Messaging"
+                onClick={() => {
+                  setActiveNav('Messaging')
+                  setIsMobileSidebarOpen(false)
+                  window.location.hash = 'messages'
+                }}
               >
-                <span className="ai-nav-icon">{Icons.Bookmark}</span>
-                <span className="ai-nav-label">Citations Library</span>
-                <span className="ai-soon-badge">Soon</span>
+                <span className="ai-nav-icon">{Icons.MessageSquare}</span>
+                <span className="ai-nav-label">Messaging</span>
               </button>
             </nav>
           </div>
@@ -1232,16 +1367,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
               />
             </div>
 
-            {/* Theme Toggle Button */}
-            <button
-              type="button"
-              className="ai-top-icon-btn"
-              onClick={toggleTheme}
-              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-            >
-              {theme === 'dark' ? Icons.Sun : Icons.Moon}
-            </button>
-
             {/* + Create Button */}
             <button
               type="button"
@@ -1273,7 +1398,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
         </header>
 
         {/* 3. DUAL COLUMN WORKSPACE (FEED + RIGHT WIDGETS) */}
-        <div className="ai-content-columns">
+        <div className="ai-content-columns" ref={contentColumnsRef}>
           {/* CENTER MAIN FEED STREAM */}
           <main className="ai-center-stream">
             {/* Feed Filter Navigation Bar */}
@@ -1558,8 +1683,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                             >
                               <Heart
                                 size={16}
-                                fill={isPostLiked ? '#ef4444' : 'none'}
-                                color={isPostLiked ? '#ef4444' : 'currentColor'}
+                                fill={isPostLiked ? 'currentColor' : 'none'}
+                                color="currentColor"
                                 className={`ai-heart-icon ${isPostLiked ? 'is-liked' : ''}`}
                               />
                               <span>{displayLikes}</span>
@@ -1624,6 +1749,25 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                   )
                 })
               ) : null}
+
+              {/* Infinite Scroll Sentinel */}
+              <div ref={feedBottomSentinelRef} className="ai-feed-scroll-sentinel" />
+
+              {/* Loading More Indicator */}
+              {isLoadingMorePosts && (
+                <div className="ai-feed-loading-more-card" role="status" aria-label="Loading more posts">
+                  <div className="ai-feed-spinner-sm" />
+                  <span>Loading more stories...</span>
+                </div>
+              )}
+
+              {/* All caught up message */}
+              {!hasMorePosts && !loadingFeed && feedPosts.length > 0 && (
+                <div className="ai-feed-end-of-stream">
+                  <div className="ai-feed-end-divider" />
+                  <span className="ai-feed-end-text">You've reached the end of the feed</span>
+                </div>
+              )}
             </div>
           </main>
 

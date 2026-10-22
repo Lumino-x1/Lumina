@@ -103,7 +103,7 @@ export const EditorShell: React.FC<EditorShellProps> = ({ onBackToDashboard, use
   }
 
   return (
-    <div className="lumina-editor-shell">
+    <div className="lumina-editor-shell dark" data-theme="dark">
       {/* 1. Top Navigation Bar */}
       <EditorToolbar
         onBackToDashboard={onBackToDashboard}

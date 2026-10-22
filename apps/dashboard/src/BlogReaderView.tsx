@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { type FeedStory, togglePostLikeApi } from './api/feedApi'
+import {
+  sendFriendRequestApi,
+  cancelFriendRequestApi,
+  fetchOutgoingRequestsApi,
+  fetchMyFriendsApi,
+} from './api/friendsApi'
 import { CommentsSection } from './components/CommentsDrawer'
 import { DEFAULT_WHATSAPP_AVATAR } from './components/WhatsAppDefaultAvatar'
 import { useTheme } from './lib/themeContext'
@@ -20,6 +26,7 @@ export interface BlogReaderViewProps {
     name?: string | null
     username?: string | null
     image?: string | null
+    email?: string | null
   } | null
   onCommentAdded?: (storyId: string, newCount?: number) => void
 }
@@ -53,6 +60,203 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
   )
   const [repostCount, setRepostCount] = useState(68)
   const [isReposted, setIsReposted] = useState(false)
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [isPending, setIsPending] = useState(false)
+  const [isMutualFriend, setIsMutualFriend] = useState(false)
+  const [isCheckingFriendship, setIsCheckingFriendship] = useState(true)
+
+  // Resolve current logged-in user details with localStorage fallback
+  const effectiveUser = React.useMemo(() => {
+    if (currentUser?.id || currentUser?.username) return currentUser
+    try {
+      const stored = localStorage.getItem('lumina_user')
+      if (stored) return JSON.parse(stored)
+    } catch {
+      // ignore
+    }
+    return currentUser
+  }, [currentUser])
+
+  // Check if viewing own post
+  const isSelf = React.useMemo(() => {
+    if (!effectiveUser) return false
+    const myId = effectiveUser.id
+    const myUser = (effectiveUser.username || '').replace(/^@/, '').toLowerCase().trim()
+    const myName = (effectiveUser.name || '').toLowerCase().trim()
+    const myEmailUser = (effectiveUser as any).email ? (effectiveUser as any).email.split('@')[0].toLowerCase().trim() : ''
+
+    const authorId = story.authorId
+    const authorUser = (story.authorUsername || story.authorName || '').replace(/^@/, '').toLowerCase().trim()
+    const authorName = (story.authorName || '').toLowerCase().trim()
+
+    if (myId && authorId && myId === authorId) return true
+    if (myUser && authorUser && myUser === authorUser) return true
+    if (myName && authorName && myName === authorName) return true
+    if (myEmailUser && authorUser && myEmailUser === authorUser) return true
+    return false
+  }, [effectiveUser, story.authorId, story.authorUsername, story.authorName])
+
+  // Sync friendship & follow state with backend
+  useEffect(() => {
+    let mounted = true
+
+    if (isSelf) {
+      setIsMutualFriend(true)
+      setIsCheckingFriendship(false)
+      return
+    }
+
+    const checkStatus = async () => {
+      try {
+        setIsCheckingFriendship(true)
+
+        // 1. Fetch user's accepted friends to check if they are already mutual friends
+        const friendsRes = await fetchMyFriendsApi()
+        if (!mounted) return
+
+        if (friendsRes.success && Array.isArray(friendsRes.data)) {
+          const myId = effectiveUser?.id
+          const myUser = (effectiveUser?.username || '').replace(/^@/, '').toLowerCase().trim()
+          const authorId = story.authorId
+          const authorUser = (story.authorUsername || story.authorName || '')
+            .replace(/^@/, '')
+            .toLowerCase()
+            .trim()
+          const authorName = (story.authorName || '').toLowerCase().trim()
+
+          const isFriend = friendsRes.data.some((item: any) => {
+            if (item.status && item.status !== 'ACCEPTED') return false
+
+            const isSenderMe =
+              (myId && (item.sender?.id === myId || item.senderId === myId)) ||
+              (myUser && item.sender?.username?.replace(/^@/, '').toLowerCase().trim() === myUser)
+
+            const other = isSenderMe ? item.receiver : item.sender
+            const otherId = other?.id || (isSenderMe ? item.receiverId : item.senderId)
+            const otherUser = (other?.username || other?.profile?.username || '')
+              .replace(/^@/, '')
+              .toLowerCase()
+              .trim()
+            const otherName = (other?.name || other?.profile?.name || '')
+              .toLowerCase()
+              .trim()
+
+            if (authorId && otherId && authorId === otherId) return true
+            if (authorUser && otherUser && authorUser === otherUser) return true
+            if (authorName && otherName && authorName === otherName) return true
+            if (authorUser && otherName && authorUser === otherName) return true
+            if (authorName && otherUser && authorName === otherUser) return true
+
+            // Fallback: direct check on both sender and receiver
+            const sId = item.sender?.id || item.senderId
+            const rId = item.receiver?.id || item.receiverId
+            const sUser = (item.sender?.username || item.sender?.profile?.username || '').replace(/^@/, '').toLowerCase().trim()
+            const rUser = (item.receiver?.username || item.receiver?.profile?.username || '').replace(/^@/, '').toLowerCase().trim()
+            const sName = (item.sender?.name || item.sender?.profile?.name || '').toLowerCase().trim()
+            const rName = (item.receiver?.name || item.receiver?.profile?.name || '').toLowerCase().trim()
+
+            if (myId) {
+              if (sId === myId) {
+                if (authorId && rId === authorId) return true
+                if (authorUser && (rUser === authorUser || rName === authorUser)) return true
+                if (authorName && (rUser === authorName || rName === authorName)) return true
+              }
+              if (rId === myId) {
+                if (authorId && sId === authorId) return true
+                if (authorUser && (sUser === authorUser || sName === authorUser)) return true
+                if (authorName && (sUser === authorName || sName === authorName)) return true
+              }
+            } else {
+              if (authorId && (sId === authorId || rId === authorId)) return true
+              if (authorUser && (sUser === authorUser || rUser === authorUser)) return true
+              if (authorName && (sUser === authorName || rUser === authorName)) return true
+            }
+
+            return false
+          })
+
+          if (isFriend) {
+            setIsMutualFriend(true)
+            setIsPending(false)
+            setIsFollowing(false)
+            setIsCheckingFriendship(false)
+            return
+          }
+        }
+
+        // 2. Check if there's an outgoing pending request
+        const outgoingRes = await fetchOutgoingRequestsApi()
+        if (!mounted) return
+
+        if (outgoingRes.success && Array.isArray(outgoingRes.data)) {
+          const authorId = story.authorId
+          const authorUser = (story.authorUsername || story.authorName || '')
+            .replace(/^@/, '')
+            .toLowerCase()
+            .trim()
+
+          const hasPending = outgoingRes.data.some((r: any) => {
+            if (r.status !== 'PENDING') return false
+            if (authorId && r.receiverId === authorId) return true
+            const recUser = (r.receiver?.username || '').replace(/^@/, '').toLowerCase().trim()
+            if (authorUser && recUser && authorUser === recUser) return true
+            return false
+          })
+
+          if (hasPending) {
+            setIsPending(true)
+          } else {
+            setIsPending(false)
+          }
+        }
+      } catch (err) {
+        console.error('Error syncing friendship status in BlogReaderView:', err)
+      } finally {
+        if (mounted) {
+          setIsCheckingFriendship(false)
+        }
+      }
+    }
+
+    void checkStatus()
+
+    return () => {
+      mounted = false
+    }
+  }, [story.authorId, story.authorUsername, story.authorName, effectiveUser?.id, effectiveUser?.username, isSelf])
+
+  const handleToggleFollow = async () => {
+    if (isPending || isFollowing) {
+      setIsPending(false)
+      setIsFollowing(false)
+      if (story.authorId) {
+        try {
+          await cancelFriendRequestApi(story.authorId)
+        } catch {
+          // ignore
+        }
+      }
+    } else {
+      setIsPending(true)
+      if (story.authorId) {
+        try {
+          const res = await sendFriendRequestApi(story.authorId)
+          if (!res.success) {
+            if (res.error && /already/i.test(res.error)) {
+              // They are already friends (mutual friends)! Don't show button
+              setIsMutualFriend(true)
+              setIsFollowing(false)
+              setIsPending(false)
+            } else if (res.error && /exists/i.test(res.error)) {
+              setIsPending(true)
+            }
+          }
+        } catch {
+          // ignore
+        }
+      }
+    }
+  }
 
   const authorDisplayName =
     story.authorName ||
@@ -182,7 +386,7 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
   )
 
   return (
-    <div className={`lumina-blog-reader-page ${theme === 'dark' ? 'dark' : 'light'}`}>
+    <div className="lumina-blog-reader-page dark">
       {/* 1. Clean Top Navigation Header */}
       <header className="reader-top-bar">
         <div className="reader-top-bar-inner">
@@ -207,8 +411,8 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
             >
               <Heart
                 size={16}
-                fill={localLiked ? '#ef4444' : 'none'}
-                color={localLiked ? '#ef4444' : 'currentColor'}
+                fill={localLiked ? 'currentColor' : 'none'}
+                color="currentColor"
                 strokeWidth={2}
                 className={`ai-heart-icon ${localLiked ? 'is-liked' : ''}`}
               />
@@ -237,7 +441,7 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
 
             <button
               type="button"
-              className={`reader-icon-btn ${isSaved ? 'is-active is-saved' : ''}`}
+              className={`reader-icon-btn reader-save-btn ${isSaved ? 'is-saved' : ''}`}
               onClick={() => onToggleSave && onToggleSave(story.id)}
               title={isSaved ? 'Remove from bookmarks' : 'Save bookmark'}
             >
@@ -302,8 +506,8 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
               >
                 <Heart
                   size={16}
-                  fill={localLiked ? '#ef4444' : 'none'}
-                  color={localLiked ? '#ef4444' : 'currentColor'}
+                  fill={localLiked ? 'currentColor' : 'none'}
+                  color="currentColor"
                   strokeWidth={2}
                   className={`ai-heart-icon ${localLiked ? 'is-liked' : ''}`}
                 />
@@ -700,8 +904,8 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
               >
                 <Heart
                   size={18}
-                  fill={localLiked ? '#ef4444' : 'none'}
-                  color={localLiked ? '#ef4444' : 'currentColor'}
+                  fill={localLiked ? 'currentColor' : 'none'}
+                  color="currentColor"
                   strokeWidth={2}
                   className={`ai-heart-icon ${localLiked ? 'is-liked' : ''}`}
                 />
@@ -735,7 +939,7 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
             <div className="reader-action-bar-right">
               <button
                 type="button"
-                className={`reader-toolbar-icon-btn ${isSaved ? 'is-active is-saved' : ''}`}
+                className={`reader-toolbar-icon-btn ${isSaved ? 'is-saved' : ''}`}
                 onClick={() => onToggleSave && onToggleSave(story.id)}
                 title={isSaved ? 'Remove from bookmarks' : 'Save story'}
               >
@@ -786,16 +990,16 @@ export const BlogReaderView: React.FC<BlogReaderViewProps> = ({
               Hi, I'm {authorFirstName}. Welcome to my corner on Lumina where I share campus perspectives, research notes, and stories. Explore more articles across our college community.
             </p>
 
-            <button
-              type="button"
-              className="reader-author-access-btn"
-              onClick={() => {
-                if (onBack) onBack()
-                else window.location.hash = 'feed'
-              }}
-            >
-              Explore More on Lumina
-            </button>
+            {/* If they are mutual friends or viewing own story, do not show follow/pending button */}
+            {!isCheckingFriendship && !isMutualFriend && !isSelf && (
+              <button
+                type="button"
+                className={`reader-author-follow-btn ${isFollowing || isPending ? 'is-following' : ''}`}
+                onClick={handleToggleFollow}
+              >
+                {isFollowing ? 'Following' : isPending ? 'Pending' : 'Follow'}
+              </button>
+            )}
           </div>
 
           {/* In-page Comments Section */}

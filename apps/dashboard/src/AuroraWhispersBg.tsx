@@ -17,12 +17,12 @@ export const AuroraWhispersBg: React.FC<AuroraWhispersBgProps> = ({
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           background: `
-            radial-gradient(ellipse 75% 55% at 86% 12%, rgba(255, 106, 0, 0.48), rgba(255, 65, 0, 0.20) 42%, transparent 70%),
-            radial-gradient(ellipse 70% 50% at 10% 32%, rgba(255, 120, 15, 0.42), rgba(255, 75, 0, 0.16) 40%, transparent 68%),
-            radial-gradient(ellipse 75% 55% at 90% 55%, rgba(255, 95, 0, 0.46), rgba(255, 55, 0, 0.18) 42%, transparent 70%),
-            radial-gradient(ellipse 70% 50% at 8% 76%, rgba(255, 110, 0, 0.42), rgba(255, 70, 0, 0.16) 40%, transparent 68%),
-            radial-gradient(ellipse 72% 52% at 85% 94%, rgba(255, 90, 0, 0.38), rgba(255, 50, 0, 0.14) 40%, transparent 68%),
-            #000000
+            radial-gradient(ellipse 75% 55% at 86% 12%, rgba(247, 243, 235, 0.12), rgba(247, 243, 235, 0.04) 42%, transparent 70%),
+            radial-gradient(ellipse 70% 50% at 10% 32%, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02) 40%, transparent 68%),
+            radial-gradient(ellipse 75% 55% at 90% 55%, rgba(247, 243, 235, 0.10), rgba(247, 243, 235, 0.03) 42%, transparent 70%),
+            radial-gradient(ellipse 70% 50% at 8% 76%, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02) 40%, transparent 68%),
+            radial-gradient(ellipse 72% 52% at 85% 94%, rgba(247, 243, 235, 0.10), rgba(247, 243, 235, 0.03) 40%, transparent 68%),
+            #191919
           `,
         }}
       />

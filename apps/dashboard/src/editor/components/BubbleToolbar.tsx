@@ -3,9 +3,9 @@ import { useEditorStore } from '../state/editorStore'
 import { EditorIcons } from '../icons'
 
 const BAR_COLORS = [
-  { name: 'Gray', value: 'rgb(107, 114, 128)', bg: '#9ca3af' },
-  { name: 'Red', value: 'rgb(239, 68, 68)', bg: '#ef4444' },
-  { name: 'Green', value: 'rgb(16, 185, 129)', bg: '#10b981' },
+  { name: 'Black', value: '#191919', bg: '#191919' },
+  { name: 'Muted', value: 'rgba(25, 25, 25, 0.65)', bg: 'rgba(25, 25, 25, 0.65)' },
+  { name: 'Cream', value: '#F7F3EB', bg: '#F7F3EB' },
 ]
 
 export const BubbleToolbar: React.FC = () => {

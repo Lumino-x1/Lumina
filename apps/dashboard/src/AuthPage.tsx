@@ -21,7 +21,6 @@ import {
 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTheme } from './lib/themeContext'
-import { ThemeToggle } from './components/ThemeToggle'
 import './AuthPage.css'
 
 class ShaderErrorBoundary extends React.Component<
@@ -104,7 +103,7 @@ const DEPARTMENT_SUGGESTIONS = [
 
 export const AuthPage: React.FC<AuthPageProps> = ({
   initialMode = 'login',
-  onBack,
+  onBack: _onBack,
   onSuccess,
   onRequireVerification,
 }) => {
@@ -372,54 +371,23 @@ export const AuthPage: React.FC<AuthPageProps> = ({
     }
   }
 
-  const handleBack = () => {
-    if (onBack) {
-      onBack()
-    } else {
-      window.location.hash = ''
-    }
-  }
-
   return (
-    <div className={`lumina-split-root ${!isDark ? 'light bright' : 'dark'}`} data-theme={!isDark ? 'light' : 'dark'}>
+    <div className="lumina-split-root dark" data-theme="dark">
       {/* ====================================================================
           LEFT PANE: AUTH & ONBOARDING FLOW (WITH DOT GRID BACKGROUND)
          ==================================================================== */}
       <div className="lumina-split-left">
         {/* DotGrid background strictly confined to left pane */}
-        <DotGrid theme={!isDark ? 'light' : 'dark'} spacing={20} />
+        <DotGrid theme="dark" spacing={20} />
 
-        {/* Top: Back Navigation & Step Badge */}
+        {/* Top: Step Badge */}
         <div className="lumina-auth-top-bar">
-          <button
-            type="button"
-            onClick={handleBack}
-            className="lumina-auth-back-btn"
-            aria-label="Back to website"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
-            <span>Back to website</span>
-          </button>
-
           <div className="lumina-auth-top-actions">
             {mode === 'signup' && (
               <span className="lumina-auth-step-badge">
                 Step {signupStep} of 4
               </span>
             )}
-            <ThemeToggle />
           </div>
         </div>
 
@@ -1092,10 +1060,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             frame={2854.5}
             colors={
               !isDark
-                ? ['#FFFFFF', '#2563EB', '#60A5FA', '#EFF6FF']
-                : ['#FFFFFF', '#2563EB', '#60A5FA', '#09090B']
+                ? ['#FFFFFF', '#191919', '#F7F3EB', '#FFFFFF']
+                : ['#191919', '#F7F3EB', '#191919', '#FFFFFF']
             }
-            colorBack={!isDark ? '#F7F8FA' : '#000000'}
+            colorBack={!isDark ? '#F7F3EB' : '#191919'}
             className="absolute inset-0 w-full h-full"
           />
         </ShaderErrorBoundary>
@@ -1117,22 +1085,18 @@ export default AuthPage
 /* Google G Logo Icon */
 function GoogleIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
       <path
         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09Z"
-        fill="#4285F4"
       />
       <path
         d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-        fill="#34A853"
       />
       <path
         d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84Z"
-        fill="#FBBC05"
       />
       <path
         d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84C6.71 7.3 9.14 5.38 12 5.38Z"
-        fill="#EB4335"
       />
     </svg>
   )
@@ -1141,7 +1105,7 @@ function GoogleIcon() {
 /* Facebook Official Icon */
 function FacebookIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="#1877F2">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
     </svg>
   )

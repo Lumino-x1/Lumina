@@ -118,7 +118,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #2563EB;
+  background-color: #ffffff;
   transform-origin: top;
   border-radius: 9999px;
 }
@@ -161,7 +161,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50% !important;
-  background-color: #2563EB;
+  background-color: #ffffff;
   flex-shrink: 0;
 }
 
@@ -220,7 +220,7 @@
 .difference-meta-line {
   width: 32px;
   height: 1px;
-  background-color: #2563EB;
+  background-color: #ffffff;
   transform-origin: left;
 }
 
@@ -259,7 +259,7 @@
 
 .difference-slide-dot.is-active {
   width: 38px;
-  background-color: #2563EB;
+  background-color: #ffffff;
 }
 
 .difference-slide-dot:hover:not(.is-active) {
@@ -283,24 +283,29 @@ button.testimonial-nav-btn,
   min-width: 42px;
   min-height: 42px;
   aspect-ratio: 1 / 1;
-  border-radius: 50% !important;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background-color: rgba(255, 255, 255, 0.04);
+  border-radius: 5px !important;
+  border: none !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   overflow: hidden;
   color: #ffffff;
-  transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease, transform 0.12s ease;
+  transition: opacity 0.18s ease, color 0.18s ease, transform 0.12s ease;
   padding: 0;
 }
 
 .testimonial-nav-btn:hover,
 .difference-nav-btn:hover {
-  border-color: #2563EB;
-  background-color: #2563EB;
-  color: #FFFFFF;
+  border: none !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #ffffff;
+  opacity: 0.8;
   transform: scale(1.04);
 }
 
@@ -348,7 +353,7 @@ button.testimonial-nav-btn,
 }
 
 /* ==========================================================================
-   BRIGHT / LIGHT MODE SUPPORT (Lumina 4-Color Palette: #2563EB, #FFFFFF, #FFFFFF, #E5E7EB)
+   BRIGHT / LIGHT MODE SUPPORT (Notion-Inspired: Black, White, Cream)
    ========================================================================== */
 [data-theme="bright"] .testimonial-root,
 [data-theme="light"] .testimonial-root,
@@ -359,7 +364,7 @@ button.testimonial-nav-btn,
 .bright .difference-root,
 .light .difference-root {
   background-color: #FFFFFF !important;
-  color: #111111 !important;
+  color: #191919 !important;
 }
 
 [data-theme="bright"] .testimonial-oversized-number,
@@ -370,7 +375,7 @@ button.testimonial-nav-btn,
 [data-theme="light"] .difference-oversized-number,
 .bright .difference-oversized-number,
 .light .difference-oversized-number {
-  color: rgba(177, 173, 161, 0.22) !important;
+  color: rgba(25, 25, 25, 0.08) !important;
 }
 
 [data-theme="bright"] .testimonial-left-col,
@@ -381,7 +386,7 @@ button.testimonial-nav-btn,
 [data-theme="light"] .difference-left-col,
 .bright .difference-left-col,
 .light .difference-left-col {
-  border-right: 1px dashed #E5E7EB !important;
+  border-right: 1px dashed rgba(25, 25, 25, 0.12) !important;
 }
 
 [data-theme="bright"] .testimonial-vertical-label,
@@ -392,7 +397,7 @@ button.testimonial-nav-btn,
 [data-theme="light"] .difference-vertical-label,
 .bright .difference-vertical-label,
 .light .difference-vertical-label {
-  color: #9CA3AF !important;
+  color: rgba(25, 25, 25, 0.45) !important;
 }
 
 [data-theme="bright"] .testimonial-progress-track,
@@ -403,7 +408,7 @@ button.testimonial-nav-btn,
 [data-theme="light"] .difference-progress-track,
 .bright .difference-progress-track,
 .light .difference-progress-track {
-  background-color: rgba(177, 173, 161, 0.35) !important;
+  background-color: rgba(25, 25, 25, 0.12) !important;
 }
 
 [data-theme="bright"] .testimonial-progress-fill,
@@ -414,72 +419,72 @@ button.testimonial-nav-btn,
 [data-theme="light"] .difference-progress-fill,
 .bright .difference-progress-fill,
 .light .difference-progress-fill {
-  background-color: #2563EB !important;
+  background-color: #191919 !important;
 }
 
 [data-theme="bright"] .difference-category-badge,
 [data-theme="light"] .difference-category-badge,
 .bright .difference-category-badge,
 .light .difference-category-badge {
-  color: #111111 !important;
-  border: 1px solid #E5E7EB !important;
-  background-color: #FFFFFF !important;
+  color: #191919 !important;
+  border: 1px solid rgba(25, 25, 25, 0.12) !important;
+  background-color: #F7F3EB !important;
 }
 
 [data-theme="bright"] .difference-category-dot,
 [data-theme="light"] .difference-category-dot,
 .bright .difference-category-dot,
 .light .difference-category-dot {
-  background-color: #2563EB !important;
+  background-color: #191919 !important;
 }
 
 [data-theme="bright"] .difference-headline-text,
 [data-theme="light"] .difference-headline-text,
 .bright .difference-headline-text,
 .light .difference-headline-text {
-  color: #111111 !important;
+  color: #191919 !important;
 }
 
 [data-theme="bright"] .difference-desc-text,
 [data-theme="light"] .difference-desc-text,
 .bright .difference-desc-text,
 .light .difference-desc-text {
-  color: #6B7280 !important;
+  color: rgba(25, 25, 25, 0.65) !important;
 }
 
 [data-theme="bright"] .difference-meta-line,
 [data-theme="light"] .difference-meta-line,
 .bright .difference-meta-line,
 .light .difference-meta-line {
-  background-color: #2563EB !important;
+  background-color: #191919 !important;
 }
 
 [data-theme="bright"] .difference-meta-text,
 [data-theme="light"] .difference-meta-text,
 .bright .difference-meta-text,
 .light .difference-meta-text {
-  color: #9CA3AF !important;
+  color: rgba(25, 25, 25, 0.45) !important;
 }
 
 [data-theme="bright"] .difference-slide-dot,
 [data-theme="light"] .difference-slide-dot,
 .bright .difference-slide-dot,
 .light .difference-slide-dot {
-  background-color: rgba(177, 173, 161, 0.4) !important;
+  background-color: rgba(25, 25, 25, 0.16) !important;
 }
 
 [data-theme="bright"] .difference-slide-dot.is-active,
 [data-theme="light"] .difference-slide-dot.is-active,
 .bright .difference-slide-dot.is-active,
 .light .difference-slide-dot.is-active {
-  background-color: #2563EB !important;
+  background-color: #191919 !important;
 }
 
 [data-theme="bright"] .difference-slide-dot:hover:not(.is-active),
 [data-theme="light"] .difference-slide-dot:hover:not(.is-active),
 .bright .difference-slide-dot:hover:not(.is-active),
 .light .difference-slide-dot:hover:not(.is-active) {
-  background-color: #E5E7EB !important;
+  background-color: rgba(25, 25, 25, 0.25) !important;
 }
 
 [data-theme="bright"] button.testimonial-nav-btn,
@@ -494,9 +499,11 @@ button.testimonial-nav-btn,
 .light button.testimonial-nav-btn,
 .light .testimonial-nav-btn,
 .light .difference-nav-btn {
-  border: 1px solid #E5E7EB !important;
-  background-color: #FFFFFF !important;
-  color: #111111 !important;
+  border: none !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #191919 !important;
 }
 
 [data-theme="bright"] .testimonial-nav-btn:hover,
@@ -507,9 +514,12 @@ button.testimonial-nav-btn,
 .bright .difference-nav-btn:hover,
 .light .testimonial-nav-btn:hover,
 .light .difference-nav-btn:hover {
-  border-color: #2563EB !important;
-  background-color: #2563EB !important;
-  color: #FFFFFF !important;
+  border: none !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #191919 !important;
+  opacity: 0.8;
 }
 
 [data-theme="bright"] .testimonial-ticker-wrap,
@@ -531,7 +541,7 @@ button.testimonial-nav-btn,
 [data-theme="light"] .difference-ticker-track,
 .bright .difference-ticker-track,
 .light .difference-ticker-track {
-  color: #9CA3AF !important;
+  color: rgba(25, 25, 25, 0.45) !important;
 }
 
 /* ==========================================================================

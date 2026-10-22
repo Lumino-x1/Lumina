@@ -2,7 +2,7 @@
   position: relative;
   width: 100%;
   min-height: 85vh;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -115,7 +115,7 @@
   height: 80%;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(56, 189, 248, 0.03) 40%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(247, 243, 235, 0.03) 40%, transparent 70%);
   pointer-events: none;
   filter: blur(50px);
 }

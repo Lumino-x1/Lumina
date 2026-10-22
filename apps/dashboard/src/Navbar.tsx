@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Search, Menu, X } from 'lucide-react'
-import { ThemeToggle } from './components/ThemeToggle'
 import './Navbar.css'
 
 export interface NavbarProps {
@@ -72,9 +71,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="saascn-key">K</span>
             </div>
           </div>
-
-          {/* Theme Toggle (Bright Pure White/Black vs Existing Dark) */}
-          <ThemeToggle />
 
           {/* Dashboard / Get Started Button (Desktop only) */}
           <button

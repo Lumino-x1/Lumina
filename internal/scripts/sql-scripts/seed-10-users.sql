@@ -12,6 +12,7 @@ DECLARE
   v_dept_id TEXT;
   v_pwd_hash TEXT := '3f4920e5dd5f471ac1a72cada791a427:9229b09f49c325bc825d19c89b9001c6c021a3ec3f58e4ae1a1d0969605c0088585c4875d5f7c95e40fe5693d047d73a56f7e2c9e9f7e7a692cbf22e53ea2c23';
 BEGIN
+
   -- 1. Ensure College exists
   SELECT id INTO v_college_id FROM "College" WHERE domain = 'psgtech.ac.in' OR slug = 'psg-tech' LIMIT 1;
   IF v_college_id IS NULL THEN

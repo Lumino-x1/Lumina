@@ -83,7 +83,7 @@ export const Globe: React.FC<GlobeProps> = ({ className, config }) => {
         className="pointer-events-none absolute inset-0 rounded-full"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.08) 0%, rgba(255, 94, 58, 0.04) 40%, transparent 70%)",
+            "radial-gradient(circle at 50% 50%, rgba(247, 243, 235, 0.08) 0%, rgba(25, 25, 25, 0.04) 40%, transparent 70%)",
           filter: "blur(24px)",
         }}
         aria-hidden="true"

@@ -1,7 +1,7 @@
 .problem-section {
   position: relative;
   width: 100%;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   color: #ffffff;
   overflow: hidden;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -16,7 +16,7 @@
   display: flex;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   border-top: 1px solid rgba(255, 255, 255, 0.04);
-  background: #000000;
+  background: var(--background, #191919);
   overflow: hidden;
   user-select: none;
 }
@@ -30,13 +30,13 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    var(--beam-glow, rgba(0, 242, 254, 0.45)) 25%,
-    var(--beam-primary, #00f2fe) 48%,
-    var(--beam-secondary, #4facfe) 52%,
-    var(--beam-glow, rgba(0, 242, 254, 0.45)) 75%,
+    var(--beam-glow, rgba(255, 255, 255, 0.25)) 25%,
+    var(--beam-primary, #FFFFFF) 48%,
+    var(--beam-secondary, #F7F3EB) 52%,
+    var(--beam-glow, rgba(255, 255, 255, 0.25)) 75%,
     transparent 100%
   );
-  opacity: 0.7;
+  opacity: 0.6;
   filter: blur(10px);
   mix-blend-mode: screen;
   pointer-events: none;
@@ -52,11 +52,11 @@
   width: 320px;
   background: radial-gradient(
     ellipse at center,
-    var(--beam-primary, #00f2fe) 0%,
-    var(--beam-secondary, #4facfe) 40%,
+    var(--beam-primary, #FFFFFF) 0%,
+    var(--beam-secondary, #F7F3EB) 40%,
     transparent 80%
   );
-  opacity: 0.55;
+  opacity: 0.45;
   mix-blend-mode: color-dodge;
   pointer-events: none;
   z-index: 3;
@@ -109,9 +109,9 @@
   top: 130px;
   width: 2px;
   height: 48px;
-  background: linear-gradient(180deg, #ff3b30 0%, #a855f7 50%, #3b82f6 100%);
+  background: #FFFFFF;
   border-radius: 2px;
-  box-shadow: 0 0 10px rgba(255, 59, 48, 0.8), 0 0 5px rgba(168, 85, 247, 0.8);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.35);
   z-index: 5;
 }
 
@@ -194,7 +194,7 @@
 .problem-cards-deck {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background: #181818;
+  background: #191919;
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 0;
   overflow: hidden;
@@ -220,14 +220,16 @@
 }
 
 .problem-card-icon {
-  width: 40px;
-  height: 40px;
+  width: auto;
+  height: auto;
   border-radius: 0;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   color: rgba(255, 255, 255, 0.85);
   margin-bottom: 76px;
 }

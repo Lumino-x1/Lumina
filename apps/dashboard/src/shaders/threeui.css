@@ -29,7 +29,7 @@
 
 .mechanical-keyboard {
   isolation: isolate;
-  background: #090a0c;
+  background: #191919;
 }
 
 .mechanical-keyboard__frame {
@@ -39,7 +39,7 @@
   width: 100%;
   height: 100%;
   border: 0;
-  background: #090a0c;
+  background: #191919;
   opacity: 0;
   transition: opacity 180ms ease-out;
   touch-action: none;
@@ -51,7 +51,7 @@
 
 .retro-metallic {
   isolation: isolate;
-  background: #08090a;
+  background: #191919;
 }
 
 .retro-metallic__frame {
@@ -61,7 +61,7 @@
   width: 100%;
   height: 100%;
   border: 0;
-  background: #08090a;
+  background: #191919;
   opacity: 0;
   transition: opacity 180ms ease-out;
   touch-action: none;
@@ -73,7 +73,7 @@
 
 .japanese-tower-landscape {
   isolation: isolate;
-  background: #ecdcbc;
+  background: #F7F3EB;
 }
 
 .japanese-tower-landscape__frame {
@@ -83,7 +83,7 @@
   width: 100%;
   height: 100%;
   border: 0;
-  background: #ecdcbc;
+  background: #F7F3EB;
   opacity: 0;
   transition: opacity 180ms ease-out;
 }
@@ -94,7 +94,7 @@
 
 .landscape-scene {
   isolation: isolate;
-  background: #ecdcbc;
+  background: #F7F3EB;
 }
 
 .landscape-scene__frame {
@@ -104,7 +104,7 @@
   width: 100%;
   height: 100%;
   border: 0;
-  background: #ecdcbc;
+  background: #F7F3EB;
   opacity: 0;
   transition: opacity 180ms ease-out;
   touch-action: none;
@@ -116,7 +116,7 @@
 
 .sakura-branch-scene {
   isolation: isolate;
-  background: #d4738a;
+  background: #F7F3EB;
 }
 
 .sakura-branch-scene__frame {
@@ -126,7 +126,7 @@
   width: 100%;
   height: 100%;
   border: 0;
-  background: #d4738a;
+  background: #F7F3EB;
   opacity: 0;
   transition: opacity 180ms ease-out;
 }
@@ -143,7 +143,7 @@
 
 .isometric-motion-grid {
   isolation: isolate;
-  background: #08090a;
+  background: #191919;
 }
 
 .isometric-motion-grid__stage {
@@ -160,7 +160,7 @@
   width: 100%;
   height: 100%;
   border: 0;
-  background: #08090a;
+  background: #191919;
   opacity: 0;
   transition: opacity 180ms ease-out;
 }
@@ -171,7 +171,7 @@
 
 .isometric-illustration {
   isolation: isolate;
-  background: #111;
+  background: #191919;
 }
 
 .isometric-illustration__frame {
@@ -181,7 +181,7 @@
   width: 100%;
   height: 100%;
   border: 0;
-  background: #111;
+  background: #191919;
   opacity: 0;
   transition: opacity 180ms ease-out;
 }
@@ -219,7 +219,7 @@
 
 .liquid-metal-button {
   isolation: isolate;
-  background: #070708;
+  background: #191919;
 }
 
 .liquid-metal-button__frame {
@@ -229,7 +229,7 @@
   width: 100%;
   height: 100%;
   border: 0;
-  background: #070708;
+  background: #191919;
   opacity: 0;
   transition: opacity 180ms ease-out;
 }
@@ -246,7 +246,7 @@
 
 .iso-mail-lightshafts {
   isolation: isolate;
-  background: #140f0b;
+  background: #191919;
 }
 
 .iso-mail-lightshafts__frame {
@@ -256,7 +256,7 @@
   width: 100%;
   height: 100%;
   border: 0;
-  background: #140f0b;
+  background: #191919;
   opacity: 0;
   transition: opacity 180ms ease-out;
 }
@@ -288,7 +288,7 @@
 
 .hypnotic-loops {
   isolation: isolate;
-  background: #f15a24;
+  background: #F7F3EB;
 }
 
 .hypnotic-loops__frame {
@@ -298,7 +298,7 @@
   width: 100%;
   height: 100%;
   border: 0;
-  background: #f15a24;
+  background: #F7F3EB;
   opacity: 0;
 }
 
@@ -329,7 +329,7 @@
 
 .scalability-bricks {
   isolation: isolate;
-  background: #0b0b0c;
+  background: #191919;
 }
 
 .scalability-bricks__frame {
@@ -339,7 +339,7 @@
   width: 100%;
   height: 100%;
   border: 0;
-  background: #0b0b0c;
+  background: #191919;
   opacity: 0;
   transition: opacity 180ms ease-out;
 }
@@ -350,11 +350,11 @@
 
 .text-path-study {
   isolation: isolate;
-  background: #08090a;
+  background: #191919;
 }
 
 .text-path-study--light {
-  background: #f3f5f8;
+  background: #F7F3EB;
 }
 
 .text-path-study-frame {
@@ -371,7 +371,7 @@
 .threeui-background {
   position: relative;
   isolation: isolate;
-  background: #030304;
+  background: #191919;
 }
 
 .threeui-background.condensation {
@@ -380,15 +380,15 @@
 
 .threeui-background.predictive-arc--light,
 .threeui-background.data-pixel-arc--light {
-  background: #f3f6f1;
+  background: #F7F3EB;
 }
 
 .typography-vortex-component.typography-vortex-component--light {
-  background: #eef1f6;
+  background: #F7F3EB;
 }
 
 .typography-vortex-component--light .typography-vortex-component__hint {
-  color: rgba(28, 30, 38, 0.55);
+  color: rgba(25, 25, 25, 0.55);
 }
 
 .threeui-background > canvas {
@@ -413,36 +413,36 @@
 }
 
 .terrain-plume-component {
-  --fe-bg: #030304;
+  --fe-bg: #191919;
   --fe-band: clamp(260px, 52cqw, 820px);
 
   isolation: isolate;
   container-type: inline-size;
   background:
-    linear-gradient(180deg, #050505 0%, #020202 44%, #000 100%);
+    linear-gradient(180deg, #191919 0%, #191919 44%, #000 100%);
 }
 
 /* Each scene keeps the same engraved grammar and only moves the ground tone the
    body fill and the reveal cover are painted with. */
 .terrain-plume-component[data-terrain-scene="river"] {
-  --fe-bg: #03070a;
+  --fe-bg: #191919;
 
   background:
-    linear-gradient(180deg, #05090d 0%, #020507 44%, #000 100%);
+    linear-gradient(180deg, #191919 0%, #191919 44%, #000 100%);
 }
 
 .terrain-plume-component[data-terrain-scene="desert"] {
-  --fe-bg: #0a0603;
+  --fe-bg: #191919;
 
   background:
-    linear-gradient(180deg, #0d0805 0%, #060302 44%, #000 100%);
+    linear-gradient(180deg, #191919 0%, #191919 44%, #000 100%);
 }
 
 .terrain-plume-component[data-terrain-scene="bridge-city"] {
-  --fe-bg: #03050b;
+  --fe-bg: #191919;
 
   background:
-    linear-gradient(180deg, #050810 0%, #020407 44%, #000 100%);
+    linear-gradient(180deg, #191919 0%, #191919 44%, #000 100%);
 }
 
 /* The authored plume sits at the foot of its own canvas, where the terrain band
@@ -537,7 +537,7 @@
 .sunset-valley-scene {
   position: relative;
   overflow: hidden;
-  background: #090d16;
+  background: #191919;
 }
 
 .sunset-valley-canvas {
@@ -571,7 +571,7 @@ img.sunset-valley-fallback {
 .temple-night-scene {
   position: relative;
   overflow: hidden;
-  background: #05070a;
+  background: #191919;
 }
 
 .temple-night-canvas {
@@ -591,8 +591,8 @@ img.sunset-valley-fallback {
   display: grid;
   place-items: center;
   margin: 0;
-  color: #a9b2b7;
-  background: #05070a;
+  color: rgba(25, 25, 25, 0.65);
+  background: #191919;
 }
 
 .yosemite-sunset-scene,
@@ -605,7 +605,7 @@ img.sunset-valley-fallback {
 .yosemite-sunset-scene {
   position: relative;
   overflow: hidden;
-  background: #241a26;
+  background: #191919;
 }
 
 .yosemite-sunset-canvas {
@@ -625,8 +625,8 @@ img.sunset-valley-fallback {
   display: grid;
   place-items: center;
   margin: 0;
-  color: #e0c3ab;
-  background: #241a26;
+  color: #F7F3EB;
+  background: #191919;
 }
 
 .presidio-sunset-scene,
@@ -639,7 +639,7 @@ img.sunset-valley-fallback {
 .presidio-sunset-scene {
   position: relative;
   overflow: hidden;
-  background: #2a1c22;
+  background: #191919;
 }
 
 .presidio-sunset-canvas {
@@ -659,8 +659,8 @@ img.sunset-valley-fallback {
   display: grid;
   place-items: center;
   margin: 0;
-  color: #e6c1ad;
-  background: #2a1c22;
+  color: #F7F3EB;
+  background: #191919;
 }
 
 .lake-louise-scene,
@@ -673,7 +673,7 @@ img.sunset-valley-fallback {
 .lake-louise-scene {
   position: relative;
   overflow: hidden;
-  background: #171d2c;
+  background: #191919;
 }
 
 .lake-louise-canvas {
@@ -693,8 +693,8 @@ img.sunset-valley-fallback {
   display: grid;
   place-items: center;
   margin: 0;
-  color: #b9c8d6;
-  background: #171d2c;
+  color: #F7F3EB;
+  background: #191919;
 }
 
 .bookshelf,
@@ -710,7 +710,7 @@ img.sunset-valley-fallback {
   position: relative;
   container-type: inline-size;
   overflow: hidden;
-  background: #171a24;
+  background: #191919;
   outline: none;
 }
 
@@ -736,20 +736,20 @@ img.sunset-valley-fallback {
   place-items: center;
   margin: 0;
   padding: 24px;
-  color: #f4eee6;
+  color: #F7F3EB;
   text-align: center;
 }
 
 .sketchbook {
   position: relative;
   overflow: hidden;
-  background: #ece7dc;
+  background: #F7F3EB;
 }
 
 .sketchbook__frame {
   border: 0;
   opacity: 0;
-  background: #ece7dc;
+  background: #F7F3EB;
 }
 
 .sketchbook__frame.is-ready {
@@ -768,8 +768,8 @@ img.sunset-valley-fallback {
 .animated-top-dock-component,
 .typography-vortex-component {
   container-type: inline-size;
-  color: #ecece8;
-  background: #0b0b0b;
+  color: #F7F3EB;
+  background: #191919;
   font-family: "Geist", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
@@ -797,7 +797,7 @@ img.sunset-valley-fallback {
   display: flex;
   justify-content: space-between;
   padding-bottom: clamp(14px, 2.6cqw, 30px);
-  color: #62625e;
+  color: rgba(25, 25, 25, 0.65);
   font: 400 clamp(8px, 0.85cqw, 10px) / 1 "ThreeUI Fragment Mono", ui-monospace, monospace;
   letter-spacing: 0.12em;
 }
@@ -807,12 +807,12 @@ img.sunset-valley-fallback {
   grid-template-columns: clamp(28px, 4cqw, 56px) minmax(0, 1fr) auto;
   align-items: center;
   gap: clamp(10px, 2.2cqw, 30px);
-  border-top: 1px solid #2a2a28;
+  border-top: 1px solid #191919;
 }
 
 .article-headings-component__entry h2 {
   margin: 0;
-  color: #e9e9e5;
+  color: #F7F3EB;
   font-size: clamp(18px, 3.2cqw, 44px);
   font-weight: 600;
   line-height: 1.08;
@@ -821,7 +821,7 @@ img.sunset-valley-fallback {
 
 .article-headings-component__index,
 .article-headings-component__meta {
-  color: #60605c;
+  color: rgba(25, 25, 25, 0.65);
   font: 400 clamp(8px, 0.85cqw, 10px) / 1.3 "ThreeUI Fragment Mono", ui-monospace, monospace;
   letter-spacing: 0.06em;
 }
@@ -831,22 +831,22 @@ img.sunset-valley-fallback {
 }
 
 .article-headings-component--light {
-  color: #202128;
-  background: #f3f5f8;
+  color: #191919;
+  background: #F7F3EB;
 }
 
 .article-headings-component--light .article-headings-component__header,
 .article-headings-component--light .article-headings-component__index,
 .article-headings-component--light .article-headings-component__meta {
-  color: #71737b;
+  color: rgba(25, 25, 25, 0.65);
 }
 
 .article-headings-component--light .article-headings-component__entry {
-  border-color: #d9dce3;
+  border-color: #F7F3EB;
 }
 
 .article-headings-component--light .article-headings-component__entry h2 {
-  color: #1d1f26;
+  color: #191919;
 }
 
 .typography-vortex-component {
@@ -868,7 +868,7 @@ img.sunset-valley-fallback {
 .animated-top-dock-component__caption {
   position: absolute;
   z-index: 6;
-  color: #62625e;
+  color: rgba(25, 25, 25, 0.65);
   font: 400 9px/1 "ThreeUI Fragment Mono", ui-monospace, monospace;
   letter-spacing: 0.1em;
 }
@@ -885,7 +885,7 @@ img.sunset-valley-fallback {
   isolation: isolate;
   background:
     radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.035), transparent 34%),
-    #080808;
+    #191919;
 }
 
 .animated-top-dock__nav {
@@ -899,9 +899,9 @@ img.sunset-valley-fallback {
   height: 38px;
   padding: 4px;
   overflow: visible;
-  border: 1px solid #292929;
+  border: 1px solid #191919;
   border-radius: 11px;
-  background: rgba(14, 14, 14, 0.86);
+  background: rgba(25, 25, 25, 0.86);
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.48), inset 0 1px rgba(255, 255, 255, 0.035);
   backdrop-filter: blur(18px) saturate(75%);
   transform: translateX(-50%);
@@ -921,8 +921,8 @@ img.sunset-valley-fallback {
   border: 1px solid transparent;
   border-radius: 7px;
   outline: none;
-  color: #858580;
-  background: rgba(21, 21, 20, 0.9);
+  color: rgba(25, 25, 25, 0.65);
+  background: rgba(25, 25, 25, 0.9);
   font: 400 10px/1 "ThreeUI Fragment Mono", ui-monospace, monospace;
   letter-spacing: 0.1em;
   white-space: nowrap;
@@ -936,9 +936,9 @@ img.sunset-valley-fallback {
 .animated-top-dock__item[data-dock-near="true"],
 .animated-top-dock__item:focus-visible {
   z-index: 7;
-  color: #ecece8;
-  border-color: #41413e;
-  background: rgba(27, 27, 26, 0.94);
+  color: #F7F3EB;
+  border-color: #191919;
+  background: rgba(25, 25, 25, 0.94);
   box-shadow: 0 7px 16px rgba(0, 0, 0, 0.26);
 }
 
@@ -946,7 +946,7 @@ img.sunset-valley-fallback {
   width: 28px;
   height: 28px;
   overflow: hidden;
-  background: #e8e8e3;
+  background: #F7F3EB;
 }
 
 .animated-top-dock__logo svg {
@@ -962,9 +962,9 @@ img.sunset-valley-fallback {
 }
 
 .animated-top-dock__link[aria-pressed="true"] {
-  color: #111;
-  border-color: #e8e8e3;
-  background: #e8e8e3;
+  color: #191919;
+  border-color: #F7F3EB;
+  background: #F7F3EB;
   box-shadow: 0 7px 18px rgba(0, 0, 0, 0.28);
 }
 
@@ -1204,7 +1204,7 @@ img.sunset-valley-fallback {
      cluster, and only falls back to an inset strip in a shell too narrow to
      hold it */
   --atd-bar-width: min(1240px, calc(100% - clamp(24px, 5cqw, 120px)));
-  background: #07080c;
+  background: #191919;
 }
 
 .atd-modern__aurora {
@@ -1214,9 +1214,9 @@ img.sunset-valley-fallback {
   height: 82%;
   pointer-events: none;
   background:
-    radial-gradient(58% 62% at 22% 36%, rgba(78, 116, 255, 0.4), transparent 68%),
-    radial-gradient(46% 56% at 78% 20%, rgba(186, 96, 255, 0.3), transparent 70%),
-    radial-gradient(40% 48% at 52% 6%, rgba(56, 220, 214, 0.2), transparent 72%),
+    radial-gradient(58% 62% at 22% 36%, rgba(247, 243, 235, 0.15), transparent 68%),
+    radial-gradient(46% 56% at 78% 20%, rgba(255, 255, 255, 0.1), transparent 70%),
+    radial-gradient(40% 48% at 52% 6%, rgba(247, 243, 235, 0.08), transparent 72%),
     radial-gradient(34% 40% at 50% 14%, rgba(255, 255, 255, 0.07), transparent 76%);
   filter: blur(8px);
 }
@@ -1225,14 +1225,14 @@ img.sunset-valley-fallback {
   gap: clamp(14px, 2.4cqw, 40px);
   border: 1px solid rgba(255, 255, 255, 0.045);
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(25, 27, 36, 0.86), rgba(12, 13, 18, 0.82));
+  background: linear-gradient(180deg, rgba(25, 25, 25, 0.86), rgba(25, 25, 25, 0.82));
   box-shadow: 0 22px 52px -24px rgba(0, 0, 0, 0.92), inset 0 1px rgba(255, 255, 255, 0.045);
   backdrop-filter: blur(22px) saturate(150%);
   -webkit-backdrop-filter: blur(22px) saturate(150%);
 }
 
 .atd-modern__brand {
-  color: #f2f3f7;
+  color: #F7F3EB;
 }
 
 .atd-modern__mark {
@@ -1245,7 +1245,7 @@ img.sunset-valley-fallback {
 .atd-modern__item {
   border: 1px solid transparent;
   border-radius: 999px;
-  color: #9b9fae;
+  color: rgba(25, 25, 25, 0.65);
   background: transparent;
   font: 500 var(--atd-label) / 1 inherit;
   letter-spacing: -0.005em;
@@ -1257,7 +1257,7 @@ img.sunset-valley-fallback {
 .atd-modern__item[data-dock-near="true"],
 .atd-modern__item:hover,
 .atd-modern__item:focus-visible {
-  color: #f4f5f9;
+  color: #F7F3EB;
   border-color: rgba(255, 255, 255, 0.055);
   background: rgba(255, 255, 255, 0.055);
   box-shadow: 0 8px 20px -14px rgba(0, 0, 0, 0.9), inset 0 1px rgba(255, 255, 255, 0.05);
@@ -1266,10 +1266,10 @@ img.sunset-valley-fallback {
 }
 
 .atd-modern__item[aria-pressed="true"] {
-  color: #0a0b10;
+  color: #191919;
   border-color: transparent;
-  background: linear-gradient(180deg, #ffffff, #dfe3ef);
-  box-shadow: 0 10px 24px -12px rgba(120, 150, 255, 0.75), inset 0 -1px rgba(0, 0, 0, 0.14);
+  background: linear-gradient(180deg, #ffffff, #F7F3EB);
+  box-shadow: 0 10px 24px -12px rgba(255, 255, 255, 0.4), inset 0 -1px rgba(0, 0, 0, 0.14);
 }
 
 .atd-modern__icon,
@@ -1304,11 +1304,11 @@ img.sunset-valley-fallback {
 }
 
 .atd-modern__ghost {
-  color: #a7abba;
+  color: rgba(25, 25, 25, 0.65);
 }
 
 .atd-modern__ghost:hover {
-  color: #f0f1f6;
+  color: #F7F3EB;
   background: rgba(255, 255, 255, 0.06);
 }
 
@@ -1318,9 +1318,9 @@ img.sunset-valley-fallback {
   align-items: center;
   padding: 0 var(--atd-bar-pad) 0 clamp(14px, 1.1cqw, 24px);
   border: 0;
-  color: #0a0b10;
-  background: linear-gradient(180deg, #ffffff, #d8ddec);
-  box-shadow: 0 10px 26px -14px rgba(150, 175, 255, 0.95), inset 0 -1px rgba(0, 0, 0, 0.16);
+  color: #191919;
+  background: linear-gradient(180deg, #ffffff, #F7F3EB);
+  box-shadow: 0 10px 26px -14px rgba(255, 255, 255, 0.5), inset 0 -1px rgba(0, 0, 0, 0.16);
 }
 
 .atd-modern__cta svg {
@@ -1329,7 +1329,7 @@ img.sunset-valley-fallback {
   height: calc(var(--atd-action-height) - clamp(12px, 0.9cqw, 20px));
   padding: clamp(4px, 0.3cqw, 7px);
   border-radius: 999px;
-  background: rgba(10, 11, 16, 0.1);
+  background: rgba(25, 25, 25, 0.1);
   fill: none;
   stroke: currentColor;
   stroke-width: 1.4;
@@ -1338,7 +1338,7 @@ img.sunset-valley-fallback {
 }
 
 .atd-modern__cta:hover {
-  box-shadow: 0 16px 32px -14px rgba(150, 175, 255, 1), inset 0 -1px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 16px 32px -14px rgba(255, 255, 255, 0.6), inset 0 -1px rgba(0, 0, 0, 0.16);
   transform: translateY(-1px);
 }
 
@@ -1355,7 +1355,7 @@ img.sunset-valley-fallback {
 
 .atd-modern__eyebrow {
   margin: 0 0 clamp(8px, 0.9cqw, 18px);
-  color: #7d84a0;
+  color: rgba(25, 25, 25, 0.65);
   font: 400 clamp(8px, 0.62cqw, 13px) / 1 "ThreeUI Fragment Mono", ui-monospace, monospace;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -1387,7 +1387,7 @@ img.sunset-valley-fallback {
   --atd-label: clamp(9px, 0.68cqw, 15px);
   --atd-icon: clamp(10px, 0.78cqw, 17px);
   --atd-brand: clamp(11px, 0.8cqw, 18px);
-  background: #0b0819;
+  background: #191919;
 }
 
 .atd-retro__field {
@@ -1406,8 +1406,8 @@ img.sunset-valley-fallback {
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(124% 90% at 50% 34%, transparent 28%, rgba(6, 4, 16, 0.62) 100%),
-    linear-gradient(180deg, rgba(6, 4, 16, 0.6) 0%, transparent 24%, transparent 62%, rgba(6, 4, 16, 0.58) 100%);
+    radial-gradient(124% 90% at 50% 34%, transparent 28%, rgba(25, 25, 25, 0.62) 100%),
+    linear-gradient(180deg, rgba(25, 25, 25, 0.6) 0%, transparent 24%, transparent 62%, rgba(25, 25, 25, 0.58) 100%);
 }
 
 /* the raster runs at screen resolution, not at the field's pixel scale, so the
@@ -1430,17 +1430,17 @@ img.sunset-valley-fallback {
   gap: 0;
   padding: 0;
   overflow: hidden;
-  border: 2px solid #f4e6c8;
-  background: #1a1030;
-  box-shadow: 6px 6px 0 rgba(6, 4, 16, 0.62);
+  border: 2px solid #F7F3EB;
+  background: #191919;
+  box-shadow: 6px 6px 0 rgba(25, 25, 25, 0.62);
 }
 
 .atd-retro__brand {
   height: 100%;
   padding: 0 clamp(12px, 1.1cqw, 26px);
-  border-right: 2px solid #4b2f7e;
-  color: #f9c74f;
-  background: #150c28;
+  border-right: 2px solid #191919;
+  color: #F7F3EB;
+  background: #191919;
   font: 400 var(--atd-brand) / 1 "ThreeUI Fragment Mono", ui-monospace, monospace;
   letter-spacing: 0.12em;
 }
@@ -1475,9 +1475,9 @@ img.sunset-valley-fallback {
   padding: 0 clamp(6px, 0.5cqw, 12px);
   overflow: hidden;
   border: 0;
-  border-right: 2px solid #4b2f7e;
-  color: #b9a7e8;
-  background: #241548;
+  border-right: 2px solid #191919;
+  color: #F7F3EB;
+  background: #191919;
   font: 400 var(--atd-label) / 1 "ThreeUI Fragment Mono", ui-monospace, monospace;
   letter-spacing: 0.14em;
   transition: color 0.1s steps(2), background 0.1s steps(2);
@@ -1485,13 +1485,13 @@ img.sunset-valley-fallback {
 
 .atd-retro__item[data-dock-near="true"],
 .atd-retro__item:focus-visible {
-  color: #fff4d6;
-  background: #3a2170;
+  color: #F7F3EB;
+  background: #191919;
 }
 
 .atd-retro__item[aria-pressed="true"] {
-  color: #1a1030;
-  background: #f9c74f;
+  color: #191919;
+  background: #F7F3EB;
 }
 
 .atd-retro__icon {
@@ -1509,9 +1509,9 @@ img.sunset-valley-fallback {
   height: 100%;
   padding: 0 clamp(14px, 1.2cqw, 28px);
   border: 0;
-  border-left: 2px solid #f4e6c8;
-  color: #1a1030;
-  background: #f47b5c;
+  border-left: 2px solid #F7F3EB;
+  color: #191919;
+  background: #F7F3EB;
   font: 400 var(--atd-label) / 1 "ThreeUI Fragment Mono", ui-monospace, monospace;
   letter-spacing: 0.16em;
   transition: background 0.1s steps(2), color 0.1s steps(2);
@@ -1519,8 +1519,8 @@ img.sunset-valley-fallback {
 }
 
 .atd-retro__cta:hover {
-  color: #1a1030;
-  background: #f9c74f;
+  color: #191919;
+  background: #F7F3EB;
 }
 
 .atd-retro__readout {
@@ -1531,7 +1531,7 @@ img.sunset-valley-fallback {
   display: flex;
   gap: clamp(12px, 2.4cqw, 42px);
   margin: 0;
-  color: #a08fd4;
+  color: #F7F3EB;
   font: 400 clamp(9px, 0.62cqw, 13px) / 1 "ThreeUI Fragment Mono", ui-monospace, monospace;
   letter-spacing: 0.2em;
   transform: translateX(-50%);
@@ -1546,7 +1546,7 @@ img.sunset-valley-fallback {
 
 .animated-top-dock-component.atd-glass {
   --atd-rail-width: clamp(158px, 12.5cqw, 250px);
-  background: #08090d;
+  background: #191919;
 }
 
 .atd-glass__field {
@@ -1567,7 +1567,7 @@ img.sunset-valley-fallback {
   width: 42%;
   pointer-events: none;
   content: "";
-  background: linear-gradient(90deg, rgba(6, 7, 11, 0.66), rgba(6, 7, 11, 0));
+  background: linear-gradient(90deg, rgba(25, 25, 25, 0.66), rgba(25, 25, 25, 0));
 }
 
 .atd-glass__rail {
@@ -1605,7 +1605,7 @@ img.sunset-valley-fallback {
 .atd-glass__brand {
   position: relative;
   padding: clamp(6px, 0.5cqw, 12px) clamp(8px, 0.7cqw, 15px);
-  color: #fbfbfe;
+  color: #F7F3EB;
 }
 
 .atd-glass__mark {
@@ -1650,9 +1650,9 @@ img.sunset-valley-fallback {
 }
 
 .atd-glass__item[aria-pressed="true"] {
-  color: #0d0f16;
+  color: #191919;
   border-color: rgba(255, 255, 255, 0.6);
-  background: linear-gradient(180deg, #ffffff, #e6e9f4);
+  background: linear-gradient(180deg, #ffffff, #F7F3EB);
   box-shadow: 0 10px 24px -12px rgba(255, 255, 255, 0.5), inset 0 -1px rgba(0, 0, 0, 0.14);
 }
 
@@ -1664,8 +1664,8 @@ img.sunset-valley-fallback {
   width: 100%;
   padding: 0 clamp(12px, 1cqw, 22px);
   border: 1px solid rgba(255, 255, 255, 0.55);
-  color: #0d0f16;
-  background: linear-gradient(180deg, #ffffff, #dfe3f0);
+  color: #191919;
+  background: linear-gradient(180deg, #ffffff, #F7F3EB);
   box-shadow: 0 12px 30px -14px rgba(255, 255, 255, 0.6), inset 0 -1px rgba(0, 0, 0, 0.16);
 }
 
@@ -1691,7 +1691,7 @@ img.sunset-valley-fallback {
 
 .atd-retro .animated-top-dock-component__caption {
   z-index: 12;
-  color: #7b6ab0;
+  color: rgba(25, 25, 25, 0.65);
 }
 
 @container (max-width: 900px) {

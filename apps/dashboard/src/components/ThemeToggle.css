@@ -21,8 +21,10 @@ button.lumina-skiper-toggle-btn,
   aspect-ratio: 1 / 1;
   padding: 8px;
   border-radius: 50% !important;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background-color: #000000;
+  border: none !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
   color: #ffffff;
   cursor: pointer;
   box-sizing: border-box;
@@ -30,20 +32,21 @@ button.lumina-skiper-toggle-btn,
   flex-shrink: 0;
   overflow: hidden;
   transition:
-    background-color 0.25s ease,
-    border-color 0.25s ease,
     color 0.25s ease,
     transform 0.15s ease,
-    box-shadow 0.25s ease;
+    opacity 0.2s ease;
 }
 
 .lumina-skiper-toggle-btn:hover {
-  border-color: rgba(255, 255, 255, 0.35);
-  background-color: #121212;
+  border: none !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  opacity: 0.8;
 }
 
 .lumina-skiper-toggle-btn:focus-visible {
-  outline: 2px solid #ffffff;
+  outline: 2px solid currentColor;
   outline-offset: 2px;
 }
 
@@ -59,24 +62,28 @@ button.lumina-skiper-toggle-btn,
 }
 
 /* ==========================================================================
-   Light Mode Support (Lumina Black + White + Blue Palette)
+   Light Mode Support (Lumina Notion Palette: #191919, #FFFFFF, #F7F3EB)
    ========================================================================== */
 [data-theme="light"] .lumina-skiper-toggle-btn,
 .light .lumina-skiper-toggle-btn {
-  background-color: #FFFFFF !important;
-  border-color: #E5E7EB !important;
-  color: #111111 !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  border: none !important;
+  color: #191919 !important;
+  box-shadow: none !important;
 }
 
 [data-theme="light"] .lumina-skiper-toggle-btn:hover,
 .light .lumina-skiper-toggle-btn:hover {
-  background-color: #F7F8FA !important;
-  border-color: #2563EB !important;
-  color: #2563EB !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #191919 !important;
+  opacity: 0.8;
 }
 
 [data-theme="light"] .lumina-skiper-toggle-btn:focus-visible,
 .light .lumina-skiper-toggle-btn:focus-visible {
-  outline-color: #2563EB !important;
+  outline-color: #191919 !important;
 }

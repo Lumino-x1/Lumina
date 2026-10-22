@@ -2,7 +2,7 @@
 .process-section {
   position: relative;
   width: 100%;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   color: #ffffff;
   overflow: hidden;
   padding-bottom: 120px;
@@ -12,7 +12,7 @@
 .process-top-ruler {
   width: 100%;
   height: 38px;
-  background-color: #000000;
+  background-color: var(--background, #191919);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   overflow: hidden;
@@ -145,13 +145,13 @@
 }
 
 .process-book-btn {
-  background: #232326;
+  background: #191919;
   color: #ffffff;
   font-family: var(--font-sans);
   font-size: 14.5px;
   font-weight: 500;
   padding: 5px 20px 5px 6px;
-  border-radius: 0;
+  border-radius: 5px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   cursor: pointer;
   display: inline-flex;
@@ -161,7 +161,7 @@
 }
 
 .process-book-btn:hover {
-  background: #2d2e33;
+  background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.25);
 }
 
@@ -298,9 +298,9 @@
 .process-card {
   width: 100%;
   min-height: 440px;
-  background: #202020;
+  background: #191919;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0;
+  border-radius: 6px;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -325,7 +325,7 @@
 .card-tunnel-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, transparent 30%, rgba(32, 32, 32, 0.95) 90%);
+  background: radial-gradient(circle at center, transparent 30%, rgba(25, 25, 25, 0.95) 90%);
   pointer-events: none;
 }
 
@@ -383,10 +383,10 @@
 
 /* Pill Bubble Styling */
 .card-question-pill {
-  background: rgba(26, 27, 32, 0.78);
+  background: rgba(25, 25, 25, 0.85);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 0;
+  border-radius: 4px;
   padding: 8px 18px;
   font-family: var(--font-sans);
   font-size: 13.5px;
@@ -402,7 +402,7 @@
 
 .card-question-pill:hover {
   border-color: rgba(255, 255, 255, 0.25);
-  background: rgba(35, 36, 44, 0.85);
+  background: rgba(25, 25, 25, 0.95);
   transform: translateY(-1px);
 }
 

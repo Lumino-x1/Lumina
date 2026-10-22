@@ -75,11 +75,11 @@ const THREEUI_MARK_SVG = `<svg viewBox="0 0 512 512" aria-hidden="true">
       </g>
     </mask>
   </defs>
-  <rect width="512" height="512" fill="#f5f5f7" mask="url(#threeui-intro-cut)"/>
+  <rect width="512" height="512" fill="#F7F3EB" mask="url(#threeui-intro-cut)"/>
 </svg>`;
 
 const SHADERS_WORDMARK_SVG = `<svg width="1600" height="300" viewBox="0 0 1600 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <text x="800" y="235" text-anchor="middle" fill="#F4F4F0" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="240" font-weight="900" letter-spacing="-8">SHADERS</text>
+  <text x="800" y="235" text-anchor="middle" fill="#F7F3EB" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="240" font-weight="900" letter-spacing="-8">SHADERS</text>
 </svg>`;
 
 export type NeuformIsolatedEffectProps = {
@@ -118,11 +118,11 @@ export const GALLERY_HEADING_VARIANTS = {
     direction: 1,
     field: "matte",
     palette: [
-      "#e9e5dd", "#20232a", "#c25a43", "#2f5b4e", "#d6cfc2", "#3a4763",
-      "#dda45c", "#14161a", "#a7b3a4", "#f3f1ec", "#5a6670", "#8c4b3f",
+      "#F7F3EB", "#191919", "#191919", "#191919", "#F7F3EB", "#191919",
+      "#191919", "#191919", "#191919", "#F7F3EB", "#191919", "#191919",
     ],
     /* headline ink: [muted line, emphasis line, offset plate] */
-    ink: { dark: ["#8d949c", "#ffffff", "#20232a"], light: ["#6b7280", "#111827", "#e9e5dd"] },
+    ink: { dark: ["#FFFFFF", "#F7F3EB", "#191919"], light: ["#191919", "#191919", "#F7F3EB"] },
     type: { font: "sans", weight: "400", headlineSize: 1.15, tracking: 0.1 },
     motion: { spring: true, ease: 0.42 },
   },
@@ -137,11 +137,11 @@ export const GALLERY_HEADING_VARIANTS = {
     direction: -1,
     field: "glitch",
     palette: [
-      "#0b0b12", "#ff2f6d", "#00e6ff", "#13f28a", "#f2f2f8", "#7a1bff",
-      "#101018", "#ff7a1a", "#141a2e", "#e01f52", "#1a1a26", "#0ac2d8",
+      "#191919", "#191919", "#191919", "#191919", "#F7F3EB", "#191919",
+      "#191919", "#191919", "#191919", "#191919", "#191919", "#191919",
     ],
     /* headline ink: [muted line, emphasis line, offset plate] */
-    ink: { dark: ["#ff2f6d", "#f2f2f8", "#0b0b12"], light: ["#c81049", "#111827", "#f2f2f8"] },
+    ink: { dark: ["#FFFFFF", "#F7F3EB", "#191919"], light: ["#191919", "#191919", "#F7F3EB"] },
     type: { font: "sans", weight: "700", headlineSize: 1.2, tracking: 0 },
     motion: { spring: false, ease: 0.12 },
   },
@@ -156,11 +156,11 @@ export const GALLERY_HEADING_VARIANTS = {
     direction: 1,
     field: "riso",
     palette: [
-      "#e0b64a", "#b1512a", "#6d7638", "#ecdfc2", "#2f6b66", "#8a3a2b",
-      "#d69b3e", "#3c4630", "#c06e3a", "#e6d3a8", "#546d76", "#7a4726",
+      "#191919", "#191919", "#191919", "#F7F3EB", "#191919", "#191919",
+      "#191919", "#191919", "#191919", "#F7F3EB", "#191919", "#191919",
     ],
     /* headline ink: [muted line, emphasis line, offset plate] */
-    ink: { dark: ["#e0b64a", "#f4e9d2", "#6d2a16"], light: ["#8a3a2b", "#2b2018", "#e0b64a"] },
+    ink: { dark: ["#FFFFFF", "#F7F3EB", "#191919"], light: ["#191919", "#191919", "#F7F3EB"] },
     type: { font: "oldstyle", weight: "700", headlineSize: 1.2, tracking: 0.03 },
     motion: { spring: false, ease: 0.9 },
   },
@@ -175,11 +175,11 @@ export const GALLERY_HEADING_VARIANTS = {
     direction: -1,
     field: "halftone",
     palette: [
-      "#12110f", "#f2efe8", "#1c1b18", "#e4e0d7", "#2b2a26", "#d6d1c6",
-      "#0a0a09", "#faf8f3", "#1f1e1a", "#eae6dd", "#161513", "#c0402c",
+      "#191919", "#F7F3EB", "#191919", "#F7F3EB", "#191919", "#F7F3EB",
+      "#191919", "#F7F3EB", "#191919", "#F7F3EB", "#191919", "#191919",
     ],
     /* headline ink: [muted line, emphasis line, offset plate] */
-    ink: { dark: ["#c0402c", "#f2efe8", "#12110f"], light: ["#c0402c", "#12110f", "#e4e0d7"] },
+    ink: { dark: ["#FFFFFF", "#F7F3EB", "#191919"], light: ["#191919", "#191919", "#F7F3EB"] },
     type: { font: "didone", weight: "400", headlineSize: 1.25, tracking: 0.06 },
     motion: { spring: false, ease: 0.55 },
   },
@@ -210,15 +210,15 @@ export const GALLERY_HEADING_DEFAULTS = {
 } as const;
 
 function transformThinkingButtonSource(source: string, mode: EffectMode) {
-  const background = mode === "light" ? "#f4f7fb" : "#111318";
+  const background = mode === "light" ? "#FFFFFF" : "#191919";
   const plate = mode === "light"
-    ? ["#60a5fa", "#3b82f6", "#2563eb"]
-    : ["#2563eb", "#1d4ed8", "#1e40af"];
+    ? ["#191919", "#F7F3EB", "#191919"]
+    : ["#FFFFFF", "#F7F3EB", "#FFFFFF"];
 
   return source
     .replace("<title>Uploading — glowing border microinteraction</title>", "<title>Thinking — glowing border microinteraction</title>")
     .replace("<style>", '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300&display=swap" rel="stylesheet">\n<style>')
-    .replaceAll("#1d1d1d", background)
+    .replaceAll("#191919", background)
     .replace("var word = 'Uploading'", "var word = 'Thinking'")
     .replace(
       'var FONT = \'300 100px -apple-system, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, system-ui, "Segoe UI", Roboto, sans-serif\';',
@@ -228,9 +228,9 @@ function transformThinkingButtonSource(source: string, mode: EffectMode) {
       "      if(glyphs[i].ch === 'g') doubleStoreyG(c);\n      else{",
       "      {",
     )
-    .replace("grd.addColorStop(0, '#2e3242');", `grd.addColorStop(0, '${plate[0]}');`)
-    .replace("grd.addColorStop(0.55, '#2b2f3c');", `grd.addColorStop(0.55, '${plate[1]}');`)
-    .replace("grd.addColorStop(1, '#272c36');", `grd.addColorStop(1, '${plate[2]}');`)
+    .replace("grd.addColorStop(0, '#191919');", `grd.addColorStop(0, '${plate[0]}');`)
+    .replace("grd.addColorStop(0.55, '#191919');", `grd.addColorStop(0.55, '${plate[1]}');`)
+    .replace("grd.addColorStop(1, '#191919');", `grd.addColorStop(1, '${plate[2]}');`)
     .replaceAll("rgb(83,92,135)", "rgb(219,234,254)")
     .replaceAll("rgb(97,106,150)", "rgb(239,246,255)")
     .replace("rgb(133,141,189)", "rgb(255,255,255)")
@@ -307,7 +307,7 @@ function transformGradientPillButtonSource(source: string, mode: EffectMode) {
     .replace("from-black/10 via-black/20 to-black/10", "from-white/[0.16] via-white/[0.07] to-white/[0.16]")
     .replace("text-black/60", "text-white/70")
     .replace("text-slate-600", "text-slate-200")
-    .replace('stroke="#666"', 'stroke="#e5e7eb"')
+    .replace('stroke="#191919"', 'stroke="#F7F3EB"')
     /* the hover fill sits behind the gradient, so near-white flashed the pill */
     .replace("hover:bg-slate-50", "hover:bg-white/10");
 }
@@ -528,7 +528,7 @@ function paintGlitch(x, base, i){
     gx.fillStyle = color; gx.fillRect(0,0,TS,TS);
     return g;
   };
-  var red = channel('#ff3050'), cyan = channel('#30e0ff');
+  var red = channel('#191919'), cyan = channel('#191919');
   x.save();
   x.globalCompositeOperation = 'lighter';
   x.globalAlpha = 0.3;
@@ -682,7 +682,7 @@ function transformGalleryHeadingSource(
   mode: EffectMode,
   variant: GalleryHeadingConfiguration,
 ) {
-  const background = mode === "light" ? "#f4f7fb" : "#000000";
+  const background = mode === "light" ? "#F7F3EB" : "#191919";
   const ink = mode === "light" ? variant.ink.light : variant.ink.dark;
   const font = GALLERY_HEADING_FONTS[variant.type.font];
 
@@ -716,7 +716,7 @@ function transformGalleryHeadingSource(
         + `var HEAD_TRACK = ${variant.type.tracking};   /* headline tracking, in cap heights */\n`
         + `var HEAD_STYLE = '${variant.field}';\n`
         + `var HEAD_SHADOW = '${ink[2]}';  /* riso: the plate under the ink */\n`
-        + `var HEAD_GHOST = ['#ff2f6d','#00e6ff'];  /* glitch: the two channel ghosts */\n`
+        + `var HEAD_GHOST = ['#191919','#191919'];  /* glitch: the two channel ghosts */\n`
         + `var PLATES = ${JSON.stringify(variant.palette)};\n`
         + `var FIELD = '${variant.field}';       /* which painter shades the plates */\n`
         + `var EASE = ${variant.motion.ease};        /* seconds for the orbit to reach hover speed */\n`
@@ -726,7 +726,7 @@ function transformGalleryHeadingSource(
       "var SANS = '\"Helvetica Neue\",Helvetica,\"Inter\",Arial,system-ui,sans-serif';",
       `var SANS = '${font}';`,
     )
-    .replace("{ s:'NEW GRAINIENT',    top:930,  w:1370, fill:'#d0d0d0' }", `{ s:'${variant.headline[0]}', top:930,  w:${variant.headlineWidths[0]}, fill:'${ink[0]}' }`)
+    .replace("{ s:'NEW GRAINIENT',    top:930,  w:1370, fill:'#191919' }", `{ s:'${variant.headline[0]}', top:930,  w:${variant.headlineWidths[0]}, fill:'${ink[0]}' }`)
     .replace("{ s:'COLLECTION ADDED', top:1114, w:1775, fill:'#ffffff' }", `{ s:'${variant.headline[1]}', top:1114, w:${variant.headlineWidths[1]}, fill:'${ink[1]}' }`)
     .replace(" * Tile artwork — eleven grainy gradient \"wallpapers\"", " * Tile artwork — twelve flat plates under a procedural noise field")
     .replace(GALLERY_HEADING_ART_BLOCK, GALLERY_HEADING_ART)
@@ -904,8 +904,8 @@ const RECURSIVE_EROSION_SPHERE: RecursiveErosionStyle = {
   pointerBoost: "  '    boost=min(boost+pull*0.85,1.5);',",
   projection: "  '  gl_Position=vec4(p.xy*persp*u_scale+u_off+toP*(pull*0.26),0.0,1.0);',",
   flicker: "      var flick=w.env(th);",
-  lightBackground: "#f4f3f1",
-  darkBackground: "#0a0908",
+  lightBackground: "#F7F3EB",
+  darkBackground: "#191919",
 };
 
 const RECURSIVE_EROSION_BRANCHES: RecursiveErosionStyle = {
@@ -1045,8 +1045,8 @@ const RECURSIVE_EROSION_BRANCHES: RecursiveErosionStyle = {
     var ay=th;
     var az=0.05*Math.cos(th+0.6);`,
   grain: "        d[i]=n; d[i+1]=n*0.70; d[i+2]=n*0.44; d[i+3]=255;",
-  lightBackground: "#f4f3f1",
-  darkBackground: "#0a0908",
+  lightBackground: "#F7F3EB",
+  darkBackground: "#191919",
 };
 
 const RECURSIVE_EROSION_MOUNTAINS: RecursiveErosionStyle = {
@@ -1132,8 +1132,8 @@ const RECURSIVE_EROSION_MOUNTAINS: RecursiveErosionStyle = {
     var ay=0.16*Math.sin(th+2.2);
     var az=0.0;`,
   grain: "        d[i]=n*0.86; d[i+1]=n*0.62; d[i+2]=n*0.74; d[i+3]=255;",
-  lightBackground: "#f2f1f5",
-  darkBackground: "#0b0a10",
+  lightBackground: "#F7F3EB",
+  darkBackground: "#191919",
 };
 
 const RECURSIVE_EROSION_NEBULA: RecursiveErosionStyle = {
@@ -1220,8 +1220,8 @@ const RECURSIVE_EROSION_NEBULA: RecursiveErosionStyle = {
     var ay=0.42*Math.sin(th+2.2)+0.10*Math.cos(th*2);
     var az=0.08*Math.cos(th+0.6);`,
   grain: "        d[i]=n*0.78; d[i+1]=n*0.52; d[i+2]=n; d[i+3]=255;",
-  lightBackground: "#f4f2f8",
-  darkBackground: "#08060f",
+  lightBackground: "#F7F3EB",
+  darkBackground: "#191919",
 };
 
 const RECURSIVE_EROSION_STYLES = {
@@ -1354,18 +1354,18 @@ function transformEpiludeWordmarkSource(source: string, mode: EffectMode) {
 }
 
 function transformAudioWordmarkSource(source: string, mode: EffectMode) {
-  const background = mode === "light" ? "#f4f7fb" : "#000";
-  const ink = mode === "light" ? "#172033" : "#E8EEE9";
-  const secondaryInk = mode === "light" ? "#536076" : "#c9d4cc";
-  const accent = mode === "light" ? "#315efb" : "#7080ff";
+  const background = mode === "light" ? "#F7F3EB" : "#000";
+  const ink = mode === "light" ? "#191919" : "#F7F3EB";
+  const secondaryInk = mode === "light" ? "#191919" : "#F7F3EB";
+  const accent = mode === "light" ? "#191919" : "#191919";
 
   return source
     .replace("<title>Supreme Radio — Graphic Identity</title>", "<title>ThreeUI — Audio Wordmark</title>")
     .replaceAll("supreme radio", "ThreeUI")
-    .replaceAll("#EA3927", accent)
-    .replaceAll("#E8EEE9", ink)
-    .replaceAll("#E3EDE5", ink)
-    .replaceAll("#c9d4cc", secondaryInk)
+    .replaceAll("#191919", accent)
+    .replaceAll("#F7F3EB", ink)
+    .replaceAll("#F7F3EB", ink)
+    .replaceAll("#F7F3EB", secondaryInk)
     .replaceAll("#000", background)
     .replace("var DUR = 20;", "var DUR = 4.7;");
 }
@@ -1374,17 +1374,17 @@ const EFFECTS = {
   expanse: {
     title: "Expanse Field shader background",
     source: expanseSource,
-    background: "#07080b",
+    background: "#191919",
     targets: [{ selector: "#glcanvas", role: "background" }],
   },
   starfield: {
     title: "Imaginie star portal",
     source: starfieldSource,
-    background: "#0d0a12",
+    background: "#191919",
     theme: {
       nativeMode: "dark",
-      lightBackground: "#f4f7fb",
-      darkBackground: "#0d0a12",
+      lightBackground: "#F7F3EB",
+      darkBackground: "#191919",
       invertBackground: true,
     },
     targets: [
@@ -1396,47 +1396,47 @@ const EFFECTS = {
   particleOrb: {
     title: "Synthesis autonomous orb",
     source: particleOrbSource,
-    background: "#050505",
+    background: "#191919",
     targets: [{ selector: "#orbCanvas", role: "background" }],
   },
   performanceGaugesTachometer: {
     title: "Tachometer diagnostic gauge",
     source: performanceGaugesSource,
-    background: "#000000",
+    background: "#191919",
     targets: [{ selector: "#gauge-tachometer", role: "visual", fit: "contain-square" }],
   },
   performanceGaugesSpeedometer: {
     title: "Speedometer diagnostic gauge",
     source: performanceGaugesSource,
-    background: "#000000",
+    background: "#191919",
     targets: [{ selector: "#gauge-speedometer", role: "visual", fit: "contain-square" }],
   },
   performanceGaugesBoost: {
     title: "Turbo boost diagnostic gauge",
     source: performanceGaugesSource,
-    background: "#000000",
+    background: "#191919",
     targets: [{ selector: "#gauge-boost", role: "visual", fit: "contain-square" }],
   },
   performanceGaugesPower: {
     title: "EV power diagnostic gauge",
     source: performanceGaugesSource,
-    background: "#000000",
+    background: "#191919",
     targets: [{ selector: "#gauge-power", role: "visual", fit: "contain-square" }],
   },
   logicCore: {
     title: "Logic Core isometric field",
     source: logicCoreSource,
-    background: "#050505",
+    background: "#191919",
     targets: [{ selector: "#three-canvas-container", role: "background" }],
   },
   ignition: {
     title: "Ignition Button shader button",
     source: ignitionSource,
-    background: "#f0ede7",
+    background: "#F7F3EB",
     theme: {
       nativeMode: "light",
-      lightBackground: "#f0ede7",
-      darkBackground: "#121316",
+      lightBackground: "#F7F3EB",
+      darkBackground: "#191919",
       invertBackground: true,
     },
     targets: [
@@ -1447,11 +1447,11 @@ const EFFECTS = {
   induction: {
     title: "Induction Button kinetic button",
     source: inductionSource,
-    background: "#050505",
+    background: "#191919",
     theme: {
       nativeMode: "dark",
-      lightBackground: "#f4f7fb",
-      darkBackground: "#050505",
+      lightBackground: "#F7F3EB",
+      darkBackground: "#191919",
       invertBackground: true,
     },
     targets: [
@@ -1462,11 +1462,11 @@ const EFFECTS = {
   aetherisLabs: {
     title: "Aetheris Labs plasma button",
     source: aetherisLabsSource,
-    background: "#020614",
+    background: "#191919",
     theme: {
       nativeMode: "dark",
-      lightBackground: "#f4f7fb",
-      darkBackground: "#020614",
+      lightBackground: "#F7F3EB",
+      darkBackground: "#191919",
       invertBackground: true,
     },
     targets: [
@@ -1477,11 +1477,11 @@ const EFFECTS = {
   tactile: {
     title: "Nexus tactile fluidics button",
     source: tactileSource,
-    background: "#03090d",
+    background: "#191919",
     theme: {
       nativeMode: "dark",
-      lightBackground: "#f4f7fb",
-      darkBackground: "#03090d",
+      lightBackground: "#F7F3EB",
+      darkBackground: "#191919",
       invertBackground: true,
     },
     targets: [
@@ -1492,10 +1492,10 @@ const EFFECTS = {
   thinking: {
     title: "Thinking Button canvas animation",
     source: thinkingSource,
-    background: "#111318",
+    background: "#191919",
     theme: {
-      lightBackground: "#f4f7fb",
-      darkBackground: "#111318",
+      lightBackground: "#F7F3EB",
+      darkBackground: "#191919",
     },
     transformSource: transformThinkingButtonSource,
     targets: [{ selector: "#stage", role: "button" }],
@@ -1503,82 +1503,82 @@ const EFFECTS = {
   slidingTextCta: {
     title: "Sliding Text CTA button",
     source: slidingTextCtaSource,
-    background: "#111318",
-    theme: { lightBackground: "#f4f7fb", darkBackground: "#111318" },
+    background: "#191919",
+    theme: { lightBackground: "#F7F3EB", darkBackground: "#191919" },
     targets: [{ selector: ".component-wrapper button", role: "button", preserveTransform: true }],
   },
   floatingDotsCta: {
     title: "Floating Dots CTA button",
     source: floatingDotsCtaSource,
-    background: "#111318",
-    theme: { lightBackground: "#f4f7fb", darkBackground: "#111318" },
+    background: "#191919",
+    theme: { lightBackground: "#F7F3EB", darkBackground: "#191919" },
     targets: [{ selector: ".component-wrapper button", role: "button", preserveTransform: true }],
   },
   launchButton: {
     title: "Gradient Launch button",
     source: launchButtonSource,
-    background: "#111318",
-    theme: { lightBackground: "#f4f7fb", darkBackground: "#111318" },
+    background: "#191919",
+    theme: { lightBackground: "#F7F3EB", darkBackground: "#191919" },
     targets: [{ selector: ".component-wrapper button", role: "button", preserveTransform: true }],
   },
   dotBorderButton: {
     title: "Dot Border button",
     source: dotBorderButtonSource,
-    background: "#111318",
-    theme: { lightBackground: "#f4f7fb", darkBackground: "#111318" },
+    background: "#191919",
+    theme: { lightBackground: "#F7F3EB", darkBackground: "#191919" },
     transformSource: transformDotBorderButtonSource,
     targets: [{ selector: ".component-wrapper .btn-wrapper", role: "button", preserveTransform: true }],
   },
   gradientCta: {
     title: "Gradient CTA button",
     source: gradientCtaSource,
-    background: "#111318",
-    theme: { lightBackground: "#f4f7fb", darkBackground: "#111318" },
+    background: "#191919",
+    theme: { lightBackground: "#F7F3EB", darkBackground: "#191919" },
     targets: [{ selector: ".component-wrapper button", role: "button", preserveTransform: true }],
   },
   spinningBorderButton: {
     title: "Spinning Border button",
     source: spinningBorderButtonSource,
-    background: "#111318",
-    theme: { lightBackground: "#f4f7fb", darkBackground: "#111318" },
+    background: "#191919",
+    theme: { lightBackground: "#F7F3EB", darkBackground: "#191919" },
     targets: [{ selector: ".component-wrapper button", role: "button", preserveTransform: true }],
   },
   glassmorphismCta: {
     title: "Glassmorphism CTA button",
     source: glassmorphismCtaSource,
-    background: "#111318",
-    theme: { lightBackground: "#f4f7fb", darkBackground: "#111318" },
+    background: "#191919",
+    theme: { lightBackground: "#F7F3EB", darkBackground: "#191919" },
     targets: [{ selector: ".component-wrapper a", role: "button", preserveTransform: true }],
   },
   generateButton: {
     title: "Generate button",
     source: generateButtonSource,
-    background: "#111318",
-    theme: { lightBackground: "#f4f7fb", darkBackground: "#111318" },
+    background: "#191919",
+    theme: { lightBackground: "#F7F3EB", darkBackground: "#191919" },
     targets: [{ selector: ".component-wrapper .btn-wrapper", role: "button", preserveTransform: true }],
   },
   gradientPillButton: {
     title: "Gradient Pill button",
     source: gradientPillButtonSource,
-    background: "#111318",
-    theme: { lightBackground: "#f4f7fb", darkBackground: "#111318" },
+    background: "#191919",
+    theme: { lightBackground: "#F7F3EB", darkBackground: "#191919" },
     transformSource: transformGradientPillButtonSource,
     targets: [{ selector: ".component-wrapper button", role: "button", preserveTransform: true }],
   },
   gradientBeamCta: {
     title: "Gradient Beam CTA button",
     source: gradientBeamCtaSource,
-    background: "#111318",
-    theme: { lightBackground: "#f4f7fb", darkBackground: "#111318" },
+    background: "#191919",
+    theme: { lightBackground: "#F7F3EB", darkBackground: "#191919" },
     targets: [{ selector: ".component-wrapper button", role: "button", preserveTransform: true }],
   },
   recursiveErosion: {
     title: "Recursive Erosion particle sphere background",
     source: recursiveErosionSource,
-    background: "#0a0908",
+    background: "#191919",
     theme: {
-      lightBackground: "#f4f3f1",
-      darkBackground: "#0a0908",
+      lightBackground: "#F7F3EB",
+      darkBackground: "#191919",
     },
     targets: [{ selector: "#stage", role: "background" }],
     hiddenTargets: ["#badge", ".sr"],
@@ -1586,11 +1586,11 @@ const EFFECTS = {
   threeUIIntro: {
     title: "ThreeUI chromatic wordmark intro",
     source: creatorStudioIntroSource,
-    background: "#000000",
+    background: "#191919",
     theme: {
       nativeMode: "dark",
-      lightBackground: "#f4f7fb",
-      darkBackground: "#000000",
+      lightBackground: "#F7F3EB",
+      darkBackground: "#191919",
       invertBackground: true,
     },
     targets: [{ selector: "#stage", role: "background" }],
@@ -1607,10 +1607,10 @@ const EFFECTS = {
   particleWordmark: {
     title: "Shaders particle wordmark",
     source: epiludeFooterSource,
-    background: "#0c0c0d",
+    background: "#191919",
     theme: {
-      lightBackground: "#f4f7fb",
-      darkBackground: "#0c0c0d",
+      lightBackground: "#F7F3EB",
+      darkBackground: "#191919",
     },
     transformSource: transformEpiludeWordmarkSource,
     targets: [{ selector: "#storm", role: "visual", fit: "wide-wordmark" }],
@@ -1618,10 +1618,10 @@ const EFFECTS = {
   audioWordmark: {
     title: "ThreeUI audio wordmark",
     source: audioWordmarkSource,
-    background: "#000000",
+    background: "#191919",
     theme: {
-      lightBackground: "#f4f7fb",
-      darkBackground: "#000000",
+      lightBackground: "#F7F3EB",
+      darkBackground: "#191919",
     },
     transformSource: transformAudioWordmarkSource,
     targets: [{ selector: "#stage", role: "visual", fit: "portrait-stage", preserveTransform: true }],
@@ -1629,10 +1629,10 @@ const EFFECTS = {
   galleryHeading: {
     title: "Gallery Heading canvas animation",
     source: galleryHeadingSource,
-    background: "#000000",
+    background: "#191919",
     theme: {
-      lightBackground: "#f4f7fb",
-      darkBackground: "#000000",
+      lightBackground: "#F7F3EB",
+      darkBackground: "#191919",
     },
     transformSource: (source, mode) => transformGalleryHeadingSource(source, mode, GALLERY_HEADING_VARIANTS[GALLERY_HEADING_DEFAULTS.variant]),
     targets: [{ selector: "#stage", role: "background" }],
@@ -1640,31 +1640,31 @@ const EFFECTS = {
   dimensional: {
     title: "Vanguard dimensional architecture",
     source: dimensionalSource,
-    background: "#050608",
+    background: "#191919",
     targets: [{ selector: "#webgl-canvas", role: "background" }],
   },
   cloud: {
     title: "Strata cloud migration field",
     source: cloudSource,
-    background: "#071010",
+    background: "#191919",
     targets: [{ selector: "#c", role: "background" }],
   },
   vertex9: {
     title: "Vertex 9 global data field",
     source: vertex9Source,
-    background: "#050505",
+    background: "#191919",
     targets: [{ selector: "#webgl-canvas", role: "background" }],
   },
   topology: {
     title: "Nexus topology field",
     source: topologySource,
-    background: "#070707",
+    background: "#191919",
     targets: [{ selector: "#animationCanvas", role: "background" }],
   },
   voidField: {
     title: "Void Field shader background",
     source: voidFieldSource,
-    background: "#030305",
+    background: "#191919",
     targets: [{ selector: "#webgl-canvas", role: "background" }],
   },
 } as const satisfies Record<string, EffectDefinition>;
