@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { DEFAULT_WHATSAPP_AVATAR } from './components/WhatsAppDefaultAvatar'
 import { cn } from './lib/utils'
 import './Skiper48.css'
 
@@ -24,7 +25,7 @@ export interface ImageItem {
 
 const DEFAULT_IMAGES: ImageItem[] = [
   {
-    src: '/landing-page-image-of-ceo.jpeg',
+    src: DEFAULT_WHATSAPP_AVATAR,
     alt: 'Sunilkumar T CEO Lumina',
     title: 'Sunilkumar T',
     subtitle: 'CEO Lumina',

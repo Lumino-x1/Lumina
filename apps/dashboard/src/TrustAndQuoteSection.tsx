@@ -1,4 +1,5 @@
 import React from 'react'
+import { DEFAULT_WHATSAPP_AVATAR } from './components/WhatsAppDefaultAvatar'
 import './TrustAndQuoteSection.css'
 
 export const TrustAndQuoteSection: React.FC = () => {
@@ -31,10 +32,13 @@ export const TrustAndQuoteSection: React.FC = () => {
             {/* Avatar */}
             <div className="trust-quote-avatar">
               <img
-                src="/landing-page-image-of-ceo.jpeg"
+                src={DEFAULT_WHATSAPP_AVATAR}
                 alt="Sunilkumar T"
                 className="trust-quote-avatar-img"
                 loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
+                }}
               />
             </div>
 

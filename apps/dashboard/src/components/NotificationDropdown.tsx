@@ -133,12 +133,16 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
     if (!isOpen) return
 
     const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null
+      if (target?.closest?.('.ai-bell-btn')) return
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         onClose()
       }
     }
 
     const handleTouchOutside = (e: TouchEvent) => {
+      const target = e.target as HTMLElement | null
+      if (target?.closest?.('.ai-bell-btn')) return
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         onClose()
       }
@@ -159,6 +163,27 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
       document.removeEventListener('keydown', handleKeyDown)
     }
   }, [isOpen, onClose])
+
+  // Prevent background scrolling on mobile when full page notifications is open
+  useEffect(() => {
+    if (!isOpen) return
+
+    const updateScrollLock = () => {
+      if (window.innerWidth <= 768) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = ''
+      }
+    }
+
+    updateScrollLock()
+    window.addEventListener('resize', updateScrollLock)
+
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('resize', updateScrollLock)
+    }
+  }, [isOpen])
 
   const handleAcceptRequest = async (req: FollowRequestNotification) => {
     // Immediately remove notification without showing accepted text
@@ -206,20 +231,34 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
         {/* Header */}
         <div className="ai-notif-header">
           <div className="ai-notif-title-group">
+            <button
+              type="button"
+              className="ai-notif-back-btn"
+              onClick={onClose}
+              title="Back"
+              aria-label="Back"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+              </svg>
+            </button>
             <h3 className="ai-notif-title">Notifications</h3>
             {totalPending > 0 && (
               <span className="ai-notif-count-badge">{totalPending} New</span>
             )}
           </div>
           {hasAnyNotifications && (
-            <button
-              type="button"
-              className="ai-notif-mark-read-btn"
-              onClick={handleMarkAllAsRead}
-              title="Mark all as read"
-            >
-              Mark all read
-            </button>
+            <div className="ai-notif-header-actions">
+              <button
+                type="button"
+                className="ai-notif-mark-read-btn"
+                onClick={handleMarkAllAsRead}
+                title="Mark all read"
+              >
+                Mark all read
+              </button>
+            </div>
           )}
         </div>
 
