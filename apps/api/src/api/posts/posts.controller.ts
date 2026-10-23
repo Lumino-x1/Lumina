@@ -56,16 +56,13 @@ export const toggleSavePost = async (req: AuthenticatedRequest, res: Response) =
   try {
     const postId = req.params.id as string
     const userId = req.user.id
-    const result = await PostsService.toggleSavePost({
+    await PostsService.toggleSavePost({
       postId,
       userId,
     })
     return res.status(200).json({
+      message : "Post saved successfully",
       success: true,
-      ...result,
-      data: {
-        saved: result.saved,
-      },
     })
   } catch (error: any) {
     if (error.message === 'POST_NOT_FOUND') {

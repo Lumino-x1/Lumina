@@ -1341,7 +1341,7 @@
 
 [contenteditable]:empty::before {
   content: attr(data-placeholder);
-  color: rgba(0, 0, 0, 0.46);
+  color: rgba(255, 255, 255, 0.45);
   cursor: text;
 }
 
@@ -1421,11 +1421,11 @@
   overflow-wrap: break-word;
 }
 
-/* Medium-Style Code Snippet (Light/White Minimal Box) */
+/* Medium-Style Code Snippet */
 .lumina-code-block-wrap {
   position: relative;
-  background: #F7F3EB;
-  border: 1px solid rgba(0, 0, 0, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 6px;
   padding: 16px 20px 20px 20px;
   margin: 16px 0;
@@ -1446,7 +1446,7 @@
 .medium-code-lang-label {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Menlo, monospace;
   font-size: 13px;
-  color: rgba(25, 25, 25, 0.65);
+  color: rgba(255, 255, 255, 0.75);
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -1456,7 +1456,7 @@
 }
 
 .medium-code-lang-chevron {
-  stroke: rgba(25, 25, 25, 0.65);
+  stroke: rgba(255, 255, 255, 0.75);
   stroke-width: 2.2;
 }
 
@@ -1471,8 +1471,8 @@
 }
 
 .medium-code-lang-hidden-select option {
-  background: #ffffff;
-  color: #191919;
+  background: #191919;
+  color: #FFFFFF;
 }
 
 .lumina-code-pre {
@@ -1482,7 +1482,7 @@
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 13.5px;
   line-height: 1.6;
-  color: #191919;
+  color: #FFFFFF;
   outline: none;
   overflow-x: auto;
   max-width: 100%;
@@ -1492,11 +1492,17 @@
   outline: none;
   display: block;
   min-height: 28px;
-  color: #191919;
-  caret-color: currentColor;
+  color: #FFFFFF;
+  caret-color: #FFFFFF;
   white-space: pre-wrap;
   word-break: break-all;
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.lumina-code-pre code:empty::before {
+  content: attr(data-placeholder);
+  color: rgba(255, 255, 255, 0.45);
+  cursor: text;
 }
 
 .lumina-checklist-row {
@@ -3373,7 +3379,7 @@
 }
 
 .lumina-code-pre code {
-  caret-color: #191919 !important;
+  caret-color: #FFFFFF !important;
 }
 
 /* Hide caret when plus/action bar is open */
@@ -3668,7 +3674,7 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
 /* Medium Inline Video URL Prompt */
 .medium-video-prompt-wrapper {
   width: 100%;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   margin: 10px 0 16px 0;
   display: flex;
   align-items: center;
@@ -3683,7 +3689,8 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
   font-family: Lyon-Text, Georgia, Cambria, 'Times New Roman', serif;
   font-size: 19px;
   line-height: 28px;
-  color: #191919;
+  color: #FFFFFF;
+  caret-color: #FFFFFF;
   letter-spacing: -0.01em;
   box-sizing: border-box;
   user-select: text !important;
@@ -3691,7 +3698,7 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
 }
 
 .medium-video-prompt-input::placeholder {
-  color: rgba(0, 0, 0, 0.38);
+  color: rgba(255, 255, 255, 0.5);
   font-family: Lyon-Text, Georgia, Cambria, 'Times New Roman', serif;
   font-style: italic;
   font-weight: 300;
@@ -3700,7 +3707,7 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
 /* Medium Inline Embed URL Prompt */
 .medium-embed-prompt-wrapper {
   width: 100%;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   margin: 10px 0 16px 0;
   display: flex;
   align-items: center;
@@ -3715,7 +3722,8 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
   font-family: Lyon-Text, Georgia, Cambria, 'Times New Roman', serif;
   font-size: 19px;
   line-height: 28px;
-  color: #191919;
+  color: #FFFFFF;
+  caret-color: #FFFFFF;
   letter-spacing: -0.01em;
   box-sizing: border-box;
   user-select: text !important;
@@ -3723,7 +3731,7 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
 }
 
 .medium-embed-prompt-input::placeholder {
-  color: rgba(0, 0, 0, 0.38);
+  color: rgba(255, 255, 255, 0.5);
   font-family: Lyon-Text, Georgia, Cambria, 'Times New Roman', serif;
   font-style: italic;
   font-weight: 300;
@@ -4022,7 +4030,7 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
 
 .unsplash-search-input-wrapper {
   width: 100%;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   margin-bottom: 12px;
   display: flex;
   align-items: center;
@@ -4037,13 +4045,14 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
   font-family: Lyon-Text, Georgia, Cambria, 'Times New Roman', serif;
   font-size: 19px;
   line-height: 28px;
-  color: #191919;
+  color: #FFFFFF;
+  caret-color: #FFFFFF;
   letter-spacing: -0.01em;
   box-sizing: border-box;
 }
 
 .unsplash-search-input::placeholder {
-  color: rgba(0, 0, 0, 0.38);
+  color: rgba(255, 255, 255, 0.5);
   font-family: Lyon-Text, Georgia, Cambria, 'Times New Roman', serif;
   font-style: italic;
   font-weight: 300;
@@ -4075,7 +4084,7 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
 
 .unsplash-meta-count {
   font-size: 13px;
-  color: rgba(0, 0, 0, 0.45);
+  color: rgba(255, 255, 255, 0.6);
   font-weight: 400;
 }
 
@@ -4090,7 +4099,7 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
   border: none;
   padding: 0;
   font-size: 13px;
-  color: rgba(0, 0, 0, 0.55);
+  color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   font-weight: 400;
   transition: color 0.15s ease;
@@ -4098,7 +4107,7 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
 }
 
 .unsplash-meta-nav-btn:hover {
-  color: rgba(0, 0, 0, 0.95);
+  color: #FFFFFF;
   text-decoration: underline;
 }
 
@@ -4116,7 +4125,7 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
   border-radius: 2px;
   overflow: hidden;
   cursor: pointer;
-  background-color: #F7F3EB;
+  background-color: rgba(255, 255, 255, 0.05);
   outline: 2px solid transparent;
   transition: outline-color 0.15s ease, transform 0.15s ease;
   user-select: none;
@@ -4124,7 +4133,7 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
 
 .unsplash-card:hover,
 .unsplash-card.is-selected {
-  outline: 2px solid #191919;
+  outline: 2px solid #FFFFFF;
   outline-offset: -2px;
 }
 
@@ -4161,7 +4170,7 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
 .unsplash-loading-indicator {
   padding: 24px 0;
   text-align: center;
-  color: rgba(25, 25, 25, 0.65);
+  color: rgba(255, 255, 255, 0.7);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 14px;
 }
@@ -4169,7 +4178,7 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
 .unsplash-empty-notice {
   padding: 24px 0;
   text-align: center;
-  color: rgba(25, 25, 25, 0.65);
+  color: rgba(255, 255, 255, 0.7);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 14px;
 }
@@ -5496,11 +5505,107 @@ body:has(.medium-action-bar-container.is-open) [contenteditable="true"] {
   color: rgba(255, 255, 255, 0.70);
 }
 
+[data-theme="dark"] .lumina-code-block-wrap,
+.dark .lumina-code-block-wrap {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
 [data-theme="dark"] .lumina-code-pre,
 .dark .lumina-code-pre {
-  background-color: #191919;
+  background-color: transparent !important;
   border-color: rgba(255, 255, 255, 0.12);
-  color: #FFFFFF;
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .lumina-code-pre code,
+.dark .lumina-code-pre code {
+  color: #FFFFFF !important;
+  caret-color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .medium-code-lang-label,
+.dark .medium-code-lang-label {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+[data-theme="dark"] .medium-code-lang-chevron,
+.dark .medium-code-lang-chevron {
+  stroke: rgba(255, 255, 255, 0.75) !important;
+}
+
+[data-theme="dark"] .lumina-list-text,
+[data-theme="dark"] .lumina-checklist-text,
+.dark .lumina-list-text,
+.dark .lumina-checklist-text {
+  caret-color: #FFFFFF !important;
+}
+
+[data-theme="dark"] [contenteditable]:empty::before,
+.dark [contenteditable]:empty::before {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* Video & Embed Dark Theme Overrides */
+[data-theme="dark"] .medium-video-prompt-wrapper,
+[data-theme="dark"] .medium-embed-prompt-wrapper,
+.dark .medium-video-prompt-wrapper,
+.dark .medium-embed-prompt-wrapper {
+  border-bottom-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-theme="dark"] .medium-video-prompt-input,
+[data-theme="dark"] .medium-embed-prompt-input,
+.dark .medium-video-prompt-input,
+.dark .medium-embed-prompt-input {
+  color: #FFFFFF !important;
+  caret-color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .medium-video-prompt-input::placeholder,
+[data-theme="dark"] .medium-embed-prompt-input::placeholder,
+.dark .medium-video-prompt-input::placeholder,
+.dark .medium-embed-prompt-input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Unsplash Block Dark Theme Overrides */
+[data-theme="dark"] .unsplash-search-input-wrapper,
+.dark .unsplash-search-input-wrapper {
+  border-bottom-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-theme="dark"] .unsplash-search-input,
+.dark .unsplash-search-input {
+  color: #FFFFFF !important;
+  caret-color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .unsplash-search-input::placeholder,
+.dark .unsplash-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+[data-theme="dark"] .unsplash-meta-count,
+.dark .unsplash-meta-count {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+[data-theme="dark"] .unsplash-meta-nav-btn,
+.dark .unsplash-meta-nav-btn {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+[data-theme="dark"] .unsplash-meta-nav-btn:hover,
+.dark .unsplash-meta-nav-btn:hover {
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .unsplash-loading-indicator,
+[data-theme="dark"] .unsplash-empty-notice,
+.dark .unsplash-loading-indicator,
+.dark .unsplash-empty-notice {
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
 [data-theme="dark"] .lumina-callout,

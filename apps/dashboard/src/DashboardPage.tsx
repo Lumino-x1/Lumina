@@ -1274,7 +1274,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
             />
             <div className="ai-user-meta">
               <span className="ai-user-name">{activeAccount.name}</span>
-              <span className="ai-user-role">{activeAccount.title}</span>
+              <span className="ai-user-role" title={activeAccount.email}>{activeAccount.email}</span>
             </div>
             <button
               type="button"

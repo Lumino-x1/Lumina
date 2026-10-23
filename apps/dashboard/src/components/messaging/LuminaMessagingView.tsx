@@ -68,393 +68,7 @@ export interface ChatConversation {
   messages: ChatMessage[]
 }
 
-const INITIAL_CHATS: ChatConversation[] = [
-  {
-    id: 'sih-hackathon',
-    name: 'SIH HACKATHON 🥇',
-    isGroup: true,
-    membersCount: 6,
-    membersPreview: 'Muhamed Gowtham, Kiran, Sahaana, You, Rahul, Priya',
-    pinned: true,
-    unreadCount: 0,
-    isFavourite: true,
-    statusText: 'Muhamed, Kiran, Sahaana, Rahul, Priya, You',
-    lastMessageSnippet: 'Muhamed Gowtham: 🚫 This message was deleted',
-    lastMessageType: 'deleted',
-    lastMessageTime: '20/09/25',
-    lastMessageStatus: 'read',
-    messages: [
-      {
-        id: 'sih-1',
-        sender: 'them',
-        senderName: 'Muhamed Gowtham',
-        text: 'Team, our SIH Grand Finale presentation PPT is ready in the shared drive. Please check slide 8 for architecture.',
-        time: '7:45 PM',
-        status: 'read',
-      },
-      {
-        id: 'sih-2',
-        sender: 'them',
-        senderName: 'Sahaana',
-        text: 'Checked! I added the high-throughput Redis queue benchmarks and database schema diagram.',
-        time: '7:52 PM',
-        status: 'read',
-      },
-      {
-        id: 'sih-3',
-        sender: 'them',
-        senderName: 'Kiran',
-        text: 'All integration endpoints are tested on staging. Zero downtime.',
-        time: '8:05 PM',
-        status: 'read',
-      },
-      {
-        id: 'sih-4',
-        sender: 'them',
-        senderName: 'Muhamed Gowtham',
-        isDeleted: true,
-        text: 'This message was deleted',
-        time: '8:14 PM',
-        status: 'read',
-      },
-      {
-        id: 'sih-5',
-        sender: 'me',
-        text: 'Super! Deploying the latest build to Lumina production now. Good luck everyone! 🚀',
-        time: '8:20 PM',
-        status: 'read',
-      },
-    ],
-  },
-  {
-    id: 'cn-project-presentation',
-    name: 'cn project presentation unoff...',
-    isGroup: true,
-    membersCount: 4,
-    membersPreview: 'Kiran, Krishna, kkagnesh, You',
-    pinned: false,
-    unreadCount: 0,
-    statusText: 'Kiran, Krishna, kkagnesh, You',
-    lastMessageSnippet: 'Kiran: exp9 final record',
-    lastMessageType: 'text',
-    lastMessageTime: '12:40 AM',
-    lastMessageStatus: 'delivered',
-    messages: [
-      {
-        id: 'cn-1',
-        sender: 'them',
-        senderName: 'Krishna Kumar',
-        text: 'Guys, make sure your packet tracer topologies are saved in the lab folder before 8:30 AM tomorrow.',
-        time: '12:30 AM',
-      },
-      {
-        id: 'cn-2',
-        sender: 'them',
-        senderName: 'Kiran',
-        text: 'exp9 final record is updated. Check the routing tables on slide 4.',
-        time: '12:40 AM',
-      },
-    ],
-  },
-  {
-    id: 'kiran-friend',
-    name: 'Kiran Class Friend',
-    isOnline: true,
-    statusText: 'Online',
-    pinned: false,
-    unreadCount: 0,
-    lastMessageSnippet: '📄 exp9 cn.pdf • 8 pages',
-    lastMessageType: 'document',
-    lastMessageTime: '12:39 AM',
-    messages: [
-      {
-        id: 'kiran-1',
-        sender: 'me',
-        text: 'Kiran, did you calculate the subnet mask calculations for lab question 3?',
-        time: '12:35 AM',
-        status: 'read',
-      },
-      {
-        id: 'kiran-2',
-        sender: 'them',
-        text: 'Yes! Here is the compiled PDF report with all network graphs.',
-        time: '12:38 AM',
-      },
-      {
-        id: 'kiran-3',
-        sender: 'them',
-        time: '12:39 AM',
-        attachment: {
-          type: 'document',
-          fileName: 'exp9 cn.pdf',
-          fileSize: '2.4 MB',
-          pageCount: 8,
-        },
-      },
-    ],
-  },
-  {
-    id: 'krishna-kumar',
-    name: 'Krishna Kumar',
-    isOnline: false,
-    statusText: 'last seen yesterday at 11:45 PM',
-    pinned: false,
-    unreadCount: 0,
-    lastMessageSnippet: '📄 CN_MiniProject_Report_Designed (1)...',
-    lastMessageType: 'document',
-    lastMessageTime: 'Yesterday',
-    messages: [
-      {
-        id: 'kk-1',
-        sender: 'them',
-        text: 'Here is the final mini project report with all cover pages and signatures formatted.',
-        time: '9:15 PM',
-      },
-      {
-        id: 'kk-2',
-        sender: 'them',
-        time: '9:16 PM',
-        attachment: {
-          type: 'document',
-          fileName: 'CN_MiniProject_Report_Designed (1).pdf',
-          fileSize: '4.8 MB',
-          pageCount: 14,
-        },
-      },
-    ],
-  },
-  {
-    id: 'kkagnesh',
-    name: 'kkagnesh Class Friend',
-    isOnline: false,
-    statusText: 'last seen yesterday at 10:12 PM',
-    pinned: false,
-    unreadCount: 0,
-    lastMessageSnippet: '👍',
-    lastMessageType: 'like',
-    lastMessageTime: 'Yesterday',
-    messages: [
-      {
-        id: 'ka-1',
-        sender: 'me',
-        text: 'Are you coming to the college library at 9 AM tomorrow for the review?',
-        time: '6:15 PM',
-        status: 'read',
-      },
-      {
-        id: 'ka-2',
-        sender: 'them',
-        text: '👍',
-        time: '6:22 PM',
-      },
-    ],
-  },
-  {
-    id: 'sahaana',
-    name: 'Sahaana',
-    isOnline: true,
-    statusText: 'Online',
-    pinned: false,
-    unreadCount: 0,
-    isFavourite: true,
-    lastMessageSnippet: '📷 46 photos',
-    lastMessageType: 'image',
-    lastMessageTime: 'Yesterday',
-    lastMessageStatus: 'delivered',
-    messages: [
-      {
-        id: 'sah-1',
-        sender: 'them',
-        text: 'Uploaded the hackathon presentation ceremony and awards photos!',
-        time: '5:40 PM',
-      },
-      {
-        id: 'sah-2',
-        sender: 'them',
-        time: '5:41 PM',
-        attachment: {
-          type: 'image',
-          imageUrl: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=600&q=80',
-          caption: '📷 46 photos',
-        },
-      },
-    ],
-  },
-  {
-    id: 'bot-4vs8',
-    name: '4 Vs 8 Bot',
-    isOnline: true,
-    statusText: 'Lumina Study Assistant',
-    pinned: false,
-    unreadCount: 0,
-    lastMessageSnippet: 'Call eh pesala nee',
-    lastMessageType: 'text',
-    lastMessageTime: 'Yesterday',
-    lastMessageStatus: 'read',
-    messages: [
-      {
-        id: 'bot-1',
-        sender: 'them',
-        text: 'Your campus study sprint starts in 15 minutes. Distributed systems chapter 4 review pending.',
-        time: '4:15 PM',
-      },
-      {
-        id: 'bot-2',
-        sender: 'them',
-        text: 'Call eh pesala nee',
-        time: '4:16 PM',
-      },
-    ],
-  },
-  {
-    id: 'mummy',
-    name: 'Mummy ❤️',
-    isOnline: false,
-    statusText: 'last seen yesterday at 9:30 PM',
-    pinned: false,
-    unreadCount: 0,
-    isFavourite: true,
-    lastMessageSnippet: 'ahhh',
-    lastMessageType: 'text',
-    lastMessageTime: 'Yesterday',
-    lastMessageStatus: 'read',
-    messages: [
-      {
-        id: 'mum-1',
-        sender: 'them',
-        text: 'Did you have dinner beta? Take care of your health.',
-        time: '8:45 PM',
-      },
-      {
-        id: 'mum-2',
-        sender: 'me',
-        text: 'Yes Mummy, just studying with friends in the hostel. Don’t worry!',
-        time: '8:48 PM',
-        status: 'read',
-      },
-      {
-        id: 'mum-3',
-        sender: 'them',
-        text: 'ahhh',
-        time: '8:50 PM',
-      },
-    ],
-  },
-  {
-    id: 'prof-ramesh',
-    name: '+91 83008 24024',
-    statusText: 'Prof. Ramesh (CS HOD)',
-    pinned: false,
-    unreadCount: 0,
-    lastMessageSnippet: 'Hi! 👋 I came across Studio D and n...',
-    lastMessageType: 'text',
-    lastMessageTime: 'Yesterday',
-    lastMessageStatus: 'read',
-    messages: [
-      {
-        id: 'prof-1',
-        sender: 'them',
-        text: 'Hi! 👋 I came across Studio D and noticed your research paper submission on decentralized consensus. Well drafted.',
-        time: '3:10 PM',
-      },
-    ],
-  },
-  {
-    id: 'alumni-mentor',
-    name: '+91 95668 82888',
-    statusText: 'Alumni Tech Lead (Google)',
-    pinned: false,
-    unreadCount: 0,
-    lastMessageSnippet: 'Hi! 👋 I came across Landmark Port...',
-    lastMessageType: 'text',
-    lastMessageTime: 'Yesterday',
-    lastMessageStatus: 'read',
-    messages: [
-      {
-        id: 'alum-1',
-        sender: 'them',
-        text: 'Hi! 👋 I came across Landmark Portfolio and your open-source projects on Lumina. Let us connect regarding summer internships.',
-        time: '2:15 PM',
-      },
-    ],
-  },
-  {
-    id: 'photo-club',
-    name: '+91 98941 00475',
-    statusText: 'Photography Club Coordinator',
-    pinned: false,
-    unreadCount: 0,
-    lastMessageSnippet: 'Hi! 👋 I came across 7 and 11 Photo...',
-    lastMessageType: 'text',
-    lastMessageTime: 'Yesterday',
-    lastMessageStatus: 'read',
-    messages: [
-      {
-        id: 'photo-1',
-        sender: 'them',
-        text: 'Hi! 👋 I came across 7 and 11 Photo showcase entries. Lumina team won 1st prize in the portrait competition.',
-        time: '1:45 PM',
-      },
-    ],
-  },
-  {
-    id: 'su-union',
-    name: 'SU 26-27',
-    isGroup: true,
-    membersCount: 450,
-    membersPreview: 'Students’ Union Official Campus Announcements',
-    pinned: false,
-    unreadCount: 4,
-    statusText: 'Students’ Union Official Announcements',
-    lastMessageSnippet: 'Students’ Union 2026-27, Announcements',
-    lastMessageType: 'text',
-    lastMessageTime: 'Yesterday',
-    messages: [
-      {
-        id: 'su-1',
-        sender: 'them',
-        senderName: 'General Secretary',
-        text: 'Important update: The academic calendar for odd semester examinations has been updated.',
-        time: '11:00 AM',
-      },
-      {
-        id: 'su-2',
-        sender: 'them',
-        senderName: 'SU Admin',
-        text: 'Students’ Union 2026-27, Announcements',
-        time: '11:15 AM',
-      },
-    ],
-  },
-  {
-    id: 'app-dev-team',
-    name: 'APP',
-    isGroup: true,
-    membersCount: 8,
-    membersPreview: 'App Architecture & Core Team',
-    pinned: false,
-    unreadCount: 0,
-    lastMessageSnippet: 'You voted: "👍 If ok na choose your UI s..."',
-    lastMessageType: 'text',
-    lastMessageTime: 'Yesterday',
-    messages: [
-      {
-        id: 'app-1',
-        sender: 'them',
-        senderName: 'Design Lead',
-        text: 'Poll: Should we adopt the high-density Notion dark palette for all messaging surfaces?',
-        time: '10:00 AM',
-      },
-      {
-        id: 'app-2',
-        sender: 'me',
-        text: 'You voted: "👍 If ok na choose your UI screen"',
-        time: '10:05 AM',
-        status: 'read',
-      },
-    ],
-  },
-]
+const INITIAL_CHATS: ChatConversation[] = []
 
 /**
  * GradientBackground — Notion Black & White live CSS canvas
@@ -868,7 +482,7 @@ export const LuminaMessagingView: React.FC<LuminaMessagingViewProps> = ({
         <div className="lumina-msg-chat-items-scroll" role="list">
           {filteredChats.length === 0 ? (
             <div className="lumina-msg-empty-filter">
-              <span className="lumina-msg-empty-text">No chats found</span>
+              <span className="lumina-msg-empty-text">No chats yet</span>
             </div>
           ) : (
             filteredChats.map((chat) => {
@@ -1366,7 +980,36 @@ export const LuminaMessagingView: React.FC<LuminaMessagingViewProps> = ({
           /* ========================================================
              EMPTY STATE: CLEAN BLANK CHAT PANE
              ======================================================== */
-          <div className="lumina-msg-empty-hero-container" />
+          <div className="lumina-msg-empty-hero-container">
+            <div className="lumina-msg-empty-center-card">
+              <div className="lumina-msg-brand-mark">
+                <svg
+                  width="68"
+                  height="68"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lumina-msg-hero-svg"
+                >
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+              </div>
+              <h2 className="lumina-msg-empty-title">Lumina Messaging</h2>
+              <p className="lumina-msg-empty-version">
+                Send and receive messages with campus peers and study groups.
+              </p>
+            </div>
+            <div className="lumina-msg-empty-bottom-lock">
+              <Lock size={13} className="lumina-msg-lock-icon" />
+              <span>
+                Your personal messages are{' '}
+                <span className="lumina-msg-encrypted-link">end-to-end encrypted</span>
+              </span>
+            </div>
+          </div>
         )}
       </main>
 
@@ -1418,35 +1061,28 @@ export const LuminaMessagingView: React.FC<LuminaMessagingViewProps> = ({
               </div>
 
               <div className="lumina-msg-modal-suggestions">
-                <span className="lumina-msg-suggestions-heading">Campus Peers & Teams</span>
-                <div className="lumina-msg-suggestions-list">
-                  {[
-                    { name: 'Dr. Kavitha (Dean Academics)', role: 'Faculty', isOnline: true },
-                    { name: 'Muhamed Gowtham', role: 'Fullstack Dev & Hackathon Partner', isOnline: true },
-                    { name: 'Sahaana', role: 'UI/UX Lead & Class Representative', isOnline: true },
-                    { name: 'Kiran', role: 'Networks & Cloud Engineer', isOnline: false },
-                    { name: 'ACM Student Chapter', role: 'Technical Society (120 members)', isOnline: true },
-                    { name: 'Robotics & AI Club', role: 'Project Guild (45 members)', isOnline: false },
-                  ].map((item) => (
-                    <button
-                      key={item.name}
-                      type="button"
-                      className="lumina-msg-suggestion-item"
-                      onClick={() => handleCreateNewChat(item.name)}
-                    >
-                      <div className="lumina-msg-suggestion-left">
-                        <div className="lumina-msg-suggest-avatar">
-                          {item.name.charAt(0).toUpperCase()}
-                        </div>
-                        <div className="lumina-msg-suggest-meta">
-                          <span className="lumina-msg-suggest-name">{item.name}</span>
-                          <span className="lumina-msg-suggest-role">{item.role}</span>
-                        </div>
+                {newChatSearch.trim() ? (
+                  <button
+                    type="button"
+                    className="lumina-msg-suggestion-item"
+                    onClick={() => handleCreateNewChat(newChatSearch.trim())}
+                  >
+                    <div className="lumina-msg-suggestion-left">
+                      <div className="lumina-msg-suggest-avatar">
+                        {newChatSearch.trim().charAt(0).toUpperCase()}
                       </div>
-                      <Plus size={16} className="lumina-msg-suggest-plus" />
-                    </button>
-                  ))}
-                </div>
+                      <div className="lumina-msg-suggest-meta">
+                        <span className="lumina-msg-suggest-name">Chat with "{newChatSearch.trim()}"</span>
+                        <span className="lumina-msg-suggest-role">Start direct conversation</span>
+                      </div>
+                    </div>
+                    <Plus size={16} className="lumina-msg-suggest-plus" />
+                  </button>
+                ) : (
+                  <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.45)', margin: '12px 4px' }}>
+                    Type a peer or group name above and press Enter to start a new chat.
+                  </p>
+                )}
               </div>
             </div>
 

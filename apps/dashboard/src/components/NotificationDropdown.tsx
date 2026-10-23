@@ -316,42 +316,32 @@ export const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                                   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80'
                               }}
                             />
-                            <span className="ai-notif-req-icon" title="Friend Request">
-                              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                <circle cx="8.5" cy="7" r="4" />
-                                <line x1="20" y1="8" x2="20" y2="14" stroke="currentColor" strokeWidth="2.5" />
-                                <line x1="23" y1="11" x2="17" y2="11" stroke="currentColor" strokeWidth="2.5" />
-                              </svg>
-                            </span>
                           </div>
 
                           <div className="ai-notif-content">
-                            <div className="ai-notif-top-row">
-                              <div className="ai-notif-main-text">
-                                <strong className="ai-notif-user-name">{req.name}</strong>{' '}
-                                <span className="ai-notif-action-text">requested to follow you</span>
-                              </div>
-                              <span className="ai-notif-time">{req.timeAgo}</span>
+                            <div className="ai-notif-main-text">
+                              <strong className="ai-notif-user-name">{req.name}</strong>{' '}
+                              <span className="ai-notif-action-text">requested to follow you</span>
                             </div>
+                            <span className="ai-notif-time">{req.timeAgo}</span>
+                          </div>
 
-                            {/* Action buttons */}
-                            <div className="ai-notif-actions">
-                              <button
-                                type="button"
-                                className="ai-notif-btn-confirm"
-                                onClick={() => handleAcceptRequest(req)}
-                              >
-                                Confirm
-                              </button>
-                              <button
-                                type="button"
-                                className="ai-notif-btn-delete"
-                                onClick={() => handleRejectRequest(req)}
-                              >
-                                Delete
-                              </button>
-                            </div>
+                          {/* Action buttons (Confirm & Delete text buttons) placed on the right side */}
+                          <div className="ai-notif-actions">
+                            <button
+                              type="button"
+                              className="ai-notif-btn-confirm"
+                              onClick={() => handleAcceptRequest(req)}
+                            >
+                              Confirm
+                            </button>
+                            <button
+                              type="button"
+                              className="ai-notif-btn-delete"
+                              onClick={() => handleRejectRequest(req)}
+                            >
+                              Delete
+                            </button>
                           </div>
                         </div>
                       ))}

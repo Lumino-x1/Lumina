@@ -710,7 +710,7 @@ export const TextBlock: React.FC<TextBlockProps> = ({ block, isSelected }) => {
               onKeyUp={handleInput}
               onKeyDown={handleKeyDown}
               onPaste={handleCodePaste}
-              data-placeholder=""
+              data-placeholder="Code..."
             />
           </pre>
         </div>

@@ -18,6 +18,7 @@ import usersRouter from './users/users.routes'
 import authRouter from './auth/auth.routes'
 import commentsRouter from './comments/comments.routes'
 import friendsRouter from './friends/friends.routes'
+import chatRouter from './chat/chat.routes'
 import { recommendationRouter } from './recommendation'
 import { subscribe } from '@lumina/realtime'
 import { prisma } from '@lumina/db'
@@ -72,9 +73,7 @@ apiRouter.use('/posts', postsRouter)
 apiRouter.use('/feed', feedRouter)
 
 // --- Chat (Stream): /api/chat ---
-apiRouter.get('/chat/token', requireAuth, controller.getChatToken as never)
-apiRouter.post('/chat/conversations', requireAuth, controller.createOneToOneConversation as never)
-apiRouter.get('/chat/conversations', requireAuth, controller.getMyConversations as never)
+apiRouter.use('/chat', chatRouter)
 
 // --- Leaderboard: /api/leaderboard ---
 apiRouter.get('/leaderboard', requireAuth, controller.getLeaderboard)

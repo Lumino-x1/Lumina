@@ -56,6 +56,7 @@ import {
   type FeedPostItem,
   type FeedStory,
   fetchMyPostsApi,
+  fetchSavedPostsApi,
   mapFeedPostToStory,
   togglePostLikeApi,
   toggleSavePostApi,
@@ -734,6 +735,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [selectedStoryForRead, setSelectedStoryForRead] = useState<FeedStory | null>(null)
   const [initialOpenCommentsForRead, setInitialOpenCommentsForRead] = useState<boolean>(false)
 
+  // Saved posts in profile (fetched from GET /api/posts/saved)
+  const [savedPostsList, setSavedPostsList] = useState<FeedPostItem[]>([])
+  const [loadingSavedPosts, setLoadingSavedPosts] = useState<boolean>(true)
+
   // Scheduled posts state
   const [scheduledPosts, setScheduledPosts] = useState<ScheduledPostItem[]>(DEFAULT_SCHEDULED_POSTS)
 
@@ -786,6 +791,32 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     }
   }, [])
 
+  // Load saved posts from backend (GET /api/posts/saved)
+  useEffect(() => {
+    let mounted = true
+    async function loadSaved() {
+      try {
+        const posts = await fetchSavedPostsApi()
+        if (mounted && Array.isArray(posts)) {
+          setSavedPostsList(posts)
+          const savedMap: Record<string, boolean> = {}
+          posts.forEach((p) => {
+            savedMap[p.id] = true
+          })
+          setSavedPosts((prev) => ({ ...savedMap, ...prev }))
+        }
+      } catch (err) {
+        console.error('Failed to load saved posts:', err)
+      } finally {
+        if (mounted) setLoadingSavedPosts(false)
+      }
+    }
+    void loadSaved()
+    return () => {
+      mounted = false
+    }
+  }, [])
+
   const handleOpenPost = (post: FeedPostItem, openComments = false) => {
     const story = mapFeedPostToStory(post)
     setInitialOpenCommentsForRead(openComments)
@@ -807,7 +838,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       const hash = window.location.hash
       if (hash.startsWith('#post/')) {
         const postId = hash.replace('#post/', '')
-        const found = publishedPosts.find((p) => p.id === postId)
+        const found =
+          publishedPosts.find((p) => p.id === postId) ||
+          savedPostsList.find((p) => p.id === postId)
         if (found) {
           setSelectedStoryForRead(mapFeedPostToStory(found))
         }
@@ -823,7 +856,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       window.removeEventListener('hashchange', handleHashSync)
       window.removeEventListener('popstate', handleHashSync)
     }
-  }, [publishedPosts, selectedStoryForRead])
+  }, [publishedPosts, savedPostsList, selectedStoryForRead])
 
   const handleToggleLike = async (id: string) => {
     let nextLiked = false
@@ -831,41 +864,39 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       const currentLiked =
         prev[id] !== undefined
           ? prev[id]
-          : Boolean(publishedPosts.find((p) => p.id === id)?.isLiked)
+          : Boolean(publishedPosts.find((p) => p.id === id)?.isLiked || savedPostsList.find((p) => p.id === id)?.isLiked)
       nextLiked = !currentLiked
       return { ...prev, [id]: nextLiked }
     })
 
-    setPublishedPosts((prevList) =>
-      prevList.map((p) => {
-        if (p.id !== id) return p
-        const currentCount = p.likeCount ?? 0
-        const isCurrentlyLiked =
-          likedPosts[id] !== undefined ? likedPosts[id] : Boolean(p.isLiked)
-        const willBeLiked = !isCurrentlyLiked
-        const diff = willBeLiked ? 1 : -1
-        return {
-          ...p,
-          isLiked: willBeLiked,
-          likeCount: Math.max(0, currentCount + diff),
-        }
-      })
-    )
+    const updatePostLike = (p: FeedPostItem) => {
+      if (p.id !== id) return p
+      const currentCount = p.likeCount ?? 0
+      const isCurrentlyLiked =
+        likedPosts[id] !== undefined ? likedPosts[id] : Boolean(p.isLiked)
+      const willBeLiked = !isCurrentlyLiked
+      const diff = willBeLiked ? 1 : -1
+      return {
+        ...p,
+        isLiked: willBeLiked,
+        likeCount: Math.max(0, currentCount + diff),
+      }
+    }
+
+    setPublishedPosts((prevList) => prevList.map(updatePostLike))
+    setSavedPostsList((prevList) => prevList.map(updatePostLike))
 
     try {
       const res = await togglePostLikeApi(id)
       if (res && res.data && typeof res.data.liked === 'boolean') {
         const serverLiked = res.data.liked
         setLikedPosts((prev) => ({ ...prev, [id]: serverLiked }))
-        setPublishedPosts((prevList) =>
-          prevList.map((p) => {
-            if (p.id !== id) return p
-            return {
-              ...p,
-              isLiked: serverLiked,
-            }
-          })
-        )
+        const syncServerLike = (p: FeedPostItem) => {
+          if (p.id !== id) return p
+          return { ...p, isLiked: serverLiked }
+        }
+        setPublishedPosts((prevList) => prevList.map(syncServerLike))
+        setSavedPostsList((prevList) => prevList.map(syncServerLike))
       }
     } catch {
       // ignore
@@ -873,12 +904,28 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   }
 
   const handleToggleSave = async (id: string) => {
-    setSavedPosts((prev) => ({ ...prev, [id]: !prev[id] }))
+    const isCurrentlySaved = savedPosts[id] ?? savedPostsList.some((p) => p.id === id)
+    const nextSaved = !isCurrentlySaved
+
+    setSavedPosts((prev) => ({ ...prev, [id]: nextSaved }))
+
+    if (!nextSaved) {
+      setSavedPostsList((prev) => prev.filter((p) => p.id !== id))
+    } else {
+      const existing = publishedPosts.find((p) => p.id === id)
+      if (existing && !savedPostsList.some((p) => p.id === id)) {
+        setSavedPostsList((prev) => [{ ...existing, isSaved: true }, ...prev])
+      }
+    }
+
     try {
       const res = await toggleSavePostApi(id)
       const serverSaved = res?.data?.saved ?? res?.saved
       if (typeof serverSaved === 'boolean') {
         setSavedPosts((prev) => ({ ...prev, [id]: serverSaved }))
+        if (!serverSaved) {
+          setSavedPostsList((prev) => prev.filter((p) => p.id !== id))
+        }
       }
     } catch {
       // ignore
@@ -1585,7 +1632,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             />
             <div className="ai-user-meta">
               <span className="ai-user-name">{profile.name}</span>
-              <span className="ai-user-role">{profile.role}</span>
+              <span className="ai-user-role" title={profile.email}>{profile.email}</span>
             </div>
             <button
               type="button"
@@ -1718,16 +1765,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                       <LinkedInSilhouette />
                     )}
                   </div>
-                  {!loadingProfile && (
-                    <button
-                      type="button"
-                      className="ai-avatar-add-story-btn"
-                      title="Add profile photo or frame"
-                      onClick={() => alert('Add profile photo or frame')}
-                    >
-                      <Plus size={20} strokeWidth={2.8} />
-                    </button>
-                  )}
                 </div>
 
                 {/* Card Top Right Edit Button */}
@@ -1875,9 +1912,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                 </button>
                 <button
                   type="button"
-                  className={`ai-profile-tab ai-profile-blurred ${activeTab === 'saved' ? 'is-active' : ''}`}
+                  className={`ai-profile-tab ${activeTab === 'saved' ? 'is-active' : ''}`}
                   onClick={() => setActiveTab('saved')}
                 >
+                  <Bookmark size={14} />
                   <span>Saved</span>
                 </button>
               </div>
@@ -2513,12 +2551,17 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   <div className="ai-posts-subtitle-wrap">
                     <h2 className="ai-posts-subtitle">Saved Items</h2>
                     <span className="ai-posts-subtitle-count">
-                      ({publishedPosts.filter((p) => savedPosts[p.id] ?? !!p.isSaved).length})
+                      ({savedPostsList.length})
                     </span>
                   </div>
                 </div>
 
-                {publishedPosts.filter((p) => savedPosts[p.id] ?? !!p.isSaved).length === 0 ? (
+                {loadingSavedPosts ? (
+                  <div className="ai-feed-loading-state" style={{ padding: '36px 0', textAlign: 'center', color: 'rgba(255, 255, 255, 0.6)' }}>
+                    <Loader2 className="ai-profile-avatar-spinner" size={28} style={{ margin: '0 auto 12px' }} />
+                    <p style={{ margin: 0, fontSize: '14px' }}>Loading saved posts...</p>
+                  </div>
+                ) : savedPostsList.length === 0 ? (
                   <div className="ai-empty-tab-state">
                     <Bookmark size={36} className="ai-empty-icon" />
                     <h3 className="ai-empty-title">No saved stories yet</h3>
@@ -2527,12 +2570,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                     </p>
                   </div>
                 ) : (
-                  publishedPosts
-                    .filter((p) => savedPosts[p.id] ?? !!p.isSaved)
-                    .map((post) => {
-                      const baseLikes = post.likeCount ?? 0
-                      const isPostLiked = likedPosts[post.id] ?? !!post.isLiked
-                      const isPostSaved = savedPosts[post.id] ?? !!post.isSaved
+                  savedPostsList.map((post) => {
+                    const baseLikes = post.likeCount ?? 0
+                    const isPostLiked = likedPosts[post.id] ?? !!post.isLiked
+                    const isPostSaved = savedPosts[post.id] ?? true
                       const likeDiff =
                         likedPosts[post.id] !== undefined
                           ? likedPosts[post.id]
@@ -2765,14 +2806,24 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                               </span>
                             </div>
                           </div>
-                          <button
-                            type="button"
-                            className="ai-friends-remove-btn"
-                            onClick={() => handleRemoveFriend(friend)}
-                            disabled={!!removingFriendIds[friend.id]}
-                          >
-                            {removingFriendIds[friend.id] ? 'Removing...' : 'Remove'}
-                          </button>
+                          <div className="ai-friends-actions">
+                            <button
+                              type="button"
+                              className="ai-friends-message-btn"
+                              onClick={() => setDirectMessageFriend(friend)}
+                              title={`Message ${friend.name || friend.username}`}
+                            >
+                              Message
+                            </button>
+                            <button
+                              type="button"
+                              className="ai-friends-remove-btn"
+                              onClick={() => handleRemoveFriend(friend)}
+                              disabled={!!removingFriendIds[friend.id]}
+                            >
+                              {removingFriendIds[friend.id] ? 'Removing...' : 'Remove'}
+                            </button>
+                          </div>
                         </div>
                       ))
                     )}
@@ -3164,14 +3215,24 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                         </span>
                       </div>
                     </div>
-                    <button
-                      type="button"
-                      className="ai-friends-remove-btn"
-                      onClick={() => handleRemoveFriend(friend)}
-                      disabled={!!removingFriendIds[friend.id]}
-                    >
-                      {removingFriendIds[friend.id] ? 'Removing...' : 'Remove'}
-                    </button>
+                    <div className="ai-friends-actions">
+                      <button
+                        type="button"
+                        className="ai-friends-message-btn"
+                        onClick={() => setDirectMessageFriend(friend)}
+                        title={`Message ${friend.name || friend.username}`}
+                      >
+                        Message
+                      </button>
+                      <button
+                        type="button"
+                        className="ai-friends-remove-btn"
+                        onClick={() => handleRemoveFriend(friend)}
+                        disabled={!!removingFriendIds[friend.id]}
+                      >
+                        {removingFriendIds[friend.id] ? 'Removing...' : 'Remove'}
+                      </button>
+                    </div>
                   </div>
                 ))
               )}

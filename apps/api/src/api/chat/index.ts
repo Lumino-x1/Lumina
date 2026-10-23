@@ -1,0 +1,6 @@
+export * from './chat.controller'
+export * from './chat.repo'
+export * from './chat.lib'
+export * from './chat.service'
+export * from './chat.routes'
+export { default as chatRouter } from './chat.routes'

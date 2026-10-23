@@ -164,6 +164,11 @@ export namespace PostsRepo {
             author: {
               select: { id: true, username: true, name: true, image: true },
             },
+            media: {
+              orderBy: {
+                order: 'asc',
+              },
+            },
           },
         },
       },

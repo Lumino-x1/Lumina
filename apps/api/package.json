@@ -45,7 +45,8 @@
     "ioredis": "^6.0.0",
     "mediainfo.js": "^0.3.7",
     "multer": "^2.2.0",
-    "stream-chat": "^9.50.2",
+    "stream-chat": "^9.54.0",
+    "stream-chat-react": "^14.14.1",
     "zod": "^4.4.3"
   },
   "peerDependencies": {

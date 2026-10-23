@@ -5901,6 +5901,13 @@
 }
 
 /* Action Button: Remove Friend / Message */
+.ai-friends-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .ai-friends-remove-btn,
 .ai-friends-message-btn {
   background-color: #FFFFFF !important;
@@ -5932,9 +5939,13 @@
 .lumina-ai-profile-root.dark .ai-friends-remove-btn,
 .lumina-ai-profile-root.dark .ai-friends-message-btn,
 .dark .lumina-ai-profile-root button.ai-friends-remove-btn,
+.dark .lumina-ai-profile-root button.ai-friends-message-btn,
 .lumina-ai-profile-root.dark button.ai-friends-remove-btn,
+.lumina-ai-profile-root.dark button.ai-friends-message-btn,
 [data-theme='dark'] .lumina-ai-profile-root button.ai-friends-remove-btn,
-.ai-friends-row button.ai-friends-remove-btn {
+[data-theme='dark'] .lumina-ai-profile-root button.ai-friends-message-btn,
+.ai-friends-row button.ai-friends-remove-btn,
+.ai-friends-row button.ai-friends-message-btn {
   background-color: #FFFFFF !important;
   color: #191919 !important;
   border: 1px solid #FFFFFF !important;
@@ -6142,6 +6153,145 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* ==========================================================================
+   FRIENDS VIEW & MODAL - MOBILE RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .ai-friends-modal-overlay {
+    padding: 12px;
+  }
+
+  .ai-friends-modal-container {
+    width: 100% !important;
+    max-width: 540px !important;
+  }
+
+  .ai-friends-tab-card {
+    padding: 16px 14px !important;
+  }
+
+  .ai-friends-actions {
+    gap: 8px !important;
+  }
+
+  .ai-friends-remove-btn,
+  .ai-friends-message-btn {
+    padding: 7px 18px !important;
+    min-width: 82px !important;
+    text-align: center !important;
+    justify-content: center !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-friends-modal-overlay {
+    padding: 8px !important;
+  }
+
+  .ai-friends-modal-container {
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px) !important;
+    max-height: 90vh !important;
+    border-radius: 8px !important;
+  }
+
+  .ai-friends-modal-header {
+    padding: 14px 14px 12px !important;
+  }
+
+  .ai-friends-search-bar {
+    margin: 10px 10px 6px !important;
+    padding: 8px 12px !important;
+  }
+
+  .ai-friends-list-body {
+    padding: 4px 6px 12px !important;
+  }
+
+  .ai-friends-tab-card {
+    padding: 14px 10px !important;
+    border-radius: 8px !important;
+  }
+
+  .ai-friends-tab-header {
+    padding-bottom: 12px !important;
+    gap: 10px !important;
+  }
+
+  .tab-search {
+    min-width: 100% !important;
+    margin-top: 4px !important;
+  }
+
+  .ai-friends-row {
+    padding: 10px 8px !important;
+    gap: 10px !important;
+  }
+
+  .ai-friends-left {
+    gap: 10px !important;
+  }
+
+  .ai-friends-avatar {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .ai-friends-actions {
+    gap: 6px !important;
+  }
+
+  /* Increase width of Message and Remove buttons slightly in mobile view */
+  .ai-friends-remove-btn,
+  .ai-friends-message-btn {
+    padding: 6px 16px !important;
+    min-width: 78px !important;
+    font-size: 12.5px !important;
+    text-align: center !important;
+    justify-content: center !important;
+  }
+
+  .ai-dm-container {
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px) !important;
+  }
+
+  .ai-dm-body {
+    padding: 14px 12px !important;
+    gap: 10px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .ai-friends-modal-overlay {
+    padding: 4px !important;
+  }
+
+  .ai-friends-modal-container {
+    width: calc(100vw - 8px) !important;
+    max-width: calc(100vw - 8px) !important;
+  }
+
+  .ai-friends-row {
+    padding: 8px 6px !important;
+    gap: 8px !important;
+  }
+
+  .ai-friends-avatar {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .ai-friends-remove-btn,
+  .ai-friends-message-btn {
+    padding: 5px 12px !important;
+    min-width: 68px !important;
+    font-size: 11.5px !important;
+  }
+}
+
 
 
 

@@ -730,6 +730,82 @@ export async function fetchMySavedPostIdsApi(): Promise<string[]> {
   return []
 }
 
+/**
+ * Fetch full saved post entities for the authenticated user from GET /api/posts/saved
+ */
+export async function fetchSavedPostsApi(): Promise<FeedPostItem[]> {
+  const baseUrl = getBaseApiUrl()
+  const endpoint = `${baseUrl}/api/posts/saved`
+
+  let sessionToken = ''
+  try {
+    sessionToken =
+      localStorage.getItem('better-auth.session_token') ||
+      localStorage.getItem('lumina_session_token') ||
+      ''
+    if (!sessionToken && typeof document !== 'undefined') {
+      const match = document.cookie.match(/(?:^|;\s*)better-auth\.session_token=([^;]+)/)
+      if (match && match[1]) sessionToken = decodeURIComponent(match[1])
+    }
+  } catch {
+    // ignore
+  }
+
+  const headers: Record<string, string> = getFeedHeaders({
+    'Content-Type': 'application/json',
+  })
+
+  if (sessionToken) {
+    try {
+      headers['Cookie'] = `better-auth.session_token=${sessionToken}`
+    } catch {
+      // ignore
+    }
+    headers['Authorization'] = `Bearer ${sessionToken}`
+  }
+
+  try {
+    let res = await fetch(endpoint, {
+      method: 'GET',
+      headers,
+      credentials: 'include',
+    })
+
+    if (!res.ok && endpoint.startsWith('http')) {
+      try {
+        const proxyRes = await fetch(`/api/posts/saved`, {
+          method: 'GET',
+          headers,
+          credentials: 'include',
+        })
+        if (proxyRes.ok) res = proxyRes
+      } catch {
+        // ignore
+      }
+    }
+
+    if (res.ok) {
+      const payload = await res.json()
+      if (payload && payload.success && Array.isArray(payload.savedPosts)) {
+        return payload.savedPosts
+          .map((item: any) => {
+            const p = item.post || item
+            if (!p || !p.id) return null
+            return {
+              ...p,
+              isSaved: true,
+            } as FeedPostItem
+          })
+          .filter(Boolean) as FeedPostItem[]
+      }
+    }
+  } catch (err) {
+    console.error('Failed to fetch saved posts from /api/posts/saved:', err)
+  }
+
+  return []
+}
+
 export interface PostLikeInfo {
   count: number
   isLiked: boolean
