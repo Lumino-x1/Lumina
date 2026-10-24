@@ -35,8 +35,11 @@ export default defineConfig({
   },
 
   resolve: {
+    dedupe: ['react', 'react-dom'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      react: path.resolve(__dirname, '../../node_modules/react'),
+      'react-dom': path.resolve(__dirname, '../../node_modules/react-dom'),
       'motion/react': 'framer-motion',
       '@designcodeio/threeui/style.css': path.resolve(
         __dirname,
@@ -47,5 +50,8 @@ export default defineConfig({
         'src/shaders/index.ts',
       ),
     },
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'stream-chat', 'stream-chat-react'],
   },
 })

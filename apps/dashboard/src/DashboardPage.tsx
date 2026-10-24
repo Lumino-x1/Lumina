@@ -400,7 +400,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
   onOpenProfile,
 }) => {
   const { theme: _theme } = useTheme()
-  const [activeNav, setActiveNav] = useState<string>('Overview')
+  const [activeNav, setActiveNav] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const h = window.location.hash.toLowerCase()
+      if (h === '#messages' || h === '#messaging' || h === '#/messages' || h.startsWith('#messages?')) {
+        return 'Messaging'
+      }
+    }
+    return 'Overview'
+  })
   const [activeTab, setActiveTab] = useState<'for-you' | 'following' | 'communities' | 'academic-ai'>('for-you')
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [searchFocused, setSearchFocused] = useState<boolean>(false)
@@ -875,6 +883,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           setActiveNav('Overview')
           window.location.hash = 'feed'
         }}
+        onOpenProfile={onOpenProfile}
+        onLogout={onLogout}
       />
     )
   }

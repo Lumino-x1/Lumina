@@ -68,8 +68,16 @@ function AppContent() {
     setView('landing')
   }
 
-  const handleOpenDashboard = () => {
-    window.location.hash = 'feed'
+  const handleOpenDashboard = (targetHash?: string) => {
+    if (targetHash) {
+      window.location.hash = targetHash
+    } else if (
+      window.location.hash !== '#messages' &&
+      window.location.hash !== '#messaging' &&
+      window.location.hash !== '#/messages'
+    ) {
+      window.location.hash = 'feed'
+    }
     setView('dashboard')
   }
 
@@ -83,8 +91,16 @@ function AppContent() {
     setView('editor')
   }
 
-  const handleBackToDashboard = () => {
-    window.location.hash = 'feed'
+  const handleBackToDashboard = (targetHash?: string) => {
+    if (targetHash) {
+      window.location.hash = targetHash
+    } else if (
+      window.location.hash !== '#messages' &&
+      window.location.hash !== '#messaging' &&
+      window.location.hash !== '#/messages'
+    ) {
+      window.location.hash = 'feed'
+    }
     setView('dashboard')
   }
 

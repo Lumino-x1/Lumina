@@ -324,6 +324,11 @@
 .ai-notif-item.ai-follow-req-item {
   align-items: center;
   gap: 12px;
+  padding: 14px 14px;
+}
+
+.ai-notif-item.ai-follow-req-item .ai-notif-content {
+  padding-top: 10px;
 }
 
 /* Actions */
@@ -685,6 +690,11 @@
   .ai-notif-item.ai-follow-req-item {
     align-items: center;
     gap: 12px;
+    padding: 14px 14px;
+  }
+
+  .ai-notif-item.ai-follow-req-item .ai-notif-content {
+    padding-top: 10px;
   }
 
   .ai-notif-actions {

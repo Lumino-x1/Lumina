@@ -9,6 +9,7 @@ export namespace ChatRepo {
       select: {
         id: true,
         username: true,
+        name: true,
         image: true,
       },
     })
@@ -24,6 +25,7 @@ export namespace ChatRepo {
       select: {
         id: true,
         username: true,
+        name: true,
         image: true,
       },
     })

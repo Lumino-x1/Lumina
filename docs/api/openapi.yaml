@@ -1534,6 +1534,366 @@ paths:
         - Chat
       operationId: getChatConversations
       parameters: []
+  /api/chat/conversations/{channelId}/messages:
+    get:
+      summary: Get messages in a conversation channel
+      tags:
+        - Chat
+      operationId: getChatChannelMessages
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Channel messages returned
+    post:
+      summary: Send message to a conversation channel
+      tags:
+        - Chat
+      operationId: postChatChannelMessage
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - text
+              properties:
+                text:
+                  type: string
+      responses:
+        "201":
+          description: Message successfully sent
+  /api/chat/groups:
+    post:
+      summary: Create group conversation
+      tags:
+        - Chat
+      operationId: postChatGroups
+      parameters:
+        - $ref: "#/components/parameters/OriginHeaderOptional"
+        - $ref: "#/components/parameters/JsonContentType"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - memberIds
+              properties:
+                name:
+                  type: string
+                memberIds:
+                  type: array
+                  items:
+                    type: string
+                image:
+                  type: string
+      responses:
+        "201":
+          description: Group conversation created
+  /api/chat/search:
+    get:
+      summary: Search messages across chat conversations
+      tags:
+        - Chat
+      operationId: searchChatMessages
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Matching messages returned
+  /api/chat/conversations/{channelId}/messages/{messageId}:
+    put:
+      summary: Edit message in channel
+      tags:
+        - Chat
+      operationId: putChatMessage
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - text
+              properties:
+                text:
+                  type: string
+      responses:
+        "200":
+          description: Message edited
+    delete:
+      summary: Delete message in channel
+      tags:
+        - Chat
+      operationId: deleteChatMessage
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Message deleted
+  /api/chat/conversations/{channelId}/messages/{messageId}/reactions:
+    post:
+      summary: Send reaction to message
+      tags:
+        - Chat
+      operationId: postChatMessageReaction
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+      responses:
+        "201":
+          description: Reaction added
+  /api/chat/conversations/{channelId}/messages/{messageId}/reactions/{type}:
+    delete:
+      summary: Remove reaction from message
+      tags:
+        - Chat
+      operationId: deleteChatMessageReaction
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Reaction removed
+  /api/chat/conversations/{channelId}/messages/{messageId}/replies:
+    get:
+      summary: Get thread replies for a message
+      tags:
+        - Chat
+      operationId: getChatMessageReplies
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Thread replies returned
+  /api/chat/conversations/{channelId}/messages/{messageId}/pin:
+    post:
+      summary: Pin message in channel
+      tags:
+        - Chat
+      operationId: pinChatMessage
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Message pinned
+    delete:
+      summary: Unpin message in channel
+      tags:
+        - Chat
+      operationId: unpinChatMessage
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Message unpinned
+  /api/chat/conversations/{channelId}/read:
+    post:
+      summary: Mark channel messages as read
+      tags:
+        - Chat
+      operationId: markChatChannelRead
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Marked as read
+  /api/chat/conversations/{channelId}/typing:
+    post:
+      summary: Send typing indicator event
+      tags:
+        - Chat
+      operationId: postChatTypingIndicator
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Typing indicator sent
+  /api/chat/conversations/{channelId}/members:
+    post:
+      summary: Add members to group channel
+      tags:
+        - Chat
+      operationId: addChatChannelMembers
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - memberIds
+              properties:
+                memberIds:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: Members added
+  /api/chat/conversations/{channelId}/members/{memberId}:
+    delete:
+      summary: Remove member from channel
+      tags:
+        - Chat
+      operationId: removeChatChannelMember
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Member removed
+  /api/chat/conversations/{channelId}/mute:
+    post:
+      summary: Mute channel notifications
+      tags:
+        - Chat
+      operationId: muteChatChannel
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Channel muted
+  /api/chat/conversations/{channelId}/unmute:
+    post:
+      summary: Unmute channel notifications
+      tags:
+        - Chat
+      operationId: unmuteChatChannel
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Channel unmuted
   /api/leaderboard:
     get:
       summary: Get paginated LeetCode leaderboard

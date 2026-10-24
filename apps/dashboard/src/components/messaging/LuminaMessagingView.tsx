@@ -1,816 +1,847 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import {
-  Search,
-  Plus,
-  MoreVertical,
-  MoreHorizontal,
   ArrowLeft,
-  Check,
-  CheckCheck,
-  Pin,
-  Paperclip,
-  Smile,
-  Send,
-  Mic,
+  Search,
   Phone,
   Video,
-  FileText,
-  Image as ImageIcon,
-  Archive,
-  Lock,
-  X,
   Users,
-  Sparkles,
+  Paperclip,
+  Code,
+  Smile,
+  Mic,
+  Send,
   Download,
-  ThumbsUp,
-  Share2,
+  CheckCheck,
+  BadgeCheck,
+  FileText,
+  Sigma,
 } from 'lucide-react'
 import './LuminaMessagingView.css'
 import type { DashboardUser } from '../../DashboardPage'
-import { DEFAULT_WHATSAPP_AVATAR } from '../WhatsAppDefaultAvatar'
+
+export interface MessageAttachment {
+  type: 'pdf' | 'slide' | 'image' | 'link'
+  fileName: string
+  fileSize?: string
+  fileSubtitle?: string
+  url?: string
+}
 
 export interface ChatMessage {
   id: string
   sender: 'me' | 'them'
-  senderName?: string
-  text?: string
+  senderName: string
+  senderAvatar?: string
+  text: string
   time: string
-  status?: 'sent' | 'delivered' | 'read'
-  attachment?: {
-    type: 'document' | 'image' | 'voice'
-    fileName?: string
-    fileSize?: string
-    pageCount?: number
-    imageUrl?: string
-    caption?: string
-  }
-  isDeleted?: boolean
+  attachment?: MessageAttachment
 }
 
-export interface ChatConversation {
+export interface SharedClass {
+  code: string
+  name: string
+  schedule: string
+  color: string
+}
+
+export interface SharedMediaItem {
+  id: string
+  type: 'slide' | 'photo' | 'group'
+  title: string
+  badgeLabel: string
+  imageUrl: string
+}
+
+export interface PinnedLink {
+  id: string
+  type: 'notion' | 'github' | 'generic'
+  url: string
+  pinnedBy: string
+}
+
+export interface MutualFriend {
   id: string
   name: string
-  avatar?: string
-  initials?: string
-  isGroup?: boolean
-  membersCount?: number
-  membersPreview?: string
-  pinned?: boolean
-  unreadCount?: number
-  isFavourite?: boolean
-  isArchived?: boolean
-  statusText?: string
-  isOnline?: boolean
-  lastMessageSnippet: string
-  lastMessageType?: 'text' | 'document' | 'image' | 'deleted' | 'like'
-  lastMessageTime: string
-  lastMessageStatus?: 'sent' | 'delivered' | 'read'
-  messages: ChatMessage[]
+  avatar: string
 }
 
-const INITIAL_CHATS: ChatConversation[] = []
-
-/**
- * GradientBackground — Notion Black & White live CSS canvas
- * Applied exclusively to the active chat conversation background canvas.
- */
-export function GradientBackground({ className }: { className?: string }) {
-  return (
-    <div
-      aria-hidden="true"
-      className={className}
-      style={{
-        position: 'absolute',
-        inset: 0,
-        overflow: 'hidden',
-        width: '100%',
-        height: '100%',
-        containerType: 'size',
-        pointerEvents: 'none',
-        zIndex: 0,
-      }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          inset: '-0.8cqmin',
-          filter: 'blur(0.4cqmin)',
-          backgroundColor: '#161616',
-          backgroundImage:
-            'radial-gradient(circle at 65.53% 45.75%, rgba(255, 255, 255, 0.05) 0%, rgba(22, 22, 22, 0) 43.9%), radial-gradient(circle at 28.32% 73.33%, rgba(247, 243, 235, 0.04) 0%, rgba(22, 22, 22, 0) 55.45%), radial-gradient(circle at 52.58% 18.64%, rgba(255, 255, 255, 0.065) 0%, rgba(22, 22, 22, 0) 67.35%), radial-gradient(circle at 79.44% 84.4%, rgba(38, 38, 38, 0.95) 0%, rgba(22, 22, 22, 0) 78.9%)',
-        }}
-      />
-    </div>
-  )
+export interface Conversation {
+  id: string
+  name: string
+  avatar: string
+  isGroup?: boolean
+  verified?: boolean
+  handle?: string
+  majorBadge?: string
+  status: 'online' | 'idle' | 'offline'
+  statusText?: string
+  lastTime: string
+  snippet: string
+  secondarySnippet?: string
+  tags?: string[]
+  unreadCount?: number
+  deliveryStatus?: 'sent' | 'delivered' | 'read'
+  messages: ChatMessage[]
+  sharedClasses?: SharedClass[]
+  sharedMedia?: SharedMediaItem[]
+  pinnedLinks?: PinnedLink[]
+  mutualFriends?: MutualFriend[]
+  extraMutualCount?: number
 }
 
 interface LuminaMessagingViewProps {
   currentUser?: DashboardUser | null
-  onBackToDashboard: () => void
+  onBackToDashboard?: () => void
+  onOpenProfile?: () => void
+  onLogout?: () => void
   initialChatId?: string | null
 }
 
+const INITIAL_CONVERSATIONS: Conversation[] = [
+  {
+    id: 'maya-chen',
+    name: 'Maya Chen',
+    avatar:
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
+    verified: true,
+    handle: '@mayachen • Class of \'25',
+    majorBadge: 'Stanford CS & Symbolic Systems',
+    status: 'online',
+    statusText: 'Active now',
+    lastTime: '10:42 AM',
+    snippet: 'Are we meeting at the library for AI Ethics?',
+    tags: ["CS & CogSci '25", '📍 Green Library'],
+    messages: [
+      {
+        id: 'maya-1',
+        sender: 'them',
+        senderName: 'Maya Chen',
+        senderAvatar:
+          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+        text: 'Hey Alex! Did you manage to review the revised rubric and syllabus for the AI Ethics project? Prof. Roberts updated the dataset requirements yesterday.',
+        time: '10:30 AM',
+        attachment: {
+          type: 'pdf',
+          fileName: 'AI_Ethics_Brie...',
+          fileSize: '1.4 MB',
+          fileSubtitle: 'Updated Syllabus PDF',
+        },
+      },
+      {
+        id: 'maya-2',
+        sender: 'me',
+        senderName: 'Alex (You)',
+        text: 'Hey Maya! Yes, just finished reading it. Section 3 on algorithmic bias in generative vision models is super compelling. We can totally build our benchmark on that.',
+        time: '10:36 AM',
+      },
+    ],
+    sharedClasses: [
+      {
+        code: 'CS 480',
+        name: 'CS 480 Capstone',
+        schedule: 'Mon / Wed',
+        color: '#3B82F6',
+      },
+      {
+        code: 'PHIL 150',
+        name: 'PHIL 150 AI Ethics',
+        schedule: 'Tue / Thu',
+        color: '#A855F7',
+      },
+      {
+        code: 'STATS 214',
+        name: 'STATS 214 Machine Learning',
+        schedule: 'Fri',
+        color: '#F59E0B',
+      },
+    ],
+    sharedMedia: [
+      {
+        id: 'sm-1',
+        type: 'slide',
+        title: 'Project Architecture Slide',
+        badgeLabel: 'Slide',
+        imageUrl:
+          'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&auto=format&fit=crop&q=80',
+      },
+      {
+        id: 'sm-2',
+        type: 'photo',
+        title: 'Neural Lens Schematics',
+        badgeLabel: 'Photo',
+        imageUrl:
+          'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&auto=format&fit=crop&q=80',
+      },
+      {
+        id: 'sm-3',
+        type: 'group',
+        title: 'Study Session Photo',
+        badgeLabel: 'Group',
+        imageUrl:
+          'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&auto=format&fit=crop&q=80',
+      },
+    ],
+    pinnedLinks: [
+      {
+        id: 'pl-1',
+        type: 'notion',
+        url: 'notion.so/stanford-cs480-rubric',
+        pinnedBy: 'Pinned by Alex • Oct 22',
+      },
+      {
+        id: 'pl-2',
+        type: 'github',
+        url: 'github.com/maya-chen/ai-bias-lens',
+        pinnedBy: 'Pinned by Maya • Oct 20',
+      },
+    ],
+    mutualFriends: [
+      {
+        id: 'mf-1',
+        name: 'David Kalu',
+        avatar:
+          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
+      },
+      {
+        id: 'mf-2',
+        name: 'Sarah Jenkins',
+        avatar:
+          'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
+      },
+      {
+        id: 'mf-3',
+        name: 'Marcus Vance',
+        avatar:
+          'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
+      },
+      {
+        id: 'mf-4',
+        name: 'Priya Sharma',
+        avatar:
+          'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80',
+      },
+    ],
+    extraMutualCount: 4,
+  },
+  {
+    id: 'david-kalu',
+    name: 'David Kalu',
+    avatar:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
+    verified: false,
+    handle: '@dkalu • Class of \'24',
+    majorBadge: 'Stanford EE & Distributed Systems',
+    status: 'online',
+    statusText: 'Active now',
+    lastTime: '9:15 AM',
+    snippet: 'Sent you the project repo link 🚀',
+    secondarySnippet: 'Shared github.com/lumin-a...',
+    unreadCount: 2,
+    messages: [
+      {
+        id: 'david-1',
+        sender: 'them',
+        senderName: 'David Kalu',
+        senderAvatar:
+          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
+        text: 'Hey Alex! Just pushed the initial distributed consensus node implementation to the repo.',
+        time: '9:12 AM',
+      },
+      {
+        id: 'david-2',
+        sender: 'them',
+        senderName: 'David Kalu',
+        senderAvatar:
+          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
+        text: 'Sent you the project repo link 🚀: github.com/lumina-distributed/mesh-core',
+        time: '9:15 AM',
+      },
+    ],
+    sharedClasses: [
+      {
+        code: 'CS 244B',
+        name: 'CS 244B Distributed Systems',
+        schedule: 'Tue / Thu',
+        color: '#3B82F6',
+      },
+    ],
+    mutualFriends: [
+      {
+        id: 'mf-1',
+        name: 'Maya Chen',
+        avatar:
+          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+      },
+    ],
+  },
+  {
+    id: 'cs480-capstone',
+    name: 'CS480 Capstone',
+    avatar: '',
+    isGroup: true,
+    handle: '5 members active • Stanford Capstone',
+    majorBadge: 'CS 480 Senior Project Team',
+    status: 'online',
+    statusText: '5 active members',
+    lastTime: 'Yesterday',
+    snippet: 'Elena: Slides are ready for review',
+    tags: ['5 members active'],
+    unreadCount: 5,
+    messages: [
+      {
+        id: 'cs-1',
+        sender: 'them',
+        senderName: 'Elena Rostova',
+        text: 'Team, the midterm review deck is finalized in Figma and Google Slides.',
+        time: 'Yesterday 4:15 PM',
+      },
+      {
+        id: 'cs-2',
+        sender: 'them',
+        senderName: 'Elena Rostova',
+        text: 'Slides are ready for review! Please drop your comments before 6 PM.',
+        time: 'Yesterday 4:18 PM',
+      },
+    ],
+    sharedClasses: [
+      {
+        code: 'CS 480',
+        name: 'CS 480 Senior Capstone',
+        schedule: 'Mon / Wed / Fri',
+        color: '#3B82F6',
+      },
+    ],
+    mutualFriends: [],
+  },
+  {
+    id: 'sarah-jenkins',
+    name: 'Sarah Jenkins',
+    avatar:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&auto=format&fit=crop&q=80',
+    verified: false,
+    handle: '@sarahj • Class of \'25',
+    majorBadge: 'Product Design & HCI',
+    status: 'idle',
+    statusText: 'Away (15m)',
+    lastTime: 'Yesterday',
+    snippet: 'Sounds good, let me check the schedule!',
+    deliveryStatus: 'delivered',
+    messages: [
+      {
+        id: 'sj-1',
+        sender: 'me',
+        senderName: 'Alex (You)',
+        text: 'Hey Sarah, are you free for a quick sync on the Lumina UI components tomorrow afternoon?',
+        time: 'Yesterday 2:10 PM',
+      },
+      {
+        id: 'sj-2',
+        sender: 'them',
+        senderName: 'Sarah Jenkins',
+        senderAvatar:
+          'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
+        text: 'Sounds good, let me check the schedule! I should be free around 3 PM.',
+        time: 'Yesterday 2:34 PM',
+      },
+    ],
+    sharedClasses: [
+      {
+        code: 'CS 147',
+        name: 'CS 147 Intro to HCI',
+        schedule: 'Mon / Wed',
+        color: '#10B981',
+      },
+    ],
+  },
+  {
+    id: 'marcus-vance',
+    name: 'Marcus Vance',
+    avatar:
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&auto=format&fit=crop&q=80',
+    verified: false,
+    handle: '@mvance • Class of \'24',
+    majorBadge: 'Applied Math & Statistics',
+    status: 'offline',
+    statusText: 'Last seen Tuesday',
+    lastTime: 'Tuesday',
+    snippet: 'Can you send the lecture recording?',
+    secondarySnippet: 'MATH 310 TA Session',
+    messages: [
+      {
+        id: 'mv-1',
+        sender: 'them',
+        senderName: 'Marcus Vance',
+        senderAvatar:
+          'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
+        text: 'Hey Alex, missed the beginning of yesterday\'s linear algebra discussion. Can you send the lecture recording?',
+        time: 'Tuesday 11:20 AM',
+      },
+      {
+        id: 'mv-2',
+        sender: 'me',
+        senderName: 'Alex (You)',
+        text: 'Uploaded it to Canvas under the TA shared folder!',
+        time: 'Tuesday 11:45 AM',
+      },
+    ],
+    sharedClasses: [
+      {
+        code: 'MATH 310',
+        name: 'MATH 310 TA Session',
+        schedule: 'Tuesday 10 AM',
+        color: '#EC4899',
+      },
+    ],
+  },
+  {
+    id: 'priya-sharma',
+    name: 'Priya Sharma',
+    avatar:
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&auto=format&fit=crop&q=80',
+    verified: true,
+    handle: '@psharma • Class of \'25',
+    majorBadge: 'Computer Systems & AI Ethics',
+    status: 'online',
+    statusText: 'Active now',
+    lastTime: 'Monday',
+    snippet: 'See you at the hackathon workshop!',
+    secondarySnippet: 'TreeHacks Lead Organizer',
+    messages: [
+      {
+        id: 'ps-1',
+        sender: 'them',
+        senderName: 'Priya Sharma',
+        senderAvatar:
+          'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80',
+        text: 'Hey Alex, all workshop mentor stations are assigned! See you at the hackathon workshop!',
+        time: 'Monday 3:40 PM',
+      },
+      {
+        id: 'ps-2',
+        sender: 'me',
+        senderName: 'Alex (You)',
+        text: 'Can\'t wait Priya! Stanford AI lab is ready.',
+        time: 'Monday 4:02 PM',
+      },
+    ],
+    sharedClasses: [
+      {
+        code: 'CS 182',
+        name: 'Ethics, Public Policy, and Tech',
+        schedule: 'Tue / Thu',
+        color: '#6366F1',
+      },
+    ],
+  },
+]
+
 export const LuminaMessagingView: React.FC<LuminaMessagingViewProps> = ({
   currentUser,
-  onBackToDashboard,
+  onBackToDashboard: _onBackToDashboard,
+  onOpenProfile: _onOpenProfile,
+  onLogout: _onLogout,
   initialChatId,
 }) => {
-  const [chats, setChats] = useState<ChatConversation[]>(INITIAL_CHATS)
-  const [activeChatId, setActiveChatId] = useState<string | null>(
-    initialChatId || INITIAL_CHATS[0]?.id || null
+  const [conversations, setConversations] =
+    useState<Conversation[]>(INITIAL_CONVERSATIONS)
+  const [activeChatId, setActiveChatId] = useState<string>(
+    initialChatId || 'maya-chen'
   )
-  const [activeFilter, setActiveFilter] = useState<'all' | 'unread' | 'favourites' | 'groups'>('all')
-  const [searchQuery, setSearchQuery] = useState<string>('')
-  const [inputText, setInputText] = useState<string>('')
-  const [showArchived, setShowArchived] = useState<boolean>(false)
-  const [showNewChatModal, setShowNewChatModal] = useState<boolean>(false)
-  const [newChatSearch, setNewChatSearch] = useState<string>('')
-  const [showQuickEmoji, setShowQuickEmoji] = useState<boolean>(false)
-  const [showAttachmentMenu, setShowAttachmentMenu] = useState<boolean>(false)
-  const [showChatOptions, setShowChatOptions] = useState<boolean>(false)
-  const [showSidebarMenu, setShowSidebarMenu] = useState<boolean>(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [activeFilter, setActiveFilter] = useState<
+    'all' | 'unread' | 'groups'
+  >('all')
+  const [inputText, setInputText] = useState('')
+  const [mobileView, setMobileView] = useState<'list' | 'thread'>('list')
 
-  const messagesEndRef = useRef<HTMLDivElement | null>(null)
-  const inputRef = useRef<HTMLInputElement | null>(null)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  // Find active chat object
-  const activeChat = chats.find((c) => c.id === activeChatId) || null
+  const currentUserName = currentUser?.name || 'Alex Rivera'
 
-  // Auto-scroll on active chat switch or new message
-  useEffect(() => {
-    if (activeChatId && messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [activeChatId, activeChat?.messages.length])
-
-  // Filter chats by search query and category
-  const filteredChats = chats.filter((chat) => {
-    if (showArchived) {
-      return !!chat.isArchived
-    }
-    if (chat.isArchived) return false
-
-    // Category pill filter
-    if (activeFilter === 'unread' && (!chat.unreadCount || chat.unreadCount <= 0)) {
-      return false
-    }
-    if (activeFilter === 'favourites' && !chat.isFavourite && !chat.pinned) {
-      return false
-    }
-    if (activeFilter === 'groups' && !chat.isGroup) {
-      return false
-    }
-
-    // Search query filter
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim()
-      const matchName = chat.name.toLowerCase().includes(q)
-      const matchSnippet = chat.lastMessageSnippet.toLowerCase().includes(q)
-      const matchMember = chat.membersPreview?.toLowerCase().includes(q)
-      return matchName || matchSnippet || matchMember
-    }
-
-    return true
-  })
-
-  // Total unread count for badge
-  const totalUnread = chats.reduce((acc, c) => acc + (c.unreadCount || 0), 0)
-  const groupsCount = chats.filter((c) => c.isGroup).length
-
-  // Select a chat
-  const handleSelectChat = (chatId: string) => {
-    setActiveChatId(chatId)
-    // Mark as read
-    setChats((prev) =>
-      prev.map((c) =>
-        c.id === chatId ? { ...c, unreadCount: 0 } : c
-      )
+  const activeConversation = useMemo(() => {
+    return (
+      conversations.find((c) => c.id === activeChatId) || conversations[0]
     )
-    setShowQuickEmoji(false)
-    setShowAttachmentMenu(false)
-  }
+  }, [conversations, activeChatId])
 
-  // Send a message in active chat
-  const handleSendMessage = (customText?: string) => {
-    const textToSend = (customText !== undefined ? customText : inputText).trim()
-    if (!textToSend || !activeChatId) return
+  // Filter conversations
+  const filteredConversations = useMemo(() => {
+    return conversations.filter((c) => {
+      // Tab filter
+      if (activeFilter === 'unread') {
+        if (!c.unreadCount || c.unreadCount <= 0) return false
+      } else if (activeFilter === 'groups') {
+        if (!c.isGroup) return false
+      }
+
+      // Search query
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim()
+        const matchesName = c.name.toLowerCase().includes(q)
+        const matchesSnippet = c.snippet.toLowerCase().includes(q)
+        const matchesTags = c.tags?.some((t) => t.toLowerCase().includes(q))
+        return matchesName || matchesSnippet || matchesTags
+      }
+      return true
+    })
+  }, [conversations, activeFilter, searchQuery])
+
+  // Auto-scroll to bottom of messages
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [activeConversation?.messages])
+
+  const handleSendMessage = () => {
+    if (!inputText.trim()) return
 
     const now = new Date()
-    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    const timeStr = now.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
 
     const newMsg: ChatMessage = {
-      id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      id: `msg-${Date.now()}`,
       sender: 'me',
-      text: textToSend,
+      senderName: `${currentUserName} (You)`,
+      text: inputText.trim(),
       time: timeStr,
-      status: 'delivered',
     }
 
-    setChats((prev) =>
-      prev.map((c) => {
-        if (c.id === activeChatId) {
+    setConversations((prev) =>
+      prev.map((conv) => {
+        if (conv.id === activeConversation.id) {
           return {
-            ...c,
-            lastMessageSnippet: textToSend,
-            lastMessageType: 'text',
-            lastMessageTime: timeStr,
-            lastMessageStatus: 'delivered',
-            messages: [...c.messages, newMsg],
+            ...conv,
+            snippet: inputText.trim(),
+            lastTime: timeStr,
+            unreadCount: 0,
+            messages: [...conv.messages, newMsg],
           }
         }
-        return c
+        return conv
       })
     )
 
     setInputText('')
-    setShowQuickEmoji(false)
-    setShowAttachmentMenu(false)
-
-    // Optional simulated reply after 1.4s
-    const targetChat = activeChat
-    if (targetChat && !targetChat.isGroup && targetChat.id !== 'mummy') {
-      setTimeout(() => {
-        const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        const replyMsg: ChatMessage = {
-          id: `reply-${Date.now()}`,
-          sender: 'them',
-          senderName: targetChat.name,
-          text: `Got it! Sounds good. Let's sync up on Lumina soon. 👍`,
-          time: replyTime,
-        }
-
-        setChats((current) =>
-          current.map((c) => {
-            if (c.id === targetChat.id) {
-              return {
-                ...c,
-                lastMessageSnippet: replyMsg.text || '',
-                lastMessageType: 'text',
-                lastMessageTime: replyTime,
-                messages: [...c.messages, replyMsg],
-              }
-            }
-            return c
-          })
-        )
-      }, 1400)
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
     }
   }
 
-  // Quick Emoji reactions
-  const quickEmojis = ['👍', '❤️', '🔥', '🚀', '😂', '🎉', '👏', '💯', '🙏', '💡']
-
-  // Create new chat
-  const handleCreateNewChat = (contactName: string) => {
-    if (!contactName.trim()) return
-    const newId = `chat-${Date.now()}`
-    const newConversation: ChatConversation = {
-      id: newId,
-      name: contactName.trim(),
-      isOnline: true,
-      statusText: 'Active now',
-      unreadCount: 0,
-      lastMessageSnippet: 'Conversation started',
-      lastMessageType: 'text',
-      lastMessageTime: 'Just now',
-      messages: [
-        {
-          id: `init-${Date.now()}`,
-          sender: 'them',
-          senderName: contactName.trim(),
-          text: `Hi! Connected with you on Lumina.`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        },
-      ],
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault()
+      handleSendMessage()
+    } else if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSendMessage()
     }
-
-    setChats((prev) => [newConversation, ...prev])
-    setActiveChatId(newId)
-    setShowNewChatModal(false)
-    setNewChatSearch('')
   }
 
   return (
-    <div className="lumina-messaging-screen dark">
-      {/* ========================================================
-          1. LEFT COLUMN: CHAT LIST SIDEBAR
-          ======================================================== */}
-      <aside
-        className={`lumina-msg-sidebar ${activeChatId ? 'msg-hidden-on-mobile' : ''}`}
-        aria-label="Chats List"
-      >
-        {/* TOP BAR / HEADER */}
-        <header className="lumina-msg-sidebar-header">
-          <div className="lumina-msg-header-left">
-            {currentUser && (
-              <img
-                src={currentUser.image || DEFAULT_WHATSAPP_AVATAR}
-                alt={currentUser.name || 'User'}
-                className="lumina-msg-user-avatar-mini"
-                title={`${currentUser.name || ''} (${currentUser.email || ''})`}
-                onError={(e) => {
-                  e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
-                }}
-              />
-            )}
-            <h1 className="lumina-msg-sidebar-title">Chats</h1>
-          </div>
-
-          <div className="lumina-msg-header-actions">
-            <div style={{ position: 'relative' }}>
-              <button
-                type="button"
-                className="lumina-msg-icon-btn"
-                title="Options"
-                aria-label="Options"
-                onClick={() => setShowSidebarMenu((prev) => !prev)}
-              >
-                <MoreHorizontal size={20} />
-              </button>
-
-              {showSidebarMenu && (
-                <div className="lumina-msg-dropdown-menu">
-                  <button
-                    type="button"
-                    className="lumina-msg-dropdown-item"
-                    onClick={() => {
-                      setShowSidebarMenu(false)
-                      onBackToDashboard()
-                    }}
-                  >
-                    Back to Dashboard
-                  </button>
-                  <button
-                    type="button"
-                    className="lumina-msg-dropdown-item"
-                    onClick={() => {
-                      setShowSidebarMenu(false)
-                      setChats((prev) => prev.map((c) => ({ ...c, unreadCount: 0 })))
-                    }}
-                  >
-                    Mark all as read
-                  </button>
-                  <button
-                    type="button"
-                    className="lumina-msg-dropdown-item"
-                    onClick={() => {
-                      setShowSidebarMenu(false)
-                      setShowArchived(true)
-                    }}
-                  >
-                    Archived chats
-                  </button>
-                  <button
-                    type="button"
-                    className="lumina-msg-dropdown-item"
-                    onClick={() => {
-                      setShowSidebarMenu(false)
-                      setShowNewChatModal(true)
-                    }}
-                  >
-                    New chat
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <button
-              type="button"
-              className="lumina-msg-new-chat-btn"
-              title="New Chat"
-              aria-label="New Chat"
-              onClick={() => setShowNewChatModal(true)}
-            >
-              <Plus size={20} strokeWidth={2.5} />
-            </button>
-          </div>
-        </header>
-
-        {/* SEARCH BAR */}
-        <div className="lumina-msg-search-section">
-          <div className="lumina-msg-search-input-wrap">
-            <Search size={16} className="lumina-msg-search-icon" aria-hidden="true" />
-            <input
-              type="text"
-              placeholder="Search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="lumina-msg-search-input"
-              aria-label="Search chats"
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                className="lumina-msg-search-clear-btn"
-                onClick={() => setSearchQuery('')}
-                aria-label="Clear search"
-              >
-                <X size={14} />
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* FILTER PILLS */}
-        <div className="lumina-msg-filter-pills-bar" role="tablist" aria-label="Chat filters">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeFilter === 'all' && !showArchived}
-            className={`lumina-msg-filter-pill ${activeFilter === 'all' && !showArchived ? 'is-active' : ''}`}
-            onClick={() => {
-              setShowArchived(false)
-              setActiveFilter('all')
-            }}
-          >
-            All
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeFilter === 'unread' && !showArchived}
-            className={`lumina-msg-filter-pill ${activeFilter === 'unread' && !showArchived ? 'is-active' : ''}`}
-            onClick={() => {
-              setShowArchived(false)
-              setActiveFilter('unread')
-            }}
-          >
-            <span>Unread</span>
-            {totalUnread > 0 && <span className="lumina-msg-pill-badge">{totalUnread}</span>}
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeFilter === 'favourites' && !showArchived}
-            className={`lumina-msg-filter-pill ${activeFilter === 'favourites' && !showArchived ? 'is-active' : ''}`}
-            onClick={() => {
-              setShowArchived(false)
-              setActiveFilter('favourites')
-            }}
-          >
-            Favourites
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeFilter === 'groups' && !showArchived}
-            className={`lumina-msg-filter-pill ${activeFilter === 'groups' && !showArchived ? 'is-active' : ''}`}
-            onClick={() => {
-              setShowArchived(false)
-              setActiveFilter('groups')
-            }}
-          >
-            <span>Groups</span>
-            <span className="lumina-msg-pill-badge">{groupsCount}</span>
-          </button>
-        </div>
-
-        {/* ARCHIVED BAR */}
-        <button
-          type="button"
-          className={`lumina-msg-archived-row ${showArchived ? 'is-archived-active' : ''}`}
-          onClick={() => setShowArchived((prev) => !prev)}
+    <div className="notion-chat-layout">
+      {/* =========================================================================
+          MAIN CHAT WORKSPACE (RESPONSIVE 2-PANEL NOTION-BLACK CHAT)
+         ========================================================================= */}
+      <div className="notion-chat-main-container">
+        {/* Responsive Chat Layout */}
+        <div
+          className={`notion-chat-columns ${
+            mobileView === 'thread' ? 'mobile-show-thread' : 'mobile-show-list'
+          }`}
         >
-          <div className="lumina-msg-archived-left">
-            <Archive size={18} className="lumina-msg-archived-icon" />
-            <span className="lumina-msg-archived-label">Archived</span>
-          </div>
-          {showArchived && <span className="lumina-msg-archived-badge">Active</span>}
-        </button>
-
-        {/* CHAT CONVERSATION ITEMS LIST */}
-        <div className="lumina-msg-chat-items-scroll" role="list">
-          {filteredChats.length === 0 ? (
-            <div className="lumina-msg-empty-filter">
-              <span className="lumina-msg-empty-text">No chats yet</span>
+          {/* =====================================================================
+              COLUMN 1: CONVERSATIONS LIST
+             ===================================================================== */}
+          <section className="notion-col-conversations">
+            {/* Header: Title */}
+            <div className="notion-conv-header">
+              <div className="notion-conv-title-wrap">
+                <h2 className="notion-conv-title">Messages</h2>
+              </div>
             </div>
-          ) : (
-            filteredChats.map((chat) => {
-              const isSelected = chat.id === activeChatId
-              return (
-                <div
-                  key={chat.id}
-                  role="listitem"
-                  tabIndex={0}
-                  className={`lumina-msg-chat-row ${isSelected ? 'is-selected' : ''}`}
-                  onClick={() => handleSelectChat(chat.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      handleSelectChat(chat.id)
-                    }
-                  }}
-                >
-                  {/* Avatar */}
-                  <div className="lumina-msg-avatar-wrap">
-                    {chat.isGroup ? (
-                      <div className="lumina-msg-group-avatar">
-                        <Users size={20} />
-                      </div>
-                    ) : (
-                      <img
-                        src={chat.avatar || DEFAULT_WHATSAPP_AVATAR}
-                        alt={chat.name}
-                        className="lumina-msg-avatar-img"
-                        onError={(e) => {
-                          e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
-                        }}
-                      />
-                    )}
-                    {chat.isOnline && <span className="lumina-msg-online-dot" />}
-                  </div>
 
-                  {/* Chat Metadata & Snippet */}
-                  <div className="lumina-msg-chat-meta">
-                    <div className="lumina-msg-chat-top-row">
-                      <span className="lumina-msg-chat-name" title={chat.name}>
-                        {chat.name}
-                      </span>
-                      <span className="lumina-msg-chat-time">{chat.lastMessageTime}</span>
+            {/* Quick Search with ⌘K */}
+            <div className="notion-conv-search-wrap">
+              <Search size={15} className="notion-conv-search-icon" />
+              <input
+                type="text"
+                placeholder="Search friends or messages..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="notion-conv-search-input"
+              />
+              <span className="notion-conv-kbd">⌘K</span>
+            </div>
+
+            {/* Filter Tabs */}
+            <div className="notion-conv-tabs">
+              <button
+                type="button"
+                className={`notion-conv-tab-btn ${activeFilter === 'all' ? 'active' : ''}`}
+                onClick={() => setActiveFilter('all')}
+              >
+                All
+              </button>
+              <button
+                type="button"
+                className={`notion-conv-tab-btn ${activeFilter === 'unread' ? 'active' : ''}`}
+                onClick={() => setActiveFilter('unread')}
+              >
+                Unread 3
+              </button>
+              <button
+                type="button"
+                className={`notion-conv-tab-btn ${activeFilter === 'groups' ? 'active' : ''}`}
+                onClick={() => setActiveFilter('groups')}
+              >
+                Study Groups
+              </button>
+            </div>
+
+            {/* Scrollable Conversation List */}
+            <div className="notion-conv-scroll-list">
+              {filteredConversations.map((conv) => {
+                const isSelected = conv.id === activeConversation.id
+
+                return (
+                  <div
+                    key={conv.id}
+                    className={`notion-conv-card ${isSelected ? 'is-selected' : ''}`}
+                    onClick={() => {
+                      setActiveChatId(conv.id)
+                      setMobileView('thread')
+                    }}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    {/* Avatar with Status Dot */}
+                    <div className="notion-conv-avatar-box">
+                      {conv.isGroup ? (
+                        <div className="notion-conv-group-avatar">
+                          <span className="notion-group-initials">CS 480</span>
+                        </div>
+                      ) : (
+                        <img
+                          src={conv.avatar}
+                          alt={conv.name}
+                          className="notion-conv-avatar-img"
+                        />
+                      )}
+                      <span
+                        className={`notion-conv-status-dot ${conv.status}`}
+                      />
                     </div>
 
-                    <div className="lumina-msg-chat-bottom-row">
-                      <div className="lumina-msg-snippet-wrap">
-                        {/* Status checks */}
-                        {chat.lastMessageStatus === 'read' && (
-                          <CheckCheck size={16} className="lumina-msg-tick lumina-msg-tick-read" />
-                        )}
-                        {chat.lastMessageStatus === 'delivered' && (
-                          <CheckCheck size={16} className="lumina-msg-tick lumina-msg-tick-delivered" />
-                        )}
-                        {chat.lastMessageStatus === 'sent' && (
-                          <Check size={16} className="lumina-msg-tick lumina-msg-tick-sent" />
-                        )}
-
-                        {/* Special Icon */}
-                        {chat.lastMessageType === 'document' && (
-                          <FileText size={14} className="lumina-msg-type-icon" />
-                        )}
-                        {chat.lastMessageType === 'image' && (
-                          <ImageIcon size={14} className="lumina-msg-type-icon" />
-                        )}
-                        {chat.lastMessageType === 'like' && (
-                          <ThumbsUp size={14} className="lumina-msg-type-icon" />
-                        )}
-
-                        <span className="lumina-msg-snippet-text" title={chat.lastMessageSnippet}>
-                          {chat.lastMessageSnippet}
+                    {/* Middle Card Content */}
+                    <div className="notion-conv-info">
+                      <div className="notion-conv-top-row">
+                        <div className="notion-conv-name-row">
+                          <span className="notion-conv-name">{conv.name}</span>
+                          {conv.isGroup && (
+                            <Users size={13} className="notion-group-icon" />
+                          )}
+                        </div>
+                        <span className="notion-conv-time">
+                          {conv.lastTime}
                         </span>
                       </div>
 
-                      <div className="lumina-msg-meta-icons">
-                        {chat.pinned && <Pin size={14} className="lumina-msg-pin-icon" />}
-                        {chat.unreadCount && chat.unreadCount > 0 ? (
-                          <span className="lumina-msg-unread-badge">{chat.unreadCount}</span>
+                      <div className="notion-conv-snippet-row">
+                        <span className="notion-conv-snippet">
+                          {conv.snippet}
+                        </span>
+                        {conv.unreadCount && conv.unreadCount > 0 ? (
+                          <span className="notion-conv-unread-bubble">
+                            {conv.unreadCount}
+                          </span>
+                        ) : conv.deliveryStatus === 'delivered' ? (
+                          <span className="notion-conv-delivered-mark">
+                            <CheckCheck size={14} /> Delivered
+                          </span>
                         ) : null}
                       </div>
+
+                      {conv.secondarySnippet && (
+                        <div className="notion-conv-secondary-snippet">
+                          {conv.secondarySnippet}
+                        </div>
+                      )}
+
+                      {/* Badges / Location Tag Row */}
+                      {conv.tags && conv.tags.length > 0 && (
+                        <div className="notion-conv-badges-row">
+                          {conv.tags.map((tag, idx) => (
+                            <span key={idx} className="notion-conv-tag-pill">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
-              )
-            })
-          )}
-        </div>
-      </aside>
+                )
+              })}
+            </div>
+          </section>
 
-      {/* ========================================================
-          2. RIGHT COLUMN: ACTIVE CHAT CONVERSATION OR LUMINA EMPTY STATE
-          ======================================================== */}
-      <main
-        className={`lumina-msg-main ${!activeChatId ? 'msg-hidden-on-mobile' : ''}`}
-        aria-label="Messaging Conversation Area"
-      >
-        {activeChat ? (
-          /* ACTIVE CHAT WORKSPACE */
-          <div className="lumina-msg-active-chat-view">
-            {/* ACTIVE CHAT TOP BAR */}
-            <header className="lumina-msg-chat-header">
-              <div className="lumina-msg-chat-header-left">
-                {/* Mobile Back Button to Chat List */}
+          {/* =====================================================================
+              COLUMN 2: MAIN CHAT THREAD (GRID PATTERN CANVAS)
+             ===================================================================== */}
+          <section className="notion-col-thread">
+            {/* Thread Header */}
+            <div className="notion-thread-header">
+              <div className="notion-thread-header-left">
                 <button
                   type="button"
-                  className="lumina-msg-mobile-back-btn"
-                  onClick={() => setActiveChatId(null)}
-                  title="Back to chats"
-                  aria-label="Back to chats"
+                  className="notion-mobile-back-btn"
+                  onClick={() => setMobileView('list')}
+                  title="Back to messages"
+                  aria-label="Back to messages"
                 >
-                  <ArrowLeft size={20} />
+                  <ArrowLeft size={18} />
                 </button>
-
-                <div className="lumina-msg-header-avatar">
-                  {activeChat.isGroup ? (
-                    <div className="lumina-msg-group-avatar is-header">
-                      <Users size={20} />
+                <div className="notion-thread-avatar-wrap">
+                  {activeConversation.isGroup ? (
+                    <div className="notion-conv-group-avatar mini">
+                      <span className="notion-group-initials">CS 480</span>
                     </div>
                   ) : (
                     <img
-                      src={activeChat.avatar || DEFAULT_WHATSAPP_AVATAR}
-                      alt={activeChat.name}
-                      className="lumina-msg-avatar-img is-header"
-                      onError={(e) => {
-                        e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
-                      }}
+                      src={activeConversation.avatar}
+                      alt={activeConversation.name}
+                      className="notion-thread-header-avatar"
                     />
                   )}
-                  {activeChat.isOnline && <span className="lumina-msg-online-dot" />}
+                  <span
+                    className={`notion-conv-status-dot ${activeConversation.status}`}
+                  />
                 </div>
-
-                <div className="lumina-msg-header-info">
-                  <h2 className="lumina-msg-header-name" title={activeChat.name}>
-                    {activeChat.name}
-                  </h2>
-                  <span className="lumina-msg-header-status">
-                    {activeChat.statusText || (activeChat.isOnline ? 'Online' : 'Offline')}
+                <div className="notion-thread-header-info">
+                  <div className="notion-thread-name-row">
+                    <span className="notion-thread-header-name">
+                      {activeConversation.name}
+                    </span>
+                    {activeConversation.verified && (
+                      <BadgeCheck
+                        size={15}
+                        className="notion-verified-icon"
+                      />
+                    )}
+                  </div>
+                  <span className="notion-thread-header-sub">
+                    {activeConversation.statusText || 'Active now'}
                   </span>
                 </div>
               </div>
 
-              <div className="lumina-msg-chat-header-actions">
+              <div className="notion-thread-header-actions">
                 <button
                   type="button"
-                  className="lumina-msg-icon-btn"
-                  title="Video call"
-                  aria-label="Video call"
-                  onClick={() => alert(`Initiating secure video call with ${activeChat.name}...`)}
+                  className="notion-thread-btn"
+                  title="Phone Call"
+                  onClick={() => alert(`Calling ${activeConversation.name}...`)}
                 >
-                  <Video size={19} />
+                  <Phone size={17} />
                 </button>
                 <button
                   type="button"
-                  className="lumina-msg-icon-btn"
-                  title="Voice call"
-                  aria-label="Voice call"
-                  onClick={() => alert(`Initiating secure voice call with ${activeChat.name}...`)}
+                  className="notion-thread-btn"
+                  title="Video Call"
+                  onClick={() =>
+                    alert(`Starting Video Call with ${activeConversation.name}...`)
+                  }
                 >
-                  <Phone size={18} />
+                  <Video size={17} />
                 </button>
-                <div style={{ position: 'relative' }}>
-                  <button
-                    type="button"
-                    className="lumina-msg-icon-btn"
-                    title="Menu"
-                    aria-label="Menu"
-                    onClick={() => setShowChatOptions((prev) => !prev)}
-                  >
-                    <MoreVertical size={19} />
-                  </button>
-
-                  {showChatOptions && (
-                    <div className="lumina-msg-dropdown-menu">
-                      <button
-                        type="button"
-                        className="lumina-msg-dropdown-item"
-                        onClick={() => {
-                          setShowChatOptions(false)
-                          alert(`Contact Info:\n${activeChat.name}\n${activeChat.statusText || ''}`)
-                        }}
-                      >
-                        Contact info
-                      </button>
-                      <button
-                        type="button"
-                        className="lumina-msg-dropdown-item"
-                        onClick={() => {
-                          setShowChatOptions(false)
-                          setChats((prev) =>
-                            prev.map((c) =>
-                              c.id === activeChat.id ? { ...c, isArchived: !c.isArchived } : c
-                            )
-                          )
-                          setActiveChatId(null)
-                        }}
-                      >
-                        {activeChat.isArchived ? 'Unarchive chat' : 'Archive chat'}
-                      </button>
-                      <button
-                        type="button"
-                        className="lumina-msg-dropdown-item"
-                        onClick={() => {
-                          setShowChatOptions(false)
-                          setChats((prev) =>
-                            prev.map((c) =>
-                              c.id === activeChat.id ? { ...c, messages: [] } : c
-                            )
-                          )
-                        }}
-                      >
-                        Clear messages
-                      </button>
-                      <button
-                        type="button"
-                        className="lumina-msg-dropdown-item text-danger"
-                        onClick={() => {
-                          setShowChatOptions(false)
-                          setChats((prev) => prev.filter((c) => c.id !== activeChat.id))
-                          setActiveChatId(null)
-                        }}
-                      >
-                        Delete chat
-                      </button>
-                    </div>
-                  )}
-                </div>
+                <button
+                  type="button"
+                  className="notion-thread-btn"
+                  title="Search in conversation"
+                  onClick={() => alert('Search in thread')}
+                >
+                  <Search size={17} />
+                </button>
               </div>
-            </header>
+            </div>
 
-            {/* CHAT MESSAGE STREAM WRAPPER (Ambient Notion Black & White Live Canvas) */}
-            <div className="lumina-msg-stream-wrapper">
-              <GradientBackground className="lumina-msg-convo-bg" />
-              <div className="lumina-msg-stream-container">
-                {/* Encryption Banner */}
-                <div className="lumina-msg-encryption-banner">
-                  <Lock size={12} className="lumina-msg-lock-mini" />
-                  <span>
-                    Messages and calls are end-to-end encrypted. No one outside of this chat, not even Lumina, can read or listen to them.
-                  </span>
-                </div>
+            {/* Chat Messages Body with Blueprint Grid */}
+            <div className="notion-thread-body">
+              {/* Date Separator Pill */}
+              <div className="notion-date-divider">
+                <span className="notion-date-pill">
+                  TODAY, OCTOBER 24 • AI ETHICS PROJECT
+                </span>
+              </div>
 
-                {/* Date divider */}
-                <div className="lumina-msg-date-divider">
-                  <span>Today</span>
-                </div>
+              {/* Messages Flow */}
+              <div className="notion-messages-list">
+                {activeConversation.messages.map((msg) => {
+                  const isThem = msg.sender === 'them'
 
-                {/* Messages list */}
-                {activeChat.messages.map((msg) => {
-                  const isMe = msg.sender === 'me'
                   return (
                     <div
                       key={msg.id}
-                      className={`lumina-msg-bubble-wrap ${isMe ? 'is-me' : 'is-them'}`}
+                      className={`notion-message-row ${isThem ? 'from-them' : 'from-me'}`}
                     >
-                      <div className="lumina-msg-bubble">
-                        {/* Sender Name in Group Chat */}
-                        {activeChat.isGroup && !isMe && msg.senderName && (
-                          <div className="lumina-msg-bubble-sender">{msg.senderName}</div>
-                        )}
+                      {isThem && (
+                        <div className="notion-msg-avatar-col">
+                          <img
+                            src={msg.senderAvatar || activeConversation.avatar}
+                            alt={msg.senderName}
+                            className="notion-msg-avatar"
+                          />
+                        </div>
+                      )}
 
-                        {/* Deleted message indicator */}
-                        {msg.isDeleted ? (
-                          <div className="lumina-msg-deleted-content">
-                            <span className="lumina-msg-deleted-icon">🚫</span>
-                            <span className="lumina-msg-deleted-text">{msg.text}</span>
-                          </div>
-                        ) : msg.attachment ? (
-                          /* Attachment Preview */
-                          <div className="lumina-msg-attachment-box">
-                            {msg.attachment.type === 'document' && (
-                              <div className="lumina-msg-doc-card">
-                                <div className="lumina-msg-doc-icon-wrap">
-                                  <FileText size={24} />
+                      <div className="notion-msg-content-col">
+                        {/* Header: Sender Name + Timestamp */}
+                        <div className="notion-msg-meta-row">
+                          <span className="notion-msg-sender-name">
+                            {msg.senderName}
+                          </span>
+                          <span className="notion-msg-time">{msg.time}</span>
+                        </div>
+
+                        {/* Bubble */}
+                        <div
+                          className={`notion-msg-bubble ${isThem ? 'bubble-them' : 'bubble-me'}`}
+                        >
+                          <p className="notion-msg-text">{msg.text}</p>
+
+                          {/* Attachment Card if present */}
+                          {msg.attachment && (
+                            <div className="notion-attachment-card">
+                              <div className="notion-attach-left">
+                                <div className="notion-attach-pdf-badge">
+                                  <FileText size={18} />
+                                  <span className="notion-pdf-badge-label">
+                                    PDF
+                                  </span>
                                 </div>
-                                <div className="lumina-msg-doc-meta">
-                                  <span className="lumina-msg-doc-title">
+                                <div className="notion-attach-details">
+                                  <span className="notion-attach-title">
                                     {msg.attachment.fileName}
                                   </span>
-                                  <span className="lumina-msg-doc-sub">
-                                    {msg.attachment.pageCount ? `${msg.attachment.pageCount} pages • ` : ''}
-                                    {msg.attachment.fileSize || 'PDF Document'}
+                                  <span className="notion-attach-subtitle">
+                                    {msg.attachment.fileSize} •{' '}
+                                    {msg.attachment.fileSubtitle}
                                   </span>
                                 </div>
-                                <button
-                                  type="button"
-                                  className="lumina-msg-doc-dl-btn"
-                                  title="Download Document"
-                                  onClick={() => alert(`Downloading ${msg.attachment?.fileName}...`)}
-                                >
-                                  <Download size={16} />
-                                </button>
                               </div>
-                            )}
-
-                            {msg.attachment.type === 'image' && (
-                              <div className="lumina-msg-img-preview">
-                                <img
-                                  src={msg.attachment.imageUrl}
-                                  alt="Attachment"
-                                  className="lumina-msg-img"
-                                />
-                                {msg.attachment.caption && (
-                                  <div className="lumina-msg-img-caption">
-                                    {msg.attachment.caption}
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          /* Text Content */
-                          <div className="lumina-msg-bubble-text">{msg.text}</div>
-                        )}
-
-                        {/* Bubble Footer: Time & Status Tick */}
-                        <div className="lumina-msg-bubble-footer">
-                          <span className="lumina-msg-bubble-time">{msg.time}</span>
-                          {isMe && (
-                            <span className="lumina-msg-bubble-tick">
-                              {msg.status === 'read' ? (
-                                <CheckCheck size={14} className="lumina-msg-tick-read" />
-                              ) : msg.status === 'delivered' ? (
-                                <CheckCheck size={14} className="lumina-msg-tick-delivered" />
-                              ) : (
-                                <Check size={14} className="lumina-msg-tick-sent" />
-                              )}
-                            </span>
+                              <button
+                                type="button"
+                                className="notion-attach-dl-btn"
+                                title="Download PDF"
+                                onClick={() =>
+                                  alert(`Downloading ${msg.attachment?.fileName}`)
+                                }
+                              >
+                                <Download size={16} />
+                              </button>
+                            </div>
                           )}
                         </div>
                       </div>
@@ -821,292 +852,87 @@ export const LuminaMessagingView: React.FC<LuminaMessagingViewProps> = ({
               </div>
             </div>
 
-            {/* QUICK EMOJI BAR (POPUP) */}
-            {showQuickEmoji && (
-              <div className="lumina-msg-emoji-bar">
-                {quickEmojis.map((emoji) => (
-                  <button
-                    key={emoji}
-                    type="button"
-                    className="lumina-msg-emoji-btn"
-                    onClick={() => {
-                      handleSendMessage(emoji)
-                      setShowQuickEmoji(false)
-                    }}
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* ATTACHMENT MENU POPUP */}
-            {showAttachmentMenu && (
-              <div className="lumina-msg-attachment-popover">
-                <button
-                  type="button"
-                  className="lumina-msg-attachment-opt"
-                  onClick={() => {
-                    setShowAttachmentMenu(false)
-                    const fileName = prompt('Enter document file name (e.g. Distributed_Systems_Notes.pdf):')
-                    if (fileName) {
-                      const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                      const docMsg: ChatMessage = {
-                        id: `doc-${Date.now()}`,
-                        sender: 'me',
-                        time: now,
-                        status: 'delivered',
-                        attachment: {
-                          type: 'document',
-                          fileName: fileName.trim(),
-                          fileSize: '3.1 MB',
-                          pageCount: 12,
-                        },
-                      }
-                      setChats((prev) =>
-                        prev.map((c) =>
-                          c.id === activeChat.id
-                            ? {
-                                ...c,
-                                lastMessageSnippet: `📄 ${fileName.trim()}`,
-                                lastMessageType: 'document',
-                                lastMessageTime: now,
-                                messages: [...c.messages, docMsg],
-                              }
-                            : c
-                        )
-                      )
-                    }
-                  }}
-                >
-                  <FileText size={18} className="lumina-msg-attachment-icon" />
-                  <span>Document</span>
-                </button>
-                <button
-                  type="button"
-                  className="lumina-msg-attachment-opt"
-                  onClick={() => {
-                    setShowAttachmentMenu(false)
-                    alert('Select photo / video from your device.')
-                  }}
-                >
-                  <ImageIcon size={18} className="lumina-msg-attachment-icon" />
-                  <span>Photos & Videos</span>
-                </button>
-                <button
-                  type="button"
-                  className="lumina-msg-attachment-opt"
-                  onClick={() => {
-                    setShowAttachmentMenu(false)
-                    alert('Create a quick group poll for project decisions.')
-                  }}
-                >
-                  <Share2 size={18} className="lumina-msg-attachment-icon" />
-                  <span>Poll</span>
-                </button>
-              </div>
-            )}
-
-            {/* CHAT INPUT BAR */}
-            <footer className="lumina-msg-chat-input-bar">
-              <button
-                type="button"
-                className={`lumina-msg-input-tool-btn ${showQuickEmoji ? 'is-active' : ''}`}
-                title="Emojis"
-                aria-label="Emojis"
-                onClick={() => {
-                  setShowQuickEmoji((prev) => !prev)
-                  setShowAttachmentMenu(false)
-                }}
-              >
-                <Smile size={21} />
-              </button>
-
-              <button
-                type="button"
-                className={`lumina-msg-input-tool-btn ${showAttachmentMenu ? 'is-active' : ''}`}
-                title="Attach"
-                aria-label="Attach"
-                onClick={() => {
-                  setShowAttachmentMenu((prev) => !prev)
-                  setShowQuickEmoji(false)
-                }}
-              >
-                <Paperclip size={20} />
-              </button>
-
-              <div className="lumina-msg-input-box-wrapper">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder="Type a message"
+            {/* Message Composer Area */}
+            <div className="notion-composer-wrapper">
+              <div className="notion-composer-box">
+                <textarea
+                  ref={textareaRef}
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault()
-                      handleSendMessage()
-                    }
-                  }}
-                  className="lumina-msg-text-input"
-                  aria-label="Type a message"
+                  onKeyDown={handleKeyDown}
+                  placeholder="Message..."
+                  rows={2}
+                  className="notion-composer-textarea"
                 />
-              </div>
 
-              {inputText.trim() ? (
-                <button
-                  type="button"
-                  className="lumina-msg-send-action-btn"
-                  onClick={() => handleSendMessage()}
-                  title="Send message"
-                  aria-label="Send message"
-                >
-                  <Send size={18} />
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="lumina-msg-input-tool-btn"
-                  title="Voice message"
-                  aria-label="Voice message"
-                  onClick={() => alert('Hold to record voice message (Lumina Audio)')}
-                >
-                  <Mic size={21} />
-                </button>
-              )}
-            </footer>
-          </div>
-        ) : (
-          /* ========================================================
-             EMPTY STATE: CLEAN BLANK CHAT PANE
-             ======================================================== */
-          <div className="lumina-msg-empty-hero-container">
-            <div className="lumina-msg-empty-center-card">
-              <div className="lumina-msg-brand-mark">
-                <svg
-                  width="68"
-                  height="68"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lumina-msg-hero-svg"
-                >
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                </svg>
-              </div>
-              <h2 className="lumina-msg-empty-title">Lumina Messaging</h2>
-              <p className="lumina-msg-empty-version">
-                Send and receive messages with campus peers and study groups.
-              </p>
-            </div>
-            <div className="lumina-msg-empty-bottom-lock">
-              <Lock size={13} className="lumina-msg-lock-icon" />
-              <span>
-                Your personal messages are{' '}
-                <span className="lumina-msg-encrypted-link">end-to-end encrypted</span>
-              </span>
-            </div>
-          </div>
-        )}
-      </main>
+                <div className="notion-composer-toolbar">
+                  {/* Left Formatting / Input Tools */}
+                  <div className="notion-composer-tools-left">
+                    <button
+                      type="button"
+                      className="notion-tool-btn"
+                      title="Attach file or media"
+                      onClick={() => alert('Attach file')}
+                    >
+                      <Paperclip size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      className="notion-tool-btn"
+                      title="Insert code block"
+                      onClick={() =>
+                        setInputText((prev) => prev + '\n```typescript\n\n```\n')
+                      }
+                    >
+                      <Code size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      className="notion-tool-btn"
+                      title="Insert math formula (LaTeX)"
+                      onClick={() => setInputText((prev) => prev + ' $\\sum_{i=1}^n$ ')}
+                    >
+                      <Sigma size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      className="notion-tool-btn"
+                      title="Add emoji"
+                      onClick={() => setInputText((prev) => prev + ' 🚀')}
+                    >
+                      <Smile size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      className="notion-tool-btn"
+                      title="Voice message"
+                      onClick={() => alert('Voice recording started')}
+                    >
+                      <Mic size={16} />
+                    </button>
+                  </div>
 
-      {/* ========================================================
-          3. NEW CHAT MODAL
-          ======================================================== */}
-      {showNewChatModal && (
-        <div
-          className="lumina-msg-modal-backdrop"
-          onClick={() => setShowNewChatModal(false)}
-          role="dialog"
-          aria-modal="true"
-        >
-          <div
-            className="lumina-msg-modal-dialog"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="lumina-msg-modal-header">
-              <div className="lumina-msg-modal-title-row">
-                <Sparkles size={18} className="lumina-msg-modal-title-icon" />
-                <h3 className="lumina-msg-modal-title">New Conversation</h3>
-              </div>
-              <button
-                type="button"
-                className="lumina-msg-modal-close"
-                onClick={() => setShowNewChatModal(false)}
-                aria-label="Close modal"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <div className="lumina-msg-modal-body">
-              <div className="lumina-msg-modal-search-wrap">
-                <Search size={16} className="lumina-msg-search-icon" />
-                <input
-                  type="text"
-                  placeholder="Search student or group name..."
-                  value={newChatSearch}
-                  onChange={(e) => setNewChatSearch(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && newChatSearch.trim()) {
-                      handleCreateNewChat(newChatSearch.trim())
-                    }
-                  }}
-                  autoFocus
-                  className="lumina-msg-modal-input"
-                />
-              </div>
-
-              <div className="lumina-msg-modal-suggestions">
-                {newChatSearch.trim() ? (
-                  <button
-                    type="button"
-                    className="lumina-msg-suggestion-item"
-                    onClick={() => handleCreateNewChat(newChatSearch.trim())}
-                  >
-                    <div className="lumina-msg-suggestion-left">
-                      <div className="lumina-msg-suggest-avatar">
-                        {newChatSearch.trim().charAt(0).toUpperCase()}
-                      </div>
-                      <div className="lumina-msg-suggest-meta">
-                        <span className="lumina-msg-suggest-name">Chat with "{newChatSearch.trim()}"</span>
-                        <span className="lumina-msg-suggest-role">Start direct conversation</span>
-                      </div>
-                    </div>
-                    <Plus size={16} className="lumina-msg-suggest-plus" />
-                  </button>
-                ) : (
-                  <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.45)', margin: '12px 4px' }}>
-                    Type a peer or group name above and press Enter to start a new chat.
-                  </p>
-                )}
+                  {/* Right: Shortcut Hint + Send Button */}
+                  <div className="notion-composer-tools-right">
+                    <span className="notion-composer-hint">
+                      Ctrl + Enter to send
+                    </span>
+                    <button
+                      type="button"
+                      className="notion-send-btn"
+                      onClick={handleSendMessage}
+                      disabled={!inputText.trim()}
+                    >
+                      <span>Send</span>
+                      <Send size={14} className="notion-send-icon" />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div className="lumina-msg-modal-footer">
-              <button
-                type="button"
-                className="lumina-msg-btn-secondary"
-                onClick={() => setShowNewChatModal(false)}
-              >
-                Cancel
-              </button>
-              {newChatSearch.trim() && (
-                <button
-                  type="button"
-                  className="lumina-msg-btn-primary"
-                  onClick={() => handleCreateNewChat(newChatSearch.trim())}
-                >
-                  Start Chat with "{newChatSearch.trim()}"
-                </button>
-              )}
-            </div>
-          </div>
+          </section>
         </div>
-      )}
+      </div>
     </div>
   )
 }

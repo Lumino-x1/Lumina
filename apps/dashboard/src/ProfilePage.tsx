@@ -61,6 +61,7 @@ import {
   togglePostLikeApi,
   toggleSavePostApi,
 } from './api/feedApi'
+import { createConversationApi } from './api/chatApi'
 import BlogReaderView from './BlogReaderView'
 
 export interface FriendUserItem {
@@ -72,7 +73,7 @@ export interface FriendUserItem {
 
 export interface ProfilePageProps {
   user?: DashboardUser | null
-  onBackToDashboard?: () => void
+  onBackToDashboard?: (targetHash?: string) => void
   onNavigateHome?: () => void
   onLogout?: () => void
 }
@@ -392,8 +393,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [friendsList, setFriendsList] = useState<FriendUserItem[]>([])
   const [isFriendsLoading, setIsFriendsLoading] = useState<boolean>(true)
   const [friendsSearchQuery, setFriendsSearchQuery] = useState<string>('')
-  const [directMessageFriend, setDirectMessageFriend] = useState<FriendUserItem | null>(null)
-  const [directMessageText, setDirectMessageText] = useState<string>('')
+  const [startingChatFriendId, setStartingChatFriendId] = useState<string | null>(null)
 
   useEffect(() => {
     let isMounted = true
@@ -517,13 +517,48 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     }
   }
 
-  const handleSendDirectMessage = () => {
-    if (!directMessageFriend) return
-    const recipient = directMessageFriend.name || directMessageFriend.username
-    setToastMessage(`Message sent to ${recipient}!`)
-    setDirectMessageFriend(null)
-    setDirectMessageText('')
-    setTimeout(() => setToastMessage(null), 3500)
+  const handleStartChatWithFriend = async (friend: FriendUserItem) => {
+    try {
+      setStartingChatFriendId(friend.id)
+      const res = await createConversationApi({
+        otherUserId: friend.id,
+        otherName: friend.name,
+        otherUsername: friend.username,
+        otherAvatar: friend.avatar,
+      })
+
+      const channelId = res.success && res.data?.channelId
+        ? res.data.channelId
+        : `direct-${friend.id}`
+
+      try {
+        sessionStorage.setItem('lumina_active_channel_id', channelId)
+        sessionStorage.setItem('lumina_active_chat_friend', JSON.stringify(friend))
+      } catch {
+        // ignore storage errors
+      }
+
+      setShowFriendsModal(false)
+      window.location.hash = 'messages'
+      if (onBackToDashboard) {
+        onBackToDashboard('messages')
+      }
+    } catch (err: any) {
+      console.error('Failed to create chat channel:', err)
+      try {
+        sessionStorage.setItem('lumina_active_channel_id', `direct-${friend.id}`)
+        sessionStorage.setItem('lumina_active_chat_friend', JSON.stringify(friend))
+      } catch {
+        // ignore
+      }
+      setShowFriendsModal(false)
+      window.location.hash = 'messages'
+      if (onBackToDashboard) {
+        onBackToDashboard('messages')
+      }
+    } finally {
+      setStartingChatFriendId(null)
+    }
   }
 
   const settingsMenuRef = useRef<HTMLDivElement>(null)
@@ -533,7 +568,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       if (event.key === 'Escape') {
         setSettingsMenuOpen(false)
         setShowFriendsModal(false)
-        setDirectMessageFriend(null)
       }
     }
     window.addEventListener('keydown', handleGlobalKeyDown)
@@ -2810,10 +2844,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                             <button
                               type="button"
                               className="ai-friends-message-btn"
-                              onClick={() => setDirectMessageFriend(friend)}
+                              onClick={() => handleStartChatWithFriend(friend)}
+                              disabled={startingChatFriendId === friend.id}
                               title={`Message ${friend.name || friend.username}`}
                             >
-                              Message
+                              {startingChatFriendId === friend.id ? 'Connecting...' : 'Message'}
                             </button>
                             <button
                               type="button"
@@ -3219,10 +3254,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                       <button
                         type="button"
                         className="ai-friends-message-btn"
-                        onClick={() => setDirectMessageFriend(friend)}
+                        onClick={() => handleStartChatWithFriend(friend)}
+                        disabled={startingChatFriendId === friend.id}
                         title={`Message ${friend.name || friend.username}`}
                       >
-                        Message
+                        {startingChatFriendId === friend.id ? 'Connecting...' : 'Message'}
                       </button>
                       <button
                         type="button"
@@ -3236,83 +3272,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
                   </div>
                 ))
               )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Direct Message Compose Modal */}
-      {directMessageFriend && (
-        <div
-          className="ai-friends-modal-overlay"
-          onClick={() => setDirectMessageFriend(null)}
-          role="dialog"
-          aria-modal="true"
-        >
-          <div
-            className="ai-friends-modal-container ai-dm-container"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="ai-friends-modal-header">
-              <div className="ai-friends-modal-title-row">
-                <Send size={16} color="var(--ai-btn-primary-bg, #191919)" />
-                <h3 className="ai-friends-modal-title">
-                  Message {directMessageFriend.name}
-                </h3>
-              </div>
-              <button
-                type="button"
-                className="ai-friends-modal-close-btn"
-                onClick={() => setDirectMessageFriend(null)}
-                aria-label="Close message dialog"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <div className="ai-dm-body">
-              <div className="ai-dm-user-badge">
-                <img
-                  src={directMessageFriend.avatar || DEFAULT_WHATSAPP_AVATAR}
-                  alt={directMessageFriend.name}
-                  className="ai-dm-avatar"
-                  onError={(e) => {
-                    e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
-                  }}
-                />
-                <div>
-                  <strong className="ai-dm-username">{directMessageFriend.username}</strong>
-                  <span className="ai-dm-name">{directMessageFriend.name}</span>
-                </div>
-              </div>
-
-              <textarea
-                className="ai-dm-textarea"
-                placeholder={`Write a message to @${directMessageFriend.username}...`}
-                rows={4}
-                value={directMessageText}
-                onChange={(e) => setDirectMessageText(e.target.value)}
-                autoFocus
-              />
-
-              <div className="ai-dm-footer">
-                <button
-                  type="button"
-                  className="ai-dm-cancel-btn"
-                  onClick={() => setDirectMessageFriend(null)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className="ai-dm-send-btn"
-                  disabled={!directMessageText.trim()}
-                  onClick={handleSendDirectMessage}
-                >
-                  <Send size={14} />
-                  <span>Send Message</span>
-                </button>
-              </div>
             </div>
           </div>
         </div>
