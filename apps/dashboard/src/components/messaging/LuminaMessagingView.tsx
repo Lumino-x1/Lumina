@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react'
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import {
   ArrowLeft,
   Search,
@@ -15,9 +15,21 @@ import {
   BadgeCheck,
   FileText,
   Sigma,
+  Loader2,
 } from 'lucide-react'
 import './LuminaMessagingView.css'
 import type { DashboardUser } from '../../DashboardPage'
+import { DEFAULT_WHATSAPP_AVATAR } from '../WhatsAppDefaultAvatar'
+import {
+  fetchMyConversationsApi,
+  fetchChannelMessagesApi,
+  sendMessageApi,
+  createConversationApi,
+  markChannelReadApi,
+  sendTypingIndicatorApi,
+  type ChatConversationItem,
+  type ChatMessageItem,
+} from '../../api/chatApi'
 
 export interface MessageAttachment {
   type: 'pdf' | 'slide' | 'image' | 'link'
@@ -97,343 +109,94 @@ interface LuminaMessagingViewProps {
   initialChatId?: string | null
 }
 
-const INITIAL_CONVERSATIONS: Conversation[] = [
-  {
-    id: 'maya-chen',
-    name: 'Maya Chen',
-    avatar:
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
-    verified: true,
-    handle: '@mayachen • Class of \'25',
-    majorBadge: 'Stanford CS & Symbolic Systems',
-    status: 'online',
-    statusText: 'Active now',
-    lastTime: '10:42 AM',
-    snippet: 'Are we meeting at the library for AI Ethics?',
-    tags: ["CS & CogSci '25", '📍 Green Library'],
-    messages: [
-      {
-        id: 'maya-1',
-        sender: 'them',
-        senderName: 'Maya Chen',
-        senderAvatar:
-          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-        text: 'Hey Alex! Did you manage to review the revised rubric and syllabus for the AI Ethics project? Prof. Roberts updated the dataset requirements yesterday.',
-        time: '10:30 AM',
-        attachment: {
-          type: 'pdf',
-          fileName: 'AI_Ethics_Brie...',
-          fileSize: '1.4 MB',
-          fileSubtitle: 'Updated Syllabus PDF',
-        },
-      },
-      {
-        id: 'maya-2',
-        sender: 'me',
-        senderName: 'Alex (You)',
-        text: 'Hey Maya! Yes, just finished reading it. Section 3 on algorithmic bias in generative vision models is super compelling. We can totally build our benchmark on that.',
-        time: '10:36 AM',
-      },
-    ],
-    sharedClasses: [
-      {
-        code: 'CS 480',
-        name: 'CS 480 Capstone',
-        schedule: 'Mon / Wed',
-        color: '#3B82F6',
-      },
-      {
-        code: 'PHIL 150',
-        name: 'PHIL 150 AI Ethics',
-        schedule: 'Tue / Thu',
-        color: '#A855F7',
-      },
-      {
-        code: 'STATS 214',
-        name: 'STATS 214 Machine Learning',
-        schedule: 'Fri',
-        color: '#F59E0B',
-      },
-    ],
-    sharedMedia: [
-      {
-        id: 'sm-1',
-        type: 'slide',
-        title: 'Project Architecture Slide',
-        badgeLabel: 'Slide',
-        imageUrl:
-          'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&auto=format&fit=crop&q=80',
-      },
-      {
-        id: 'sm-2',
-        type: 'photo',
-        title: 'Neural Lens Schematics',
-        badgeLabel: 'Photo',
-        imageUrl:
-          'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&auto=format&fit=crop&q=80',
-      },
-      {
-        id: 'sm-3',
-        type: 'group',
-        title: 'Study Session Photo',
-        badgeLabel: 'Group',
-        imageUrl:
-          'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&auto=format&fit=crop&q=80',
-      },
-    ],
-    pinnedLinks: [
-      {
-        id: 'pl-1',
-        type: 'notion',
-        url: 'notion.so/stanford-cs480-rubric',
-        pinnedBy: 'Pinned by Alex • Oct 22',
-      },
-      {
-        id: 'pl-2',
-        type: 'github',
-        url: 'github.com/maya-chen/ai-bias-lens',
-        pinnedBy: 'Pinned by Maya • Oct 20',
-      },
-    ],
-    mutualFriends: [
-      {
-        id: 'mf-1',
-        name: 'David Kalu',
-        avatar:
-          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
-      },
-      {
-        id: 'mf-2',
-        name: 'Sarah Jenkins',
-        avatar:
-          'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
-      },
-      {
-        id: 'mf-3',
-        name: 'Marcus Vance',
-        avatar:
-          'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
-      },
-      {
-        id: 'mf-4',
-        name: 'Priya Sharma',
-        avatar:
-          'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80',
-      },
-    ],
-    extraMutualCount: 4,
-  },
-  {
-    id: 'david-kalu',
-    name: 'David Kalu',
-    avatar:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80',
-    verified: false,
-    handle: '@dkalu • Class of \'24',
-    majorBadge: 'Stanford EE & Distributed Systems',
-    status: 'online',
-    statusText: 'Active now',
-    lastTime: '9:15 AM',
-    snippet: 'Sent you the project repo link 🚀',
-    secondarySnippet: 'Shared github.com/lumin-a...',
-    unreadCount: 2,
-    messages: [
-      {
-        id: 'david-1',
-        sender: 'them',
-        senderName: 'David Kalu',
-        senderAvatar:
-          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
-        text: 'Hey Alex! Just pushed the initial distributed consensus node implementation to the repo.',
-        time: '9:12 AM',
-      },
-      {
-        id: 'david-2',
-        sender: 'them',
-        senderName: 'David Kalu',
-        senderAvatar:
-          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
-        text: 'Sent you the project repo link 🚀: github.com/lumina-distributed/mesh-core',
-        time: '9:15 AM',
-      },
-    ],
-    sharedClasses: [
-      {
-        code: 'CS 244B',
-        name: 'CS 244B Distributed Systems',
-        schedule: 'Tue / Thu',
-        color: '#3B82F6',
-      },
-    ],
-    mutualFriends: [
-      {
-        id: 'mf-1',
-        name: 'Maya Chen',
-        avatar:
-          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
-      },
-    ],
-  },
-  {
-    id: 'cs480-capstone',
-    name: 'CS480 Capstone',
-    avatar: '',
-    isGroup: true,
-    handle: '5 members active • Stanford Capstone',
-    majorBadge: 'CS 480 Senior Project Team',
-    status: 'online',
-    statusText: '5 active members',
-    lastTime: 'Yesterday',
-    snippet: 'Elena: Slides are ready for review',
-    tags: ['5 members active'],
-    unreadCount: 5,
-    messages: [
-      {
-        id: 'cs-1',
-        sender: 'them',
-        senderName: 'Elena Rostova',
-        text: 'Team, the midterm review deck is finalized in Figma and Google Slides.',
-        time: 'Yesterday 4:15 PM',
-      },
-      {
-        id: 'cs-2',
-        sender: 'them',
-        senderName: 'Elena Rostova',
-        text: 'Slides are ready for review! Please drop your comments before 6 PM.',
-        time: 'Yesterday 4:18 PM',
-      },
-    ],
-    sharedClasses: [
-      {
-        code: 'CS 480',
-        name: 'CS 480 Senior Capstone',
-        schedule: 'Mon / Wed / Fri',
-        color: '#3B82F6',
-      },
-    ],
-    mutualFriends: [],
-  },
-  {
-    id: 'sarah-jenkins',
-    name: 'Sarah Jenkins',
-    avatar:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&auto=format&fit=crop&q=80',
-    verified: false,
-    handle: '@sarahj • Class of \'25',
-    majorBadge: 'Product Design & HCI',
-    status: 'idle',
-    statusText: 'Away (15m)',
-    lastTime: 'Yesterday',
-    snippet: 'Sounds good, let me check the schedule!',
-    deliveryStatus: 'delivered',
-    messages: [
-      {
-        id: 'sj-1',
-        sender: 'me',
-        senderName: 'Alex (You)',
-        text: 'Hey Sarah, are you free for a quick sync on the Lumina UI components tomorrow afternoon?',
-        time: 'Yesterday 2:10 PM',
-      },
-      {
-        id: 'sj-2',
-        sender: 'them',
-        senderName: 'Sarah Jenkins',
-        senderAvatar:
-          'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
-        text: 'Sounds good, let me check the schedule! I should be free around 3 PM.',
-        time: 'Yesterday 2:34 PM',
-      },
-    ],
-    sharedClasses: [
-      {
-        code: 'CS 147',
-        name: 'CS 147 Intro to HCI',
-        schedule: 'Mon / Wed',
-        color: '#10B981',
-      },
-    ],
-  },
-  {
-    id: 'marcus-vance',
-    name: 'Marcus Vance',
-    avatar:
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&auto=format&fit=crop&q=80',
-    verified: false,
-    handle: '@mvance • Class of \'24',
-    majorBadge: 'Applied Math & Statistics',
-    status: 'offline',
-    statusText: 'Last seen Tuesday',
-    lastTime: 'Tuesday',
-    snippet: 'Can you send the lecture recording?',
-    secondarySnippet: 'MATH 310 TA Session',
-    messages: [
-      {
-        id: 'mv-1',
-        sender: 'them',
-        senderName: 'Marcus Vance',
-        senderAvatar:
-          'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
-        text: 'Hey Alex, missed the beginning of yesterday\'s linear algebra discussion. Can you send the lecture recording?',
-        time: 'Tuesday 11:20 AM',
-      },
-      {
-        id: 'mv-2',
-        sender: 'me',
-        senderName: 'Alex (You)',
-        text: 'Uploaded it to Canvas under the TA shared folder!',
-        time: 'Tuesday 11:45 AM',
-      },
-    ],
-    sharedClasses: [
-      {
-        code: 'MATH 310',
-        name: 'MATH 310 TA Session',
-        schedule: 'Tuesday 10 AM',
-        color: '#EC4899',
-      },
-    ],
-  },
-  {
-    id: 'priya-sharma',
-    name: 'Priya Sharma',
-    avatar:
-      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&auto=format&fit=crop&q=80',
-    verified: true,
-    handle: '@psharma • Class of \'25',
-    majorBadge: 'Computer Systems & AI Ethics',
-    status: 'online',
-    statusText: 'Active now',
-    lastTime: 'Monday',
-    snippet: 'See you at the hackathon workshop!',
-    secondarySnippet: 'TreeHacks Lead Organizer',
-    messages: [
-      {
-        id: 'ps-1',
-        sender: 'them',
-        senderName: 'Priya Sharma',
-        senderAvatar:
-          'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80',
-        text: 'Hey Alex, all workshop mentor stations are assigned! See you at the hackathon workshop!',
-        time: 'Monday 3:40 PM',
-      },
-      {
-        id: 'ps-2',
-        sender: 'me',
-        senderName: 'Alex (You)',
-        text: 'Can\'t wait Priya! Stanford AI lab is ready.',
-        time: 'Monday 4:02 PM',
-      },
-    ],
-    sharedClasses: [
-      {
-        code: 'CS 182',
-        name: 'Ethics, Public Policy, and Tech',
-        schedule: 'Tue / Thu',
-        color: '#6366F1',
-      },
-    ],
-  },
-]
+function formatChatTime(dateString?: string | null): string {
+  if (!dateString) return ''
+  try {
+    const d = new Date(dateString)
+    if (isNaN(d.getTime())) return ''
+    const now = new Date()
+    const isToday =
+      d.getDate() === now.getDate() &&
+      d.getMonth() === now.getMonth() &&
+      d.getFullYear() === now.getFullYear()
+    if (isToday) {
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }
+    return d.toLocaleDateString([], { month: 'short', day: 'numeric' })
+  } catch {
+    return ''
+  }
+}
+
+function mapConversation(
+  item: ChatConversationItem,
+  _currentUserId?: string,
+  existingMessages?: ChatMessage[]
+): Conversation {
+  const isGroup = Boolean(item.isGroup)
+  const other = item.otherUser
+  const name =
+    item.name ||
+    other?.name ||
+    other?.username ||
+    (isGroup ? 'Study Group' : 'Conversation')
+  const avatar = item.image || other?.image || DEFAULT_WHATSAPP_AVATAR
+  const isOnline = Boolean(other?.online)
+  const status = isOnline ? 'online' : 'offline'
+  const statusText = isGroup
+    ? `${item.membersCount || 2} members`
+    : isOnline
+    ? 'Active now'
+    : 'Offline'
+
+  return {
+    id: item.channelId || item.id,
+    name,
+    avatar,
+    isGroup,
+    status,
+    statusText,
+    lastTime: formatChatTime(item.lastMessage?.createdAt),
+    snippet: item.lastMessage?.text || 'No messages yet',
+    unreadCount: item.unreadCount || 0,
+    messages: existingMessages || [],
+  }
+}
+
+function mapMessage(msg: ChatMessageItem, currentUserId?: string): ChatMessage {
+  const isMe = Boolean(
+    (currentUserId &&
+      (msg.user_id === currentUserId || msg.user?.id === currentUserId)) ||
+      msg.user_id === 'me'
+  )
+  const time = formatChatTime(msg.created_at)
+
+  let attachment: MessageAttachment | undefined
+  if (msg.attachments && msg.attachments.length > 0) {
+    const att = msg.attachments[0]
+    attachment = {
+      type: (att.type === 'pdf' ? 'pdf' : 'link') as any,
+      fileName: att.title || 'Attachment',
+      fileSize: att.file_size
+        ? `${Math.round(att.file_size / 1024)} KB`
+        : undefined,
+      fileSubtitle: att.title,
+      url: att.asset_url || att.image_url,
+    }
+  }
+
+  return {
+    id: msg.id,
+    sender: isMe ? 'me' : 'them',
+    senderName: isMe ? 'You' : msg.user?.name || 'Friend',
+    senderAvatar: msg.user?.image || undefined,
+    text: msg.text,
+    time,
+    attachment,
+  }
+}
+
+const INITIAL_CONVERSATIONS: Conversation[] = []
 
 export const LuminaMessagingView: React.FC<LuminaMessagingViewProps> = ({
   currentUser,
@@ -445,7 +208,7 @@ export const LuminaMessagingView: React.FC<LuminaMessagingViewProps> = ({
   const [conversations, setConversations] =
     useState<Conversation[]>(INITIAL_CONVERSATIONS)
   const [activeChatId, setActiveChatId] = useState<string>(
-    initialChatId || 'maya-chen'
+    initialChatId || ''
   )
   const [searchQuery, setSearchQuery] = useState('')
   const [activeFilter, setActiveFilter] = useState<
@@ -453,29 +216,185 @@ export const LuminaMessagingView: React.FC<LuminaMessagingViewProps> = ({
   >('all')
   const [inputText, setInputText] = useState('')
   const [mobileView, setMobileView] = useState<'list' | 'thread'>('list')
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false)
+  const [isSending, setIsSending] = useState(false)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const typingTimeoutRef = useRef<any>(null)
 
-  const currentUserName = currentUser?.name || 'Alex Rivera'
+  const currentUserName = currentUser?.name || 'You'
+
+  // Fetch all user conversations from backend
+  const loadConversations = useCallback(async (silent = false) => {
+    try {
+      const res = await fetchMyConversationsApi()
+      if (res.success && Array.isArray(res.data)) {
+        setConversations((prev) => {
+          const prevMap = new Map(prev.map((c) => [c.id, c]))
+          const mapped = res.data!.map((item) => {
+            const existing = prevMap.get(item.channelId || item.id)
+            return mapConversation(
+              item,
+              currentUser?.id,
+              existing?.messages || []
+            )
+          })
+
+          // Retain any pending or locally created conversation
+          prev.forEach((localConv) => {
+            if (!mapped.some((m) => m.id === localConv.id)) {
+              mapped.unshift(localConv)
+            }
+          })
+
+          return mapped
+        })
+      }
+    } catch (err) {
+      if (!silent) {
+        console.warn('[LuminaMessaging] Failed to fetch conversations:', err)
+      }
+    }
+  }, [currentUser?.id])
+
+  // Fetch messages for active channel
+  const loadMessagesForChannel = useCallback(
+    async (channelId: string, silent = false) => {
+      if (!channelId) return
+      if (!silent) setIsLoadingMessages(true)
+      try {
+        const res = await fetchChannelMessagesApi(channelId)
+        if (res.success && Array.isArray(res.data)) {
+          const mapped = res.data.map((m) => mapMessage(m, currentUser?.id))
+          setConversations((prev) =>
+            prev.map((c) => {
+              if (c.id === channelId) {
+                const last = mapped[mapped.length - 1]
+                return {
+                  ...c,
+                  messages: mapped,
+                  snippet: last?.text || c.snippet,
+                  lastTime: last?.time || c.lastTime,
+                  unreadCount: 0,
+                }
+              }
+              return c
+            })
+          )
+        }
+        markChannelReadApi(channelId).catch(() => {})
+      } catch (err) {
+        if (!silent) {
+          console.warn(`[LuminaMessaging] Failed to load messages for ${channelId}:`, err)
+        }
+      } finally {
+        if (!silent) setIsLoadingMessages(false)
+      }
+    },
+    [currentUser?.id]
+  )
+
+  // Mount: fetch conversations and handle sessionStorage friend
+  useEffect(() => {
+    let isMounted = true
+
+    loadConversations().then(() => {
+      if (!isMounted) return
+      try {
+        const friendStr = sessionStorage.getItem('lumina_active_chat_friend')
+        const channelId = sessionStorage.getItem('lumina_active_channel_id')
+        if (friendStr) {
+          const friend = JSON.parse(friendStr)
+          if (friend && friend.id) {
+            const desiredChannelId = channelId || `direct-${friend.id}`
+
+            createConversationApi({
+              otherUserId: friend.id,
+              otherName: friend.name,
+              otherUsername: friend.username,
+              otherAvatar: friend.avatar,
+            })
+              .then((createRes) => {
+                if (!isMounted) return
+                const finalId =
+                  createRes.success && createRes.data?.channelId
+                    ? createRes.data.channelId
+                    : desiredChannelId
+
+                setConversations((prev) => {
+                  if (prev.some((c) => c.id === finalId)) {
+                    return prev
+                  }
+                  const newConv: Conversation = {
+                    id: finalId,
+                    name: friend.name || friend.username || 'Friend',
+                    avatar: friend.avatar || DEFAULT_WHATSAPP_AVATAR,
+                    status: 'online',
+                    statusText: 'Active now',
+                    lastTime: 'Just now',
+                    snippet: 'Conversation started',
+                    messages: [],
+                  }
+                  return [newConv, ...prev]
+                })
+                setActiveChatId(finalId)
+                setMobileView('thread')
+              })
+              .catch(() => {
+                if (!isMounted) return
+                setActiveChatId(desiredChannelId)
+              })
+          }
+        }
+      } catch {
+        // ignore
+      }
+    })
+
+    const interval = setInterval(() => {
+      loadConversations(true)
+    }, 10000)
+
+    return () => {
+      isMounted = false
+      clearInterval(interval)
+    }
+  }, [loadConversations])
+
+  // Active channel messages polling
+  useEffect(() => {
+    if (!activeChatId) return
+
+    loadMessagesForChannel(activeChatId, false)
+
+    const interval = setInterval(() => {
+      loadMessagesForChannel(activeChatId, true)
+    }, 3500)
+
+    return () => clearInterval(interval)
+  }, [activeChatId, loadMessagesForChannel])
 
   const activeConversation = useMemo(() => {
+    if (conversations.length === 0) return null
     return (
-      conversations.find((c) => c.id === activeChatId) || conversations[0]
+      conversations.find((c) => c.id === activeChatId) || conversations[0] || null
     )
   }, [conversations, activeChatId])
+
+  const unreadCount = useMemo(() => {
+    return conversations.filter((c) => (c.unreadCount || 0) > 0).length
+  }, [conversations])
 
   // Filter conversations
   const filteredConversations = useMemo(() => {
     return conversations.filter((c) => {
-      // Tab filter
       if (activeFilter === 'unread') {
         if (!c.unreadCount || c.unreadCount <= 0) return false
       } else if (activeFilter === 'groups') {
         if (!c.isGroup) return false
       }
 
-      // Search query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim()
         const matchesName = c.name.toLowerCase().includes(q)
@@ -492,42 +411,126 @@ export const LuminaMessagingView: React.FC<LuminaMessagingViewProps> = ({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [activeConversation?.messages])
 
-  const handleSendMessage = () => {
-    if (!inputText.trim()) return
+  // Send message with optimistic update and backend sync
+  const handleSendMessage = async () => {
+    const textToSend = inputText.trim()
+    if (!textToSend || !activeConversation || isSending) return
 
-    const now = new Date()
-    const timeStr = now.toLocaleTimeString([], {
+    const channelId = activeConversation.id
+    const tempId = `temp-${Date.now()}`
+    const timeStr = new Date().toLocaleTimeString([], {
       hour: '2-digit',
       minute: '2-digit',
     })
 
-    const newMsg: ChatMessage = {
-      id: `msg-${Date.now()}`,
+    const optimisticMsg: ChatMessage = {
+      id: tempId,
       sender: 'me',
       senderName: `${currentUserName} (You)`,
-      text: inputText.trim(),
+      text: textToSend,
       time: timeStr,
+    }
+
+    setInputText('')
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.focus()
     }
 
     setConversations((prev) =>
       prev.map((conv) => {
-        if (conv.id === activeConversation.id) {
+        if (conv.id === channelId) {
           return {
             ...conv,
-            snippet: inputText.trim(),
+            snippet: textToSend,
             lastTime: timeStr,
             unreadCount: 0,
-            messages: [...conv.messages, newMsg],
+            messages: [...conv.messages, optimisticMsg],
           }
         }
         return conv
       })
     )
 
-    setInputText('')
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'
+    setIsSending(true)
+    try {
+      const res = await sendMessageApi(channelId, textToSend)
+      if (res.success && res.data) {
+        const backendMsg = mapMessage(res.data, currentUser?.id)
+        setConversations((prev) =>
+          prev.map((c) => {
+            if (c.id === channelId) {
+              return {
+                ...c,
+                messages: c.messages.map((m) =>
+                  m.id === tempId ? backendMsg : m
+                ),
+              }
+            }
+            return c
+          })
+        )
+      } else {
+        // If channel was created purely on client, create channel on backend first
+        const friendStr = sessionStorage.getItem('lumina_active_chat_friend')
+        if (friendStr) {
+          try {
+            const friend = JSON.parse(friendStr)
+            if (friend?.id) {
+              const createRes = await createConversationApi({
+                otherUserId: friend.id,
+                otherName: friend.name,
+                otherUsername: friend.username,
+                otherAvatar: friend.avatar,
+              })
+              if (createRes.success && createRes.data?.channelId) {
+                const newId = createRes.data.channelId
+                setActiveChatId(newId)
+                await sendMessageApi(newId, textToSend)
+              }
+            }
+          } catch {
+            // ignore
+          }
+        }
+      }
+    } catch (err) {
+      console.error('[LuminaMessaging] Failed to send message:', err)
+    } finally {
+      setIsSending(false)
     }
+  }
+
+  // Handle typing with debounced typing indicator to backend
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputText(e.target.value)
+    if (activeConversation?.id) {
+      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current)
+      typingTimeoutRef.current = setTimeout(() => {
+        sendTypingIndicatorApi(activeConversation.id).catch(() => {})
+      }, 500)
+    }
+  }
+
+  const handleStartChatFromSearch = async (query: string) => {
+    const clean = query.trim()
+    if (!clean) return
+
+    const tempId = `chat-${Date.now()}`
+    const newConv: Conversation = {
+      id: tempId,
+      name: clean,
+      avatar: DEFAULT_WHATSAPP_AVATAR,
+      status: 'online',
+      statusText: 'Active now',
+      lastTime: 'Just now',
+      snippet: 'Conversation started',
+      messages: [],
+    }
+    setConversations((prev) => [newConv, ...prev])
+    setActiveChatId(tempId)
+    setSearchQuery('')
+    setMobileView('thread')
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -590,7 +593,7 @@ export const LuminaMessagingView: React.FC<LuminaMessagingViewProps> = ({
                 className={`notion-conv-tab-btn ${activeFilter === 'unread' ? 'active' : ''}`}
                 onClick={() => setActiveFilter('unread')}
               >
-                Unread 3
+                Unread {unreadCount > 0 ? unreadCount : ''}
               </button>
               <button
                 type="button"
@@ -603,87 +606,107 @@ export const LuminaMessagingView: React.FC<LuminaMessagingViewProps> = ({
 
             {/* Scrollable Conversation List */}
             <div className="notion-conv-scroll-list">
-              {filteredConversations.map((conv) => {
-                const isSelected = conv.id === activeConversation.id
-
-                return (
-                  <div
-                    key={conv.id}
-                    className={`notion-conv-card ${isSelected ? 'is-selected' : ''}`}
-                    onClick={() => {
-                      setActiveChatId(conv.id)
-                      setMobileView('thread')
-                    }}
-                    role="button"
-                    tabIndex={0}
+              {searchQuery.trim() && filteredConversations.length === 0 ? (
+                <div className="notion-conv-search-empty">
+                  <p className="notion-empty-desc">No chats match "{searchQuery}"</p>
+                  <button
+                    type="button"
+                    className="notion-start-chat-btn"
+                    onClick={() => handleStartChatFromSearch(searchQuery)}
                   >
-                    {/* Avatar with Status Dot */}
-                    <div className="notion-conv-avatar-box">
-                      {conv.isGroup ? (
-                        <div className="notion-conv-group-avatar">
-                          <span className="notion-group-initials">CS 480</span>
-                        </div>
-                      ) : (
-                        <img
-                          src={conv.avatar}
-                          alt={conv.name}
-                          className="notion-conv-avatar-img"
-                        />
-                      )}
-                      <span
-                        className={`notion-conv-status-dot ${conv.status}`}
-                      />
-                    </div>
+                    Start chat with "{searchQuery.trim()}"
+                  </button>
+                </div>
+              ) : filteredConversations.length === 0 ? null : (
+                filteredConversations.map((conv) => {
+                  const isSelected =
+                    activeConversation && conv.id === activeConversation.id
 
-                    {/* Middle Card Content */}
-                    <div className="notion-conv-info">
-                      <div className="notion-conv-top-row">
-                        <div className="notion-conv-name-row">
-                          <span className="notion-conv-name">{conv.name}</span>
-                          {conv.isGroup && (
-                            <Users size={13} className="notion-group-icon" />
-                          )}
-                        </div>
-                        <span className="notion-conv-time">
-                          {conv.lastTime}
-                        </span>
-                      </div>
-
-                      <div className="notion-conv-snippet-row">
-                        <span className="notion-conv-snippet">
-                          {conv.snippet}
-                        </span>
-                        {conv.unreadCount && conv.unreadCount > 0 ? (
-                          <span className="notion-conv-unread-bubble">
-                            {conv.unreadCount}
-                          </span>
-                        ) : conv.deliveryStatus === 'delivered' ? (
-                          <span className="notion-conv-delivered-mark">
-                            <CheckCheck size={14} /> Delivered
-                          </span>
-                        ) : null}
-                      </div>
-
-                      {conv.secondarySnippet && (
-                        <div className="notion-conv-secondary-snippet">
-                          {conv.secondarySnippet}
-                        </div>
-                      )}
-
-                      {/* Badges / Location Tag Row */}
-                      {conv.tags && conv.tags.length > 0 && (
-                        <div className="notion-conv-badges-row">
-                          {conv.tags.map((tag, idx) => (
-                            <span key={idx} className="notion-conv-tag-pill">
-                              {tag}
+                  return (
+                    <div
+                      key={conv.id}
+                      className={`notion-conv-card ${isSelected ? 'is-selected' : ''}`}
+                      onClick={() => {
+                        setActiveChatId(conv.id)
+                        setMobileView('thread')
+                      }}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      {/* Avatar with Status Dot */}
+                      <div className="notion-conv-avatar-box">
+                        {conv.isGroup ? (
+                          <div className="notion-conv-group-avatar">
+                            <span className="notion-group-initials">
+                              {(conv.name.slice(0, 2) || 'GP').toUpperCase()}
                             </span>
-                          ))}
+                          </div>
+                        ) : (
+                          <img
+                            src={conv.avatar}
+                            alt={conv.name}
+                            className="notion-conv-avatar-img"
+                            onError={(e) => {
+                              ;(e.target as HTMLImageElement).src =
+                                DEFAULT_WHATSAPP_AVATAR
+                            }}
+                          />
+                        )}
+                        <span
+                          className={`notion-conv-status-dot ${conv.status}`}
+                        />
+                      </div>
+
+                      {/* Middle Card Content */}
+                      <div className="notion-conv-info">
+                        <div className="notion-conv-top-row">
+                          <div className="notion-conv-name-row">
+                            <span className="notion-conv-name">{conv.name}</span>
+                            {conv.isGroup && (
+                              <Users size={13} className="notion-group-icon" />
+                            )}
+                          </div>
+                          <span className="notion-conv-time">
+                            {conv.lastTime}
+                          </span>
                         </div>
-                      )}
+
+                        <div className="notion-conv-snippet-row">
+                          <span className="notion-conv-snippet">
+                            {conv.snippet}
+                          </span>
+                          {conv.unreadCount && conv.unreadCount > 0 ? (
+                            <span className="notion-conv-unread-bubble">
+                              {conv.unreadCount}
+                            </span>
+                          ) : conv.deliveryStatus === 'delivered' ? (
+                            <span className="notion-conv-delivered-mark">
+                              <CheckCheck size={14} /> Delivered
+                            </span>
+                          ) : null}
+                        </div>
+
+                        {conv.secondarySnippet && (
+                          <div className="notion-conv-secondary-snippet">
+                            {conv.secondarySnippet}
+                          </div>
+                        )}
+
+                        {/* Badges / Location Tag Row */}
+                        {conv.tags && conv.tags.length > 0 && (
+                          <div className="notion-conv-badges-row">
+                            {conv.tags.map((tag, idx) => (
+                              <span key={idx} className="notion-conv-tag-pill">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })
+              )}
             </div>
           </section>
 
@@ -691,245 +714,277 @@ export const LuminaMessagingView: React.FC<LuminaMessagingViewProps> = ({
               COLUMN 2: MAIN CHAT THREAD (GRID PATTERN CANVAS)
              ===================================================================== */}
           <section className="notion-col-thread">
-            {/* Thread Header */}
-            <div className="notion-thread-header">
-              <div className="notion-thread-header-left">
+            {!activeConversation ? (
+              <div className="notion-thread-empty-state">
                 <button
                   type="button"
-                  className="notion-mobile-back-btn"
+                  className="notion-mobile-back-btn notion-empty-mobile-back"
                   onClick={() => setMobileView('list')}
                   title="Back to messages"
                   aria-label="Back to messages"
                 >
                   <ArrowLeft size={18} />
                 </button>
-                <div className="notion-thread-avatar-wrap">
-                  {activeConversation.isGroup ? (
-                    <div className="notion-conv-group-avatar mini">
-                      <span className="notion-group-initials">CS 480</span>
-                    </div>
-                  ) : (
-                    <img
-                      src={activeConversation.avatar}
-                      alt={activeConversation.name}
-                      className="notion-thread-header-avatar"
-                    />
-                  )}
-                  <span
-                    className={`notion-conv-status-dot ${activeConversation.status}`}
-                  />
-                </div>
-                <div className="notion-thread-header-info">
-                  <div className="notion-thread-name-row">
-                    <span className="notion-thread-header-name">
-                      {activeConversation.name}
-                    </span>
-                    {activeConversation.verified && (
-                      <BadgeCheck
-                        size={15}
-                        className="notion-verified-icon"
-                      />
-                    )}
-                  </div>
-                  <span className="notion-thread-header-sub">
-                    {activeConversation.statusText || 'Active now'}
-                  </span>
-                </div>
               </div>
-
-              <div className="notion-thread-header-actions">
-                <button
-                  type="button"
-                  className="notion-thread-btn"
-                  title="Phone Call"
-                  onClick={() => alert(`Calling ${activeConversation.name}...`)}
-                >
-                  <Phone size={17} />
-                </button>
-                <button
-                  type="button"
-                  className="notion-thread-btn"
-                  title="Video Call"
-                  onClick={() =>
-                    alert(`Starting Video Call with ${activeConversation.name}...`)
-                  }
-                >
-                  <Video size={17} />
-                </button>
-                <button
-                  type="button"
-                  className="notion-thread-btn"
-                  title="Search in conversation"
-                  onClick={() => alert('Search in thread')}
-                >
-                  <Search size={17} />
-                </button>
-              </div>
-            </div>
-
-            {/* Chat Messages Body with Blueprint Grid */}
-            <div className="notion-thread-body">
-              {/* Date Separator Pill */}
-              <div className="notion-date-divider">
-                <span className="notion-date-pill">
-                  TODAY, OCTOBER 24 • AI ETHICS PROJECT
-                </span>
-              </div>
-
-              {/* Messages Flow */}
-              <div className="notion-messages-list">
-                {activeConversation.messages.map((msg) => {
-                  const isThem = msg.sender === 'them'
-
-                  return (
-                    <div
-                      key={msg.id}
-                      className={`notion-message-row ${isThem ? 'from-them' : 'from-me'}`}
-                    >
-                      {isThem && (
-                        <div className="notion-msg-avatar-col">
-                          <img
-                            src={msg.senderAvatar || activeConversation.avatar}
-                            alt={msg.senderName}
-                            className="notion-msg-avatar"
-                          />
-                        </div>
-                      )}
-
-                      <div className="notion-msg-content-col">
-                        {/* Header: Sender Name + Timestamp */}
-                        <div className="notion-msg-meta-row">
-                          <span className="notion-msg-sender-name">
-                            {msg.senderName}
-                          </span>
-                          <span className="notion-msg-time">{msg.time}</span>
-                        </div>
-
-                        {/* Bubble */}
-                        <div
-                          className={`notion-msg-bubble ${isThem ? 'bubble-them' : 'bubble-me'}`}
-                        >
-                          <p className="notion-msg-text">{msg.text}</p>
-
-                          {/* Attachment Card if present */}
-                          {msg.attachment && (
-                            <div className="notion-attachment-card">
-                              <div className="notion-attach-left">
-                                <div className="notion-attach-pdf-badge">
-                                  <FileText size={18} />
-                                  <span className="notion-pdf-badge-label">
-                                    PDF
-                                  </span>
-                                </div>
-                                <div className="notion-attach-details">
-                                  <span className="notion-attach-title">
-                                    {msg.attachment.fileName}
-                                  </span>
-                                  <span className="notion-attach-subtitle">
-                                    {msg.attachment.fileSize} •{' '}
-                                    {msg.attachment.fileSubtitle}
-                                  </span>
-                                </div>
-                              </div>
-                              <button
-                                type="button"
-                                className="notion-attach-dl-btn"
-                                title="Download PDF"
-                                onClick={() =>
-                                  alert(`Downloading ${msg.attachment?.fileName}`)
-                                }
-                              >
-                                <Download size={16} />
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
-                <div ref={messagesEndRef} />
-              </div>
-            </div>
-
-            {/* Message Composer Area */}
-            <div className="notion-composer-wrapper">
-              <div className="notion-composer-box">
-                <textarea
-                  ref={textareaRef}
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Message..."
-                  rows={2}
-                  className="notion-composer-textarea"
-                />
-
-                <div className="notion-composer-toolbar">
-                  {/* Left Formatting / Input Tools */}
-                  <div className="notion-composer-tools-left">
+            ) : (
+              <>
+                {/* Thread Header */}
+                <div className="notion-thread-header">
+                  <div className="notion-thread-header-left">
                     <button
                       type="button"
-                      className="notion-tool-btn"
-                      title="Attach file or media"
-                      onClick={() => alert('Attach file')}
+                      className="notion-mobile-back-btn"
+                      onClick={() => setMobileView('list')}
+                      title="Back to messages"
+                      aria-label="Back to messages"
                     >
-                      <Paperclip size={16} />
+                      <ArrowLeft size={18} />
+                    </button>
+                    <div className="notion-thread-avatar-wrap">
+                      {activeConversation.isGroup ? (
+                        <div className="notion-conv-group-avatar mini">
+                          <span className="notion-group-initials">
+                            {(activeConversation.name.slice(0, 2) || 'GP').toUpperCase()}
+                          </span>
+                        </div>
+                      ) : (
+                        <img
+                          src={activeConversation.avatar}
+                          alt={activeConversation.name}
+                          className="notion-thread-header-avatar"
+                          onError={(e) => {
+                            ;(e.target as HTMLImageElement).src =
+                              DEFAULT_WHATSAPP_AVATAR
+                          }}
+                        />
+                      )}
+                      <span
+                        className={`notion-conv-status-dot ${activeConversation.status}`}
+                      />
+                    </div>
+                    <div className="notion-thread-header-info">
+                      <div className="notion-thread-name-row">
+                        <span className="notion-thread-header-name">
+                          {activeConversation.name}
+                        </span>
+                        {activeConversation.verified && (
+                          <BadgeCheck
+                            size={15}
+                            className="notion-verified-icon"
+                          />
+                        )}
+                      </div>
+                      <span className="notion-thread-header-sub">
+                        {activeConversation.statusText || 'Active now'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="notion-thread-header-actions">
+                    <button
+                      type="button"
+                      className="notion-thread-btn"
+                      title="Phone Call"
+                      onClick={() => alert(`Calling ${activeConversation.name}...`)}
+                    >
+                      <Phone size={17} />
                     </button>
                     <button
                       type="button"
-                      className="notion-tool-btn"
-                      title="Insert code block"
+                      className="notion-thread-btn"
+                      title="Video Call"
                       onClick={() =>
-                        setInputText((prev) => prev + '\n```typescript\n\n```\n')
+                        alert(`Starting Video Call with ${activeConversation.name}...`)
                       }
                     >
-                      <Code size={16} />
+                      <Video size={17} />
                     </button>
                     <button
                       type="button"
-                      className="notion-tool-btn"
-                      title="Insert math formula (LaTeX)"
-                      onClick={() => setInputText((prev) => prev + ' $\\sum_{i=1}^n$ ')}
+                      className="notion-thread-btn"
+                      title="Search in conversation"
+                      onClick={() => alert('Search in thread')}
                     >
-                      <Sigma size={16} />
-                    </button>
-                    <button
-                      type="button"
-                      className="notion-tool-btn"
-                      title="Add emoji"
-                      onClick={() => setInputText((prev) => prev + ' 🚀')}
-                    >
-                      <Smile size={16} />
-                    </button>
-                    <button
-                      type="button"
-                      className="notion-tool-btn"
-                      title="Voice message"
-                      onClick={() => alert('Voice recording started')}
-                    >
-                      <Mic size={16} />
-                    </button>
-                  </div>
-
-                  {/* Right: Shortcut Hint + Send Button */}
-                  <div className="notion-composer-tools-right">
-                    <span className="notion-composer-hint">
-                      Ctrl + Enter to send
-                    </span>
-                    <button
-                      type="button"
-                      className="notion-send-btn"
-                      onClick={handleSendMessage}
-                      disabled={!inputText.trim()}
-                    >
-                      <span>Send</span>
-                      <Send size={14} className="notion-send-icon" />
+                      <Search size={17} />
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
+
+                {/* Chat Messages Body with Blueprint Grid */}
+                <div className="notion-thread-body">
+                  {/* Messages Flow */}
+                  <div className="notion-messages-list">
+                    {isLoadingMessages && activeConversation.messages.length === 0 ? (
+                      <div className="notion-thread-loading-wrap">
+                        <Loader2 size={22} className="notion-spin-icon" />
+                      </div>
+                    ) : activeConversation.messages.length === 0 ? null : (
+                      <>
+                        <div className="notion-date-divider">
+                          <span className="notion-date-pill">TODAY</span>
+                        </div>
+                        {activeConversation.messages.map((msg) => {
+                          const isThem = msg.sender === 'them'
+
+                          return (
+                            <div
+                              key={msg.id}
+                              className={`notion-message-row ${isThem ? 'from-them' : 'from-me'}`}
+                            >
+                              {isThem && (
+                                <div className="notion-msg-avatar-col">
+                                  <img
+                                    src={msg.senderAvatar || activeConversation.avatar}
+                                    alt={msg.senderName}
+                                    className="notion-msg-avatar"
+                                  />
+                                </div>
+                              )}
+
+                              <div className="notion-msg-content-col">
+                                {/* Header: Sender Name + Timestamp */}
+                                <div className="notion-msg-meta-row">
+                                  <span className="notion-msg-sender-name">
+                                    {msg.senderName}
+                                  </span>
+                                  <span className="notion-msg-time">{msg.time}</span>
+                                </div>
+
+                                {/* Bubble */}
+                                <div
+                                  className={`notion-msg-bubble ${isThem ? 'bubble-them' : 'bubble-me'}`}
+                                >
+                                  <p className="notion-msg-text">{msg.text}</p>
+
+                                  {/* Attachment Card if present */}
+                                  {msg.attachment && (
+                                    <div className="notion-attachment-card">
+                                      <div className="notion-attach-left">
+                                        <div className="notion-attach-pdf-badge">
+                                          <FileText size={18} />
+                                          <span className="notion-pdf-badge-label">
+                                            PDF
+                                          </span>
+                                        </div>
+                                        <div className="notion-attach-details">
+                                          <span className="notion-attach-title">
+                                            {msg.attachment.fileName}
+                                          </span>
+                                          <span className="notion-attach-subtitle">
+                                            {msg.attachment.fileSize} •{' '}
+                                            {msg.attachment.fileSubtitle}
+                                          </span>
+                                        </div>
+                                      </div>
+                                      <button
+                                        type="button"
+                                        className="notion-attach-dl-btn"
+                                        title="Download PDF"
+                                        onClick={() =>
+                                          alert(`Downloading ${msg.attachment?.fileName}`)
+                                        }
+                                      >
+                                        <Download size={16} />
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </>
+                    )}
+                    <div ref={messagesEndRef} />
+                  </div>
+                </div>
+
+                {/* Message Composer Area */}
+                <div className="notion-composer-wrapper">
+                  <div className="notion-composer-box">
+                    <textarea
+                      ref={textareaRef}
+                      value={inputText}
+                      onChange={handleTextareaChange}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Message..."
+                      rows={2}
+                      className="notion-composer-textarea"
+                    />
+
+                    <div className="notion-composer-toolbar">
+                      {/* Left Formatting / Input Tools */}
+                      <div className="notion-composer-tools-left">
+                        <button
+                          type="button"
+                          className="notion-tool-btn"
+                          title="Attach file or media"
+                          onClick={() => alert('Attach file')}
+                        >
+                          <Paperclip size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          className="notion-tool-btn"
+                          title="Insert code block"
+                          onClick={() =>
+                            setInputText((prev) => prev + '\n```typescript\n\n```\n')
+                          }
+                        >
+                          <Code size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          className="notion-tool-btn"
+                          title="Insert math formula (LaTeX)"
+                          onClick={() => setInputText((prev) => prev + ' $\\sum_{i=1}^n$ ')}
+                        >
+                          <Sigma size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          className="notion-tool-btn"
+                          title="Add emoji"
+                          onClick={() => setInputText((prev) => prev + ' 🚀')}
+                        >
+                          <Smile size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          className="notion-tool-btn"
+                          title="Voice message"
+                          onClick={() => alert('Voice recording started')}
+                        >
+                          <Mic size={16} />
+                        </button>
+                      </div>
+
+                      {/* Right: Send Button */}
+                      <div className="notion-composer-tools-right">
+                        <button
+                          type="button"
+                          className="notion-send-btn"
+                          onClick={handleSendMessage}
+                          disabled={!inputText.trim() || isSending}
+                        >
+                          {isSending ? (
+                            <>
+                              <span>Sending</span>
+                              <Loader2 size={14} className="notion-spin-icon" />
+                            </>
+                          ) : (
+                            <>
+                              <span>Send</span>
+                              <Send size={14} className="notion-send-icon" />
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </section>
         </div>
       </div>

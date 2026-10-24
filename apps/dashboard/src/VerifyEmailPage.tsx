@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Check, Mail, ArrowLeft, AlertCircle } from 'lucide-react'
+import { Check, ArrowLeft, AlertCircle } from 'lucide-react'
 import {
   verifyOtpApi,
   resendOtpApi,
@@ -254,15 +254,8 @@ export const VerifyEmailPage: React.FC<VerifyEmailPageProps> = ({
   return (
     <div className="verify-email-page-root">
       <div className="verify-email-container">
-        <span className="crosshair-marker crosshair-top-left">+</span>
-        <span className="crosshair-marker crosshair-top-right">+</span>
-        <span className="crosshair-marker crosshair-bottom-left">+</span>
-        <span className="crosshair-marker crosshair-bottom-right">+</span>
         <div className="verify-email-header">
           <div className="verify-email-brand">Lumina</div>
-          <div className="verify-email-icon-wrapper">
-            <Mail size={24} />
-          </div>
           <h1 className="verify-email-title">Verify your email</h1>
           <p className="verify-email-description">
             We've sent a 6-digit verification code to your email address.

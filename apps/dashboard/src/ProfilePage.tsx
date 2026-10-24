@@ -1,13 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Search,
-  PanelLeft,
+  ArrowLeft,
   SquarePen,
-  ArrowUpCircle,
-  Settings,
   Users,
-  UserPlus,
-  MoreHorizontal,
   Check,
   Plus,
   Heart,
@@ -374,18 +370,13 @@ const formatPostDate = (dateStr?: string): string => {
 export const ProfilePage: React.FC<ProfilePageProps> = ({
   user,
   onBackToDashboard,
-  onNavigateHome,
-  onLogout,
+  onNavigateHome: _onNavigateHome,
+  onLogout: _onLogout,
 }) => {
   const { theme: _theme } = useTheme()
   const [activeTab, setActiveTab] = useState<'posts' | 'about' | 'projects' | 'achievements' | 'communities' | 'saved' | 'friends'>('posts')
-  const [activeNav, setActiveNav] = useState('Profile')
   const [searchQuery, setSearchQuery] = useState('')
   const [searchFocused, setSearchFocused] = useState(false)
-  const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
-  const [settingsMenuOpen, setSettingsMenuOpen] = useState(false)
-  const [currentWorkspace, setCurrentWorkspace] = useState<'primary' | 'secondary'>('primary')
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const [meProfile, setMeProfile] = useState<ProfileData | null>(null)
   const [loadingProfile, setLoadingProfile] = useState<boolean>(true)
   const [friendsCount, setFriendsCount] = useState<number | null>(null)
@@ -561,41 +552,15 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     }
   }
 
-  const settingsMenuRef = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
     const handleGlobalKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setSettingsMenuOpen(false)
         setShowFriendsModal(false)
       }
     }
     window.addEventListener('keydown', handleGlobalKeyDown)
     return () => window.removeEventListener('keydown', handleGlobalKeyDown)
   }, [])
-
-  useEffect(() => {
-    if (!settingsMenuOpen) return
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        settingsMenuRef.current &&
-        !settingsMenuRef.current.contains(event.target as Node)
-      ) {
-        setSettingsMenuOpen(false)
-      }
-    }
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setSettingsMenuOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    document.addEventListener('keydown', handleKeyDown)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [settingsMenuOpen])
 
   // Interactive likes & bookmarks
   const [likedPosts, setLikedPosts] = useState<Record<string, boolean>>({})
@@ -1236,458 +1201,24 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   return (
     <div className="lumina-ai-profile-root dark">
-      {/* 1. LEFT SIDEBAR */}
-      <aside className={`ai-sidebar ${isSidebarCollapsed ? 'is-collapsed' : ''}`}>
-        {/* Sidebar Header matching reference image */}
-        <div className="ai-sidebar-top-section">
-          <div className="ai-sidebar-action-row">
-            <button
-              type="button"
-              className="ai-sidebar-icon-btn"
-              title={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-              aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-              onClick={() => setIsSidebarCollapsed((prev) => !prev)}
-            >
-              <PanelLeft size={18} />
-            </button>
-            <div className="ai-sidebar-action-group">
-              <button
-                type="button"
-                className="ai-sidebar-icon-btn"
-                title="New Note / Post"
-                aria-label="New Note"
-                onClick={() => alert('New note composer')}
-              >
-                <SquarePen size={18} />
-              </button>
-            </div>
-          </div>
-
-          <div className="ai-sidebar-search-box">
-            <input
-              type="text"
-              placeholder="Search or ask"
-              value={sidebarSearchQuery}
-              onChange={(e) => setSidebarSearchQuery(e.target.value)}
-              className="ai-sidebar-search-input"
-              aria-label="Search or ask"
-            />
-            <div className="ai-sidebar-kbd-badge" aria-hidden="true">
-              <span>⌘K</span>
-            </div>
-          </div>
-        </div>
-
-
-
-        {/* Nav List */}
-        <div className="ai-nav-scroll">
-          {/* MAIN */}
-          <div className="ai-nav-group">
-            <span className="ai-nav-category-title">MAIN</span>
-            <nav className="ai-nav-list">
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Profile' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('Profile')}
-              >
-                <span className="ai-nav-icon">{Icons.User}</span>
-                <span className="ai-nav-label">Profile</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Home' ? 'is-active' : ''}`}
-                onClick={() => {
-                  setActiveNav('Home')
-                  if (onBackToDashboard) onBackToDashboard()
-                }}
-              >
-                <span className="ai-nav-icon">{Icons.Home}</span>
-                <span className="ai-nav-label">Home</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Feed' ? 'is-active' : ''}`}
-                onClick={() => {
-                  setActiveNav('Feed')
-                  if (onBackToDashboard) onBackToDashboard()
-                }}
-              >
-                <span className="ai-nav-icon">{Icons.Feed}</span>
-                <span className="ai-nav-label">Feed</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Discover' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('Discover')}
-              >
-                <span className="ai-nav-icon">{Icons.Discover}</span>
-                <span className="ai-nav-label">Discover</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Following' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('Following')}
-              >
-                <span className="ai-nav-icon">{Icons.Following}</span>
-                <span className="ai-nav-label">Following</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'People' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('People')}
-              >
-                <span className="ai-nav-icon">{Icons.People}</span>
-                <span className="ai-nav-label">People</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Communities' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('Communities')}
-              >
-                <span className="ai-nav-icon">{Icons.Communities}</span>
-                <span className="ai-nav-label">Communities</span>
-              </button>
-            </nav>
-          </div>
-
-          {/* ACADEMICS */}
-          <div className="ai-nav-group">
-            <span className="ai-nav-category-title">ACADEMICS</span>
-            <nav className="ai-nav-list">
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Academic Dashboard' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('Academic Dashboard')}
-              >
-                <span className="ai-nav-icon">{Icons.AcademicDashboard}</span>
-                <span className="ai-nav-label">Academic Dashboard</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Smart Scheduler' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('Smart Scheduler')}
-              >
-                <span className="ai-nav-icon">{Icons.Calendar}</span>
-                <span className="ai-nav-label">Smart Scheduler</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'AI Summarizer' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('AI Summarizer')}
-              >
-                <span className="ai-nav-icon">{Icons.Sparkles}</span>
-                <span className="ai-nav-label">AI Summarizer</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Study Groups' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('Study Groups')}
-              >
-                <span className="ai-nav-icon">{Icons.MessageSquare}</span>
-                <span className="ai-nav-label">Study Groups</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Notes & Resources' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('Notes & Resources')}
-              >
-                <span className="ai-nav-icon">{Icons.FileText}</span>
-                <span className="ai-nav-label">Notes & Resources</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Assignments & Exams' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('Assignments & Exams')}
-              >
-                <span className="ai-nav-icon">{Icons.Assignments}</span>
-                <span className="ai-nav-label">Assignments & Exams</span>
-              </button>
-            </nav>
-          </div>
-
-          {/* CAMPUS */}
-          <div className="ai-nav-group">
-            <span className="ai-nav-category-title">CAMPUS</span>
-            <nav className="ai-nav-list">
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Events' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('Events')}
-              >
-                <span className="ai-nav-icon">{Icons.Calendar}</span>
-                <span className="ai-nav-label">Events</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Clubs' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('Clubs')}
-              >
-                <span className="ai-nav-icon">{Icons.Communities}</span>
-                <span className="ai-nav-label">Clubs</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Careers' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('Careers')}
-              >
-                <span className="ai-nav-icon">{Icons.FileText}</span>
-                <span className="ai-nav-label">Careers</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Mentorship' ? 'is-active' : ''}`}
-                onClick={() => setActiveNav('Mentorship')}
-              >
-                <span className="ai-nav-icon">{Icons.People}</span>
-                <span className="ai-nav-label">Mentorship</span>
-              </button>
-            </nav>
-          </div>
-
-          {/* PERSONAL */}
-          <div className="ai-nav-group">
-            <span className="ai-nav-category-title">PERSONAL</span>
-            <nav className="ai-nav-list">
-              <button
-                type="button"
-                className="ai-nav-item is-unimplemented"
-                title="My Notes (Coming soon)"
-                tabIndex={-1}
-              >
-                <span className="ai-nav-icon">{Icons.FileText}</span>
-                <span className="ai-nav-label">My Notes</span>
-                <span className="ai-soon-badge">Soon</span>
-              </button>
-              <button
-                type="button"
-                className={`ai-nav-item ${activeNav === 'Messaging' ? 'is-active' : ''}`}
-                title="Messaging"
-                onClick={() => {
-                  window.location.hash = 'messages'
-                  if (onBackToDashboard) onBackToDashboard()
-                }}
-              >
-                <span className="ai-nav-icon">{Icons.MessageSquare}</span>
-                <span className="ai-nav-label">Messaging</span>
-              </button>
-            </nav>
-          </div>
-        </div>
-
-        {/* Sidebar Footer User Card with Popover Menu */}
-        <div className="ai-sidebar-user-footer" ref={settingsMenuRef}>
-          {/* Settings Popover Menu matching reference image */}
-          {settingsMenuOpen && (
-            <div className="ai-settings-popover" role="dialog" aria-label="Account and Workspace Settings">
-              {/* Top Header */}
-              <div className="ai-popover-header">
-                <div className="ai-popover-avatar-sq">
-                  {(profile.name.charAt(0) || 'S').toUpperCase()}
-                </div>
-                <div className="ai-popover-header-meta">
-                  <div className="ai-popover-name">
-                    {profile.name.endsWith("'s")
-                      ? profile.name
-                      : `${profile.name}'s`}
-                  </div>
-                  <div className="ai-popover-plan is-unimplemented">Free Plan · 5 members</div>
-                </div>
-              </div>
-
-              <div className="ai-popover-divider" />
-
-              {/* Action List 1 */}
-              <div className="ai-popover-menu-list">
-                <button
-                  type="button"
-                  className="ai-popover-menu-item is-upgrade is-unimplemented"
-                  onClick={() => {
-                    setSettingsMenuOpen(false)
-                    alert('Upgrade to Lumina Pro')
-                  }}
-                >
-                  <ArrowUpCircle size={16} className="ai-popover-item-icon text-blue" />
-                  <span className="text-blue">Upgrade</span>
-                </button>
-                <button
-                  type="button"
-                  className="ai-popover-menu-item"
-                  onClick={() => {
-                    setSettingsMenuOpen(false)
-                  }}
-                >
-                  <Users size={16} className="ai-popover-item-icon" />
-                  <span>My Profile</span>
-                </button>
-                <button
-                  type="button"
-                  className="ai-popover-menu-item is-unimplemented"
-                  onClick={() => {
-                    setSettingsMenuOpen(false)
-                    alert('Settings & Preferences')
-                  }}
-                >
-                  <Settings size={16} className="ai-popover-item-icon" />
-                  <span>Settings</span>
-                </button>
-                <button
-                  type="button"
-                  className="ai-popover-menu-item is-unimplemented"
-                  onClick={() => {
-                    setSettingsMenuOpen(false)
-                    alert('Invite members link copied to clipboard!')
-                  }}
-                >
-                  <Users size={16} className="ai-popover-item-icon" />
-                  <span>Invite members</span>
-                </button>
-                <button
-                  type="button"
-                  className="ai-popover-menu-item is-unimplemented"
-                  onClick={() => {
-                    setSettingsMenuOpen(false)
-                    alert('Add another account')
-                  }}
-                >
-                  <UserPlus size={16} className="ai-popover-item-icon" />
-                  <span>Add account</span>
-                </button>
-              </div>
-
-              <div className="ai-popover-divider" />
-
-              {/* Workspaces Section */}
-              <div className="ai-popover-workspaces-section">
-                <div className="ai-popover-email-row">
-                  <span className="ai-popover-email">{user?.email || 'sunilbe2006@gmail.com'}</span>
-                  <button
-                    type="button"
-                    className="ai-popover-more-btn is-unimplemented"
-                    title="Account options"
-                    onClick={() => alert('Account options')}
-                  >
-                    <MoreHorizontal size={14} />
-                  </button>
-                </div>
-
-                <button
-                  type="button"
-                  className={`ai-popover-workspace-item is-unimplemented ${currentWorkspace === 'primary' ? 'is-active' : ''}`}
-                  onClick={() => setCurrentWorkspace('primary')}
-                >
-                  <div className="ai-popover-ws-left">
-                    <div className="ai-popover-avatar-sm">
-                      {(profile.name.charAt(0) || 'S').toUpperCase()}
-                    </div>
-                    <span className="ai-popover-ws-name">
-                      {profile.name.endsWith("'s")
-                        ? profile.name
-                        : `${profile.name}'s`}
-                    </span>
-                  </div>
-                  {currentWorkspace === 'primary' && (
-                    <Check size={14} className="ai-popover-check-icon" strokeWidth={2.5} />
-                  )}
-                </button>
-
-                <button
-                  type="button"
-                  className={`ai-popover-workspace-item is-unimplemented ${currentWorkspace === 'secondary' ? 'is-active' : ''}`}
-                  onClick={() => setCurrentWorkspace('secondary')}
-                >
-                  <div className="ai-popover-ws-left">
-                    <div className="ai-popover-avatar-sm has-dot">
-                      {(profile.name.charAt(0) || 'S').toUpperCase()}
-                      <span className="ai-popover-avatar-dot" />
-                    </div>
-                    <span className="ai-popover-ws-name">
-                      {profile.name.endsWith("'s")
-                        ? `${profile.name} Workspace`
-                        : `${profile.name}'s Workspace`}
-                    </span>
-                    <span className="ai-popover-guest-badge">Guest</span>
-                  </div>
-                  {currentWorkspace === 'secondary' && (
-                    <Check size={14} className="ai-popover-check-icon" strokeWidth={2.5} />
-                  )}
-                </button>
-
-                <button
-                  type="button"
-                  className="ai-popover-workspace-item is-new-ws is-unimplemented"
-                  onClick={() => {
-                    const wsName = prompt('Enter new workspace name:')
-                    if (wsName) alert(`Created workspace: ${wsName}`)
-                  }}
-                >
-                  <div className="ai-popover-ws-left text-blue">
-                    <Plus size={15} strokeWidth={2.5} />
-                    <span>New workspace</span>
-                  </div>
-                </button>
-              </div>
-
-              <div className="ai-popover-divider" />
-
-              {/* Log out */}
-              <div className="ai-popover-footer">
-                <button
-                  type="button"
-                  className="ai-popover-logout-btn"
-                  onClick={() => {
-                    setSettingsMenuOpen(false)
-                    if (onLogout) onLogout()
-                    else if (onNavigateHome) onNavigateHome()
-                    else alert('Logged out successfully')
-                  }}
-                >
-                  Log out
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* User profile trigger pill */}
-          <div
-            className={`ai-user-profile-card ${settingsMenuOpen ? 'is-open' : ''}`}
-            onClick={() => setSettingsMenuOpen((prev) => !prev)}
-            role="button"
-            tabIndex={0}
-            title="Account & Settings"
-          >
-            <img
-              src={profile.avatar}
-              alt={profile.name}
-              className="ai-user-avatar-img"
-              onError={(e) => {
-                e.currentTarget.src = DEFAULT_WHATSAPP_AVATAR
-              }}
-            />
-            <div className="ai-user-meta">
-              <span className="ai-user-name">{profile.name}</span>
-              <span className="ai-user-role" title={profile.email}>{profile.email}</span>
-            </div>
-            <button
-              type="button"
-              className={`ai-settings-gear-btn ${settingsMenuOpen ? 'is-active' : ''}`}
-              onClick={(e) => {
-                e.stopPropagation()
-                setSettingsMenuOpen((prev) => !prev)
-              }}
-              title="Settings & Workspace Menu"
-            >
-              <Settings size={15} />
-            </button>
-          </div>
-        </div>
-      </aside>
-
-      {/* 2. MAIN APPLICATION WORKSPACE */}
+      {/* MAIN APPLICATION WORKSPACE */}
       <div className="ai-app-main-layout">
         {/* TOP BAR */}
         <header className="ai-top-bar">
-          <div className="ai-top-bar-left" />
+          <div className="ai-top-bar-left">
+            {onBackToDashboard && (
+              <button
+                type="button"
+                className="ai-top-back-btn"
+                onClick={() => onBackToDashboard('feed')}
+                title="Back to Feed"
+                aria-label="Back to Feed"
+              >
+                <ArrowLeft size={16} />
+                <span>Back</span>
+              </button>
+            )}
+          </div>
 
           <div className="ai-top-bar-right">
             {/* Search Input (Landing Page Search Bar) */}

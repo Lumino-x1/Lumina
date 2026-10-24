@@ -9,8 +9,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 24px 16px;
+  justify-content: flex-start;
+  padding: 60px 16px 40px;
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   position: relative;
@@ -33,54 +33,20 @@
 
 .verify-email-container {
   width: 100%;
-  max-width: 460px;
-  background-color: rgba(25, 25, 25, 0.94);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px dashed rgba(255, 255, 255, 0.22);
+  max-width: 440px;
+  background-color: transparent;
+  border: none;
   border-radius: 16px;
-  padding: 36px 30px;
+  padding: 16px 12px;
   box-sizing: border-box;
-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: none;
   position: relative;
   z-index: 10;
 }
 
-/* Corner Crosshairs (+) matching login card */
-.verify-email-container .crosshair-marker {
-  position: absolute;
-  font-family: monospace, ui-monospace, sans-serif;
-  font-size: 15px;
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.45);
-  pointer-events: none;
-  z-index: 10;
-  user-select: none;
-}
-
-.verify-email-container .crosshair-top-left {
-  top: -8px;
-  left: -6px;
-}
-
-.verify-email-container .crosshair-top-right {
-  top: -8px;
-  right: -6px;
-}
-
-.verify-email-container .crosshair-bottom-left {
-  bottom: -8px;
-  left: -6px;
-}
-
-.verify-email-container .crosshair-bottom-right {
-  bottom: -8px;
-  right: -6px;
-}
-
 .verify-email-header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 
 .verify-email-brand {
@@ -88,22 +54,8 @@
   font-weight: 700;
   letter-spacing: -0.5px;
   color: #FFFFFF;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
   display: inline-block;
-}
-
-.verify-email-icon-wrapper {
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px dashed rgba(255, 255, 255, 0.22);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 20px;
-  color: #FFFFFF;
-  transition: all 0.2s ease;
 }
 
 .verify-email-title {
@@ -161,8 +113,8 @@
   width: 50px;
   height: 58px;
   background-color: rgba(255, 255, 255, 0.04);
-  border: 1px dashed rgba(255, 255, 255, 0.22);
-  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
   color: #FFFFFF;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 24px;
@@ -174,13 +126,12 @@
 }
 
 .verify-email-otp-digit:hover:not(:disabled) {
-  border-color: rgba(255, 255, 255, 0.38);
-  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.35);
+  background-color: rgba(255, 255, 255, 0.07);
 }
 
 .verify-email-otp-digit:focus {
-  border-color: rgba(255, 255, 255, 0.65);
-  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.7);
   background-color: rgba(255, 255, 255, 0.08);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
   transform: translateY(-1px);
@@ -200,8 +151,8 @@
   width: 100%;
   height: 44px;
   background-color: rgba(255, 255, 255, 0.04);
-  border: 1px dashed rgba(255, 255, 255, 0.22);
-  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
   color: #FFFFFF;
   padding: 0 14px;
   font-size: 14px;
@@ -214,7 +165,6 @@
 
 .verify-email-email-input:focus {
   border-color: rgba(255, 255, 255, 0.55);
-  border-style: dashed;
   background-color: rgba(255, 255, 255, 0.08);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
 }
@@ -245,7 +195,7 @@
 .verify-email-submit-btn {
   width: 100%;
   height: 46px;
-  border-radius: 9999px;
+  border-radius: 5px;
   background-color: #FFFFFF;
   color: #191919;
   border: 1px solid #FFFFFF;

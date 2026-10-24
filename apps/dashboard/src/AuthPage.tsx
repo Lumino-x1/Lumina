@@ -18,6 +18,8 @@ import {
   Globe,
   MapPin,
   X,
+  LogIn,
+  Sparkles,
 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTheme } from './lib/themeContext'
@@ -427,6 +429,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
             {/* Segmented Mode Switch Tabs: Sign In / Sign Up */}
             <div className="lumina-auth-mode-tabs" role="tablist" aria-label="Sign in or Sign up">
+              {/* Strictly Horizontal Sliding Pill Indicator (Zero vertical dip/jump) */}
+              <div
+                className={`lumina-auth-mode-indicator ${
+                  mode === 'signup' ? 'is-signup' : 'is-login'
+                }`}
+                aria-hidden="true"
+              />
+
               <button
                 type="button"
                 role="tab"
@@ -435,7 +445,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                 className={`lumina-auth-mode-tab ${mode === 'login' ? 'active' : ''}`}
                 onClick={() => switchMode('login')}
               >
-                Sign In
+                <span className="lumina-auth-mode-label">
+                  <LogIn size={15} className="lumina-auth-tab-icon" />
+                  Sign In
+                </span>
               </button>
               <button
                 type="button"
@@ -445,7 +458,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                 className={`lumina-auth-mode-tab ${mode === 'signup' ? 'active' : ''}`}
                 onClick={() => switchMode('signup')}
               >
-                Sign Up
+                <span className="lumina-auth-mode-label">
+                  <Sparkles size={14} className="lumina-auth-tab-icon" />
+                  Sign Up
+                </span>
               </button>
             </div>
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { ArrowRight } from 'lucide-react'
-import { GridPulse } from './components/ui/grid-pulse'
+import { CloudShader } from './components/ui/cloud-shader'
 import './HeroSection.css'
 
 export interface HeroSectionProps {
@@ -62,10 +62,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </div>
 
         {/* ====================================================================
-            RIGHT COLUMN: Interactive GridPulse Canvas (No Text)
+            RIGHT COLUMN: CloudShader Canvas (Notion Black Palette)
             ==================================================================== */}
-        <div className="hero-image-col hero-grid-pulse-col" aria-hidden="true">
-          <GridPulse cell={28} reach={3} ambient={4} maxLit={260} />
+        <div className="hero-image-col hero-cloud-col" aria-hidden="true">
+          <CloudShader
+            className="w-full h-full min-h-[520px]"
+            cloudColor="#525252"
+            skyTopColor="#121212"
+            skyBottomColor="#191919"
+          />
 
           {/* Divider Crosshair Markers at column border intersections */}
           <span className="crosshair-marker crosshair-top-divider" aria-hidden="true">+</span>

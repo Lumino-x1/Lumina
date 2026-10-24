@@ -1055,3 +1055,157 @@
     gap: 10px;
   }
 }
+
+/* ==========================================================================
+   EMPTY STATES
+   ========================================================================== */
+.notion-conv-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--notion-text-muted);
+}
+
+.notion-empty-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background-color: var(--notion-surface);
+  border: 1px solid var(--notion-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--notion-text-secondary);
+  margin-bottom: 14px;
+}
+
+.notion-empty-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--notion-text-primary);
+  margin-bottom: 4px;
+}
+
+.notion-empty-desc {
+  font-size: 12.5px;
+  color: var(--notion-text-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.notion-conv-search-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px;
+  text-align: center;
+  gap: 12px;
+}
+
+.notion-start-chat-btn {
+  background-color: var(--notion-accent-blue);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.notion-start-chat-btn:hover {
+  background-color: var(--notion-accent-blue-hover);
+}
+
+.notion-thread-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  position: relative;
+  padding: 32px;
+  text-align: center;
+}
+
+.notion-empty-mobile-back {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+}
+
+.notion-thread-empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 340px;
+}
+
+.notion-thread-empty-icon-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background-color: var(--notion-surface);
+  border: 1px solid var(--notion-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--notion-text-muted);
+  margin-bottom: 18px;
+}
+
+.notion-thread-empty-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--notion-text-primary);
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+}
+
+.notion-thread-empty-desc {
+  font-size: 13.5px;
+  color: var(--notion-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.notion-thread-empty-thread {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+}
+
+.notion-empty-thread-sub {
+  font-size: 13.5px;
+  color: var(--notion-text-muted);
+  margin: 0;
+}
+
+.notion-thread-loading-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: var(--notion-text-muted);
+}
+
+.notion-spin-icon {
+  animation: notion-spin 1s linear infinite;
+}
+
+@keyframes notion-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

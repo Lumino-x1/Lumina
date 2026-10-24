@@ -228,16 +228,20 @@
 .lumina-auth-mode-tabs {
   display: flex;
   align-items: center;
-  background-color: #191919;
-  border: 1px dashed rgba(255, 255, 255, 0.22);
+  background: linear-gradient(180deg, rgba(30, 30, 30, 0.85) 0%, rgba(18, 18, 18, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 9999px;
   padding: 4px;
-  margin-bottom: 22px;
+  margin-bottom: 24px;
   width: 100%;
   box-sizing: border-box;
-  gap: 4px;
   position: relative;
   z-index: 2;
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.7),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.05),
+    0 8px 24px -4px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(16px);
 }
 
 .lumina-auth-mode-tab {
@@ -247,30 +251,78 @@
   border-radius: 9999px;
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.6);
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.18s ease;
+  transition: color 0.18s ease;
   outline: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  position: relative;
+  padding: 0 16px;
 }
 
 .lumina-auth-mode-tab:hover:not(.active) {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .lumina-auth-mode-tab.active {
-  background-color: #ffffff;
   color: #000000;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Horizontal sliding pill indicator (Fixed strictly to X-axis) */
+.lumina-auth-mode-indicator {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: 9999px;
+  background: linear-gradient(180deg, #ffffff 0%, #f1f1f3 100%);
+  box-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.35),
+    0 0 20px rgba(255, 255, 255, 0.15),
+    inset 0 1px 1px #ffffff;
+  z-index: 1;
+  pointer-events: none;
+  transform: translateX(0);
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.lumina-auth-mode-indicator.is-signup {
+  transform: translateX(100%);
+}
+
+.lumina-auth-mode-label {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  letter-spacing: -0.01em;
+}
+
+.lumina-auth-tab-icon {
+  opacity: 0.8;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.lumina-auth-mode-tab.active .lumina-auth-tab-icon {
+  opacity: 1;
+  color: #000000;
+}
+
+.lumina-auth-mode-tab:hover:not(.active) .lumina-auth-tab-icon {
+  transform: scale(1.08);
+  opacity: 1;
 }
 
 /* Form Styles */

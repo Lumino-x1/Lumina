@@ -25,6 +25,7 @@ export interface ChatConversationItem {
   membersCount?: number
   members?: Record<string, any>
   otherUser?: ChatParticipant | null
+  unreadCount?: number
   lastMessage?: {
     id: string
     text: string
