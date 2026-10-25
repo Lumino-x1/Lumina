@@ -391,6 +391,24 @@ button:not(.faq-box-btn):not(.faq-row-btn),
   right: -5px;
 }
 
+@media (max-width: 767px) {
+  .crosshair-top-right,
+  .crosshair-bottom-right,
+  .crosshair-hatch-tr,
+  .crosshair-hatch-br,
+  .crosshair-divider-right {
+    right: 0px !important;
+  }
+
+  .crosshair-top-left,
+  .crosshair-bottom-left,
+  .crosshair-hatch-tl,
+  .crosshair-hatch-bl,
+  .crosshair-divider-left {
+    left: 0px !important;
+  }
+}
+
 /* ==========================================================================
    VARIABLE FONT CLASSES - QUICKSAND & RALEWAY
    ========================================================================== */

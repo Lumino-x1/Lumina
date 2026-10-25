@@ -366,36 +366,8 @@ export function Header({ onOpenAuth, user, onOpenDashboard }: HeaderProps) {
 					)}
 				</div>
 
-				{/* 3. MOBILE VIEW ONLY: Auth Buttons + Animated Hamburger Toggle (md:hidden) */}
-				<div className="flex md:hidden items-center gap-2 sm:gap-2.5 shrink-0 z-50">
-					{user ? (
-						<Button
-							size="sm"
-							className="h-9 px-3 bg-white text-neutral-900 font-medium text-xs rounded-md shadow-sm shrink-0"
-							onClick={handleGetStarted}
-						>
-							Dashboard
-						</Button>
-					) : (
-						<>
-							<Button
-								variant="outline"
-								size="sm"
-								className="h-9 px-3 border-neutral-700 hover:bg-neutral-800 text-white font-medium text-xs rounded-md shrink-0"
-								onClick={handleSignIn}
-							>
-								Sign In
-							</Button>
-							<Button
-								size="sm"
-								className="h-9 px-3 bg-white text-neutral-900 hover:bg-neutral-200 font-medium text-xs rounded-md shadow-sm shrink-0"
-								onClick={handleGetStarted}
-							>
-								Get Started
-							</Button>
-						</>
-					)}
-
+				{/* 3. MOBILE VIEW ONLY: Animated Hamburger Toggle (md:hidden) */}
+				<div className="flex md:hidden items-center shrink-0 z-50">
 					<button
 						ref={toggleButtonRef}
 						onClick={onToggleMenu}
@@ -602,25 +574,12 @@ function useScroll(threshold: number) {
 }
 
 export const LuminaLogo = () => (
-	<div className="flex items-center gap-2 select-none">
-		<svg
-			width="22"
-			height="22"
-			viewBox="0 0 24 24"
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-			className="text-white shrink-0"
-		>
-			<circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" strokeDasharray="3 3" />
-			<circle cx="12" cy="12" r="3.5" fill="currentColor" />
-		</svg>
-		<span
-			className="text-[25px] italic font-normal tracking-[-0.02em] text-white leading-none select-none"
-			style={{ fontFamily: "'Instrument Serif', 'Times New Roman', serif" }}
-		>
-			Lumina
-		</span>
-	</div>
+	<span
+		className="text-[26px] italic font-normal tracking-[-0.02em] text-white leading-none select-none"
+		style={{ fontFamily: "'Instrument Serif', 'Times New Roman', serif" }}
+	>
+		Lumina
+	</span>
 );
 
 export default Header;

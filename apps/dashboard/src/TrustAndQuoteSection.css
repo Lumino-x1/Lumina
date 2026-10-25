@@ -13,6 +13,7 @@
   background-color: var(--background, #191919);
   color: #ffffff;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* Continuous Full-Width Container Frame */
