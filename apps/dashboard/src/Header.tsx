@@ -217,33 +217,21 @@ export function Header({ onOpenAuth, user, onOpenDashboard }: HeaderProps) {
 	// In-menu actions for the mobile overlay
 	const mobileAuthActions = (
 		<div className="flex flex-wrap items-center gap-3">
-			{user ? (
-				<Button
-					size="lg"
-					className="h-11 px-6 bg-white text-neutral-900 hover:bg-neutral-200 font-semibold text-sm rounded-md shadow-md transition-colors"
-					onClick={handleGetStarted}
-				>
-					Go to Dashboard →
-				</Button>
-			) : (
-				<>
-					<Button
-						variant="outline"
-						size="lg"
-						className="h-11 w-36 border-neutral-700 hover:bg-neutral-800 text-white font-medium text-sm rounded-md transition-colors justify-center"
-						onClick={handleSignIn}
-					>
-						Sign In
-					</Button>
-					<Button
-						size="lg"
-						className="h-11 w-36 bg-white text-neutral-900 hover:bg-neutral-200 font-semibold text-sm rounded-md shadow-md transition-colors justify-center"
-						onClick={handleGetStarted}
-					>
-						Get Started
-					</Button>
-				</>
-			)}
+			<Button
+				variant="outline"
+				size="lg"
+				className="h-11 w-36 border-neutral-700 hover:bg-neutral-800 text-white font-medium text-sm rounded-md transition-colors justify-center"
+				onClick={handleSignIn}
+			>
+				Sign In
+			</Button>
+			<Button
+				size="lg"
+				className="h-11 w-36 bg-white text-neutral-900 hover:bg-neutral-200 font-semibold text-sm rounded-md shadow-md transition-colors justify-center"
+				onClick={handleGetStarted}
+			>
+				Get Started
+			</Button>
 		</div>
 	);
 
@@ -343,27 +331,19 @@ export function Header({ onOpenAuth, user, onOpenDashboard }: HeaderProps) {
 
 				{/* 2. PREVIOUS NAVBAR: Web View Auth Action Buttons (Desktop md:flex) */}
 				<div className="hidden items-center gap-3.5 md:flex shrink-0">
-					{user ? (
-						<Button className="h-9 px-4 font-medium" onClick={handleGetStarted}>
-							Dashboard
-						</Button>
-					) : (
-						<>
-							<Button
-								variant="outline"
-								className="h-9 w-[116px] border-neutral-700 hover:bg-neutral-800 text-neutral-200 font-medium justify-center text-center"
-								onClick={handleSignIn}
-							>
-								Sign In
-							</Button>
-							<Button
-								className="h-9 w-[116px] bg-white text-neutral-900 hover:bg-neutral-200 font-medium shadow-sm justify-center text-center"
-								onClick={handleGetStarted}
-							>
-								Get Started
-							</Button>
-						</>
-					)}
+					<Button
+						variant="outline"
+						className="h-9 w-[116px] border-neutral-700 hover:bg-neutral-800 text-neutral-200 font-medium justify-center text-center"
+						onClick={handleSignIn}
+					>
+						Sign In
+					</Button>
+					<Button
+						className="h-9 w-[116px] bg-white text-neutral-900 hover:bg-neutral-200 font-medium shadow-sm justify-center text-center"
+						onClick={handleGetStarted}
+					>
+						Get Started
+					</Button>
 				</div>
 
 				{/* 3. MOBILE VIEW ONLY: Animated Hamburger Toggle (md:hidden) */}
