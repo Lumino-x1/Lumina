@@ -602,7 +602,7 @@ function useScroll(threshold: number) {
 }
 
 export const LuminaLogo = () => (
-	<div className="flex items-center gap-2.5 select-none">
+	<div className="flex items-center gap-2 select-none">
 		<svg
 			width="22"
 			height="22"
@@ -614,7 +614,10 @@ export const LuminaLogo = () => (
 			<circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" strokeDasharray="3 3" />
 			<circle cx="12" cy="12" r="3.5" fill="currentColor" />
 		</svg>
-		<span className="font-semibold text-lg tracking-tight text-white font-sans">
+		<span
+			className="text-[25px] italic font-normal tracking-[-0.02em] text-white leading-none select-none"
+			style={{ fontFamily: "'Instrument Serif', 'Times New Roman', serif" }}
+		>
 			Lumina
 		</span>
 	</div>

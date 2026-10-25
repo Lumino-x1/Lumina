@@ -32,6 +32,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section className="hero-section-root" aria-label="Hero Section">
       <SculptureHero
+        showSculpture={false}
         theme="dark"
         background="#191919"
         darkBackground="#191919"

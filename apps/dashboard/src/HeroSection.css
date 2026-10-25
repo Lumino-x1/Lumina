@@ -1,6 +1,6 @@
 /* ==========================================================================
    HeroSection Styling
-   Integrated with SculptureHero (liquid particle engine)
+   Integrated with SculptureHero
    - Notion Black palette: #191919 background
    - Full-width seamless isolation
    - Clean horizontal dashed separation line at section bottom
@@ -31,4 +31,37 @@
   border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
   pointer-events: none;
   z-index: 5;
+}
+
+/* Equal sizing and alignment for Hero CTA buttons */
+.hero-section-root .sh-aside {
+  max-width: 460px;
+}
+
+.hero-section-root .sh-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+.hero-section-root .sh-btn,
+.hero-section-root .sh-txt {
+  width: 204px;
+  min-width: 204px;
+  height: 46px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+@media (max-width: 639px) {
+  .hero-section-root .sh-btn,
+  .hero-section-root .sh-txt {
+    width: 100%;
+    min-width: 0;
+  }
 }

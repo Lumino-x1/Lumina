@@ -1062,6 +1062,8 @@ export interface SculptureHeroProps {
   /** Load the default Google Fonts (Geist + Instrument Serif, both OFL). */
   loadFonts?: boolean
 
+  /** Whether to render and simulate the liquid particle sculpture. Default true. */
+  showSculpture?: boolean
   /** 1 = default size for the breakpoint. */
   sculptureScale?: number
   mobileSculptureScale?: number
@@ -1387,6 +1389,7 @@ function renderHeadline(text: string, accent?: string) {
 
 export default function SculptureHero(props: SculptureHeroProps) {
   const {
+    showSculpture = true,
     src = DEFAULTS.src,
     darkSrc = DEFAULTS.darkSrc,
     mobileSrc = DEFAULTS.mobileSrc,
@@ -1583,6 +1586,7 @@ export default function SculptureHero(props: SculptureHeroProps) {
 
   // engine lifecycle (re-created only when the image changes)
   React.useEffect(() => {
+    if (!showSculpture) return
     const root = rootRef.current
     const stage = stageRef.current
     if (!root || !stage) return
@@ -1675,6 +1679,7 @@ export default function SculptureHero(props: SculptureHeroProps) {
   // (re)load the sculpture whenever the theme or layout asks for another image;
   // the canvas dips out while the static image covers the swap
   React.useEffect(() => {
+    if (!showSculpture) return
     const root = rootRef.current
     const engine = engineRef.current
     if (!root) return
@@ -1747,10 +1752,12 @@ export default function SculptureHero(props: SculptureHeroProps) {
           {backdropText}
         </div>
       ) : null}
-      <div ref={stageRef} className="sh-stage" aria-hidden="true">
-        <img ref={imgRef} className="sh-fallback" src={activeSrc} alt="" crossOrigin="anonymous" draggable={false} />
-      </div>
-      <span style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>{imageAlt}</span>
+      {showSculpture && (
+        <div ref={stageRef} className="sh-stage" aria-hidden="true">
+          <img ref={imgRef} className="sh-fallback" src={activeSrc} alt="" crossOrigin="anonymous" draggable={false} />
+        </div>
+      )}
+      {showSculpture && <span style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>{imageAlt}</span>}
 
       {showNav && (
         <nav ref={navRef} className="sh-nav" aria-label="Primary">
@@ -1800,7 +1807,7 @@ export default function SculptureHero(props: SculptureHeroProps) {
         </nav>
       )}
 
-      {interactive && hintText ? (
+      {showSculpture && interactive && hintText ? (
         <div ref={hintRef} className="sh-hint" aria-hidden="true">
           {hintText}
         </div>
