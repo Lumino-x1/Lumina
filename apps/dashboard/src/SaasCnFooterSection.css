@@ -13,13 +13,14 @@
   box-sizing: border-box;
 }
 
-/* Continuous Centered Container Frame with Vertical Dashed Guide Lines */
+/* Continuous Full-Width Container Frame */
 .saascn-footer-frame {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   position: relative;
-  border-left: 1px dashed rgba(255, 255, 255, 0.12);
-  border-right: 1px dashed rgba(255, 255, 255, 0.12);
+  border-left: none;
+  border-right: none;
   box-sizing: border-box;
   background-color: var(--background, #191919);
 }
@@ -28,7 +29,7 @@
    1. Transform Your Business CTA Block
    ========================================================================== */
 .saascn-cta-block {
-  padding: 80px 48px 72px;
+  padding: 80px clamp(24px, 4vw, 64px) 72px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -168,7 +169,7 @@
    3. 5-Column Navigation Grid
    ========================================================================== */
 .saascn-links-grid {
-  padding: 64px 48px 48px;
+  padding: 64px clamp(24px, 4vw, 64px) 48px;
   display: grid;
   grid-template-columns: 1fr 1.6fr 1.2fr 1fr 1fr;
   gap: 36px;
@@ -243,7 +244,7 @@
 .saascn-bottom-bar {
   position: relative;
   border-top: 1px dashed rgba(255, 255, 255, 0.12);
-  padding: 24px 48px 48px;
+  padding: 24px clamp(24px, 4vw, 64px) 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;

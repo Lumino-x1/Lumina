@@ -1,25 +1,79 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
+"use client"
+
+// ** Imports: React & Hooks **
+import React, { useState, useRef, useEffect, useMemo, useCallback } from "react"
+
+// ** UI Components **
+import {
+  SidebarInset,
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarFooter,
+  useSidebar,
+  SidebarProvider,
+} from "@/components/blocks/sidebar"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable"
+
+// ** Dropdown Menu Components **
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+// ** Icons **
 import {
   ArrowLeft,
-  Search,
-  Phone,
-  Video,
-  Users,
-  Paperclip,
-  Code,
-  Smile,
-  Mic,
-  Send,
-  Download,
+  Brush,
+  Camera,
+  ChartBarIncreasing,
   CheckCheck,
-  BadgeCheck,
-  FileText,
-  Sigma,
-  Loader2,
-} from 'lucide-react'
-import './LuminaMessagingView.css'
-import type { DashboardUser } from '../../DashboardPage'
-import { DEFAULT_WHATSAPP_AVATAR } from '../WhatsAppDefaultAvatar'
+  ChevronUp,
+  CircleFadingPlus,
+  CircleOff,
+  CircleUserRound,
+  File,
+  Image,
+  ListFilter,
+  Menu,
+  MessageCircle,
+  MessageSquareDashed,
+  MessageSquareDot,
+  Mic,
+  Paperclip,
+  Phone,
+  Search,
+  Send,
+  Settings,
+  Smile,
+  SquarePen,
+  Star,
+  User,
+  User2,
+  UserRound,
+  Users,
+  Video,
+} from "lucide-react"
+
+import type { DashboardUser } from "../../DashboardPage"
 import {
   fetchMyConversationsApi,
   fetchChannelMessagesApi,
@@ -29,79 +83,231 @@ import {
   sendTypingIndicatorApi,
   type ChatConversationItem,
   type ChatMessageItem,
-} from '../../api/chatApi'
+} from "../../api/chatApi"
 
-export interface MessageAttachment {
-  type: 'pdf' | 'slide' | 'image' | 'link'
-  fileName: string
-  fileSize?: string
-  fileSubtitle?: string
-  url?: string
+// ** Contact List **
+export const defaultContactList = [
+  {
+    id: "contact-1",
+    name: "Manoj Rayi",
+    message: "Your Last Message Here",
+    image: "https://cdn.21st.dev/assets/mirror/60/60a78914033c8e6b417d2f6ce5cf81dcc37c9247e03432bbf81c63e1f5ecfbc3.jpg",
+    time: "10:14 AM",
+    unread: false,
+    online: true,
+    isGroup: false,
+  },
+  {
+    id: "contact-2",
+    name: "Anjali Kumar",
+    message: "Hello, how are you?",
+    image: "https://cdn.21st.dev/assets/mirror/e7/e7a0b30cb92ca533b2f8dbf57649e4b60129a9e84f3fc36d45b09e2dfcaec61d.jpg",
+    time: "09:45 AM",
+    unread: true,
+    online: true,
+    isGroup: false,
+  },
+  {
+    id: "contact-3",
+    name: "Ravi Teja",
+    message: "Looking forward to the meeting.",
+    image: "https://cdn.21st.dev/assets/mirror/4c/4cff4f892ece6dca0865313df96f11ac30e11b6dcbf3b9a86bad86a3049aa6e1.jpg",
+    time: "Yesterday",
+    unread: false,
+    online: false,
+    isGroup: false,
+  },
+  {
+    id: "contact-4",
+    name: "Sneha Reddy",
+    message: "Can you send the report?",
+    image: "https://cdn.21st.dev/assets/mirror/55/55d0cf713811843ffbd3412ee403668a82597bb83aabbc684a87f66c1fc962e4.jpg",
+    time: "Yesterday",
+    unread: false,
+    online: true,
+    isGroup: false,
+  },
+  {
+    id: "contact-5",
+    name: "Arjun Das",
+    message: "Thank you for your help!",
+    image: "https://cdn.21st.dev/assets/mirror/32/32afb68c9233445d08f7c4af3e781f648c6eeeb7dadeb5bdd341a003684d1c93.jpg",
+    time: "Wednesday",
+    unread: false,
+    online: false,
+    isGroup: false,
+  },
+  {
+    id: "contact-6",
+    name: "Priya Sharma",
+    message: "Let's catch up soon.",
+    image: "https://cdn.21st.dev/assets/mirror/7f/7f2f1b6a4c09f5092437fe960232360d1e2dcf7a198c8580f3c5478c7b2d9386.jpg",
+    time: "Tuesday",
+    unread: false,
+    online: true,
+    isGroup: false,
+  },
+  {
+    id: "contact-7",
+    name: "Vikram Singh",
+    message: "I will call you later.",
+    image: "https://cdn.21st.dev/assets/mirror/f2/f25b1b7a6a351c0f748d81bf4fcaf8c5a2f8ed036563c2693d4c1ca3718d9d5d.jpg",
+    time: "Monday",
+    unread: false,
+    online: false,
+    isGroup: false,
+  },
+  {
+    id: "contact-8",
+    name: "Kavya Rao",
+    message: "Did you receive my email?",
+    image: "https://cdn.21st.dev/assets/mirror/41/417105f5784df0a25c3486becfe5c967d448e3c98b3c0231ef4ea0c59d27cb4b.jpg",
+    time: "Sunday",
+    unread: false,
+    online: true,
+    isGroup: false,
+  },
+  {
+    id: "contact-9",
+    name: "Rahul Verma",
+    message: "Meeting rescheduled to tomorrow.",
+    image: "https://cdn.21st.dev/assets/mirror/62/6252a3b6790cbb48919cb8ea756a4e1ce829f3271a141731226871b3c3df9d6d.jpg",
+    time: "Oct 20",
+    unread: false,
+    online: false,
+    isGroup: false,
+  },
+  {
+    id: "contact-10",
+    name: "Deepika Nair",
+    message: "Happy birthday! Have a great day!",
+    image: "https://cdn.21st.dev/assets/mirror/54/54ebea0e1cad66565de28318ff2f512398bf5732f6f3f3fecea8ad4338b78778.jpg",
+    time: "Oct 19",
+    unread: false,
+    online: true,
+    isGroup: false,
+  },
+  {
+    id: "contact-11",
+    name: "Rohit Malhotra",
+    message: "What's the update?",
+    image: "https://cdn.21st.dev/assets/mirror/21/21d6722e3baa38cb075afdc599a60c8861440a6dea431e7a8ff43f86d05190b9.jpg",
+    time: "Oct 18",
+    unread: false,
+    online: false,
+    isGroup: false,
+  },
+  {
+    id: "contact-12",
+    name: "Neha Gupta",
+    message: "Hope you're doing well!",
+    image: "https://cdn.21st.dev/assets/mirror/20/20bb8458e0bb0345aae5ab6a975650d1210fdfc5721729b456f7342fc59b3113.jpg",
+    time: "Oct 17",
+    unread: false,
+    online: true,
+    isGroup: false,
+  },
+  {
+    id: "contact-13",
+    name: "Amit Yadav",
+    message: "Let's finalize the project.",
+    image: "https://cdn.21st.dev/assets/mirror/56/56eb13218bfcbdfa4f6f950990d4666d616ad1f9e17777c976ccc79c781b68c6.jpg",
+    time: "Oct 16",
+    unread: false,
+    online: false,
+    isGroup: false,
+  },
+  {
+    id: "contact-14",
+    name: "Simran Kaur",
+    message: "Good morning!",
+    image: "https://cdn.21st.dev/assets/mirror/4c/4c5eaf184e978fcf67bed792f0fa88543b664347c98727aa25da4c16e32eb367.jpg",
+    time: "Oct 15",
+    unread: false,
+    online: true,
+    isGroup: false,
+  },
+  {
+    id: "contact-15",
+    name: "Varun Chopra",
+    message: "I'll send the documents soon.",
+    image: "https://cdn.21st.dev/assets/mirror/e8/e86e44eaa9cb076c9d359973ce68af0e0cd85bb5dac2e72b259582941a57621b.jpg",
+    time: "Oct 14",
+    unread: false,
+    online: false,
+    isGroup: false,
+  },
+  {
+    id: "contact-16",
+    name: "Meera Joshi",
+    message: "How was your weekend?",
+    image: "https://cdn.21st.dev/assets/mirror/cc/cc6b757fbf1174ae601b39aa711d6dfcda1b236001a2f3a67c4293d73c9fd714.jpg",
+    time: "Oct 13",
+    unread: false,
+    online: true,
+    isGroup: false,
+  },
+  {
+    id: "contact-17",
+    name: "Karthik Reddy",
+    message: "Please confirm the time.",
+    image: "https://cdn.21st.dev/assets/mirror/e8/e86e44eaa9cb076c9d359973ce68af0e0cd85bb5dac2e72b259582941a57621b.jpg",
+    time: "Oct 12",
+    unread: false,
+    online: false,
+    isGroup: false,
+  },
+  {
+    id: "contact-18",
+    name: "Pooja Sharma",
+    message: "See you at the event!",
+    image: "https://cdn.21st.dev/assets/mirror/1c/1c09f1ab9440e4f0922ad6c7494fb9efa1ae446ac5d39c4fb5843ed3fbc5c952.jpg",
+    time: "Oct 11",
+    unread: false,
+    online: true,
+    isGroup: false,
+  },
+  {
+    id: "contact-19",
+    name: "Sandeep Kumar",
+    message: "Just checking in.",
+    image: "https://cdn.21st.dev/assets/mirror/c4/c493b0a6d9a42ed0a102bcd31360d00491e23ac5cb4f7cbf8ae9c61f577ccccc.jpg",
+    time: "Oct 10",
+    unread: false,
+    online: false,
+    isGroup: false,
+  },
+  {
+    id: "contact-20",
+    name: "Lavanya Patel",
+    message: "Don't forget the meeting.",
+    image: "https://cdn.21st.dev/assets/mirror/56/56cfb2a08032e82843ccac91504bbf42ababde4aea91bbacd9b683912cd8b21a.jpg",
+    time: "Oct 09",
+    unread: false,
+    online: true,
+    isGroup: false,
+  },
+]
+
+export interface ChatContactItem {
+  id: string
+  name: string
+  message: string
+  image: string
+  time?: string
+  unread?: boolean
+  online?: boolean
+  isGroup?: boolean
 }
 
-export interface ChatMessage {
+export interface ThreadMessage {
   id: string
   sender: 'me' | 'them'
-  senderName: string
-  senderAvatar?: string
   text: string
   time: string
-  attachment?: MessageAttachment
 }
 
-export interface SharedClass {
-  code: string
-  name: string
-  schedule: string
-  color: string
-}
-
-export interface SharedMediaItem {
-  id: string
-  type: 'slide' | 'photo' | 'group'
-  title: string
-  badgeLabel: string
-  imageUrl: string
-}
-
-export interface PinnedLink {
-  id: string
-  type: 'notion' | 'github' | 'generic'
-  url: string
-  pinnedBy: string
-}
-
-export interface MutualFriend {
-  id: string
-  name: string
-  avatar: string
-}
-
-export interface Conversation {
-  id: string
-  name: string
-  avatar: string
-  isGroup?: boolean
-  verified?: boolean
-  handle?: string
-  majorBadge?: string
-  status: 'online' | 'idle' | 'offline'
-  statusText?: string
-  lastTime: string
-  snippet: string
-  secondarySnippet?: string
-  tags?: string[]
-  unreadCount?: number
-  deliveryStatus?: 'sent' | 'delivered' | 'read'
-  messages: ChatMessage[]
-  sharedClasses?: SharedClass[]
-  sharedMedia?: SharedMediaItem[]
-  pinnedLinks?: PinnedLink[]
-  mutualFriends?: MutualFriend[]
-  extraMutualCount?: number
-}
-
-interface LuminaMessagingViewProps {
+export interface LuminaMessagingViewProps {
   currentUser?: DashboardUser | null
   onBackToDashboard?: () => void
   onOpenProfile?: () => void
@@ -109,886 +315,673 @@ interface LuminaMessagingViewProps {
   initialChatId?: string | null
 }
 
-function formatChatTime(dateString?: string | null): string {
-  if (!dateString) return ''
-  try {
-    const d = new Date(dateString)
-    if (isNaN(d.getTime())) return ''
-    const now = new Date()
-    const isToday =
-      d.getDate() === now.getDate() &&
-      d.getMonth() === now.getMonth() &&
-      d.getFullYear() === now.getFullYear()
-    if (isToday) {
-      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    }
-    return d.toLocaleDateString([], { month: 'short', day: 'numeric' })
-  } catch {
-    return ''
-  }
-}
-
-function mapConversation(
-  item: ChatConversationItem,
-  _currentUserId?: string,
-  existingMessages?: ChatMessage[]
-): Conversation {
-  const isGroup = Boolean(item.isGroup)
-  const other = item.otherUser
-  const name =
-    item.name ||
-    other?.name ||
-    other?.username ||
-    (isGroup ? 'Study Group' : 'Conversation')
-  const avatar = item.image || other?.image || DEFAULT_WHATSAPP_AVATAR
-  const isOnline = Boolean(other?.online)
-  const status = isOnline ? 'online' : 'offline'
-  const statusText = isGroup
-    ? `${item.membersCount || 2} members`
-    : isOnline
-    ? 'Active now'
-    : 'Offline'
-
-  return {
-    id: item.channelId || item.id,
-    name,
-    avatar,
-    isGroup,
-    status,
-    statusText,
-    lastTime: formatChatTime(item.lastMessage?.createdAt),
-    snippet: item.lastMessage?.text || 'No messages yet',
-    unreadCount: item.unreadCount || 0,
-    messages: existingMessages || [],
-  }
-}
-
-function mapMessage(msg: ChatMessageItem, currentUserId?: string): ChatMessage {
-  const isMe = Boolean(
-    (currentUserId &&
-      (msg.user_id === currentUserId || msg.user?.id === currentUserId)) ||
-      msg.user_id === 'me'
-  )
-  const time = formatChatTime(msg.created_at)
-
-  let attachment: MessageAttachment | undefined
-  if (msg.attachments && msg.attachments.length > 0) {
-    const att = msg.attachments[0]
-    attachment = {
-      type: (att.type === 'pdf' ? 'pdf' : 'link') as any,
-      fileName: att.title || 'Attachment',
-      fileSize: att.file_size
-        ? `${Math.round(att.file_size / 1024)} KB`
-        : undefined,
-      fileSubtitle: att.title,
-      url: att.asset_url || att.image_url,
-    }
-  }
-
-  return {
-    id: msg.id,
-    sender: isMe ? 'me' : 'them',
-    senderName: isMe ? 'You' : msg.user?.name || 'Friend',
-    senderAvatar: msg.user?.image || undefined,
-    text: msg.text,
-    time,
-    attachment,
-  }
-}
-
-const INITIAL_CONVERSATIONS: Conversation[] = []
-
-export const LuminaMessagingView: React.FC<LuminaMessagingViewProps> = ({
+function LuminaMessagingViewInner({
   currentUser,
-  onBackToDashboard: _onBackToDashboard,
-  onOpenProfile: _onOpenProfile,
-  onLogout: _onLogout,
-  initialChatId,
-}) => {
-  const [conversations, setConversations] =
-    useState<Conversation[]>(INITIAL_CONVERSATIONS)
-  const [activeChatId, setActiveChatId] = useState<string>(
-    initialChatId || ''
-  )
-  const [searchQuery, setSearchQuery] = useState('')
-  const [activeFilter, setActiveFilter] = useState<
-    'all' | 'unread' | 'groups'
-  >('all')
-  const [inputText, setInputText] = useState('')
-  const [mobileView, setMobileView] = useState<'list' | 'thread'>('list')
-  const [isLoadingMessages, setIsLoadingMessages] = useState(false)
-  const [isSending, setIsSending] = useState(false)
+  onBackToDashboard,
+  onOpenProfile,
+  onLogout,
+}: LuminaMessagingViewProps) {
+  const { open, toggleSidebar } = useSidebar()
+
+  // State
+  const [contacts, setContacts] = useState<ChatContactItem[]>(defaultContactList)
+  const [currentChat, setCurrentChat] = useState<ChatContactItem>(defaultContactList[0])
+  const [searchQuery, setSearchQuery] = useState("")
+  const [activeFilter, setActiveFilter] = useState<string>("all")
+  const [inputText, setInputText] = useState("")
+  const [threadMessages, setThreadMessages] = useState<Record<string, ThreadMessage[]>>({
+    "contact-1": [
+      { id: "1", sender: "them", text: "Hey! How is everything going with the new project?", time: "10:14 AM" },
+      { id: "2", sender: "me", text: "Everything is going great! Just polishing the chat interface with resizable panels.", time: "10:16 AM" },
+      { id: "3", sender: "them", text: "Awesome, let me know if you need any feedback.", time: "10:18 AM" },
+    ],
+  })
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
   const typingTimeoutRef = useRef<any>(null)
 
-  const currentUserName = currentUser?.name || 'You'
-
-  // Fetch all user conversations from backend
-  const loadConversations = useCallback(async (silent = false) => {
+  // Load conversations from backend
+  const loadConversations = useCallback(async () => {
     try {
       const res = await fetchMyConversationsApi()
-      if (res.success && Array.isArray(res.data)) {
-        setConversations((prev) => {
-          const prevMap = new Map(prev.map((c) => [c.id, c]))
-          const mapped = res.data!.map((item) => {
-            const existing = prevMap.get(item.channelId || item.id)
-            return mapConversation(
-              item,
-              currentUser?.id,
-              existing?.messages || []
-            )
-          })
+      if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+        const mapped: ChatContactItem[] = res.data.map((item: ChatConversationItem) => {
+          const isGroup = Boolean(item.isGroup)
+          const other = item.otherUser
+          const name = item.name || other?.name || other?.username || (isGroup ? 'Study Group' : 'Direct Chat')
+          const image = item.image || other?.image || defaultContactList[0].image
+          const message = item.lastMessage?.text || 'No messages yet'
+          return {
+            id: item.channelId || item.id,
+            name,
+            message,
+            image,
+            time: 'Recent',
+            unread: (item.unreadCount || 0) > 0,
+            online: Boolean(other?.online),
+            isGroup,
+          }
+        })
 
-          // Retain any pending or locally created conversation
-          prev.forEach((localConv) => {
-            if (!mapped.some((m) => m.id === localConv.id)) {
-              mapped.unshift(localConv)
-            }
-          })
-
-          return mapped
+        setContacts((prev) => {
+          const existingIds = new Set(mapped.map((m) => m.id))
+          const nonOverlapping = prev.filter((p) => !existingIds.has(p.id))
+          return [...mapped, ...nonOverlapping]
         })
       }
-    } catch (err) {
-      if (!silent) {
-        console.warn('[LuminaMessaging] Failed to fetch conversations:', err)
+    } catch {
+      // Keep sample contacts on network failure
+    }
+  }, [])
+
+  // Load messages for current chat from backend if channel exists
+  const loadMessages = useCallback(async (chatId: string) => {
+    if (!chatId) return
+    try {
+      const res = await fetchChannelMessagesApi(chatId)
+      if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+        const mapped: ThreadMessage[] = res.data.map((m: ChatMessageItem) => ({
+          id: m.id,
+          sender: m.user_id === currentUser?.id || m.user_id === 'me' ? 'me' : 'them',
+          text: m.text,
+          time: new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }))
+        setThreadMessages((prev) => ({
+          ...prev,
+          [chatId]: mapped,
+        }))
+        markChannelReadApi(chatId).catch(() => {})
       }
+    } catch {
+      // retain local thread
     }
   }, [currentUser?.id])
 
-  // Fetch messages for active channel
-  const loadMessagesForChannel = useCallback(
-    async (channelId: string, silent = false) => {
-      if (!channelId) return
-      if (!silent) setIsLoadingMessages(true)
-      try {
-        const res = await fetchChannelMessagesApi(channelId)
-        if (res.success && Array.isArray(res.data)) {
-          const mapped = res.data.map((m) => mapMessage(m, currentUser?.id))
-          setConversations((prev) =>
-            prev.map((c) => {
-              if (c.id === channelId) {
-                const last = mapped[mapped.length - 1]
-                return {
-                  ...c,
-                  messages: mapped,
-                  snippet: last?.text || c.snippet,
-                  lastTime: last?.time || c.lastTime,
-                  unreadCount: 0,
-                }
-              }
-              return c
-            })
-          )
-        }
-        markChannelReadApi(channelId).catch(() => {})
-      } catch (err) {
-        if (!silent) {
-          console.warn(`[LuminaMessaging] Failed to load messages for ${channelId}:`, err)
-        }
-      } finally {
-        if (!silent) setIsLoadingMessages(false)
-      }
-    },
-    [currentUser?.id]
-  )
-
-  // Mount: fetch conversations and handle sessionStorage friend
   useEffect(() => {
-    let isMounted = true
-
-    loadConversations().then(() => {
-      if (!isMounted) return
-      try {
-        const friendStr = sessionStorage.getItem('lumina_active_chat_friend')
-        const channelId = sessionStorage.getItem('lumina_active_channel_id')
-        if (friendStr) {
-          const friend = JSON.parse(friendStr)
-          if (friend && friend.id) {
-            const desiredChannelId = channelId || `direct-${friend.id}`
-
-            createConversationApi({
-              otherUserId: friend.id,
-              otherName: friend.name,
-              otherUsername: friend.username,
-              otherAvatar: friend.avatar,
-            })
-              .then((createRes) => {
-                if (!isMounted) return
-                const finalId =
-                  createRes.success && createRes.data?.channelId
-                    ? createRes.data.channelId
-                    : desiredChannelId
-
-                setConversations((prev) => {
-                  if (prev.some((c) => c.id === finalId)) {
-                    return prev
-                  }
-                  const newConv: Conversation = {
-                    id: finalId,
-                    name: friend.name || friend.username || 'Friend',
-                    avatar: friend.avatar || DEFAULT_WHATSAPP_AVATAR,
-                    status: 'online',
-                    statusText: 'Active now',
-                    lastTime: 'Just now',
-                    snippet: 'Conversation started',
-                    messages: [],
-                  }
-                  return [newConv, ...prev]
-                })
-                setActiveChatId(finalId)
-                setMobileView('thread')
-              })
-              .catch(() => {
-                if (!isMounted) return
-                setActiveChatId(desiredChannelId)
-              })
-          }
-        }
-      } catch {
-        // ignore
-      }
-    })
-
-    const interval = setInterval(() => {
-      loadConversations(true)
-    }, 10000)
-
-    return () => {
-      isMounted = false
-      clearInterval(interval)
-    }
+    loadConversations()
   }, [loadConversations])
 
-  // Active channel messages polling
   useEffect(() => {
-    if (!activeChatId) return
+    if (currentChat?.id) {
+      loadMessages(currentChat.id)
+    }
+  }, [currentChat?.id, loadMessages])
 
-    loadMessagesForChannel(activeChatId, false)
+  // Auto-scroll on new messages
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [threadMessages, currentChat?.id])
 
-    const interval = setInterval(() => {
-      loadMessagesForChannel(activeChatId, true)
-    }, 3500)
-
-    return () => clearInterval(interval)
-  }, [activeChatId, loadMessagesForChannel])
-
-  const activeConversation = useMemo(() => {
-    if (conversations.length === 0) return null
-    return (
-      conversations.find((c) => c.id === activeChatId) || conversations[0] || null
-    )
-  }, [conversations, activeChatId])
-
-  const unreadCount = useMemo(() => {
-    return conversations.filter((c) => (c.unreadCount || 0) > 0).length
-  }, [conversations])
-
-  // Filter conversations
-  const filteredConversations = useMemo(() => {
-    return conversations.filter((c) => {
-      if (activeFilter === 'unread') {
-        if (!c.unreadCount || c.unreadCount <= 0) return false
-      } else if (activeFilter === 'groups') {
-        if (!c.isGroup) return false
-      }
+  // Filter contacts
+  const filteredContacts = useMemo(() => {
+    return contacts.filter((c) => {
+      if (activeFilter === "unread" && !c.unread) return false
+      if (activeFilter === "groups" && !c.isGroup) return false
+      if (activeFilter === "favorites" && c.id !== "contact-1") return false
 
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim()
-        const matchesName = c.name.toLowerCase().includes(q)
-        const matchesSnippet = c.snippet.toLowerCase().includes(q)
-        const matchesTags = c.tags?.some((t) => t.toLowerCase().includes(q))
-        return matchesName || matchesSnippet || matchesTags
+        return c.name.toLowerCase().includes(q) || c.message.toLowerCase().includes(q)
       }
       return true
     })
-  }, [conversations, activeFilter, searchQuery])
+  }, [contacts, activeFilter, searchQuery])
 
-  // Auto-scroll to bottom of messages
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [activeConversation?.messages])
+  // Current chat's messages
+  const activeMessages = useMemo(() => {
+    if (!currentChat) return []
+    return (
+      threadMessages[currentChat.id] ||
+      threadMessages[currentChat.name] || [
+        {
+          id: "init",
+          sender: "them",
+          text: currentChat.message,
+          time: currentChat.time || "Just now",
+        },
+      ]
+    )
+  }, [currentChat, threadMessages])
 
-  // Send message with optimistic update and backend sync
+  // Send message
   const handleSendMessage = async () => {
-    const textToSend = inputText.trim()
-    if (!textToSend || !activeConversation || isSending) return
+    const text = inputText.trim()
+    if (!text || !currentChat) return
 
-    const channelId = activeConversation.id
-    const tempId = `temp-${Date.now()}`
-    const timeStr = new Date().toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-
-    const optimisticMsg: ChatMessage = {
-      id: tempId,
-      sender: 'me',
-      senderName: `${currentUserName} (You)`,
-      text: textToSend,
+    const timeStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    const newMsg: ThreadMessage = {
+      id: `msg-${Date.now()}`,
+      sender: "me",
+      text,
       time: timeStr,
     }
 
-    setInputText('')
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'
-      textareaRef.current.focus()
-    }
+    setThreadMessages((prev) => ({
+      ...prev,
+      [currentChat.id]: [...(prev[currentChat.id] || []), newMsg],
+      [currentChat.name]: [...(prev[currentChat.name] || []), newMsg],
+    }))
 
-    setConversations((prev) =>
-      prev.map((conv) => {
-        if (conv.id === channelId) {
-          return {
-            ...conv,
-            snippet: textToSend,
-            lastTime: timeStr,
-            unreadCount: 0,
-            messages: [...conv.messages, optimisticMsg],
-          }
-        }
-        return conv
-      })
+    setContacts((prev) =>
+      prev.map((c) =>
+        c.id === currentChat.id ? { ...c, message: text, time: "Just now" } : c
+      )
     )
 
-    setIsSending(true)
+    setInputText("")
+
     try {
-      const res = await sendMessageApi(channelId, textToSend)
-      if (res.success && res.data) {
-        const backendMsg = mapMessage(res.data, currentUser?.id)
-        setConversations((prev) =>
-          prev.map((c) => {
-            if (c.id === channelId) {
-              return {
-                ...c,
-                messages: c.messages.map((m) =>
-                  m.id === tempId ? backendMsg : m
-                ),
-              }
-            }
-            return c
-          })
-        )
-      } else {
-        // If channel was created purely on client, create channel on backend first
-        const friendStr = sessionStorage.getItem('lumina_active_chat_friend')
-        if (friendStr) {
-          try {
-            const friend = JSON.parse(friendStr)
-            if (friend?.id) {
-              const createRes = await createConversationApi({
-                otherUserId: friend.id,
-                otherName: friend.name,
-                otherUsername: friend.username,
-                otherAvatar: friend.avatar,
-              })
-              if (createRes.success && createRes.data?.channelId) {
-                const newId = createRes.data.channelId
-                setActiveChatId(newId)
-                await sendMessageApi(newId, textToSend)
-              }
-            }
-          } catch {
-            // ignore
-          }
-        }
-      }
-    } catch (err) {
-      console.error('[LuminaMessaging] Failed to send message:', err)
-    } finally {
-      setIsSending(false)
+      await sendMessageApi(currentChat.id, text)
+    } catch {
+      // Handled optimistically
     }
   }
 
-  // Handle typing with debounced typing indicator to backend
-  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputText(e.target.value)
-    if (activeConversation?.id) {
+    if (currentChat?.id) {
       if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current)
       typingTimeoutRef.current = setTimeout(() => {
-        sendTypingIndicatorApi(activeConversation.id).catch(() => {})
+        sendTypingIndicatorApi(currentChat.id).catch(() => {})
       }, 500)
     }
   }
 
-  const handleStartChatFromSearch = async (query: string) => {
-    const clean = query.trim()
-    if (!clean) return
+  const handleCreateContact = async (isGroup = false) => {
+    const defaultName = isGroup ? "New Study Group" : "New Contact"
+    const name = window.prompt(`Enter ${isGroup ? 'Group' : 'Contact'} Name:`, defaultName)
+    if (!name?.trim()) return
 
-    const tempId = `chat-${Date.now()}`
-    const newConv: Conversation = {
-      id: tempId,
-      name: clean,
-      avatar: DEFAULT_WHATSAPP_AVATAR,
-      status: 'online',
-      statusText: 'Active now',
-      lastTime: 'Just now',
-      snippet: 'Conversation started',
-      messages: [],
+    const newId = `custom-${Date.now()}`
+    const newContact: ChatContactItem = {
+      id: newId,
+      name: name.trim(),
+      message: isGroup ? "Group created" : "Started conversation",
+      image: defaultContactList[Math.floor(Math.random() * defaultContactList.length)].image,
+      time: "Just now",
+      online: true,
+      isGroup,
     }
-    setConversations((prev) => [newConv, ...prev])
-    setActiveChatId(tempId)
-    setSearchQuery('')
-    setMobileView('thread')
-  }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-      e.preventDefault()
-      handleSendMessage()
-    } else if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSendMessage()
+    setContacts((prev) => [newContact, ...prev])
+    setCurrentChat(newContact)
+
+    try {
+      await createConversationApi({
+        otherUserId: newId,
+        otherName: name.trim(),
+      })
+    } catch {
+      // Local fallback
     }
   }
+
+  // Sidebar Menu Items
+  const menuItems = [
+    { title: "Messages", icon: MessageCircle, active: true },
+    { title: "Phone", icon: Phone, active: false },
+    { title: "Status", icon: CircleFadingPlus, active: false },
+  ]
+
+  const userName = currentUser?.name || "Manoj Rayi"
 
   return (
-    <div className="notion-chat-layout">
-      {/* =========================================================================
-          MAIN CHAT WORKSPACE (RESPONSIVE 2-PANEL NOTION-BLACK CHAT)
-         ========================================================================= */}
-      <div className="notion-chat-main-container">
-        {/* Responsive Chat Layout */}
-        <div
-          className={`notion-chat-columns ${
-            mobileView === 'thread' ? 'mobile-show-thread' : 'mobile-show-list'
-          }`}
-        >
-          {/* =====================================================================
-              COLUMN 1: CONVERSATIONS LIST
-             ===================================================================== */}
-          <section className="notion-col-conversations">
-            {/* Header: Title */}
-            <div className="notion-conv-header">
-              <div className="notion-conv-title-wrap">
-                <h2 className="notion-conv-title">Messages</h2>
-              </div>
-            </div>
+    <div className="flex h-screen w-full overflow-hidden bg-[#121212] text-neutral-100 antialiased font-sans select-none">
+      {/* 1. Collapsible Sidebar */}
+      <Sidebar variant="floating" collapsible="icon">
+        <SidebarContent className="flex flex-col items-center py-3 px-2 gap-1.5">
+          <SidebarGroup className="w-full">
+            <SidebarGroupLabel>Navigate</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {/* Sidebar Toggle Button */}
+                <SidebarMenuItem>
+                  <SidebarMenuButton onClick={toggleSidebar} title={open ? "Collapse Sidebar" : "Expand Sidebar"}>
+                    <Menu className="size-5 shrink-0" />
+                    <span>Collapse</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
 
-            {/* Quick Search with ⌘K */}
-            <div className="notion-conv-search-wrap">
-              <Search size={15} className="notion-conv-search-icon" />
-              <input
-                type="text"
-                placeholder="Search friends or messages..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="notion-conv-search-input"
-              />
-              <span className="notion-conv-kbd">⌘K</span>
-            </div>
+                {/* Back to Dashboard Feed */}
+                {onBackToDashboard && (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton onClick={onBackToDashboard} title="Back to Feed">
+                      <ArrowLeft className="size-5 shrink-0" />
+                      <span>Back to Feed</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )}
 
-            {/* Filter Tabs */}
-            <div className="notion-conv-tabs">
-              <button
-                type="button"
-                className={`notion-conv-tab-btn ${activeFilter === 'all' ? 'active' : ''}`}
-                onClick={() => setActiveFilter('all')}
-              >
-                All
-              </button>
-              <button
-                type="button"
-                className={`notion-conv-tab-btn ${activeFilter === 'unread' ? 'active' : ''}`}
-                onClick={() => setActiveFilter('unread')}
-              >
-                Unread {unreadCount > 0 ? unreadCount : ''}
-              </button>
-              <button
-                type="button"
-                className={`notion-conv-tab-btn ${activeFilter === 'groups' ? 'active' : ''}`}
-                onClick={() => setActiveFilter('groups')}
-              >
-                Study Groups
-              </button>
-            </div>
+                {/* Main Navigation Items */}
+                {menuItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton isActive={item.active} title={item.title}>
+                      <item.icon className="size-5 shrink-0" />
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
 
-            {/* Scrollable Conversation List */}
-            <div className="notion-conv-scroll-list">
-              {searchQuery.trim() && filteredConversations.length === 0 ? (
-                <div className="notion-conv-search-empty">
-                  <p className="notion-empty-desc">No chats match "{searchQuery}"</p>
-                  <button
-                    type="button"
-                    className="notion-start-chat-btn"
-                    onClick={() => handleStartChatFromSearch(searchQuery)}
-                  >
-                    Start chat with "{searchQuery.trim()}"
-                  </button>
+        {/* Sidebar Footer */}
+        <SidebarFooter className="p-2 border-t border-neutral-800 bg-[#161616]">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton title="Settings">
+                <Settings className="size-5 shrink-0" />
+                <span>Settings</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton title={userName} className="relative">
+                    {open ? (
+                      <>
+                        <User2 className="size-5 shrink-0" />
+                        <span className="truncate">{userName}</span>
+                        <ChevronUp className="ml-auto size-4 shrink-0" />
+                      </>
+                    ) : (
+                      <div className="size-8 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center text-xs font-semibold text-white shrink-0">
+                        {userName[0]?.toUpperCase() || 'U'}
+                      </div>
+                    )}
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="top"
+                  className="w-48 bg-[#1e1e1e] border-neutral-800 text-neutral-200"
+                >
+                  <DropdownMenuItem onClick={onOpenProfile}>
+                    <User className="size-4" />
+                    <span>Account</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Back Up</span>
+                  </DropdownMenuItem>
+                  {onLogout && (
+                    <DropdownMenuItem onClick={onLogout} className="text-red-400 hover:text-red-300">
+                      <span>Sign out</span>
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      </Sidebar>
+
+      {/* 2. Main Content Inset */}
+      <SidebarInset className="bg-[#191919]">
+        <ResizablePanelGroup direction="horizontal" className="h-screen w-full">
+          {/* ===================================================================
+              Left Panel: Chats List
+             =================================================================== */}
+          <ResizablePanel defaultSize={30} minSize={22} maxSize={45}>
+            <div className="flex flex-col h-full w-full border-r border-neutral-800 bg-[#161616]">
+              {/* Header */}
+              <div className="h-16 px-4 flex items-center justify-between border-b border-neutral-800 shrink-0">
+                <h2 className="text-lg font-bold text-white tracking-tight">Chats</h2>
+                <div className="flex items-center gap-1">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-neutral-400 hover:text-white hover:bg-neutral-800 size-9 rounded-lg"
+                        title="New Chat"
+                      >
+                        <SquarePen className="size-4.5" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-44 bg-[#1e1e1e] border-neutral-800 text-neutral-200">
+                      <DropdownMenuItem onClick={() => handleCreateContact(false)}>
+                        <User className="size-4" /> New Contact
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleCreateContact(true)}>
+                        <Users className="size-4" /> New Group
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-neutral-400 hover:text-white hover:bg-neutral-800 size-9 rounded-lg"
+                        title="Filter Chats"
+                      >
+                        <ListFilter className="size-4.5" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56 bg-[#1e1e1e] border-neutral-800 text-neutral-200">
+                      <DropdownMenuLabel>Filter Chats By</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem onClick={() => setActiveFilter('all')}>
+                          <MessageCircle className="size-4" /> All Chats
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setActiveFilter('unread')}>
+                          <MessageSquareDot className="size-4" /> Unread
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setActiveFilter('favorites')}>
+                          <Star className="size-4" /> Favorites
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setActiveFilter('contacts')}>
+                          <CircleUserRound className="size-4" /> Contacts
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setActiveFilter('non-contacts')}>
+                          <CircleOff className="size-4" /> Non Contacts
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem onClick={() => setActiveFilter('groups')}>
+                          <Users className="size-4" /> Groups
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setActiveFilter('drafts')}>
+                          <MessageSquareDashed className="size-4" /> Drafts
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
-              ) : filteredConversations.length === 0 ? null : (
-                filteredConversations.map((conv) => {
-                  const isSelected =
-                    activeConversation && conv.id === activeConversation.id
+              </div>
 
-                  return (
-                    <div
-                      key={conv.id}
-                      className={`notion-conv-card ${isSelected ? 'is-selected' : ''}`}
-                      onClick={() => {
-                        setActiveChatId(conv.id)
-                        setMobileView('thread')
-                      }}
-                      role="button"
-                      tabIndex={0}
-                    >
-                      {/* Avatar with Status Dot */}
-                      <div className="notion-conv-avatar-box">
-                        {conv.isGroup ? (
-                          <div className="notion-conv-group-avatar">
-                            <span className="notion-group-initials">
-                              {(conv.name.slice(0, 2) || 'GP').toUpperCase()}
-                            </span>
-                          </div>
-                        ) : (
-                          <img
-                            src={conv.avatar}
-                            alt={conv.name}
-                            className="notion-conv-avatar-img"
-                            onError={(e) => {
-                              ;(e.target as HTMLImageElement).src =
-                                DEFAULT_WHATSAPP_AVATAR
-                            }}
-                          />
-                        )}
-                        <span
-                          className={`notion-conv-status-dot ${conv.status}`}
-                        />
-                      </div>
+              {/* Search Bar */}
+              <div className="px-3.5 py-3 border-b border-neutral-800/60 shrink-0">
+                <div className="relative w-full">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-neutral-400 pointer-events-none" />
+                  <Input
+                    placeholder="Search or start new chat"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9 h-9.5 w-full bg-[#202020] border-neutral-800/80 text-neutral-100 placeholder:text-neutral-500 rounded-lg focus-visible:ring-1 focus-visible:ring-neutral-700 text-sm"
+                  />
+                </div>
+              </div>
 
-                      {/* Middle Card Content */}
-                      <div className="notion-conv-info">
-                        <div className="notion-conv-top-row">
-                          <div className="notion-conv-name-row">
-                            <span className="notion-conv-name">{conv.name}</span>
-                            {conv.isGroup && (
-                              <Users size={13} className="notion-group-icon" />
-                            )}
-                          </div>
-                          <span className="notion-conv-time">
-                            {conv.lastTime}
-                          </span>
-                        </div>
-
-                        <div className="notion-conv-snippet-row">
-                          <span className="notion-conv-snippet">
-                            {conv.snippet}
-                          </span>
-                          {conv.unreadCount && conv.unreadCount > 0 ? (
-                            <span className="notion-conv-unread-bubble">
-                              {conv.unreadCount}
-                            </span>
-                          ) : conv.deliveryStatus === 'delivered' ? (
-                            <span className="notion-conv-delivered-mark">
-                              <CheckCheck size={14} /> Delivered
-                            </span>
-                          ) : null}
-                        </div>
-
-                        {conv.secondarySnippet && (
-                          <div className="notion-conv-secondary-snippet">
-                            {conv.secondarySnippet}
-                          </div>
-                        )}
-
-                        {/* Badges / Location Tag Row */}
-                        {conv.tags && conv.tags.length > 0 && (
-                          <div className="notion-conv-badges-row">
-                            {conv.tags.map((tag, idx) => (
-                              <span key={idx} className="notion-conv-tag-pill">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )
-                })
-              )}
-            </div>
-          </section>
-
-          {/* =====================================================================
-              COLUMN 2: MAIN CHAT THREAD (GRID PATTERN CANVAS)
-             ===================================================================== */}
-          <section className="notion-col-thread">
-            {!activeConversation ? (
-              <div className="notion-thread-empty-state">
+              {/* Quick Filter Tabs */}
+              <div className="px-3.5 py-2 flex items-center gap-1.5 border-b border-neutral-800/40 shrink-0">
                 <button
                   type="button"
-                  className="notion-mobile-back-btn notion-empty-mobile-back"
-                  onClick={() => setMobileView('list')}
-                  title="Back to messages"
-                  aria-label="Back to messages"
+                  onClick={() => setActiveFilter('all')}
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+                    activeFilter === 'all'
+                      ? 'bg-neutral-800 text-white font-semibold'
+                      : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
+                  }`}
                 >
-                  <ArrowLeft size={18} />
+                  All
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveFilter('unread')}
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+                    activeFilter === 'unread'
+                      ? 'bg-neutral-800 text-white font-semibold'
+                      : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
+                  }`}
+                >
+                  Unread
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveFilter('groups')}
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+                    activeFilter === 'groups'
+                      ? 'bg-neutral-800 text-white font-semibold'
+                      : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
+                  }`}
+                >
+                  Groups
                 </button>
               </div>
-            ) : (
-              <>
-                {/* Thread Header */}
-                <div className="notion-thread-header">
-                  <div className="notion-thread-header-left">
-                    <button
-                      type="button"
-                      className="notion-mobile-back-btn"
-                      onClick={() => setMobileView('list')}
-                      title="Back to messages"
-                      aria-label="Back to messages"
-                    >
-                      <ArrowLeft size={18} />
-                    </button>
-                    <div className="notion-thread-avatar-wrap">
-                      {activeConversation.isGroup ? (
-                        <div className="notion-conv-group-avatar mini">
-                          <span className="notion-group-initials">
-                            {(activeConversation.name.slice(0, 2) || 'GP').toUpperCase()}
-                          </span>
-                        </div>
-                      ) : (
-                        <img
-                          src={activeConversation.avatar}
-                          alt={activeConversation.name}
-                          className="notion-thread-header-avatar"
-                          onError={(e) => {
-                            ;(e.target as HTMLImageElement).src =
-                              DEFAULT_WHATSAPP_AVATAR
-                          }}
-                        />
-                      )}
-                      <span
-                        className={`notion-conv-status-dot ${activeConversation.status}`}
-                      />
-                    </div>
-                    <div className="notion-thread-header-info">
-                      <div className="notion-thread-name-row">
-                        <span className="notion-thread-header-name">
-                          {activeConversation.name}
-                        </span>
-                        {activeConversation.verified && (
-                          <BadgeCheck
-                            size={15}
-                            className="notion-verified-icon"
-                          />
-                        )}
-                      </div>
-                      <span className="notion-thread-header-sub">
-                        {activeConversation.statusText || 'Active now'}
-                      </span>
-                    </div>
-                  </div>
 
-                  <div className="notion-thread-header-actions">
-                    <button
-                      type="button"
-                      className="notion-thread-btn"
-                      title="Phone Call"
-                      onClick={() => alert(`Calling ${activeConversation.name}...`)}
-                    >
-                      <Phone size={17} />
-                    </button>
-                    <button
-                      type="button"
-                      className="notion-thread-btn"
-                      title="Video Call"
-                      onClick={() =>
-                        alert(`Starting Video Call with ${activeConversation.name}...`)
-                      }
-                    >
-                      <Video size={17} />
-                    </button>
-                    <button
-                      type="button"
-                      className="notion-thread-btn"
-                      title="Search in conversation"
-                      onClick={() => alert('Search in thread')}
-                    >
-                      <Search size={17} />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Chat Messages Body with Blueprint Grid */}
-                <div className="notion-thread-body">
-                  {/* Messages Flow */}
-                  <div className="notion-messages-list">
-                    {isLoadingMessages && activeConversation.messages.length === 0 ? (
-                      <div className="notion-thread-loading-wrap">
-                        <Loader2 size={22} className="notion-spin-icon" />
-                      </div>
-                    ) : activeConversation.messages.length === 0 ? null : (
-                      <>
-                        <div className="notion-date-divider">
-                          <span className="notion-date-pill">TODAY</span>
-                        </div>
-                        {activeConversation.messages.map((msg) => {
-                          const isThem = msg.sender === 'them'
-
-                          return (
-                            <div
-                              key={msg.id}
-                              className={`notion-message-row ${isThem ? 'from-them' : 'from-me'}`}
-                            >
-                              {isThem && (
-                                <div className="notion-msg-avatar-col">
-                                  <img
-                                    src={msg.senderAvatar || activeConversation.avatar}
-                                    alt={msg.senderName}
-                                    className="notion-msg-avatar"
-                                  />
-                                </div>
-                              )}
-
-                              <div className="notion-msg-content-col">
-                                {/* Header: Sender Name + Timestamp */}
-                                <div className="notion-msg-meta-row">
-                                  <span className="notion-msg-sender-name">
-                                    {msg.senderName}
-                                  </span>
-                                  <span className="notion-msg-time">{msg.time}</span>
-                                </div>
-
-                                {/* Bubble */}
-                                <div
-                                  className={`notion-msg-bubble ${isThem ? 'bubble-them' : 'bubble-me'}`}
-                                >
-                                  <p className="notion-msg-text">{msg.text}</p>
-
-                                  {/* Attachment Card if present */}
-                                  {msg.attachment && (
-                                    <div className="notion-attachment-card">
-                                      <div className="notion-attach-left">
-                                        <div className="notion-attach-pdf-badge">
-                                          <FileText size={18} />
-                                          <span className="notion-pdf-badge-label">
-                                            PDF
-                                          </span>
-                                        </div>
-                                        <div className="notion-attach-details">
-                                          <span className="notion-attach-title">
-                                            {msg.attachment.fileName}
-                                          </span>
-                                          <span className="notion-attach-subtitle">
-                                            {msg.attachment.fileSize} •{' '}
-                                            {msg.attachment.fileSubtitle}
-                                          </span>
-                                        </div>
-                                      </div>
-                                      <button
-                                        type="button"
-                                        className="notion-attach-dl-btn"
-                                        title="Download PDF"
-                                        onClick={() =>
-                                          alert(`Downloading ${msg.attachment?.fileName}`)
-                                        }
-                                      >
-                                        <Download size={16} />
-                                      </button>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          )
-                        })}
-                      </>
-                    )}
-                    <div ref={messagesEndRef} />
-                  </div>
-                </div>
-
-                {/* Message Composer Area */}
-                <div className="notion-composer-wrapper">
-                  <div className="notion-composer-box">
-                    <textarea
-                      ref={textareaRef}
-                      value={inputText}
-                      onChange={handleTextareaChange}
-                      onKeyDown={handleKeyDown}
-                      placeholder="Message..."
-                      rows={2}
-                      className="notion-composer-textarea"
-                    />
-
-                    <div className="notion-composer-toolbar">
-                      {/* Left Formatting / Input Tools */}
-                      <div className="notion-composer-tools-left">
-                        <button
-                          type="button"
-                          className="notion-tool-btn"
-                          title="Attach file or media"
-                          onClick={() => alert('Attach file')}
-                        >
-                          <Paperclip size={16} />
-                        </button>
-                        <button
-                          type="button"
-                          className="notion-tool-btn"
-                          title="Insert code block"
-                          onClick={() =>
-                            setInputText((prev) => prev + '\n```typescript\n\n```\n')
-                          }
-                        >
-                          <Code size={16} />
-                        </button>
-                        <button
-                          type="button"
-                          className="notion-tool-btn"
-                          title="Insert math formula (LaTeX)"
-                          onClick={() => setInputText((prev) => prev + ' $\\sum_{i=1}^n$ ')}
-                        >
-                          <Sigma size={16} />
-                        </button>
-                        <button
-                          type="button"
-                          className="notion-tool-btn"
-                          title="Add emoji"
-                          onClick={() => setInputText((prev) => prev + ' 🚀')}
-                        >
-                          <Smile size={16} />
-                        </button>
-                        <button
-                          type="button"
-                          className="notion-tool-btn"
-                          title="Voice message"
-                          onClick={() => alert('Voice recording started')}
-                        >
-                          <Mic size={16} />
-                        </button>
-                      </div>
-
-                      {/* Right: Send Button */}
-                      <div className="notion-composer-tools-right">
-                        <button
-                          type="button"
-                          className="notion-send-btn"
-                          onClick={handleSendMessage}
-                          disabled={!inputText.trim() || isSending}
-                        >
-                          {isSending ? (
-                            <>
-                              <span>Sending</span>
-                              <Loader2 size={14} className="notion-spin-icon" />
-                            </>
-                          ) : (
-                            <>
-                              <span>Send</span>
-                              <Send size={14} className="notion-send-icon" />
-                            </>
+              {/* Contact List */}
+              <ScrollArea className="flex-1 w-full overflow-y-auto">
+                <div className="flex flex-col">
+                  {filteredContacts.map((contact, index) => {
+                    const isSelected = currentChat?.id === contact.id
+                    return (
+                      <button
+                        key={contact.id || index}
+                        onClick={() => setCurrentChat(contact)}
+                        className={`w-full px-3.5 py-3 hover:bg-neutral-800/50 cursor-pointer text-left transition-colors border-b border-neutral-800/30 flex items-center gap-3.5 ${
+                          isSelected ? "bg-[#252525] border-l-2 border-l-white" : ""
+                        }`}
+                      >
+                        <div className="relative shrink-0">
+                          <Avatar className="size-11 rounded-full">
+                            <AvatarImage src={contact.image} alt={contact.name} />
+                            <AvatarFallback>{contact.name[0]}</AvatarFallback>
+                          </Avatar>
+                          {contact.online && (
+                            <span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-[#161616]" />
                           )}
-                        </button>
-                      </div>
-                    </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-2 mb-1">
+                            <h4 className="text-sm font-medium text-neutral-100 truncate">
+                              {contact.name}
+                            </h4>
+                            {contact.time && (
+                              <span className="text-[11px] text-neutral-400 shrink-0 font-normal">
+                                {contact.time}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center justify-between gap-2">
+                            <p className="text-xs text-neutral-400 truncate">
+                              {contact.message}
+                            </p>
+                            {contact.unread && (
+                              <span className="size-2 rounded-full bg-blue-500 shrink-0" />
+                            )}
+                          </div>
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+              </ScrollArea>
+            </div>
+          </ResizablePanel>
+
+          {/* Resizable Divider Handle */}
+          <ResizableHandle />
+
+          {/* ===================================================================
+              Right Panel: Chat Thread Window
+             =================================================================== */}
+          <ResizablePanel defaultSize={70} minSize={55} maxSize={78}>
+            <div className="flex flex-col h-full w-full bg-[#191919]">
+              {/* Chat Header */}
+              <div className="h-16 px-6 border-b border-neutral-800 bg-[#161616] flex items-center justify-between shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <Avatar className="size-10 rounded-full">
+                      <AvatarImage src={currentChat?.image} alt={currentChat?.name} />
+                      <AvatarFallback>
+                        {currentChat?.name ? currentChat.name.slice(0, 2).toUpperCase() : "PR"}
+                      </AvatarFallback>
+                    </Avatar>
+                    {currentChat?.online && (
+                      <span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-[#161616]" />
+                    )}
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-white leading-tight">
+                      {currentChat?.name}
+                    </h3>
+                    <p className="text-xs text-neutral-400 flex items-center gap-1.5 mt-0.5">
+                      <span className={`size-1.5 rounded-full ${currentChat?.online ? 'bg-emerald-500' : 'bg-neutral-500'}`} />
+                      {currentChat?.isGroup ? "Study Group" : currentChat?.online ? "Online" : "Offline"}
+                    </p>
                   </div>
                 </div>
-              </>
-            )}
-          </section>
-        </div>
-      </div>
+
+                <div className="flex items-center gap-1.5 text-neutral-400">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="hover:text-white hover:bg-neutral-800 size-9 rounded-lg"
+                    title="Video Call"
+                  >
+                    <Video className="size-4.5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="hover:text-white hover:bg-neutral-800 size-9 rounded-lg"
+                    title="Voice Call"
+                  >
+                    <Phone className="size-4.5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="hover:text-white hover:bg-neutral-800 size-9 rounded-lg"
+                    title="Search Messages"
+                  >
+                    <Search className="size-4.5" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Chat Messages Flow */}
+              <ScrollArea className="flex-1 w-full overflow-y-auto px-6 py-6">
+                <div className="flex flex-col gap-3.5 max-w-4xl mx-auto">
+                  {activeMessages.map((msg) => {
+                    const isMe = msg.sender === "me"
+                    return (
+                      <div
+                        key={msg.id}
+                        className={`flex flex-col max-w-[68%] ${
+                          isMe ? "ml-auto items-end" : "mr-auto items-start"
+                        }`}
+                      >
+                        <div
+                          className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
+                            isMe
+                              ? "bg-neutral-800 text-white rounded-tr-xs border border-neutral-700/60"
+                              : "bg-[#222222] text-neutral-100 rounded-tl-xs border border-neutral-800"
+                          }`}
+                        >
+                          <p className="whitespace-pre-wrap select-text">{msg.text}</p>
+                          <div className={`flex items-center gap-1 text-[10px] text-neutral-400 mt-1 select-none ${isMe ? 'justify-end' : 'justify-start'}`}>
+                            <span>{msg.time}</span>
+                            {isMe && <CheckCheck className="size-3.5 text-blue-400" />}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                  <div ref={messagesEndRef} />
+                </div>
+              </ScrollArea>
+
+              {/* Bottom Message Input Bar */}
+              <div className="h-18 px-5 py-3 border-t border-neutral-800 bg-[#161616] flex items-center gap-2.5 shrink-0">
+                <button
+                  type="button"
+                  className="p-2 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-full transition-colors cursor-pointer"
+                  title="Emoji"
+                >
+                  <Smile className="size-5" />
+                </button>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <button
+                      type="button"
+                      className="p-2 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-full transition-colors cursor-pointer"
+                      title="Attach"
+                    >
+                      <Paperclip className="size-5" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="top" className="w-52 bg-[#1e1e1e] border-neutral-800 text-neutral-200">
+                    <DropdownMenuItem>
+                      <Image className="size-4" /> Photos & Videos
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Camera className="size-4" /> Camera
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <File className="size-4" /> Document
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <UserRound className="size-4" /> Contact
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <ChartBarIncreasing className="size-4" /> Poll
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Brush className="size-4" /> Drawing
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {/* Input Pill */}
+                <div className="flex-1 flex items-center bg-[#202020] border border-neutral-800 hover:border-neutral-700 focus-within:border-neutral-600 rounded-2xl px-4 py-2 transition-colors">
+                  <input
+                    type="text"
+                    className="w-full bg-transparent border-0 outline-none text-sm text-neutral-100 placeholder:text-neutral-500 focus:outline-none"
+                    placeholder="Type a message..."
+                    value={inputText}
+                    onChange={handleInputChange}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault()
+                        handleSendMessage()
+                      }
+                    }}
+                  />
+                </div>
+
+                {/* Send Button */}
+                <button
+                  type="button"
+                  onClick={handleSendMessage}
+                  disabled={!inputText.trim()}
+                  className={`p-2.5 rounded-full transition-all cursor-pointer ${
+                    inputText.trim()
+                      ? "bg-white text-black hover:bg-neutral-200 shadow-md"
+                      : "text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800/60"
+                  }`}
+                  title="Send"
+                >
+                  <Send className="size-4.5" />
+                </button>
+
+                {/* Voice Note Button */}
+                <button
+                  type="button"
+                  className="p-2 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-full transition-colors cursor-pointer"
+                  title="Voice message"
+                >
+                  <Mic className="size-5" />
+                </button>
+              </div>
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </SidebarInset>
     </div>
+  )
+}
+
+export const LuminaMessagingView: React.FC<LuminaMessagingViewProps> = (props) => {
+  return (
+    <SidebarProvider>
+      <LuminaMessagingViewInner {...props} />
+    </SidebarProvider>
   )
 }
 

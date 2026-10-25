@@ -13,13 +13,14 @@
   box-sizing: border-box;
 }
 
-/* Continuous Centered Container Frame with Vertical Dashed Guide Lines */
+/* Continuous Full-Width Container Frame */
 .why-us-container-frame {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   position: relative;
-  border-left: 1px dashed var(--border, rgba(255, 255, 255, 0.12));
-  border-right: 1px dashed var(--border, rgba(255, 255, 255, 0.12));
+  border-left: none;
+  border-right: none;
   box-sizing: border-box;
 }
 
@@ -31,7 +32,7 @@
   position: relative;
   border-top: 1px dashed var(--border, rgba(255, 255, 255, 0.12));
   border-bottom: 1px dashed var(--border, rgba(255, 255, 255, 0.12));
-  padding: 40px 36px;
+  padding: 40px clamp(24px, 4vw, 64px);
   min-height: 110px;
   background-color: var(--background, #191919);
   box-sizing: border-box;
@@ -148,7 +149,7 @@
    ========================================================================== */
 .why-us-main-content {
   width: 100%;
-  padding: 64px 32px 0;
+  padding: 64px clamp(24px, 4vw, 64px) 0;
   box-sizing: border-box;
   position: relative;
 }

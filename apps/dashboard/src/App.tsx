@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import ReactLenis from 'lenis/react'
-import { Navbar } from './Navbar'
+import { Header } from './Header'
 import { HeroSection } from './HeroSection'
 import { TrustAndQuoteSection } from './TrustAndQuoteSection'
 import { WhyUsSection } from './WhyUsSection'
@@ -226,7 +226,7 @@ function AppContent() {
   return (
     <ReactLenis root options={{ lerp: 0.08, duration: 1.2, smoothWheel: true }}>
       <div className="app-main-wrapper">
-        <Navbar
+        <Header
           user={currentUser}
           onOpenAuth={handleOpenAuth}
           onOpenDashboard={handleOpenDashboard}

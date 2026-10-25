@@ -20,10 +20,11 @@
 
 /* Continuous Centered Container Frame with Vertical Dashed Guide Lines */
 .saascn-nav-frame {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   height: 68px;
-  padding: 0 32px;
+  padding: 0 clamp(24px, 4vw, 48px);
   display: flex;
   align-items: center;
   justify-content: space-between;

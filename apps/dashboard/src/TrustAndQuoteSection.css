@@ -15,13 +15,14 @@
   box-sizing: border-box;
 }
 
-/* Continuous Centered Container Frame with Vertical Dashed Guide Lines */
+/* Continuous Full-Width Container Frame */
 .trust-quote-container-frame {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   position: relative;
-  border-left: 1px dashed rgba(255, 255, 255, 0.12);
-  border-right: 1px dashed rgba(255, 255, 255, 0.12);
+  border-left: none;
+  border-right: none;
   border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
   background-color: var(--background, #191919);
   box-sizing: border-box;
@@ -133,7 +134,7 @@
    2. Featured Quote Block
    ========================================================================== */
 .trust-quote-block {
-  padding: 68px 56px 60px;
+  padding: 68px clamp(24px, 4vw, 64px) 60px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
