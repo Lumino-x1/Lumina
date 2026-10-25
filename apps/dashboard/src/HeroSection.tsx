@@ -1,5 +1,6 @@
 import React from 'react'
 import SculptureHero from './components/ui/sculpture-hero'
+import { FluidParticlesBackground } from './components/ui/fluid-particles-background'
 import './HeroSection.css'
 
 export interface HeroSectionProps {
@@ -31,15 +32,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   return (
     <section className="hero-section-root" aria-label="Hero Section">
+      {/* Fluid Perlin/Simplex particles background */}
+      <FluidParticlesBackground
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        particleCount={2000}
+        noiseIntensity={0.003}
+        particleSize={{ min: 0.5, max: 2 }}
+      />
       <SculptureHero
         showSculpture={false}
         theme="dark"
-        background="#191919"
-        darkBackground="#191919"
+        background="transparent"
+        darkBackground="transparent"
         textColor="#FFFFFF"
         accentColor="#FFFFFF"
-        backdropText="LUMINA"
-        brand="LUMINA"
+        backdropText=""
+        brand=""
         showNav={false}
         eyebrow=""
         headline={"Your College.\nOne Connected Community."}
@@ -53,8 +61,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           label: 'Talk to an engineer',
           onClick: handleSecondary,
         }}
-        hint="Move across the sculpture"
-        hintTouch="Touch the sculpture"
+        hint=""
+        hintTouch=""
         showCredit={false}
         height="clamp(620px, calc(100svh - 64px), 940px)"
       />

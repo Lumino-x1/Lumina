@@ -16,6 +16,15 @@
   box-sizing: border-box;
 }
 
+.hero-section-root .sh-root {
+  background: transparent !important;
+}
+
+.hero-section-root .sh-btn {
+  background: #ffffff !important;
+  color: #191919 !important;
+}
+
 /* Extended Horizontal Dashed Guide Line at section bottom */
 .hero-section-root::after {
   content: '';

@@ -230,14 +230,14 @@ export function Header({ onOpenAuth, user, onOpenDashboard }: HeaderProps) {
 					<Button
 						variant="outline"
 						size="lg"
-						className="h-11 px-5 border-neutral-700 hover:bg-neutral-800 text-white font-medium text-sm rounded-md transition-colors"
+						className="h-11 w-36 border-neutral-700 hover:bg-neutral-800 text-white font-medium text-sm rounded-md transition-colors justify-center"
 						onClick={handleSignIn}
 					>
 						Sign In
 					</Button>
 					<Button
 						size="lg"
-						className="h-11 px-5 bg-white text-neutral-900 hover:bg-neutral-200 font-semibold text-sm rounded-md shadow-md transition-colors"
+						className="h-11 w-36 bg-white text-neutral-900 hover:bg-neutral-200 font-semibold text-sm rounded-md shadow-md transition-colors justify-center"
 						onClick={handleGetStarted}
 					>
 						Get Started
@@ -351,13 +351,13 @@ export function Header({ onOpenAuth, user, onOpenDashboard }: HeaderProps) {
 						<>
 							<Button
 								variant="outline"
-								className="h-9 px-4 border-neutral-700 hover:bg-neutral-800 text-neutral-200 font-medium"
+								className="h-9 w-[116px] border-neutral-700 hover:bg-neutral-800 text-neutral-200 font-medium justify-center text-center"
 								onClick={handleSignIn}
 							>
 								Sign In
 							</Button>
 							<Button
-								className="h-9 px-4 bg-white text-neutral-900 hover:bg-neutral-200 font-medium shadow-sm"
+								className="h-9 w-[116px] bg-white text-neutral-900 hover:bg-neutral-200 font-medium shadow-sm justify-center text-center"
 								onClick={handleGetStarted}
 							>
 								Get Started
