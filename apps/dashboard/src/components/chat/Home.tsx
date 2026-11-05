@@ -414,31 +414,33 @@ function HomeInner() {
               </div>
 
               {/* Chat Messages */}
-              <ScrollArea className="flex-1 w-full overflow-y-auto px-6 py-6">
-                <div className="flex flex-col gap-3.5 max-w-4xl mx-auto">
-                  {currentMessages.map((msg) => {
-                    const isMe = msg.sender === 'me'
-                    return (
-                      <div
-                        key={msg.id}
-                        className={`flex flex-col max-w-[68%] ${isMe ? 'ml-auto items-end' : 'mr-auto items-start'}`}
-                      >
+              <ScrollArea className="flex-1 w-full overflow-y-auto px-4 sm:px-6 py-4">
+                <div className="min-h-full flex flex-col justify-end">
+                  <div className="mt-auto flex flex-col gap-3.5 max-w-4xl mx-auto w-full py-2">
+                    {currentMessages.map((msg) => {
+                      const isMe = msg.sender === 'me'
+                      return (
                         <div
-                          className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
-                            isMe
-                              ? 'bg-neutral-800 text-white rounded-tr-xs border border-neutral-700/60'
-                              : 'bg-[#222222] text-neutral-100 rounded-tl-xs border border-neutral-800'
-                          }`}
+                          key={msg.id}
+                          className={`flex flex-col max-w-[85%] sm:max-w-[75%] md:max-w-[68%] ${isMe ? 'ml-auto items-end' : 'mr-auto items-start'}`}
                         >
-                          <p className="whitespace-pre-wrap select-text">{msg.text}</p>
-                          <div className={`flex items-center gap-1 text-[10px] text-neutral-400 mt-1 select-none ${isMe ? 'justify-end' : 'justify-start'}`}>
-                            <span>{msg.time}</span>
-                            {isMe && <CheckCheck className="size-3.5 text-blue-400" />}
+                          <div
+                            className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm break-words ${
+                              isMe
+                                ? 'bg-neutral-800 text-white rounded-tr-xs border border-neutral-700/60'
+                                : 'bg-[#222222] text-neutral-100 rounded-tl-xs border border-neutral-800'
+                            }`}
+                          >
+                            <p className="whitespace-pre-wrap select-text">{msg.text}</p>
+                            <div className={`flex items-center gap-1 text-[10px] text-neutral-400 mt-1 select-none ${isMe ? 'justify-end' : 'justify-start'}`}>
+                              <span>{msg.time}</span>
+                              {isMe && <CheckCheck className="size-3.5 text-blue-400" />}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )
-                  })}
+                      )
+                    })}
+                  </div>
                 </div>
               </ScrollArea>
 

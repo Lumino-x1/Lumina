@@ -25,7 +25,7 @@ export const CommandCodeSection: React.FC = () => {
         <div className="command-middle-row">
           <div className="command-desc-col">
             <p className="command-desc-text">
-              Lumina brings the campus experience to life through meaningful connections, smarter learning, and limitless possibilities—empowering students to discover, grow, and shape their future in one connected space.
+              Lumina unifies campus life, smarter learning, and future opportunities in one connected space.
             </p>
           </div>
           <div className="command-actions-col">
@@ -62,7 +62,6 @@ export const CommandCodeSection: React.FC = () => {
               </div>
               <span className="command-stat-index">[01]</span>
             </div>
-            <div className="command-stat-category">CONNECTED CAMPUS</div>
             <h3 className="command-stat-headline">One connected campus</h3>
             <p className="command-stat-desc">
               Bring students, communities, and alumni together in one space to share ideas, build relationships, and discover opportunities across campus.
@@ -77,7 +76,6 @@ export const CommandCodeSection: React.FC = () => {
               </div>
               <span className="command-stat-index">[02]</span>
             </div>
-            <div className="command-stat-category">INTELLIGENT LEARNING</div>
             <h3 className="command-stat-headline">Learning, reimagined</h3>
             <p className="command-stat-desc">
               Turn complex academic material into clear insights with AI-powered summaries, personalized learning, and intelligent study assistance.
@@ -92,7 +90,6 @@ export const CommandCodeSection: React.FC = () => {
               </div>
               <span className="command-stat-index">[03]</span>
             </div>
-            <div className="command-stat-category">CAREER &amp; GROWTH</div>
             <h3 className="command-stat-headline">Built for what&apos;s next</h3>
             <p className="command-stat-desc">
               Discover career opportunities, learn from alumni, expand your network, and turn your campus experience into a foundation for the future.

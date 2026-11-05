@@ -264,26 +264,14 @@ export function Header({ onOpenAuth, user, onOpenDashboard }: HeaderProps) {
 								<NavigationMenuTrigger className="bg-transparent text-neutral-200 hover:text-white hover:bg-neutral-800/60 h-9 px-4 inline-flex items-center justify-center text-sm font-medium rounded-md">
 									Product
 								</NavigationMenuTrigger>
-								<NavigationMenuContent className="bg-[#1c1c1c] p-1.5 border-neutral-800 text-white shadow-2xl rounded-lg">
-									<ul className="bg-[#181818] grid w-[32rem] grid-cols-2 gap-2 rounded-md border border-neutral-800/80 p-2 shadow">
+								<NavigationMenuContent className="bg-[#1c1c1c] p-2 border-neutral-800 text-white shadow-2xl rounded-xl">
+									<ul className="bg-[#181818] grid w-[42rem] sm:w-[44rem] grid-cols-2 gap-2.5 rounded-lg border border-neutral-800/80 p-3 shadow">
 										{productLinks.map((item, i) => (
 											<li key={i}>
 												<ListItem {...item} />
 											</li>
 										))}
 									</ul>
-									<div className="p-2.5">
-										<p className="text-neutral-400 text-sm">
-											Interested?{' '}
-											<button
-												type="button"
-												onClick={handleGetStarted}
-												className="text-white font-medium hover:underline bg-transparent border-none cursor-pointer p-0"
-											>
-												Schedule a demo
-											</button>
-										</p>
-									</div>
 								</NavigationMenuContent>
 							</NavigationMenuItem>
 
@@ -291,23 +279,23 @@ export function Header({ onOpenAuth, user, onOpenDashboard }: HeaderProps) {
 								<NavigationMenuTrigger className="bg-transparent text-neutral-200 hover:text-white hover:bg-neutral-800/60 h-9 px-4 inline-flex items-center justify-center text-sm font-medium rounded-md">
 									Company
 								</NavigationMenuTrigger>
-								<NavigationMenuContent className="bg-[#1c1c1c] p-1.5 border-neutral-800 text-white shadow-2xl rounded-lg">
-									<div className="grid w-[32rem] grid-cols-2 gap-2">
-										<ul className="bg-[#181818] space-y-2 rounded-md border border-neutral-800/80 p-2 shadow">
+								<NavigationMenuContent className="bg-[#1c1c1c] p-2 border-neutral-800 text-white shadow-2xl rounded-xl">
+									<div className="grid w-[42rem] sm:w-[44rem] grid-cols-[1.25fr_1fr] gap-2.5">
+										<ul className="bg-[#181818] space-y-2.5 rounded-lg border border-neutral-800/80 p-3 shadow">
 											{companyLinks.map((item, i) => (
 												<li key={i}>
 													<ListItem {...item} />
 												</li>
 											))}
 										</ul>
-										<ul className="space-y-2 p-2">
+										<ul className="space-y-1.5 p-3 flex flex-col justify-center">
 											{companyLinks2.map((item, i) => (
 												<li key={i}>
 													<NavigationMenuLink
 														href={item.href}
-														className="flex p-2 hover:bg-neutral-800 flex-row rounded-md items-center gap-x-2.5 text-neutral-200 hover:text-white text-sm"
+														className="flex p-2.5 hover:bg-neutral-800 flex-row rounded-lg items-center gap-x-3 text-neutral-200 hover:text-white text-[14.5px] transition-colors"
 													>
-														<item.icon className="text-neutral-300 size-4 shrink-0" />
+														<item.icon className="text-neutral-300 size-4.5 shrink-0" />
 														<span className="font-medium">{item.title}</span>
 													</NavigationMenuLink>
 												</li>
@@ -427,19 +415,19 @@ function ListItem({
 	return (
 		<NavigationMenuLink
 			className={cn(
-				'w-full flex flex-row gap-x-2.5 hover:bg-neutral-800 hover:text-white rounded-md p-2 text-neutral-200 transition-colors',
+				'w-full flex flex-row items-center gap-x-3.5 hover:bg-neutral-800/90 hover:text-white rounded-lg p-2.5 text-neutral-200 transition-colors',
 				className
 			)}
 			{...props}
 			asChild
 		>
 			<a href={href} onClick={onClick}>
-				<div className="bg-neutral-900/80 flex aspect-square size-10 items-center justify-center rounded-md border border-neutral-800 shadow-sm shrink-0">
-					<Icon className="text-neutral-200 size-4.5" />
+				<div className="bg-neutral-900/90 flex aspect-square size-11 items-center justify-center rounded-lg border border-neutral-800 shadow-sm shrink-0">
+					<Icon className="text-neutral-200 size-5" />
 				</div>
-				<div className="flex flex-col items-start justify-center">
-					<span className="font-medium text-sm text-neutral-100">{title}</span>
-					{description && <span className="text-neutral-400 text-xs line-clamp-1">{description}</span>}
+				<div className="flex flex-col items-start justify-center min-w-0">
+					<span className="font-medium text-[15px] text-neutral-100 leading-tight">{title}</span>
+					{description && <span className="text-neutral-400 text-xs sm:text-[13px] mt-0.5 leading-snug line-clamp-2">{description}</span>}
 				</div>
 			</a>
 		</NavigationMenuLink>

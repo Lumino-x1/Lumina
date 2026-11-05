@@ -320,12 +320,14 @@ function LuminaMessagingViewInner({
   onBackToDashboard,
   onOpenProfile,
   onLogout,
+  initialChatId,
 }: LuminaMessagingViewProps) {
-  const { open, toggleSidebar } = useSidebar()
+  const { open, toggleSidebar, isMobile } = useSidebar()
 
   // State
   const [contacts, setContacts] = useState<ChatContactItem[]>(defaultContactList)
   const [currentChat, setCurrentChat] = useState<ChatContactItem>(defaultContactList[0])
+  const [mobileActiveView, setMobileActiveView] = useState<'list' | 'chat'>('list')
   const [searchQuery, setSearchQuery] = useState("")
   const [activeFilter, setActiveFilter] = useState<string>("all")
   const [inputText, setInputText] = useState("")
@@ -339,6 +341,17 @@ function LuminaMessagingViewInner({
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const typingTimeoutRef = useRef<any>(null)
+
+  // If initialChatId was passed, open it directly
+  useEffect(() => {
+    if (initialChatId) {
+      const match = contacts.find((c) => c.id === initialChatId)
+      if (match) {
+        setCurrentChat(match)
+        setMobileActiveView('chat')
+      }
+    }
+  }, [initialChatId, contacts])
 
   // Load conversations from backend
   const loadConversations = useCallback(async () => {
@@ -525,10 +538,449 @@ function LuminaMessagingViewInner({
 
   const userName = currentUser?.name || "Manoj Rayi"
 
+  // Render Left Panel: Chats List
+  const renderChatsList = (isMobileMode: boolean) => (
+    <div className="flex flex-col h-full w-full border-r border-neutral-800 bg-[#161616]">
+      {/* Header */}
+      <div className="h-16 px-4 flex items-center justify-between border-b border-neutral-800 shrink-0">
+        <div className="flex items-center gap-2">
+          {isMobileMode && onBackToDashboard && (
+            <button
+              type="button"
+              onClick={onBackToDashboard}
+              className="p-2 -ml-2 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-lg transition-colors cursor-pointer"
+              title="Back to Dashboard"
+              aria-label="Back to Dashboard"
+            >
+              <ArrowLeft className="size-5" />
+            </button>
+          )}
+          <h2 className="text-lg font-bold text-white tracking-tight">Chats</h2>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-neutral-400 hover:text-white hover:bg-neutral-800 size-9 rounded-lg"
+                title="New Chat"
+              >
+                <SquarePen className="size-4.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-44 bg-[#1e1e1e] border-neutral-800 text-neutral-200">
+              <DropdownMenuItem onClick={() => handleCreateContact(false)}>
+                <User className="size-4 mr-2" /> New Contact
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleCreateContact(true)}>
+                <Users className="size-4 mr-2" /> New Group
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-neutral-400 hover:text-white hover:bg-neutral-800 size-9 rounded-lg"
+                title="Filter Chats"
+              >
+                <ListFilter className="size-4.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56 bg-[#1e1e1e] border-neutral-800 text-neutral-200">
+              <DropdownMenuLabel>Filter Chats By</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => setActiveFilter('all')}>
+                  <MessageCircle className="size-4 mr-2" /> All Chats
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveFilter('unread')}>
+                  <MessageSquareDot className="size-4 mr-2" /> Unread
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveFilter('favorites')}>
+                  <Star className="size-4 mr-2" /> Favorites
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveFilter('contacts')}>
+                  <CircleUserRound className="size-4 mr-2" /> Contacts
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveFilter('non-contacts')}>
+                  <CircleOff className="size-4 mr-2" /> Non Contacts
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={() => setActiveFilter('groups')}>
+                  <Users className="size-4 mr-2" /> Groups
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveFilter('drafts')}>
+                  <MessageSquareDashed className="size-4 mr-2" /> Drafts
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {isMobileMode && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  className="size-8 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center text-xs font-semibold text-white ml-1 cursor-pointer"
+                  title={userName}
+                >
+                  {userName[0]?.toUpperCase() || 'U'}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="bottom"
+                align="end"
+                className="w-48 bg-[#1e1e1e] border-neutral-800 text-neutral-200"
+              >
+                <DropdownMenuLabel>{userName}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {onOpenProfile && (
+                  <DropdownMenuItem onClick={onOpenProfile}>
+                    <User className="size-4 mr-2" />
+                    <span>Account</span>
+                  </DropdownMenuItem>
+                )}
+                {onLogout && (
+                  <DropdownMenuItem onClick={onLogout} className="text-red-400 hover:text-red-300">
+                    <span>Sign out</span>
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
+      </div>
+
+      {/* Search Bar */}
+      <div className="px-3.5 py-3 border-b border-neutral-800/60 shrink-0">
+        <div className="relative w-full">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-neutral-400 pointer-events-none" />
+          <Input
+            placeholder="Search or start new chat"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 h-9.5 w-full bg-[#202020] border-neutral-800/80 text-neutral-100 placeholder:text-neutral-500 rounded-lg focus-visible:ring-1 focus-visible:ring-neutral-700 text-sm"
+          />
+        </div>
+      </div>
+
+      {/* Quick Filter Tabs */}
+      <div className="px-3.5 py-2 flex items-center gap-1.5 border-b border-neutral-800/40 shrink-0">
+        <button
+          type="button"
+          onClick={() => setActiveFilter('all')}
+          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+            activeFilter === 'all'
+              ? 'bg-neutral-800 text-white font-semibold'
+              : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
+          }`}
+        >
+          All
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveFilter('unread')}
+          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+            activeFilter === 'unread'
+              ? 'bg-neutral-800 text-white font-semibold'
+              : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
+          }`}
+        >
+          Unread
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveFilter('groups')}
+          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer ${
+            activeFilter === 'groups'
+              ? 'bg-neutral-800 text-white font-semibold'
+              : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
+          }`}
+        >
+          Groups
+        </button>
+      </div>
+
+      {/* Contact List */}
+      <ScrollArea className="flex-1 w-full overflow-y-auto">
+        <div className="flex flex-col">
+          {filteredContacts.map((contact, index) => {
+            const isSelected = currentChat?.id === contact.id
+            return (
+              <button
+                key={contact.id || index}
+                type="button"
+                onClick={() => {
+                  setCurrentChat(contact)
+                  if (isMobileMode) {
+                    setMobileActiveView('chat')
+                  }
+                }}
+                className={`w-full px-3.5 py-3 hover:bg-neutral-800/50 cursor-pointer text-left transition-colors border-b border-neutral-800/30 flex items-center gap-3.5 ${
+                  isSelected && !isMobileMode ? "bg-[#252525] border-l-2 border-l-white" : ""
+                }`}
+              >
+                <div className="relative shrink-0">
+                  <Avatar className="size-11 rounded-full">
+                    <AvatarImage src={contact.image} alt={contact.name} />
+                    <AvatarFallback>{contact.name[0]}</AvatarFallback>
+                  </Avatar>
+                  {contact.online && (
+                    <span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-[#161616]" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <h4 className="text-sm font-medium text-neutral-100 truncate">
+                      {contact.name}
+                    </h4>
+                    {contact.time && (
+                      <span className="text-[11px] text-neutral-400 shrink-0 font-normal">
+                        {contact.time}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-xs text-neutral-400 truncate">
+                      {contact.message}
+                    </p>
+                    {contact.unread && (
+                      <span className="size-2 rounded-full bg-blue-500 shrink-0" />
+                    )}
+                  </div>
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      </ScrollArea>
+    </div>
+  )
+
+  // Render Right Panel: Chat Thread Window
+  const renderChatThread = (isMobileMode: boolean) => (
+    <div className="flex flex-col h-full w-full bg-[#191919]">
+      {/* Chat Header */}
+      <div className="h-16 px-4 sm:px-6 border-b border-neutral-800 bg-[#161616] flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+          {/* Mobile Back Button */}
+          {isMobileMode && (
+            <button
+              type="button"
+              onClick={() => setMobileActiveView('list')}
+              className="p-2 -ml-2 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-lg transition-colors cursor-pointer shrink-0"
+              title="Back to Chats"
+              aria-label="Back to Chats"
+            >
+              <ArrowLeft className="size-5" />
+            </button>
+          )}
+
+          <div className="relative shrink-0">
+            <Avatar className="size-9 sm:size-10 rounded-full">
+              <AvatarImage src={currentChat?.image} alt={currentChat?.name} />
+              <AvatarFallback>
+                {currentChat?.name ? currentChat.name.slice(0, 2).toUpperCase() : "PR"}
+              </AvatarFallback>
+            </Avatar>
+            {currentChat?.online && (
+              <span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-[#161616]" />
+            )}
+          </div>
+          <div className="min-w-0">
+            <h3 className="text-sm font-semibold text-white leading-tight truncate">
+              {currentChat?.name}
+            </h3>
+            <p className="text-xs text-neutral-400 flex items-center gap-1.5 mt-0.5 truncate">
+              <span className={`size-1.5 rounded-full shrink-0 ${currentChat?.online ? 'bg-emerald-500' : 'bg-neutral-500'}`} />
+              <span className="truncate">
+                {currentChat?.isGroup ? "Study Group" : currentChat?.online ? "Online" : "Offline"}
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1 sm:gap-1.5 text-neutral-400 shrink-0">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:text-white hover:bg-neutral-800 size-8 sm:size-9 rounded-lg"
+            title="Video Call"
+          >
+            <Video className="size-4 sm:size-4.5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:text-white hover:bg-neutral-800 size-8 sm:size-9 rounded-lg"
+            title="Voice Call"
+          >
+            <Phone className="size-4 sm:size-4.5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:text-white hover:bg-neutral-800 size-8 sm:size-9 rounded-lg"
+            title="Search Messages"
+          >
+            <Search className="size-4 sm:size-4.5" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Chat Messages Flow (Anchored at the bottom above input) */}
+      <ScrollArea className="flex-1 w-full overflow-y-auto px-3 sm:px-6 py-4">
+        <div className="min-h-full flex flex-col justify-end">
+          <div className="mt-auto flex flex-col gap-3.5 max-w-4xl mx-auto w-full py-2">
+            {/* Conversation Introduction Header */}
+            <div className="flex flex-col items-center justify-center my-6 text-center select-none">
+              <Avatar className="size-16 rounded-full mb-3 ring-2 ring-neutral-800 shadow-md">
+                <AvatarImage src={currentChat?.image} alt={currentChat?.name} />
+                <AvatarFallback className="bg-neutral-800 text-neutral-300 font-semibold text-lg">
+                  {currentChat?.name ? currentChat.name.slice(0, 2).toUpperCase() : "LU"}
+                </AvatarFallback>
+              </Avatar>
+              <h4 className="text-base font-semibold text-neutral-100">{currentChat?.name}</h4>
+              <p className="text-xs text-neutral-400 mt-1 max-w-xs">
+                {currentChat?.isGroup ? "Campus Study Group Channel" : "Direct encrypted chat on Lumina Campus"}
+              </p>
+              <div className="mt-4 px-3 py-1 rounded-full bg-neutral-800/90 border border-neutral-700/50 text-[11px] text-neutral-400 font-medium tracking-wide">
+                Today
+              </div>
+            </div>
+
+            {/* Message Stream */}
+            {activeMessages.map((msg) => {
+              const isMe = msg.sender === "me"
+              return (
+                <div
+                  key={msg.id}
+                  className={`flex flex-col max-w-[85%] sm:max-w-[75%] md:max-w-[68%] ${
+                    isMe ? "ml-auto items-end" : "mr-auto items-start"
+                  }`}
+                >
+                  <div
+                    className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm break-words ${
+                      isMe
+                        ? "bg-neutral-800 text-white rounded-tr-xs border border-neutral-700/60"
+                        : "bg-[#222222] text-neutral-100 rounded-tl-xs border border-neutral-800"
+                    }`}
+                  >
+                    <p className="whitespace-pre-wrap select-text">{msg.text}</p>
+                    <div
+                      className={`flex items-center gap-1.5 text-[10px] text-neutral-400 mt-1 select-none ${
+                        isMe ? "justify-end" : "justify-start"
+                      }`}
+                    >
+                      <span>{msg.time}</span>
+                      {isMe && <CheckCheck className="size-3.5 text-blue-400" />}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+      </ScrollArea>
+
+      {/* Bottom Message Input Bar */}
+      <div className="min-h-16 px-3 sm:px-5 py-2.5 sm:py-3 border-t border-neutral-800 bg-[#161616] flex items-center gap-2 sm:gap-2.5 shrink-0 pb-[max(0.625rem,env(safe-area-inset-bottom))]">
+        <button
+          type="button"
+          className="p-2 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-full transition-colors cursor-pointer hidden sm:inline-flex"
+          title="Emoji"
+        >
+          <Smile className="size-5" />
+        </button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              className="p-2 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-full transition-colors cursor-pointer"
+              title="Attach"
+            >
+              <Paperclip className="size-5" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="top" className="w-52 bg-[#1e1e1e] border-neutral-800 text-neutral-200">
+            <DropdownMenuItem>
+              <Image className="size-4 mr-2" /> Photos & Videos
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Camera className="size-4 mr-2" /> Camera
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <File className="size-4 mr-2" /> Document
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <UserRound className="size-4 mr-2" /> Contact
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <ChartBarIncreasing className="size-4 mr-2" /> Poll
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Brush className="size-4 mr-2" /> Drawing
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Input Pill */}
+        <div className="flex-1 flex items-center bg-[#202020] border border-neutral-800 hover:border-neutral-700 focus-within:border-neutral-600 rounded-2xl px-3.5 sm:px-4 py-2 transition-colors">
+          <input
+            type="text"
+            className="w-full bg-transparent border-0 outline-none text-sm text-neutral-100 placeholder:text-neutral-500 focus:outline-none"
+            placeholder="Type a message..."
+            value={inputText}
+            onChange={handleInputChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault()
+                handleSendMessage()
+              }
+            }}
+          />
+        </div>
+
+        {/* Send Button */}
+        <button
+          type="button"
+          onClick={handleSendMessage}
+          disabled={!inputText.trim()}
+          className={`p-2 sm:p-2.5 rounded-full transition-all cursor-pointer ${
+            inputText.trim()
+              ? "bg-white text-black hover:bg-neutral-200 shadow-md"
+              : "text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800/60"
+          }`}
+          title="Send"
+        >
+          <Send className="size-4 sm:size-4.5" />
+        </button>
+
+        {/* Voice Note Button */}
+        <button
+          type="button"
+          className="p-2 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-full transition-colors cursor-pointer"
+          title="Voice message"
+        >
+          <Mic className="size-5" />
+        </button>
+      </div>
+    </div>
+  )
+
   return (
     <div className="flex h-screen w-full overflow-hidden bg-[#121212] text-neutral-100 antialiased font-sans select-none">
-      {/* 1. Collapsible Sidebar */}
-      <Sidebar variant="floating" collapsible="icon">
+      {/* 1. Collapsible Sidebar (Desktop Only) */}
+      <Sidebar variant="floating" collapsible="icon" className="hidden md:flex">
         <SidebarContent className="flex flex-col items-center py-3 px-2 gap-1.5">
           <SidebarGroup className="w-full">
             <SidebarGroupLabel>Navigate</SidebarGroupLabel>
@@ -597,7 +1049,7 @@ function LuminaMessagingViewInner({
                   className="w-48 bg-[#1e1e1e] border-neutral-800 text-neutral-200"
                 >
                   <DropdownMenuItem onClick={onOpenProfile}>
-                    <User className="size-4" />
+                    <User className="size-4 mr-2" />
                     <span>Account</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
@@ -617,361 +1069,28 @@ function LuminaMessagingViewInner({
 
       {/* 2. Main Content Inset */}
       <SidebarInset className="bg-[#191919]">
-        <ResizablePanelGroup direction="horizontal" className="h-screen w-full">
-          {/* ===================================================================
-              Left Panel: Chats List
-             =================================================================== */}
-          <ResizablePanel defaultSize={30} minSize={22} maxSize={45}>
-            <div className="flex flex-col h-full w-full border-r border-neutral-800 bg-[#161616]">
-              {/* Header */}
-              <div className="h-16 px-4 flex items-center justify-between border-b border-neutral-800 shrink-0">
-                <h2 className="text-lg font-bold text-white tracking-tight">Chats</h2>
-                <div className="flex items-center gap-1">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-neutral-400 hover:text-white hover:bg-neutral-800 size-9 rounded-lg"
-                        title="New Chat"
-                      >
-                        <SquarePen className="size-4.5" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-44 bg-[#1e1e1e] border-neutral-800 text-neutral-200">
-                      <DropdownMenuItem onClick={() => handleCreateContact(false)}>
-                        <User className="size-4" /> New Contact
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleCreateContact(true)}>
-                        <Users className="size-4" /> New Group
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+        {isMobile ? (
+          <div className="flex flex-col h-full w-full bg-[#161616]">
+            {mobileActiveView === 'list'
+              ? renderChatsList(true)
+              : renderChatThread(true)}
+          </div>
+        ) : (
+          <ResizablePanelGroup direction="horizontal" className="h-screen w-full">
+            {/* Left Panel: Chats List */}
+            <ResizablePanel defaultSize={30} minSize={22} maxSize={45}>
+              {renderChatsList(false)}
+            </ResizablePanel>
 
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-neutral-400 hover:text-white hover:bg-neutral-800 size-9 rounded-lg"
-                        title="Filter Chats"
-                      >
-                        <ListFilter className="size-4.5" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56 bg-[#1e1e1e] border-neutral-800 text-neutral-200">
-                      <DropdownMenuLabel>Filter Chats By</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuGroup>
-                        <DropdownMenuItem onClick={() => setActiveFilter('all')}>
-                          <MessageCircle className="size-4" /> All Chats
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setActiveFilter('unread')}>
-                          <MessageSquareDot className="size-4" /> Unread
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setActiveFilter('favorites')}>
-                          <Star className="size-4" /> Favorites
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setActiveFilter('contacts')}>
-                          <CircleUserRound className="size-4" /> Contacts
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setActiveFilter('non-contacts')}>
-                          <CircleOff className="size-4" /> Non Contacts
-                        </DropdownMenuItem>
-                      </DropdownMenuGroup>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuGroup>
-                        <DropdownMenuItem onClick={() => setActiveFilter('groups')}>
-                          <Users className="size-4" /> Groups
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setActiveFilter('drafts')}>
-                          <MessageSquareDashed className="size-4" /> Drafts
-                        </DropdownMenuItem>
-                      </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </div>
+            {/* Resizable Divider Handle */}
+            <ResizableHandle />
 
-              {/* Search Bar */}
-              <div className="px-3.5 py-3 border-b border-neutral-800/60 shrink-0">
-                <div className="relative w-full">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-neutral-400 pointer-events-none" />
-                  <Input
-                    placeholder="Search or start new chat"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 h-9.5 w-full bg-[#202020] border-neutral-800/80 text-neutral-100 placeholder:text-neutral-500 rounded-lg focus-visible:ring-1 focus-visible:ring-neutral-700 text-sm"
-                  />
-                </div>
-              </div>
-
-              {/* Quick Filter Tabs */}
-              <div className="px-3.5 py-2 flex items-center gap-1.5 border-b border-neutral-800/40 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => setActiveFilter('all')}
-                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer ${
-                    activeFilter === 'all'
-                      ? 'bg-neutral-800 text-white font-semibold'
-                      : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
-                  }`}
-                >
-                  All
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveFilter('unread')}
-                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer ${
-                    activeFilter === 'unread'
-                      ? 'bg-neutral-800 text-white font-semibold'
-                      : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
-                  }`}
-                >
-                  Unread
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveFilter('groups')}
-                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer ${
-                    activeFilter === 'groups'
-                      ? 'bg-neutral-800 text-white font-semibold'
-                      : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
-                  }`}
-                >
-                  Groups
-                </button>
-              </div>
-
-              {/* Contact List */}
-              <ScrollArea className="flex-1 w-full overflow-y-auto">
-                <div className="flex flex-col">
-                  {filteredContacts.map((contact, index) => {
-                    const isSelected = currentChat?.id === contact.id
-                    return (
-                      <button
-                        key={contact.id || index}
-                        onClick={() => setCurrentChat(contact)}
-                        className={`w-full px-3.5 py-3 hover:bg-neutral-800/50 cursor-pointer text-left transition-colors border-b border-neutral-800/30 flex items-center gap-3.5 ${
-                          isSelected ? "bg-[#252525] border-l-2 border-l-white" : ""
-                        }`}
-                      >
-                        <div className="relative shrink-0">
-                          <Avatar className="size-11 rounded-full">
-                            <AvatarImage src={contact.image} alt={contact.name} />
-                            <AvatarFallback>{contact.name[0]}</AvatarFallback>
-                          </Avatar>
-                          {contact.online && (
-                            <span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-[#161616]" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between gap-2 mb-1">
-                            <h4 className="text-sm font-medium text-neutral-100 truncate">
-                              {contact.name}
-                            </h4>
-                            {contact.time && (
-                              <span className="text-[11px] text-neutral-400 shrink-0 font-normal">
-                                {contact.time}
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex items-center justify-between gap-2">
-                            <p className="text-xs text-neutral-400 truncate">
-                              {contact.message}
-                            </p>
-                            {contact.unread && (
-                              <span className="size-2 rounded-full bg-blue-500 shrink-0" />
-                            )}
-                          </div>
-                        </div>
-                      </button>
-                    )
-                  })}
-                </div>
-              </ScrollArea>
-            </div>
-          </ResizablePanel>
-
-          {/* Resizable Divider Handle */}
-          <ResizableHandle />
-
-          {/* ===================================================================
-              Right Panel: Chat Thread Window
-             =================================================================== */}
-          <ResizablePanel defaultSize={70} minSize={55} maxSize={78}>
-            <div className="flex flex-col h-full w-full bg-[#191919]">
-              {/* Chat Header */}
-              <div className="h-16 px-6 border-b border-neutral-800 bg-[#161616] flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-3">
-                  <div className="relative">
-                    <Avatar className="size-10 rounded-full">
-                      <AvatarImage src={currentChat?.image} alt={currentChat?.name} />
-                      <AvatarFallback>
-                        {currentChat?.name ? currentChat.name.slice(0, 2).toUpperCase() : "PR"}
-                      </AvatarFallback>
-                    </Avatar>
-                    {currentChat?.online && (
-                      <span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-[#161616]" />
-                    )}
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-white leading-tight">
-                      {currentChat?.name}
-                    </h3>
-                    <p className="text-xs text-neutral-400 flex items-center gap-1.5 mt-0.5">
-                      <span className={`size-1.5 rounded-full ${currentChat?.online ? 'bg-emerald-500' : 'bg-neutral-500'}`} />
-                      {currentChat?.isGroup ? "Study Group" : currentChat?.online ? "Online" : "Offline"}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-1.5 text-neutral-400">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="hover:text-white hover:bg-neutral-800 size-9 rounded-lg"
-                    title="Video Call"
-                  >
-                    <Video className="size-4.5" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="hover:text-white hover:bg-neutral-800 size-9 rounded-lg"
-                    title="Voice Call"
-                  >
-                    <Phone className="size-4.5" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="hover:text-white hover:bg-neutral-800 size-9 rounded-lg"
-                    title="Search Messages"
-                  >
-                    <Search className="size-4.5" />
-                  </Button>
-                </div>
-              </div>
-
-              {/* Chat Messages Flow */}
-              <ScrollArea className="flex-1 w-full overflow-y-auto px-6 py-6">
-                <div className="flex flex-col gap-3.5 max-w-4xl mx-auto">
-                  {activeMessages.map((msg) => {
-                    const isMe = msg.sender === "me"
-                    return (
-                      <div
-                        key={msg.id}
-                        className={`flex flex-col max-w-[68%] ${
-                          isMe ? "ml-auto items-end" : "mr-auto items-start"
-                        }`}
-                      >
-                        <div
-                          className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
-                            isMe
-                              ? "bg-neutral-800 text-white rounded-tr-xs border border-neutral-700/60"
-                              : "bg-[#222222] text-neutral-100 rounded-tl-xs border border-neutral-800"
-                          }`}
-                        >
-                          <p className="whitespace-pre-wrap select-text">{msg.text}</p>
-                          <div className={`flex items-center gap-1 text-[10px] text-neutral-400 mt-1 select-none ${isMe ? 'justify-end' : 'justify-start'}`}>
-                            <span>{msg.time}</span>
-                            {isMe && <CheckCheck className="size-3.5 text-blue-400" />}
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                  <div ref={messagesEndRef} />
-                </div>
-              </ScrollArea>
-
-              {/* Bottom Message Input Bar */}
-              <div className="h-18 px-5 py-3 border-t border-neutral-800 bg-[#161616] flex items-center gap-2.5 shrink-0">
-                <button
-                  type="button"
-                  className="p-2 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-full transition-colors cursor-pointer"
-                  title="Emoji"
-                >
-                  <Smile className="size-5" />
-                </button>
-
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <button
-                      type="button"
-                      className="p-2 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-full transition-colors cursor-pointer"
-                      title="Attach"
-                    >
-                      <Paperclip className="size-5" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent side="top" className="w-52 bg-[#1e1e1e] border-neutral-800 text-neutral-200">
-                    <DropdownMenuItem>
-                      <Image className="size-4" /> Photos & Videos
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Camera className="size-4" /> Camera
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <File className="size-4" /> Document
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <UserRound className="size-4" /> Contact
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <ChartBarIncreasing className="size-4" /> Poll
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Brush className="size-4" /> Drawing
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                {/* Input Pill */}
-                <div className="flex-1 flex items-center bg-[#202020] border border-neutral-800 hover:border-neutral-700 focus-within:border-neutral-600 rounded-2xl px-4 py-2 transition-colors">
-                  <input
-                    type="text"
-                    className="w-full bg-transparent border-0 outline-none text-sm text-neutral-100 placeholder:text-neutral-500 focus:outline-none"
-                    placeholder="Type a message..."
-                    value={inputText}
-                    onChange={handleInputChange}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault()
-                        handleSendMessage()
-                      }
-                    }}
-                  />
-                </div>
-
-                {/* Send Button */}
-                <button
-                  type="button"
-                  onClick={handleSendMessage}
-                  disabled={!inputText.trim()}
-                  className={`p-2.5 rounded-full transition-all cursor-pointer ${
-                    inputText.trim()
-                      ? "bg-white text-black hover:bg-neutral-200 shadow-md"
-                      : "text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800/60"
-                  }`}
-                  title="Send"
-                >
-                  <Send className="size-4.5" />
-                </button>
-
-                {/* Voice Note Button */}
-                <button
-                  type="button"
-                  className="p-2 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-full transition-colors cursor-pointer"
-                  title="Voice message"
-                >
-                  <Mic className="size-5" />
-                </button>
-              </div>
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
+            {/* Right Panel: Chat Thread Window */}
+            <ResizablePanel defaultSize={70} minSize={55} maxSize={78}>
+              {renderChatThread(false)}
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        )}
       </SidebarInset>
     </div>
   )

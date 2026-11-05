@@ -30,7 +30,9 @@ export function SidebarProvider({
   ...props
 }: SidebarProviderProps) {
   const [open, setOpen] = React.useState(defaultOpen)
-  const [isMobile, setIsMobile] = React.useState(false)
+  const [isMobile, setIsMobile] = React.useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  )
 
   React.useEffect(() => {
     const checkMobile = () => {

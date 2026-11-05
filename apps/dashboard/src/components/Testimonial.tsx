@@ -193,26 +193,8 @@ export const LuminaDifference: React.FC<LuminaDifferenceProps> = ({
             </div>
           </div>
 
-          {/* Center Column: Category Badge, Headline, Description, Metadata & Controls */}
+          {/* Center Column: Headline, Description, Metadata & Controls */}
           <div className="testimonial-center-col difference-center-col">
-            {/* Category Badge Pill */}
-            <div className="testimonial-badge-wrap difference-badge-wrap">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeIndex}
-                  initial={{ opacity: 0, x: -14 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 14 }}
-                  transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <span className="difference-category-badge">
-                    <span className="difference-category-dot" aria-hidden="true" />
-                    {current.category}
-                  </span>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
             {/* Slide Headline */}
             <div className="difference-headline-box">
               <AnimatePresence mode="wait">
